@@ -8,7 +8,11 @@ type Player struct {
 type Card struct{}
 
 func (p *Player) assignCard(card *Card) { p.card = card }
-func (p *Player) playCard() *Card       { return p.card }
+func (p *Player) playCard() *Card {
+	chosenCard := p.card
+	p.card = nil
+	return chosenCard
+}
 
 func TestPlayerThatPlaysCardActuallyChoosesACard(t *testing.T) {
 	p := new(Player)
