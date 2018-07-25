@@ -14,10 +14,16 @@ func (p *Player) playCard() *Card {
 	return chosenCard
 }
 
-func TestPlayerThatPlaysCardActuallyChoosesACard(t *testing.T) {
+func createPlayer(numberOfCards uint8) *Player {
 	p := new(Player)
-	card := new(Card)
-	p.assignCard(card)
+	for i := 0; i < int(numberOfCards); i++ {
+		p.assignCard(new(Card))
+	}
+	return p
+}
+
+func TestPlayerThatPlaysCardActuallyChoosesACard(t *testing.T) {
+	p := createPlayer(1)
 	playedCard := p.playCard()
 	if playedCard == nil {
 		t.Fatal("Expecting player to have chosen a card")
@@ -25,9 +31,7 @@ func TestPlayerThatPlaysCardActuallyChoosesACard(t *testing.T) {
 }
 
 func TestPlayerThatPlaysCardActuallyGivesTheCard(t *testing.T) {
-	p := new(Player)
-	card := new(Card)
-	p.assignCard(card)
+	p := createPlayer(1)
 	p.playCard()
 	if p.card != nil {
 		t.Fatal("Expecting player to have given the card")
