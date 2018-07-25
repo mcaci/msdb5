@@ -10,7 +10,7 @@ type Card struct{}
 func (p *Player) assignCard(card *Card) { p.card = card }
 func (p *Player) playCard() *Card       { return p.card }
 
-func TestPlayerThatPlaysCardHasNotItsCardAnymore(t *testing.T) {
+func TestPlayerThatPlaysCardActuallyChoosesACard(t *testing.T) {
 	p := new(Player)
 	card := new(Card)
 	p.assignCard(card)
