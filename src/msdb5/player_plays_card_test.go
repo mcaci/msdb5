@@ -16,6 +16,16 @@ func TestPlayerThatPlaysCardActuallyChoosesACard(t *testing.T) {
 	p.assignCard(card)
 	playedCard := p.playCard()
 	if playedCard == nil {
-		t.Fatal("Expecting player to have played a card")
+		t.Fatal("Expecting player to have chosen a card")
+	}
+}
+
+func TestPlayerThatPlaysCardActuallyGivesTheCard(t *testing.T) {
+	p := new(Player)
+	card := new(Card)
+	p.assignCard(card)
+	p.playCard()
+	if p.card != nil {
+		t.Fatal("Expecting player to have given the card")
 	}
 }
