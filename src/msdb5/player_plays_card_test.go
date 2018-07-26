@@ -5,7 +5,6 @@ import "testing"
 type Player struct {
 	card *Card
 }
-type Card struct{}
 
 func (p *Player) assignCard(card *Card) { p.card = card }
 func (p *Player) playCard() *Card {
