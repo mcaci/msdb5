@@ -32,8 +32,10 @@ func TestPlayerThatPlaysCardActuallyChoosesACard(t *testing.T) {
 
 func TestPlayerThatPlaysCardActuallyGivesTheCard(t *testing.T) {
 	p := createPlayer(1)
+	firstCard := p.card
 	p.playCard()
-	if p.card != nil {
+	newFirstCard := p.card
+	if firstCard == newFirstCard {
 		t.Fatal("Expecting player to have given the card")
 	}
 }
