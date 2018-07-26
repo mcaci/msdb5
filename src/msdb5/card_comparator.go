@@ -1,34 +1,19 @@
 package msdb5
 
-func higherCardBetween(a, b *Card) *Card {
-	c, haveSamePoints := compareOnPoints(a, b)
-	if haveSamePoints {
-		c = compareOnNumber(a, b)
+func (a Card) Compare(b Card) int {
+	c := a.compareOnPoints(&b)
+	if c == 0 {
+		c = a.compareOnPoints(&b)
 	}
 	return c
 }
 
-func compareOnPoints(a, b *Card) (*Card, bool) {
-	var c *Card
-	var haveSamePoints bool
+func (a *Card) compareOnPoints(b *Card) int {
 	pointsForA := a.points()
 	pointsForB := b.points()
-	if pointsForA > pointsForB {
-		c = a
-	} else if pointsForB > pointsForA {
-		c = b
-	} else {
-		haveSamePoints = true
-	}
-	return c, haveSamePoints
+	return int(pointsForA - pointsForB)
 }
 
-func compareOnNumber(a, b *Card) *Card {
-	var c *Card
-	if b.number >= a.number {
-		c = b
-	} else {
-		c = a
-	}
-	return c
+func (a *Card) compareOnNumber(b *Card) int {
+	return int(a.number - b.number)
 }
