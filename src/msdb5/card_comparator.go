@@ -14,9 +14,9 @@ func (a Card) Compare(b Card) int {
 }
 
 func (a *Card) compareOnSeed(b *Card) int {
-	seedForA := int(a.seed)
-	seedForB := int(b.seed)
-	return int(0 - math.Abs(float64(seedForA-seedForB)))
+	seedForA := float64(a.seed)
+	seedForB := float64(b.seed)
+	return int(math.Abs(seedForA - seedForB))
 }
 
 func (a *Card) compareOnPoints(b *Card) int {

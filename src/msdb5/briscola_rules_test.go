@@ -17,9 +17,15 @@ func TestComparisonWithSameSeedThat3isHigherThan10(t *testing.T) {
 	verify(t, &a, &b, firstCardLoses)
 }
 
-func TestComparisonWithSameSeedThat1isHigherThan8(t *testing.T) {
+func TestComparisonWithSameSeedThat1isHigherThan9(t *testing.T) {
 	a := Card{number: 1, seed: Coin}
 	b := Card{number: 9, seed: Coin}
+	verify(t, &a, &b, firstCardWins)
+}
+
+func TestComparisonWithSameSeedThat8isHigherThan7(t *testing.T) {
+	a := Card{number: 8, seed: Coin}
+	b := Card{number: 7, seed: Coin}
 	verify(t, &a, &b, firstCardWins)
 }
 
