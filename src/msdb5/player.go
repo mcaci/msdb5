@@ -13,9 +13,6 @@ type ConcretePlayer struct {
 }
 
 func (player *ConcretePlayer) Draw(d *Deck) *Card {
-	if player.cards == nil {
-		player.cards = list.New()
-	}
 	c := d.First()
 	player.cards.PushFront(c)
 	return c
