@@ -5,7 +5,7 @@ import (
 )
 
 func TestPlayerDrawsOneCard(t *testing.T) {
-	var d Deck
+	var d MockDeck
 	var p Player
 	p = &ConcretePlayer{}
 	p.New()

@@ -4,7 +4,7 @@ import "container/list"
 
 type Player interface {
 	New()
-	Draw(d *Deck) *Card
+	Draw(d Deck) *Card
 	Has(c *Card) bool
 	Hasnt(c *Card) bool
 }
@@ -17,7 +17,7 @@ func (player *ConcretePlayer) New() {
 	player.cards = list.New()
 }
 
-func (player *ConcretePlayer) Draw(d *Deck) *Card {
+func (player *ConcretePlayer) Draw(d Deck) *Card {
 	c := d.First()
 	player.cards.PushFront(c)
 	return c
