@@ -1,10 +1,12 @@
 package msdb5
 
-// func TestPlayerDrawsOneCard(t *testing.T) {
-// 	var d Deck
-// 	var p Player
-// 	playedCard := p.Draw(&d)
-// 	if p.Has(playedCard) {
-// 		t.Fatalf("Expecting player to have drawn %v", *playedCard)
-// 	}
-// }
+import "testing"
+
+func TestPlayerDrawsOneCard(t *testing.T) {
+	var d Deck
+	p := ConcretePlayer{}
+	playedCard := p.Draw(&d)
+	if p.Hasnt(playedCard) {
+		t.Fatalf("Expecting player to have drawn %v", playedCard)
+	}
+}
