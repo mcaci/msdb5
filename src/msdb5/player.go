@@ -32,19 +32,3 @@ func (player *ConcretePlayer) Has(c *Card) bool {
 func (player *ConcretePlayer) Hasnt(c *Card) bool {
 	return !player.Has(c)
 }
-
-// func (p *Player) assignCard(card *Card) { p.card = card }
-
-// func (p *Player) playCard() *Card {
-// 	chosenCard := p.card
-// 	p.card = nil
-// 	return chosenCard
-// }
-
-// func createPlayer(numberOfCards uint8) *Player {
-// 	p := new(Player)
-// 	for i := 0; i < int(numberOfCards); i++ {
-// 		p.assignCard(new(Card))
-// 	}
-// 	return p
-// }
