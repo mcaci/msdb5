@@ -16,6 +16,12 @@ type Card struct {
 	seed   Seed
 }
 
+func CardById(id int) *Card {
+	a := uint8(id % 10)
+	b := Seed(id / 10)
+	return &Card{number: a, seed: b}
+}
+
 func (c *Card) points() uint8 {
 	switch c.number {
 	case 1:

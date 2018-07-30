@@ -18,7 +18,7 @@ func (player *ConcretePlayer) Init() {
 }
 
 func (player *ConcretePlayer) Draw(d Deck) *Card {
-	c := d.First()
+	c := d.RemoveTop()
 	player.cards.PushFront(c)
 	return c
 }
