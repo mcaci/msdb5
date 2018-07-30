@@ -3,7 +3,7 @@ package msdb5
 import "container/list"
 
 type Player interface {
-	New()
+	Init()
 	Draw(d Deck) *Card
 	Has(c *Card) bool
 	Hasnt(c *Card) bool
@@ -13,7 +13,7 @@ type ConcretePlayer struct {
 	cards *list.List
 }
 
-func (player *ConcretePlayer) New() {
+func (player *ConcretePlayer) Init() {
 	player.cards = list.New()
 }
 
