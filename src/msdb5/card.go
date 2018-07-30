@@ -1,5 +1,7 @@
 package msdb5
 
+import "strconv"
+
 type Seed uint8
 
 const (
@@ -29,4 +31,8 @@ func (c *Card) points() uint8 {
 	default:
 		return 0
 	}
+}
+
+func (card Card) String() string {
+	return "(" + strconv.Itoa(int(card.number)) + " of " + card.seed.String() + ")"
 }
