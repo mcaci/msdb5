@@ -2,31 +2,25 @@ package msdb5
 
 import "math"
 
+var compareOn = func(a, b uint8) int { return int(a) - int(b) }
+
 func (a Card) Compare(b Card) int {
-	c := a.compareOnSeed(&b)
-	if c == 0 {
-		c = a.compareOnPoints(&b)
-		if c == 0 {
-			c = a.compareOnNumber(&b)
-		}
+	functionsToApply := []func(*Card) int{a.compareOnSeed, a.compareOnPoints, a.compareOnNumber}
+	compareScore := 0
+	for i := 0; i < len(functionsToApply) && compareScore == 0; i++ {
+		compareScore = functionsToApply[i](&b)
 	}
-	return c
+	return compareScore
 }
 
 func (a *Card) compareOnSeed(b *Card) int {
-	seedForA := float64(a.seed)
-	seedForB := float64(b.seed)
-	return int(math.Abs(seedForA - seedForB))
+	return int(math.Abs(float64(a.seed) - float64(b.seed)))
 }
 
 func (a *Card) compareOnPoints(b *Card) int {
-	pointsForA := int(a.points())
-	pointsForB := int(b.points())
-	return pointsForA - pointsForB
+	return compareOn(a.points(), b.points())
 }
 
 func (a *Card) compareOnNumber(b *Card) int {
-	numberForA := int(a.number)
-	numberForB := int(b.number)
-	return numberForA - numberForB
+	return compareOn(a.number, b.number)
 }
