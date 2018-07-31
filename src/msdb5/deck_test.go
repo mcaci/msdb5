@@ -2,11 +2,14 @@ package msdb5
 
 import "testing"
 
+func createDeck() Deck {
+	var d = &ConcreteDeck{}
+	d.Create()
+	return d
+}
+
 func TestCreate(t *testing.T) {
-	// 780
-	var d Deck
-	d = &ConcreteDeck{}
-	d.(*ConcreteDeck).Create()
+	var d = createDeck()
 	sum := 0
 	for _, v := range d.(*ConcreteDeck).cards {
 		sum += v
@@ -17,11 +20,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestRemoveTop(t *testing.T) {
-	// 780
-	var d Deck
-	d = &ConcreteDeck{}
-	d.(*ConcreteDeck).Create()
-
+	var d = createDeck()
 	a := d.RemoveTop()
 	b := d.RemoveTop()
 
