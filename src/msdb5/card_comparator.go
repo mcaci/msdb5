@@ -4,6 +4,7 @@ import "math"
 
 var compareOn = func(a, b uint8) int { return int(a) - int(b) }
 
+// Compare function
 func (a Card) Compare(b Card) int {
 	functionsToApply := []func(*Card) int{a.compareOnSeed, a.compareOnPoints, a.compareOnNumber}
 	compareScore := 0

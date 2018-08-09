@@ -2,28 +2,35 @@ package msdb5
 
 import "strconv"
 
+// Seed type
 type Seed uint8
 
 const (
+	// Coin elements
 	Coin Seed = iota
+	// Cup elements
 	Cup
+	// Sword elements
 	Sword
+	// Cudgel elements
 	Cudgel
 )
 
+// Card type
 type Card struct {
 	number uint8
 	seed   Seed
 }
 
-func CardById(id int) *Card {
+// CardByID func
+func CardByID(id int) *Card {
 	a := uint8(id % 10)
 	b := Seed(id / 10)
 	return &Card{number: a, seed: b}
 }
 
-func (c *Card) points() uint8 {
-	switch c.number {
+func (card *Card) points() uint8 {
+	switch card.number {
 	case 1:
 		return 11
 	case 3:
