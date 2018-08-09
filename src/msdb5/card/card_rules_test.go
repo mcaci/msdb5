@@ -1,4 +1,4 @@
-package msdb5
+package card
 
 import "testing"
 

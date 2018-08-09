@@ -1,8 +1,10 @@
 package msdb5
 
+import "msdb5/card"
+
 type MockDeck struct {
 }
 
-func (d *MockDeck) RemoveTop() *Card {
-	return &Card{number: 1, seed: Coin}
+func (d *MockDeck) RemoveTop() CardPtr {
+	return card.ByID(0)
 }

@@ -1,20 +1,6 @@
-package msdb5
+package card
 
 import "strconv"
-
-// Seed type
-type Seed uint8
-
-const (
-	// Coin elements
-	Coin Seed = iota
-	// Cup elements
-	Cup
-	// Sword elements
-	Sword
-	// Cudgel elements
-	Cudgel
-)
 
 // Card type
 type Card struct {
@@ -22,8 +8,8 @@ type Card struct {
 	seed   Seed
 }
 
-// CardByID func
-func CardByID(id int) *Card {
+// ByID func
+func ByID(id int) *Card {
 	a := uint8(id % 10)
 	b := Seed(id / 10)
 	return &Card{number: a, seed: b}
