@@ -1,19 +1,13 @@
-package msdb5
+package deck
 
 import (
 	"math/rand"
 	"msdb5/card"
 )
 
-// Card : Importing struct from card package
-type Card card.Card
-
-// CardPtr : Importing struct pointer from card package
-type CardPtr *(card.Card)
-
 // Deck interface
 type Deck interface {
-	RemoveTop() CardPtr
+	RemoveTop() *(card.Card)
 }
 
 // ConcreteDeck type
@@ -29,7 +23,7 @@ func (deck *ConcreteDeck) Create() {
 }
 
 // RemoveTop func
-func (deck *ConcreteDeck) RemoveTop() CardPtr {
+func (deck *ConcreteDeck) RemoveTop() *(card.Card) {
 	index := deck.index
 	deck.index++
 	return card.ByID(deck.cards[index])
