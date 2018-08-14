@@ -1,0 +1,5 @@
+package round
+
+func A() {
+	
+}
