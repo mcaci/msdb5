@@ -9,7 +9,8 @@ type MockDeck struct {
 }
 
 func (d *MockDeck) RemoveTop() *(card.Card) {
-	return card.ByID(0)
+	mockCard, _ := card.ByID(0)
+	return mockCard
 }
 func TestPlayerDrawsOneCard(t *testing.T) {
 	var d MockDeck
