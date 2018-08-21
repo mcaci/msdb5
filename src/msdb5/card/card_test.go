@@ -2,19 +2,6 @@ package card
 
 import "testing"
 
-func TestId0IsInvalid(t *testing.T) {
-	_, err := ByID(0)
-	if err == nil {
-		t.Fatal("0 is not valid id")
-	}
-}
-func TestId41IsInvalid(t *testing.T) {
-	_, err := ByID(41)
-	if err == nil {
-		t.Fatal("41 is not valid id")
-	}
-}
-
 func TestId1IsAce(t *testing.T) {
 	card, _ := ByID(1)
 	if card.number != 1 {
