@@ -35,6 +35,11 @@ func TestComparisonWithDifferentSeedThatFirstCardAlwaysWins(t *testing.T) {
 	verifyCardComparison(t, &a, &b, firstCardWins)
 }
 
+func TestComparisonWithNilCardThatNotNilCardWins(t *testing.T) {
+	a := Card{number: 8, seed: Coin}
+	verifyCardComparison(t, &a, nil, firstCardWins)
+}
+
 func verifyCardComparison(t *testing.T, a, b *Card, isComparisonBetweenCardsCorrect func(int) bool) {
 	c := a.Compare(*b)
 	if !isComparisonBetweenCardsCorrect(c) {

@@ -3,14 +3,13 @@ package round
 import "msdb5/card"
 
 func declareWinner(first, second, third, fourth, fifth *card.Card, briscola card.Seed) uint8 {
-	winnerCode := -1
-	firstCode := 0
-	secondCode := 1
+	cards := []*card.Card{first, second, third, fourth, fifth}
+	return maxCardIndex(cards)
+}
 
-	if first.Compare(*second) > 0 {
-		winnerCode = firstCode
-	} else {
-		winnerCode = secondCode
+func maxCardIndex(cards []*card.Card) uint8 {
+	for i, card := range cards {
+		
 	}
-	return uint8(winnerCode)
+	return 0
 }
