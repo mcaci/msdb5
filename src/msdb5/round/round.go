@@ -8,8 +8,13 @@ func declareWinner(first, second, third, fourth, fifth *card.Card, briscola card
 }
 
 func maxCardIndex(cards []*card.Card) uint8 {
+	maxCard := card.Card{}
+	max := 0
 	for i, card := range cards {
-		
+		if card.Compare(maxCard) > 0 {
+			maxCard = *card
+			max = i
+		}
 	}
-	return 0
+	return uint8(max)
 }

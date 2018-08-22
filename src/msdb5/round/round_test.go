@@ -49,5 +49,5 @@ func TestScenario1WithEightOfCoinWinning(t *testing.T) {
 	fourth, err4 := card.ByID(7) // 7 Coin
 	fifth, err5 := card.ByID(8)  // 8 Coin
 	briscola := card.Coin
-	verifyRoundScenario(t, 5, first, second, third, fourth, fifth, briscola, err1, err2, err3, err4, err5)
+	verifyRoundScenario(t, 4, first, second, third, fourth, fifth, briscola, err1, err2, err3, err4, err5)
 }
