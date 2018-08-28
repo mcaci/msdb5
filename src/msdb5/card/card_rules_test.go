@@ -29,9 +29,9 @@ func TestComparisonWithSameSeedThat8isHigherThan7(t *testing.T) {
 	verifyCardComparison(t, &a, &b, firstCardWins)
 }
 
-func TestComparisonWithDifferentSeedThatFirstCardAlwaysWins(t *testing.T) {
-	a := Card{number: 8, seed: Coin}
-	b := Card{number: 9, seed: Cup}
+func TestComparisonWithSecondCardOfDifferentSeedThatFirstCardAlwaysWins(t *testing.T) {
+	a := Card{number: 2, seed: Sword}
+	b := Card{number: 3, seed: Cup}
 	verifyCardComparison(t, &a, &b, firstCardWins)
 }
 
