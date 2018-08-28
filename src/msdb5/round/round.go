@@ -8,10 +8,10 @@ func IndexOfWinningCard(cardsOnTheTable [5]*card.Card, briscola card.Seed) uint8
 }
 
 func maxCardIndex(cards [5]*card.Card) uint8 {
-	maxCard := card.Card{}
+	maxCard := *cards[0]
 	max := 0
 	for i, card := range cards {
-		if card.Compare(maxCard) > 0 {
+		if maxCard.Compare(*card) < 0 {
 			maxCard = *card
 			max = i
 		}
