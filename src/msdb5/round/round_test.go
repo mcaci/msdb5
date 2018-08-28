@@ -3,39 +3,29 @@ package round
 import "testing"
 import "msdb5/card"
 
-func verifyRoundScenario(t *testing.T, expectedWinner uint8, first, second, third, fourth, fifth *card.Card, briscola card.Seed) {
-	i := declareWinner(first, second, third, fourth, fifth, briscola)
-	if i != expectedWinner {
-		t.Fatalf("Unexpected winner: winner was %d", i)
-	}
-}
-
 func TestScenario1WithAceOfCoinWinning(t *testing.T) {
-	first, _ := card.ByID(1)  // 1 Coin
-	second, _ := card.ByID(2) // 2 Coin
-	third, _ := card.ByID(3)  // 3 Coin
-	fourth, _ := card.ByID(4) // 4 Coin
-	fifth, _ := card.ByID(5)  // 5 Coin
-	briscola := card.Coin
-	verifyRoundScenario(t, 0, first, second, third, fourth, fifth, briscola)
+	verifyRoundScenario(t, 0, cardsOnTheTable(1, 2, 3, 4, 5), card.Coin)
 }
 
 func TestScenario1WithThreeOfCoinWinning(t *testing.T) {
-	first, _ := card.ByID(2)  // 2 Coin
-	second, _ := card.ByID(3) // 3 Coin
-	third, _ := card.ByID(4)  // 4 Coin
-	fourth, _ := card.ByID(5) // 5 Coin
-	fifth, _ := card.ByID(6)  // 6 Coin
-	briscola := card.Coin
-	verifyRoundScenario(t, 1, first, second, third, fourth, fifth, briscola)
+	verifyRoundScenario(t, 1, cardsOnTheTable(2, 3, 4, 5, 6), card.Coin)
 }
 
 func TestScenario1WithEightOfCoinWinning(t *testing.T) {
-	first, _ := card.ByID(4)  // 4 Coin
-	second, _ := card.ByID(5) // 5 Coin
-	third, _ := card.ByID(6)  // 6 Coin
-	fourth, _ := card.ByID(7) // 7 Coin
-	fifth, _ := card.ByID(8)  // 8 Coin
-	briscola := card.Coin
-	verifyRoundScenario(t, 4, first, second, third, fourth, fifth, briscola)
+	verifyRoundScenario(t, 4, cardsOnTheTable(4, 5, 6, 7, 8), card.Coin)
+}
+
+func cardsOnTheTable(cardIds ...uint8) [5]*card.Card {
+	var cards [5]*card.Card
+	for i := range cards {
+		cards[i], _ = card.ByID(cardIds[i])
+	}
+	return cards
+}
+
+func verifyRoundScenario(t *testing.T, expectedWinner uint8, cardsOnTheTable [5]*card.Card, briscola card.Seed) {
+	i := declareWinner(cardsOnTheTable, briscola)
+	if i != expectedWinner {
+		t.Fatalf("Unexpected winner: winner was %d", i)
+	}
 }

@@ -2,12 +2,11 @@ package round
 
 import "msdb5/card"
 
-func declareWinner(first, second, third, fourth, fifth *card.Card, briscola card.Seed) uint8 {
-	cards := []*card.Card{first, second, third, fourth, fifth}
-	return maxCardIndex(cards)
+func declareWinner(cardsOnTheTable [5]*card.Card, briscola card.Seed) uint8 {
+	return maxCardIndex(cardsOnTheTable)
 }
 
-func maxCardIndex(cards []*card.Card) uint8 {
+func maxCardIndex(cards [5]*card.Card) uint8 {
 	maxCard := card.Card{}
 	max := 0
 	for i, card := range cards {
