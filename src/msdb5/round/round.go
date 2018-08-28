@@ -2,7 +2,8 @@ package round
 
 import "msdb5/card"
 
-func declareWinner(cardsOnTheTable [5]*card.Card, briscola card.Seed) uint8 {
+// IndexOfWinningCard func
+func IndexOfWinningCard(cardsOnTheTable [5]*card.Card, briscola card.Seed) uint8 {
 	return maxCardIndex(cardsOnTheTable)
 }
 
