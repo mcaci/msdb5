@@ -18,7 +18,7 @@ func TestId40IsCudgel(t *testing.T) {
 	verifyCorrectSeed(t, 40, Cudgel)
 }
 
-func verifyCorrectSeed(t *testing.T, id int, seed Seed) {
+func verifyCorrectSeed(t *testing.T, id uint8, seed Seed) {
 	card, _ := ByID(id)
 	if card.seed != seed {
 		t.Fatalf("Card %v's seed is not %s", card, seed)

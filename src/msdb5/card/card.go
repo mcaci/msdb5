@@ -9,7 +9,7 @@ type Card struct {
 }
 
 // ByID func
-func ByID(id int) (*Card, error) {
+func ByID(id uint8) (*Card, error) {
 	if id < 1 {
 		return nil, errors.New("Index cannot be less than 1")
 	} else if id > 40 {

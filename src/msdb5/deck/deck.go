@@ -26,7 +26,7 @@ func (deck *ConcreteDeck) Create() {
 func (deck *ConcreteDeck) RemoveTop() *(card.Card) {
 	index := deck.index
 	deck.index++
-	card, err := card.ByID(deck.cards[index] + 1)
+	card, err := card.ByID(uint8(deck.cards[index] + 1))
 	if err != nil {
 		panic("should not be here")
 	}
