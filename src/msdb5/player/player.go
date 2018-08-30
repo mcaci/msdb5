@@ -42,3 +42,12 @@ func (player *ConcretePlayer) Has(c *card.Card) bool {
 func (player *ConcretePlayer) Hasnt(c *card.Card) bool {
 	return !player.Has(c)
 }
+
+func (player ConcretePlayer) String() string {
+	str := "ConcretePlayer["
+	for e := player.cards.Front(); e != nil; e = e.Next() {
+		str += e.Value.(*card.Card).String() + " "
+	}
+	str += "]"
+	return str
+}
