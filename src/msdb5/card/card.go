@@ -22,6 +22,11 @@ func ByID(id uint8) (*Card, error) {
 	}
 }
 
+// IsBriscola func
+func (card *Card) IsBriscola(briscola Seed) bool {
+	return card.seed == briscola
+}
+
 func (card *Card) points() uint8 {
 	switch card.number {
 	case 1:
