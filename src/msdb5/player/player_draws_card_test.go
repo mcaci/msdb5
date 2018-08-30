@@ -1,4 +1,4 @@
-package msdb5
+package player
 
 import (
 	"msdb5/card"
