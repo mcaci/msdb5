@@ -2,25 +2,20 @@ package deck
 
 import "testing"
 
-func createDeck() Deck {
-	var d = &ConcreteDeck{}
-	d.Create()
-	return d
-}
-
 func TestCreate(t *testing.T) {
-	var d = createDeck()
-	sum := 0
-	for _, v := range d.(*ConcreteDeck).cards {
-		sum += v
+	d := New()
+	count := 0
+	for !d.IsEmpty() {
+		count++
+		d.RemoveTop()
 	}
-	if sum != 780 {
-		t.Fatalf("Cards id sum should be the sum of all numbers up to 39")
+	if count != 40 {
+		t.Fatalf("There should be 40 card in the deck")
 	}
 }
 
-func TestRemoveTop(t *testing.T) {
-	var d = createDeck()
+func TestRemovingTwoCardsShouldGiveDifferentCards(t *testing.T) {
+	d := New()
 	a := d.RemoveTop()
 	b := d.RemoveTop()
 

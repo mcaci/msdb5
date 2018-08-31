@@ -15,8 +15,7 @@ func TestPlayerDrawsOneCard(t *testing.T) {
 }
 
 func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
-	var deck deck.ConcreteDeck
-	deck.Create()
+	deck := deck.New()
 
 	var players [5]Player
 	for i := range players {
@@ -24,7 +23,7 @@ func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
 	}
 
 	for i := 0; i < 40; i++ {
-		players[i%5].Draw(&deck)
+		players[i%5].Draw(deck)
 	}
 
 	if !deck.IsEmpty() {
