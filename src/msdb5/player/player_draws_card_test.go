@@ -1,30 +1,15 @@
 package player
 
 import (
-	"msdb5/card"
 	"msdb5/deck"
 	"testing"
 )
 
-type MockDeck struct {
-}
-
-func (d *MockDeck) RemoveTop() *card.Card {
-	mockCard, _ := card.ByID(0)
-	return mockCard
-}
-
-func (d *MockDeck) IsEmpty() bool {
-	return false
-}
-
 func TestPlayerDrawsOneCard(t *testing.T) {
 	var d MockDeck
-	var p Player
-	p = &ConcretePlayer{}
-	p.Init()
-	playedCard := p.Draw(&d)
-	if p.Hasnt(playedCard) {
+	player := New()
+	playedCard := player.Draw(&d)
+	if player.Hasnt(playedCard) {
 		t.Fatalf("Expecting player to have drawn %v", playedCard)
 	}
 }
@@ -35,8 +20,7 @@ func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
 
 	var players [5]Player
 	for i := range players {
-		players[i] = &ConcretePlayer{}
-		players[i].Init()
+		players[i] = New()
 	}
 
 	for i := 0; i < 40; i++ {
