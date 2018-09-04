@@ -15,18 +15,17 @@ func (player *concretePlayer) Draw(d deck.Deck) *card.Card {
 	return c
 }
 
-// Has func
-func (player *concretePlayer) Has(c *card.Card) bool {
+// Play func
+func (player *concretePlayer) Play() *card.Card {
+	return player.cards.Front().Value.(*card.Card)
+}
+
+func (player *concretePlayer) has(c *card.Card) bool {
 	cardFound := false
 	for e := player.cards.Front(); e != nil; e = e.Next() {
 		cardFound = (e.Value == c)
 	}
 	return cardFound
-}
-
-// Hasnt func
-func (player *concretePlayer) Hasnt(c *card.Card) bool {
-	return !player.Has(c)
 }
 
 func (player concretePlayer) String() string {

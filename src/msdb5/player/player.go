@@ -9,8 +9,9 @@ import (
 // Player interface
 type Player interface {
 	Draw(d deck.Deck) *card.Card
-	Has(c *card.Card) bool
-	Hasnt(c *card.Card) bool
+	Play() *card.Card
+	
+	has(c *card.Card) bool
 }
 
 // New func

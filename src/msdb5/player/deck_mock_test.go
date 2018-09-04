@@ -6,7 +6,7 @@ type MockDeck struct {
 }
 
 func (d *MockDeck) RemoveTop() *card.Card {
-	mockCard, _ := card.ByID(0)
+	mockCard, _ := card.ByID(1)
 	return mockCard
 }
 
