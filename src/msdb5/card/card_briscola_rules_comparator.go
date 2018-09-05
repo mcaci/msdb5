@@ -2,26 +2,34 @@ package card
 
 import "math"
 
-var compareOn = func(a, b uint8) int { return int(a) - int(b) }
-
 // Compare function
-func (a Card) Compare(b Card) int {
-	functionsToApply := []func(*Card) int{a.compareOnSeed, a.compareOnPoints, a.compareOnNumber}
-	compareScore := 0
-	for i := 0; i < len(functionsToApply) && compareScore == 0; i++ {
-		compareScore = functionsToApply[i](&b)
+func (card1 Card) Compare(card2 Card) int {
+	compareFunctions := []func(*Card, *Card) int{compareOnSeed, compareOnPoints, compareOnNumber}
+	info := cardsWithComparisonScoreInfo{card1: &card1, card2: &card2}
+	for _, compareFunction := range compareFunctions {
+		info.updateScore(compareFunction)
 	}
-	return compareScore
+	return info.score
 }
 
-func (a *Card) compareOnSeed(b *Card) int {
-	return int(math.Abs(float64(a.seed) - float64(b.seed)))
+type cardsWithComparisonScoreInfo struct {
+	score        int
+	card1, card2 *Card
 }
 
-func (a *Card) compareOnPoints(b *Card) int {
-	return compareOn(a.points(), b.points())
+func (c *cardsWithComparisonScoreInfo) updateScore(f func(*Card, *Card) int) int {
+	if c.score == 0 {
+		c.score = f(c.card1, c.card2)
+	}
+	return c.score
 }
 
-func (a *Card) compareOnNumber(b *Card) int {
-	return compareOn(a.number, b.number)
+func compareOnSeed(card1, card2 *Card) int {
+	return int(math.Abs(float64(card1.seed) - float64(card2.seed)))
 }
+
+func compareOnPoints(card1, card2 *Card) int { return compareOn(card1.points(), card2.points()) }
+
+func compareOnNumber(card1, card2 *Card) int { return compareOn(card1.number, card2.number) }
+
+func compareOn(card1, card2 uint8) int { return int(card1) - int(card2) }
