@@ -17,9 +17,9 @@ type cardsWithComparisonScoreInfo struct {
 	card1, card2 *Card
 }
 
-func (c *cardsWithComparisonScoreInfo) updateScore(f func(*Card, *Card) int) int {
+func (c *cardsWithComparisonScoreInfo) updateScore(compare func(*Card, *Card) int) int {
 	if c.score == 0 {
-		c.score = f(c.card1, c.card2)
+		c.score = compare(c.card1, c.card2)
 	}
 	return c.score
 }
