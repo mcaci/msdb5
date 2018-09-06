@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func points(c []*card.Card) int { return 1 }
+func points(c []*card.Card) int { return 0 }
 
 func TestEmptyPileSumsZero(t *testing.T) {
 	score := points([]*card.Card{})
