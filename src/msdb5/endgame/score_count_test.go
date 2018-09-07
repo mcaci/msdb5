@@ -14,3 +14,11 @@ func TestEmptyPileSums11(t *testing.T) {
 	}
 }
 
+func TestPileWitOnehAceOnlySums11(t *testing.T) {
+	ace, _ := card.ByID(1)
+	cards := []*card.Card{ace}
+	score := points(cards...)
+	if score != 11 {
+		t.Fatalf("Score expected is not 11 but %d", score)
+	}
+}
