@@ -10,7 +10,7 @@ const Size = 40
 
 // Deck interface
 type Deck interface {
-	RemoveTop() *(card.Card)
+	RemoveTop() *card.Card
 	IsEmpty() bool
 }
 
