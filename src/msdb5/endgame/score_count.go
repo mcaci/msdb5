@@ -3,9 +3,10 @@ package endgame
 import "msdb5/card"
 
 // CountPoints func
-func CountPoints(c ...*card.Card) uint8 {
-	if len(c) > 0 {
-		return c[0].Points()
+func CountPoints(cards ...*card.Card) uint8 {
+	var sum uint8
+	for _, card := range cards {
+		sum += card.Points()
 	}
-	return 0
+	return sum
 }

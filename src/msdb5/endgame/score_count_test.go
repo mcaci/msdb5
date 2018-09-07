@@ -2,6 +2,7 @@ package endgame
 
 import (
 	"msdb5/card"
+	"msdb5/deck"
 	"testing"
 )
 
@@ -12,6 +13,15 @@ func testScoreCount(t *testing.T, expectedScore uint8, cards ...*card.Card) {
 	}
 }
 
+func deckCards() []*card.Card {
+	var cards []*card.Card
+	deck := deck.New()
+	for !deck.IsEmpty() {
+		cards = append(cards, deck.RemoveTop())
+	}
+	return cards
+}
+
 func TestEmptyPileSums0(t *testing.T) {
 	testScoreCount(t, 0)
 }
@@ -19,6 +29,10 @@ func TestEmptyPileSums0(t *testing.T) {
 func TestPileWithOnehAceOnlySums11(t *testing.T) {
 	ace, _ := card.ByID(1)
 	testScoreCount(t, 11, ace)
+}
+
+func TestPileWithAllCardsSums120(t *testing.T) {
+	testScoreCount(t, 120, deckCards()...)
 }
 
 func TestPileWithOneTwoOnehAceOnlySums11(t *testing.T) {
