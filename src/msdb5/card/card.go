@@ -27,7 +27,7 @@ func (card *Card) IsBriscola(briscola Seed) bool {
 	return card.seed == briscola
 }
 
-func (card *Card) points() uint8 {
+func (card *Card) Points() uint8 {
 	switch card.number {
 	case 1:
 		return 11

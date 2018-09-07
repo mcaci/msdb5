@@ -28,7 +28,7 @@ func compareOnSeed(card1, card2 *Card) int {
 	return int(math.Abs(float64(card1.seed) - float64(card2.seed)))
 }
 
-func compareOnPoints(card1, card2 *Card) int { return compareOn(card1.points(), card2.points()) }
+func compareOnPoints(card1, card2 *Card) int { return compareOn(card1.Points(), card2.Points()) }
 
 func compareOnNumber(card1, card2 *Card) int { return compareOn(card1.number, card2.number) }
 
