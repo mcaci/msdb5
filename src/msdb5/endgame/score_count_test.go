@@ -5,18 +5,18 @@ import (
 	"testing"
 )
 
-func TestEmptyPileSums0(t *testing.T) {
-	score := CountPoints()
-	if score != 0 {
-		t.Fatalf("Score expected is not 0 but %d", score)
+func testScoreCount(t *testing.T, expectedScore uint8, cards ...*card.Card) {
+	score := CountPoints(cards...)
+	if expectedScore != score {
+		t.Fatalf("Score expected is not %d but %d", expectedScore, score)
 	}
+}
+
+func TestEmptyPileSums0(t *testing.T) {
+	testScoreCount(t, 0)
 }
 
 func TestPileWitOnehAceOnlySums11(t *testing.T) {
 	ace, _ := card.ByID(1)
-	cards := []*card.Card{ace}
-	score := CountPoints(cards...)
-	if score != 11 {
-		t.Fatalf("Score expected is not 11 but %d", score)
-	}
+	testScoreCount(t, 11, ace)
 }
