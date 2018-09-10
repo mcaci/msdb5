@@ -1,6 +1,6 @@
 package player
 
-import "msdb5/card"
+import "github.com/nikiforosFreespirit/msdb5/card"
 
 type MockDeck struct {
 }

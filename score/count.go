@@ -1,6 +1,6 @@
 package score
 
-import "msdb5/card"
+import "github.com/nikiforosFreespirit/msdb5/card"
 
 // Compute func
 func Compute(cards ...*card.Card) uint8 {

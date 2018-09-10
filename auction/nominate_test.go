@@ -2,7 +2,7 @@ package score
 
 import (
 	"testing"
-	"msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
 func Nominate(id uint8) (*card.Card, error) {

@@ -1,8 +1,8 @@
 package player
 
 import "container/list"
-import "msdb5/deck"
-import "msdb5/card"
+import "github.com/nikiforosFreespirit/msdb5/deck"
+import "github.com/nikiforosFreespirit/msdb5/card"
 
 type concretePlayer struct {
 	cards *list.List

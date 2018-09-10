@@ -1,7 +1,7 @@
 package round
 
 import "testing"
-import "msdb5/card"
+import "github.com/nikiforosFreespirit/msdb5/card"
 
 func TestScenarioWithAceOfCoinWinning(t *testing.T) {
 	// testing 1 to 5 of Coin

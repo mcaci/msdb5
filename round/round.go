@@ -1,6 +1,6 @@
 package round
 
-import "msdb5/card"
+import "github.com/nikiforosFreespirit/msdb5/card"
 
 // IndexOfWinningCard func
 func IndexOfWinningCard(cardsOnTheTable [5]*card.Card, briscola card.Seed) uint8 {

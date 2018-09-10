@@ -1,7 +1,7 @@
 package player
 
 import (
-	"msdb5/deck"
+	"github.com/nikiforosFreespirit/msdb5/deck"
 	"testing"
 )
 

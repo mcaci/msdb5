@@ -2,8 +2,8 @@ package player
 
 import (
 	"container/list"
-	"msdb5/card"
-	"msdb5/deck"
+	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
 // Player interface

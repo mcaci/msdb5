@@ -1,6 +1,6 @@
 package deck
 
-import "msdb5/card"
+import "github.com/nikiforosFreespirit/msdb5/card"
 
 type concreteDeck struct {
 	cards []int

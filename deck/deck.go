@@ -1,8 +1,8 @@
 package deck
 
 import (
+	"github.com/nikiforosFreespirit/msdb5/card"
 	"math/rand"
-	"msdb5/card"
 	"time"
 )
 
