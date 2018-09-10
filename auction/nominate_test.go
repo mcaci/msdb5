@@ -5,10 +5,6 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
-func Nominate(id uint8) (*card.Card, error) {
-	return card.ByID(id)
-}
-
 func TestNominateId0WillComplain(t *testing.T) {
 	_, err := Nominate(0)
 	if err == nil {
