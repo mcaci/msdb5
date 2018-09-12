@@ -9,8 +9,8 @@ import (
 type Board struct {
 }
 
-func (b *Board) Deck() *deck.Deck {
-	return nil
+func (b *Board) Deck() deck.Deck {
+	return deck.New()
 }
 
 func TestBoardHasADeck(t *testing.T) {
