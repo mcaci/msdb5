@@ -20,3 +20,11 @@ func TestBoardsDeckReferenceIsTheSame(t *testing.T) {
 		t.Fatal("The deck is not the same each time is retrieved")
 	}
 }
+
+func TestBoardHasAPlayer(t *testing.T) {
+	b := New()
+	if b.Player() == nil {
+		t.Fatal("The board has no Player")
+	}
+
+}

@@ -2,6 +2,7 @@ package board
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/deck"
+	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 // Board struct
@@ -19,4 +20,8 @@ func New() *Board {
 // Deck func
 func (b *Board) Deck() deck.Deck {
 	return b.deck
+}
+
+func (b *Board) Player() player.Player {
+	return nil
 }
