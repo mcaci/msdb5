@@ -7,14 +7,17 @@ import (
 )
 
 type Board struct {
+	deck deck.Deck
 }
 
 func New() *Board {
-	return &Board{}
+	var b Board
+	b.deck = deck.New()
+	return &b
 }
 
 func (b *Board) Deck() deck.Deck {
-	return deck.New()
+	return b.deck
 }
 
 func TestBoardHasADeck(t *testing.T) {
