@@ -2,14 +2,14 @@ package card
 
 import "math"
 
-// Compare function
-func (card1 Card) Compare(card2 Card) int {
+// DoesOtherCardWin function
+func DoesOtherCardWin(base, other *Card) bool {
 	compareFunctions := []func(*Card, *Card) int{compareOnSeed, compareOnPoints, compareOnNumber}
-	info := cardsWithComparisonScoreInfo{card1: &card1, card2: &card2}
+	info := cardsWithComparisonScoreInfo{card1: base, card2: other}
 	for _, compareFunction := range compareFunctions {
 		info.updateScore(compareFunction)
 	}
-	return info.score
+	return info.score < 0
 }
 
 type cardsWithComparisonScoreInfo struct {

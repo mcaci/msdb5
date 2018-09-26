@@ -4,13 +4,13 @@ import "github.com/nikiforosFreespirit/msdb5/card"
 
 // IndexOfWinningCard func
 func IndexOfWinningCard(cardsOnTheTable [5]*card.Card, briscola card.Seed) uint8 {
-	winningCard := cardsOnTheTable[0]
+	base := cardsOnTheTable[0]
 	max := 0
-	for i, card := range cardsOnTheTable {
-		onlyOtherCardIsBriscola := !winningCard.IsBriscola(briscola) && card.IsBriscola(briscola)
-		otherCardIsBiggerAndOfSameSeed := winningCard.Compare(*card) < 0
+	for i, other := range cardsOnTheTable {
+		onlyOtherCardIsBriscola := !base.IsBriscola(briscola) && other.IsBriscola(briscola)
+		otherCardIsBiggerAndOfSameSeed := card.DoesOtherCardWin(base, other)
 		if onlyOtherCardIsBriscola || otherCardIsBiggerAndOfSameSeed {
-			winningCard = card
+			base = other
 			max = i
 		}
 	}
