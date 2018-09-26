@@ -27,6 +27,10 @@ func TestScenarioWithTwoBriscolaCards(t *testing.T) {
 	// 4 of Cudgel, 10 of Cudgel, 3 of Coin, 2 of Sword, 5 of Cup
 	verifyRoundScenario(t, cardsOnTheTable(34, 40, 3, 22, 15), card.Cudgel, 1)
 }
+func TestScenarioWithTwoBriscolaCardsAndHighCardAtTheEnd(t *testing.T) {
+	// 4 of Cudgel, 10 of Cudgel, 3 of Coin, 2 of Sword, 1 of Cup
+	verifyRoundScenario(t, cardsOnTheTable(34, 40, 3, 22, 11), card.Cudgel, 1)
+}
 
 func cardsOnTheTable(cardIds ...uint8) [5]*card.Card {
 	var cards [5]*card.Card
