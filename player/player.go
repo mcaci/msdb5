@@ -2,6 +2,8 @@ package player
 
 import (
 	"container/list"
+	"fmt"
+
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 )
@@ -10,7 +12,8 @@ import (
 type Player interface {
 	Draw(d deck.Deck) *card.Card
 	Play() *card.Card
-	
+	fmt.Stringer
+
 	has(c *card.Card) bool
 }
 
