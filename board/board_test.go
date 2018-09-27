@@ -21,10 +21,9 @@ func TestBoardsDeckReferenceIsTheSame(t *testing.T) {
 	}
 }
 
-func TestBoardHasAPlayer(t *testing.T) {
+func TestBoardHas5Player(t *testing.T) {
 	b := New()
-	if b.Player() == nil {
+	if b.Players() == nil {
 		t.Fatal("The board has no Player")
 	}
-
 }
