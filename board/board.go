@@ -21,6 +21,9 @@ func New() *Board {
 	for i := range b.players {
 		b.players[i] = player.New()
 	}
+	for i := 0; !b.deck.IsEmpty(); i++ {
+		b.players[i%5].Draw(b.deck)
+	}
 
 	return &b
 }
