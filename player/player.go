@@ -12,6 +12,7 @@ import (
 type Player interface {
 	Draw(d deck.Deck) *card.Card
 	Play() *card.Card
+	Name() string
 	fmt.Stringer
 
 	has(c *card.Card) bool

@@ -20,6 +20,10 @@ func (player *concretePlayer) Play() *card.Card {
 	return player.cards.Front().Value.(*card.Card)
 }
 
+func (player *concretePlayer) Name() string {
+	return "Michele"
+}
+
 func (player *concretePlayer) has(c *card.Card) bool {
 	cardFound := false
 	for e := player.cards.Front(); e != nil; e = e.Next() {
