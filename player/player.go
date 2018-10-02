@@ -10,7 +10,7 @@ import (
 
 // Player interface
 type Player interface {
-	Draw(d deck.Deck) *card.Card
+	Draw(deck.Deck) *card.Card
 	Play() *card.Card
 	Name() string
 	fmt.Stringer
