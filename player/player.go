@@ -15,6 +15,8 @@ type Player interface {
 	Name() string
 	fmt.Stringer
 
+	Iam(string)
+
 	has(c *card.Card) bool
 }
 

@@ -5,6 +5,7 @@ import "github.com/nikiforosFreespirit/msdb5/deck"
 import "github.com/nikiforosFreespirit/msdb5/card"
 
 type concretePlayer struct {
+	name  string
 	cards *list.List
 }
 
@@ -21,7 +22,11 @@ func (player *concretePlayer) Play() *card.Card {
 }
 
 func (player *concretePlayer) Name() string {
-	return "Michele"
+	return player.name
+}
+
+func (player *concretePlayer) Iam(name string) {
+	player.name = name
 }
 
 func (player *concretePlayer) has(c *card.Card) bool {
@@ -34,6 +39,7 @@ func (player *concretePlayer) has(c *card.Card) bool {
 
 func (player concretePlayer) String() string {
 	str := "concretePlayer["
+	str += "Name:" + player.name + ";"
 	for e := player.cards.Front(); e != nil; e = e.Next() {
 		str += e.Value.(*card.Card).String() + " "
 	}
