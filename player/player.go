@@ -16,6 +16,7 @@ type Player interface {
 	fmt.Stringer
 
 	Iam(string)
+	MyHostIs(string)
 
 	has(c *card.Card) bool
 }
