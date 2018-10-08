@@ -13,6 +13,7 @@ type Player interface {
 	Draw(deck.Deck) *card.Card
 	Play() *card.Card
 	Name() string
+	Hand() *list.List
 	fmt.Stringer
 
 	Iam(string)
@@ -24,6 +25,6 @@ type Player interface {
 // New func
 func New() Player {
 	player := new(concretePlayer)
-	player.cards = new(list.List)
+	player.hand = new(list.List)
 	return player
 }
