@@ -17,6 +17,6 @@ func IndexOfWinningCard(cardsOnTheTable [5]*card.Card, briscola card.Seed) uint8
 
 func doesOtherCardWin(base, other *card.Card, briscola card.Seed) bool {
 	onlyOtherCardIsBriscola := !base.IsBriscola(briscola) && other.IsBriscola(briscola)
-	otherCardIsBiggerAndOfSameSeed := card.DoesOtherCardWin(base, other)
+	otherCardIsBiggerAndOfSameSeed := DoesOtherCardWin(base, other)
 	return onlyOtherCardIsBriscola || otherCardIsBiggerAndOfSameSeed
 }
