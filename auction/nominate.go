@@ -5,6 +5,6 @@ import (
 )
 
 // Nominate func
-func Nominate(id uint8) (*card.Card, error) {
-	return card.ByID(id)
+func Nominate(number, seed string) (*card.Card, error) {
+	return card.ByName(number, seed)
 }

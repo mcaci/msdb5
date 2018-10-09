@@ -20,6 +20,8 @@ func ByName(number, seed string) (*Card, error) {
 
 	if errN != nil {
 		err = errN
+	} else if n > 10 || n < 1 {
+		err = errors.New("number " + number + " doesn't exist")
 	} else {
 		c.number = uint8(n)
 		if seed == Coin.String() {
@@ -28,11 +30,12 @@ func ByName(number, seed string) (*Card, error) {
 			c.seed = Cup
 		} else if seed == Sword.String() {
 			c.seed = Sword
-		} else {
+		} else if seed == Cudgel.String() {
 			c.seed = Cudgel
+		} else {
+			err = errors.New("seed " + seed + " doesn't exist")
 		}
 	}
-
 	return &c, err
 }
 
