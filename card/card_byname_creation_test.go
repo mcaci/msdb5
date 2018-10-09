@@ -14,14 +14,14 @@ func NoErrorCheck(t *testing.T, number, seed string) {
 
 func NumberOfCardCheck(t *testing.T, number, seed string) {
 	card, _ := ByName(number, seed)
-	if strconv.Itoa(int(card.number)) != number {
+	if strconv.Itoa(int(card.Number())) != number {
 		t.Fatalf("Card %v's number is not created well from %s and %s", card, number, seed)
 	}
 }
 
 func SeedOfCardCheck(t *testing.T, number, seed string) {
 	card, _ := ByName(number, seed)
-	if card.seed.String() != seed {
+	if card.Seed().String() != seed {
 		t.Fatalf("Card %v's number is not created well from %s and %s", card, number, seed)
 	}
 }
