@@ -1,11 +1,39 @@
 package card
 
-import "errors"
+import (
+	"errors"
+	"strconv"
+)
 
 // Card type
 type Card struct {
 	number uint8
 	seed   Seed
+}
+
+// ByName func
+func ByName(number, seed string) (*Card, error) {
+	var c Card
+	var err error
+
+	n, errN := strconv.Atoi(number)
+
+	if errN != nil {
+		err = errN
+	} else {
+		c.number = uint8(n)
+		if seed == Coin.String() {
+			c.seed = Coin
+		} else if seed == Cup.String() {
+			c.seed = Cup
+		} else if seed == Sword.String() {
+			c.seed = Sword
+		} else {
+			c.seed = Cudgel
+		}
+	}
+
+	return &c, err
 }
 
 // ByID func
@@ -22,9 +50,14 @@ func ByID(id uint8) (*Card, error) {
 	}
 }
 
-// IsBriscola func
-func (card *Card) ID() uint8 {
-	return uint8(card.seed)*10 + card.number
+// Number func
+func (card *Card) Number() uint8 {
+	return card.number
+}
+
+// Seed func
+func (card *Card) Seed() Seed {
+	return card.seed
 }
 
 // IsBriscola func
@@ -32,6 +65,7 @@ func (card *Card) IsBriscola(briscola Seed) bool {
 	return card.seed == briscola
 }
 
+// Points func
 func (card *Card) Points() uint8 {
 	switch card.number {
 	case 1:
