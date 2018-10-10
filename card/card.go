@@ -16,34 +16,24 @@ func ByName(number, seed string) (*Card, error) {
 	var c Card
 	var err error
 	c.number, err = toNumber(number)
-	c.seed, err = toSeed(seed)
+	if err == nil {
+		c.seed, err = toSeed(seed)
+	}
 	return &c, err
 }
 
 func toNumber(number string) (uint8, error) {
-	var err error
-	n, errN := strconv.Atoi(number)
+	n, err := strconv.Atoi(number)
 
-	if number == "" {
-		err = errors.New("Number parameter is empty\nseed: ")
-	}
-
-	if errN != nil {
-		err = errN
-	} else if n > 10 || n < 1 {
-		err = errors.New("number " + number + " doesn't exist")
-	} else {
-	}
+	if n > 10 || n < 1 {
+		err = errors.New("number '" + number + "' doesn't exist")
+	} 
 	return uint8(n), err
 }
 
 func toSeed(seed string) (Seed, error) {
 	var s Seed
 	var err error
-
-	if seed == "" {
-		err = errors.New("Seed parameter is empty\nseed: ")
-	}
 
 	if seed == Coin.String() {
 		s = Coin
@@ -54,7 +44,7 @@ func toSeed(seed string) (Seed, error) {
 	} else if seed == Cudgel.String() {
 		s = Cudgel
 	} else {
-		err = errors.New("seed " + seed + " doesn't exist")
+		err = errors.New("seed '" + seed + "' doesn't exist")
 	}
 	return s, err
 }
