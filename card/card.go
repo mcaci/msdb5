@@ -15,33 +15,48 @@ type Card struct {
 func ByName(number, seed string) (*Card, error) {
 	var c Card
 	var err error
+	c.number, err = toNumber(number)
+	c.seed, err = toSeed(seed)
+	return &c, err
+}
 
-	if number == "" || seed == "" {
-		err = errors.New("One or both parameters are empty\nnumber: " + number +
-			"\nseed: " + seed)
-	}
-
+func toNumber(number string) (uint8, error) {
+	var err error
 	n, errN := strconv.Atoi(number)
+
+	if number == "" {
+		err = errors.New("Number parameter is empty\nseed: ")
+	}
 
 	if errN != nil {
 		err = errN
 	} else if n > 10 || n < 1 {
 		err = errors.New("number " + number + " doesn't exist")
 	} else {
-		c.number = uint8(n)
-		if seed == Coin.String() {
-			c.seed = Coin
-		} else if seed == Cup.String() {
-			c.seed = Cup
-		} else if seed == Sword.String() {
-			c.seed = Sword
-		} else if seed == Cudgel.String() {
-			c.seed = Cudgel
-		} else {
-			err = errors.New("seed " + seed + " doesn't exist")
-		}
 	}
-	return &c, err
+	return uint8(n), err
+}
+
+func toSeed(seed string) (Seed, error) {
+	var s Seed
+	var err error
+
+	if seed == "" {
+		err = errors.New("Seed parameter is empty\nseed: ")
+	}
+
+	if seed == Coin.String() {
+		s = Coin
+	} else if seed == Cup.String() {
+		s = Cup
+	} else if seed == Sword.String() {
+		s = Sword
+	} else if seed == Cudgel.String() {
+		s = Cudgel
+	} else {
+		err = errors.New("seed " + seed + " doesn't exist")
+	}
+	return s, err
 }
 
 // ByID func

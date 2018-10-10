@@ -82,8 +82,16 @@ func Test8OfSpadesDoesntExist(t *testing.T) {
 	errorCheck(t, "8", "Spades")
 }
 
-func TestTw0OfCudgelIsIncorrect(t *testing.T) {
+func TestTwoOfCudgelIsIncorrect(t *testing.T) {
 	errorCheck(t, "Two", "Cudgel")
+}
+
+func TestEmptyNumberIsIncorrect(t *testing.T) {
+	errorCheck(t, "", "Cudgel")
+}
+
+func TestEmptySeedIsIncorrect(t *testing.T) {
+	errorCheck(t, "6", "")
 }
 
 func errorCheck(t *testing.T, number, seed string) {
