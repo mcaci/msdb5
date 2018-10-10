@@ -16,6 +16,11 @@ func ByName(number, seed string) (*Card, error) {
 	var c Card
 	var err error
 
+	if number == "" || seed == "" {
+		err = errors.New("One or both parameters are empty\nnumber: " + number +
+			"\nseed: " + seed)
+	}
+
 	n, errN := strconv.Atoi(number)
 
 	if errN != nil {
