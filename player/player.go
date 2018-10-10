@@ -1,7 +1,6 @@
 package player
 
 import (
-	"container/list"
 	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/card"
@@ -12,7 +11,7 @@ import (
 type Player interface {
 	Draw(deck.Deck) card.Card
 	Name() string
-	Hand() *list.List
+	Hand() []card.Card
 	fmt.Stringer
 
 	Iam(string)
@@ -24,6 +23,6 @@ type Player interface {
 // New func
 func New() Player {
 	player := new(concretePlayer)
-	player.hand = list.New()
+	player.hand = []card.Card{}
 	return player
 }

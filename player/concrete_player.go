@@ -1,23 +1,22 @@
 package player
 
-import "container/list"
 import "github.com/nikiforosFreespirit/msdb5/deck"
 import "github.com/nikiforosFreespirit/msdb5/card"
 
 type concretePlayer struct {
 	name string
 	host string
-	hand *list.List
+	hand []card.Card
 }
 
 // Draw func
 func (player *concretePlayer) Draw(d deck.Deck) card.Card {
 	c := d.RemoveTop()
-	player.hand.PushFront(c)
+	player.hand = append(player.hand, c)
 	return c
 }
 
-func (player *concretePlayer) Hand() *list.List {
+func (player *concretePlayer) Hand() []card.Card {
 	return player.hand
 }
 
@@ -35,8 +34,8 @@ func (player *concretePlayer) MyHostIs(host string) {
 
 func (player *concretePlayer) Has(c card.Card) bool {
 	var cardFound bool
-	for e := player.hand.Front(); e != nil; e = e.Next() {
-		cardFound = (e.Value == c)
+	for _, card := range player.hand {
+		cardFound = (c == card)
 	}
 	return cardFound
 }
@@ -45,8 +44,8 @@ func (player concretePlayer) String() string {
 	str := "concretePlayer["
 	str += "Name:" + player.name + ";"
 	str += "Host:" + player.host + ";"
-	for e := player.hand.Front(); e != nil; e = e.Next() {
-		str += e.Value.(*card.Card).String() + " "
+	for _, card := range player.hand {
+		str += card.String() + " "
 	}
 	str += "]"
 	return str
