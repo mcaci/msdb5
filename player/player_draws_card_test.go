@@ -8,9 +8,9 @@ import (
 func TestPlayerDrawsOneCard(t *testing.T) {
 	var d MockDeck
 	player := New()
-	playedCard := player.Draw(&d)
-	if !player.has(playedCard) {
-		t.Fatalf("Expecting player to have drawn %v", playedCard)
+	drawnCard := player.Draw(&d)
+	if !player.Has(drawnCard) {
+		t.Fatalf("Expecting player to have drawn %v", drawnCard)
 	}
 }
 

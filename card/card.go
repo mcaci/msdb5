@@ -12,14 +12,14 @@ type Card struct {
 }
 
 // ByName func
-func ByName(number, seed string) (*Card, error) {
+func ByName(number, seed string) (Card, error) {
 	var c Card
 	var err error
 	c.number, err = toNumber(number)
 	if err == nil {
 		c.seed, err = toSeed(seed)
 	}
-	return &c, err
+	return c, err
 }
 
 func toNumber(number string) (uint8, error) {
@@ -27,7 +27,7 @@ func toNumber(number string) (uint8, error) {
 
 	if n > 10 || n < 1 {
 		err = errors.New("number '" + number + "' doesn't exist")
-	} 
+	}
 	return uint8(n), err
 }
 
@@ -35,31 +35,32 @@ func toSeed(seed string) (Seed, error) {
 	var s Seed
 	var err error
 
-	if seed == Coin.String() {
+	switch seed {
+	case Coin.String():
 		s = Coin
-	} else if seed == Cup.String() {
+	case Cup.String():
 		s = Cup
-	} else if seed == Sword.String() {
+	case Sword.String():
 		s = Sword
-	} else if seed == Cudgel.String() {
+	case Cudgel.String():
 		s = Cudgel
-	} else {
+	default:
 		err = errors.New("seed '" + seed + "' doesn't exist")
 	}
 	return s, err
 }
 
 // ByID func
-func ByID(id uint8) (*Card, error) {
+func ByID(id uint8) (Card, error) {
 	if id < 1 {
-		return nil, errors.New("Index cannot be less than 1")
+		return Card{}, errors.New("Index cannot be less than 1")
 	} else if id > 40 {
-		return nil, errors.New("Index cannot be more than 40")
+		return Card{}, errors.New("Index cannot be more than 40")
 	} else {
 		seedIndex := (id - 1) / 10
 		number := uint8(id - (10 * seedIndex))
 		seed := Seed(seedIndex)
-		return &Card{number: number, seed: seed}, nil
+		return Card{number: number, seed: seed}, nil
 	}
 }
 
@@ -71,11 +72,6 @@ func (card *Card) Number() uint8 {
 // Seed func
 func (card *Card) Seed() Seed {
 	return card.seed
-}
-
-// IsBriscola func
-func (card *Card) IsBriscola(briscola Seed) bool {
-	return card.seed == briscola
 }
 
 // Points func

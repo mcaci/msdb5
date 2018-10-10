@@ -32,15 +32,15 @@ func TestScenarioWithTwoBriscolaCardsAndHighCardAtTheEnd(t *testing.T) {
 	verifyRoundScenario(t, cardsOnTheTable(34, 40, 3, 22, 11), card.Cudgel, 1)
 }
 
-func cardsOnTheTable(cardIds ...uint8) [5]*card.Card {
-	var cards [5]*card.Card
+func cardsOnTheTable(cardIds ...uint8) [5]card.Card {
+	var cards [5]card.Card
 	for i := range cards {
 		cards[i], _ = card.ByID(cardIds[i])
 	}
 	return cards
 }
 
-func verifyRoundScenario(t *testing.T, cardsOnTheTable [5]*card.Card, briscola card.Seed, expectedWinner uint8) {
+func verifyRoundScenario(t *testing.T, cardsOnTheTable [5]card.Card, briscola card.Seed, expectedWinner uint8) {
 	index := IndexOfWinningCard(cardsOnTheTable, briscola)
 	if index != expectedWinner {
 		t.Fatalf("Unexpected winner: winner was %d", index)

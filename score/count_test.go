@@ -6,15 +6,15 @@ import (
 	"testing"
 )
 
-func testScoreCount(t *testing.T, expectedScore uint8, cards ...*card.Card) {
+func testScoreCount(t *testing.T, expectedScore uint8, cards ...card.Card) {
 	score := Compute(cards...)
 	if expectedScore != score {
 		t.Fatalf("Score expected is %d but %d was computed", expectedScore, score)
 	}
 }
 
-func deckCards() []*card.Card {
-	var cards []*card.Card
+func deckCards() []card.Card {
+	var cards []card.Card
 	deck := deck.New()
 	for !deck.IsEmpty() {
 		cards = append(cards, deck.RemoveTop())

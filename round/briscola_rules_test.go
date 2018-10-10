@@ -42,10 +42,10 @@ func TestComparisonWithSecondCardOfDifferentSeedThatFirstCardAlwaysWins(t *testi
 func TestComparisonWithEmptyCardThatNonEmptyCardWins(t *testing.T) {
 	a, _ := card.ByName("8", "Coin")
 	var b card.Card
-	verifyCardComparison(t, a, &b, firstCardWins)
+	verifyCardComparison(t, a, b, firstCardWins)
 }
 
-func verifyCardComparison(t *testing.T, a, b *card.Card, isComparisonBetweenCardsCorrect func(bool) bool) {
+func verifyCardComparison(t *testing.T, a, b card.Card, isComparisonBetweenCardsCorrect func(bool) bool) {
 	c := DoesOtherCardWin(a, b)
 	if !isComparisonBetweenCardsCorrect(c) {
 		t.Fatalf("Expected %v to be higher than %v", b, a)

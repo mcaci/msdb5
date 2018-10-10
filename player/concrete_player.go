@@ -11,15 +11,10 @@ type concretePlayer struct {
 }
 
 // Draw func
-func (player *concretePlayer) Draw(d deck.Deck) *card.Card {
+func (player *concretePlayer) Draw(d deck.Deck) card.Card {
 	c := d.RemoveTop()
 	player.hand.PushFront(c)
 	return c
-}
-
-// Play func
-func (player *concretePlayer) Play() *card.Card {
-	return player.hand.Front().Value.(*card.Card)
 }
 
 func (player *concretePlayer) Hand() *list.List {
@@ -38,8 +33,8 @@ func (player *concretePlayer) MyHostIs(host string) {
 	player.host = host
 }
 
-func (player *concretePlayer) has(c *card.Card) bool {
-	cardFound := false
+func (player *concretePlayer) Has(c card.Card) bool {
+	var cardFound bool
 	for e := player.hand.Front(); e != nil; e = e.Next() {
 		cardFound = (e.Value == c)
 	}

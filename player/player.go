@@ -10,8 +10,7 @@ import (
 
 // Player interface
 type Player interface {
-	Draw(deck.Deck) *card.Card
-	Play() *card.Card
+	Draw(deck.Deck) card.Card
 	Name() string
 	Hand() *list.List
 	fmt.Stringer
@@ -19,12 +18,12 @@ type Player interface {
 	Iam(string)
 	MyHostIs(string)
 
-	has(c *card.Card) bool
+	Has(c card.Card) bool
 }
 
 // New func
 func New() Player {
 	player := new(concretePlayer)
-	player.hand = new(list.List)
+	player.hand = list.New()
 	return player
 }

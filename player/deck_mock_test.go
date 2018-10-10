@@ -5,7 +5,7 @@ import "github.com/nikiforosFreespirit/msdb5/card"
 type MockDeck struct {
 }
 
-func (d *MockDeck) RemoveTop() *card.Card {
+func (d *MockDeck) RemoveTop() card.Card {
 	mockCard, _ := card.ByID(1)
 	return mockCard
 }

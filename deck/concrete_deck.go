@@ -13,7 +13,7 @@ func (deck *concreteDeck) IsEmpty() bool {
 }
 
 // RemoveTop func
-func (deck *concreteDeck) RemoveTop() *card.Card {
+func (deck *concreteDeck) RemoveTop() card.Card {
 	index := deck.index
 	deck.index++
 	card, err := card.ByID(uint8(deck.cards[index] + 1))

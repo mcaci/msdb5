@@ -5,7 +5,7 @@ import (
 )
 
 // DoesOtherCardWin function
-func DoesOtherCardWin(base, other *card.Card) bool {
+func DoesOtherCardWin(base, other card.Card) bool {
 	areSeedDifferent := base.Seed() != other.Seed()
 	isOtherGreaterOnPoints := base.Points() < other.Points()
 	isOtherGreaterOnNumberOnly := base.Points() == other.Points() && base.Number() < other.Number()

@@ -16,7 +16,7 @@ func TestNominateId0WillComplain(t *testing.T) {
 func TestNominateId1WillNominateAceOfCoin(t *testing.T) {
 	actualCard, err := Nominate("1", "Coin")
 	expectedCard, _ := card.ByName("1", "Coin")
-	if err != nil || *expectedCard != *actualCard {
+	if err != nil || expectedCard != actualCard {
 		t.Fatalf("Card nominated should be %v but %v was computed", expectedCard, actualCard)
 	}
 }
