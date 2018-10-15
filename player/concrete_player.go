@@ -36,6 +36,9 @@ func (player *concretePlayer) Has(c card.Card) bool {
 	var cardFound bool
 	for _, card := range player.hand {
 		cardFound = (c == card)
+		if cardFound {
+			break
+		}
 	}
 	return cardFound
 }
