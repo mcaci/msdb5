@@ -13,7 +13,7 @@ type Cards []card.Card
 type Board struct {
 	deck        deck.Deck
 	players     []player.Player
-	playedCards Cards
+	playedCards *Cards
 }
 
 // New func
@@ -30,7 +30,7 @@ func New() *Board {
 		b.players[i%5].Draw(b.deck)
 	}
 
-	b.playedCards = make([]card.Card, 5)
+	b.playedCards = new(Cards)
 
 	return &b
 }
@@ -46,8 +46,13 @@ func (b *Board) Players() []player.Player {
 }
 
 // PlayedCards func
-func (b *Board) PlayedCards() Cards {
+func (b *Board) PlayedCards() *Cards {
 	return b.playedCards
+}
+
+// Add func
+func (cards *Cards) Add(c card.Card) {
+	*cards = append(*cards, c)
 }
 
 // Has func
