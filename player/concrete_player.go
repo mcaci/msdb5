@@ -6,17 +6,17 @@ import "github.com/nikiforosFreespirit/msdb5/card"
 type concretePlayer struct {
 	name string
 	host string
-	hand []card.Card
+	hand card.Cards
 }
 
 // Draw func
 func (player *concretePlayer) Draw(d deck.Deck) card.Card {
 	c := d.RemoveTop()
-	player.hand = append(player.hand, c)
+	player.hand.Add(c)
 	return c
 }
 
-func (player *concretePlayer) Hand() []card.Card {
+func (player *concretePlayer) Hand() card.Cards {
 	return player.hand
 }
 
@@ -33,11 +33,7 @@ func (player *concretePlayer) MyHostIs(host string) {
 }
 
 func (player *concretePlayer) Has(c card.Card) bool {
-	var cardFound bool
-	for _, card := range player.hand {
-		cardFound = (c == card)
-	}
-	return cardFound
+	return player.Hand().Has(c)
 }
 
 func (player concretePlayer) String() string {
