@@ -1,14 +1,19 @@
 package board
 
 import (
+	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
+// Cards are slices of card.Cards
+type Cards []card.Card
+
 // Board struct
 type Board struct {
-	deck    deck.Deck
-	players []player.Player
+	deck        deck.Deck
+	players     []player.Player
+	playedCards Cards
 }
 
 // New func
@@ -36,4 +41,14 @@ func (b *Board) Deck() deck.Deck {
 // Players func
 func (b *Board) Players() []player.Player {
 	return b.players
+}
+
+// PlayedCards func
+func (b *Board) PlayedCards() Cards {
+	return b.playedCards
+}
+
+// Has func
+func (cards Cards) Has(c card.Card) bool {
+	return false
 }
