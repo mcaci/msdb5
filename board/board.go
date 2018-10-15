@@ -30,6 +30,8 @@ func New() *Board {
 		b.players[i%5].Draw(b.deck)
 	}
 
+	b.playedCards = make([]card.Card, 5)
+
 	return &b
 }
 
@@ -50,5 +52,12 @@ func (b *Board) PlayedCards() Cards {
 
 // Has func
 func (cards Cards) Has(c card.Card) bool {
-	return false
+	var cardFound bool
+	for _, card := range cards {
+		cardFound = (c == card)
+		if cardFound {
+			break
+		}
+	}
+	return cardFound
 }
