@@ -26,7 +26,7 @@ func TestBoardsSetOfPlayedCardsWithOneCardContainsIt(t *testing.T) {
 	b := New()
 	c, _ := card.ByID(1)
 	b.Add(c)
-	if !b.PlayedCards().Has(c) {
+	if !b.Has(c) {
 		t.Fatal("The deck should contain one card")
 	}
 }
