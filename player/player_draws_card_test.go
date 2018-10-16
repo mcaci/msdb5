@@ -7,16 +7,17 @@ import (
 )
 
 func TestPlayerDrawsOneCard(t *testing.T) {
-	var d MockDeck
+	d := deck.New()
+
 	player := New()
-	drawnCard := player.Draw(&d)
+	drawnCard := player.Draw(d)
 	if !player.Has(drawnCard) {
 		t.Fatalf("Expecting player to have drawn %v", drawnCard)
 	}
 }
 
 func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
-	deck := deck.New()
+	d := deck.New()
 
 	var players [5]Player
 	for i := range players {
@@ -24,10 +25,10 @@ func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
 	}
 
 	for i := 0; i < deck.Size; i++ {
-		players[i%5].Draw(deck)
+		players[i%5].Draw(d)
 	}
 
-	if !deck.IsEmpty() {
+	if !d.IsEmpty() {
 		t.Fatal("All players should have drawn all cards")
 		for _, player := range players {
 			t.Log(player)
