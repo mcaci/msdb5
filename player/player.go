@@ -23,6 +23,6 @@ type Player interface {
 // New func
 func New() Player {
 	player := new(concretePlayer)
-	player.hand = []card.Card{}
+	player.hand = card.Cards{}
 	return player
 }
