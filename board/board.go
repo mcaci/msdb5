@@ -6,14 +6,11 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
-// Cards are slices of card.Cards
-type Cards []card.Card
-
 // Board struct
 type Board struct {
 	deck        deck.Deck
 	players     []player.Player
-	playedCards *Cards
+	playedCards card.Cards
 }
 
 // New func
@@ -30,7 +27,7 @@ func New() *Board {
 		b.players[i%5].Draw(b.deck)
 	}
 
-	b.playedCards = new(Cards)
+	b.playedCards = card.Cards{}
 
 	return &b
 }
@@ -46,23 +43,16 @@ func (b *Board) Players() []player.Player {
 }
 
 // PlayedCards func
-func (b *Board) PlayedCards() *Cards {
+func (b *Board) PlayedCards() card.Cards {
 	return b.playedCards
 }
 
 // Add func
-func (cards *Cards) Add(c card.Card) {
-	*cards = append(*cards, c)
+func (b *Board) Add(c card.Card) {
+	b.playedCards.Add(c)
 }
 
 // Has func
-func (cards Cards) Has(c card.Card) bool {
-	var cardFound bool
-	for _, card := range cards {
-		cardFound = (c == card)
-		if cardFound {
-			break
-		}
-	}
-	return cardFound
+func (b *Board) Has(c card.Card) bool {
+	return b.playedCards.Has(c)
 }
