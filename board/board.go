@@ -43,16 +43,6 @@ func (b *Board) Players() []player.Player {
 }
 
 // PlayedCards func
-func (b *Board) PlayedCards() card.Cards {
-	return b.playedCards
-}
-
-// Add func
-func (b *Board) Add(c card.Card) {
-	b.playedCards.Add(c)
-}
-
-// Has func
-func (b *Board) Has(c card.Card) bool {
-	return b.playedCards.Has(c)
+func (b *Board) PlayedCards() *card.Cards {
+	return &b.playedCards
 }
