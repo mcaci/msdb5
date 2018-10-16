@@ -1,6 +1,5 @@
 package player
 
-import "github.com/nikiforosFreespirit/msdb5/deck"
 import "github.com/nikiforosFreespirit/msdb5/card"
 
 type concretePlayer struct {
@@ -10,8 +9,8 @@ type concretePlayer struct {
 }
 
 // Draw func
-func (player *concretePlayer) Draw(d deck.Deck) card.Card {
-	c := d.RemoveTop()
+func (player *concretePlayer) Draw(cardSupplier func() card.Card) card.Card {
+	c := cardSupplier()
 	player.hand.Add(c)
 	return c
 }

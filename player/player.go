@@ -4,12 +4,11 @@ import (
 	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
 // Player interface
 type Player interface {
-	Draw(deck.Deck) card.Card
+	Draw(func() card.Card) card.Card
 	Name() string
 	Hand() card.Cards
 	fmt.Stringer

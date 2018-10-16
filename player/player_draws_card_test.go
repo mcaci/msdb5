@@ -10,7 +10,7 @@ func TestPlayerDrawsOneCard(t *testing.T) {
 	d := deck.New()
 
 	player := New()
-	drawnCard := player.Draw(d)
+	drawnCard := player.Draw(d.RemoveTop)
 	if !player.Has(drawnCard) {
 		t.Fatalf("Expecting player to have drawn %v", drawnCard)
 	}
@@ -25,7 +25,7 @@ func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
 	}
 
 	for i := 0; i < deck.Size; i++ {
-		players[i%5].Draw(d)
+		players[i%5].Draw(d.RemoveTop)
 	}
 
 	if !d.IsEmpty() {
