@@ -9,7 +9,7 @@ func TestCreate(t *testing.T) {
 		count++
 		d.RemoveTop()
 	}
-	if count != 40 {
+	if count != Size {
 		t.Fatalf("There should be 40 card in the deck")
 	}
 }

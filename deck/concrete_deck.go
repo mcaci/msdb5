@@ -9,7 +9,7 @@ type concreteDeck struct {
 
 // IsEmpty func
 func (deck *concreteDeck) IsEmpty() bool {
-	return deck.index >= 40 // should be 40 as it's the deck's size
+	return deck.index >= Size // should be 40 as it's the deck's size
 }
 
 // RemoveTop func

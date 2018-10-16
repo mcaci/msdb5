@@ -1,8 +1,9 @@
 package player
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/deck"
 	"testing"
+
+	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
 func TestPlayerDrawsOneCard(t *testing.T) {
@@ -22,7 +23,7 @@ func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
 		players[i] = New()
 	}
 
-	for i := 0; i < 40; i++ {
+	for i := 0; i < deck.Size; i++ {
 		players[i%5].Draw(deck)
 	}
 

@@ -1,11 +1,13 @@
 package deck
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/card"
 	"math/rand"
 	"time"
+
+	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
+// Size of a deck of cards
 const Size = 40
 
 // Deck interface
@@ -14,7 +16,7 @@ type Deck interface {
 	IsEmpty() bool
 }
 
-// Create func
+// New func
 func New() Deck {
 	deck := new(concreteDeck)
 
