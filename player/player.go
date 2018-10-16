@@ -11,7 +11,7 @@ import (
 type Player interface {
 	Draw(deck.Deck) card.Card
 	Name() string
-	Hand() []card.Card
+	Hand() card.Cards
 	fmt.Stringer
 
 	Iam(string)
