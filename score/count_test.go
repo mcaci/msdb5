@@ -1,9 +1,10 @@
 package score
 
 import (
+	"testing"
+
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
-	"testing"
 )
 
 func testScoreCount(t *testing.T, expectedScore uint8, cards ...card.Card) {
@@ -17,7 +18,7 @@ func deckCards() []card.Card {
 	var cards []card.Card
 	deck := deck.New()
 	for !deck.IsEmpty() {
-		cards = append(cards, deck.RemoveTop())
+		cards = append(cards, deck.Supply())
 	}
 	return cards
 }

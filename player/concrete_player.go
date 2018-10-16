@@ -9,14 +9,14 @@ type concretePlayer struct {
 }
 
 // Draw func
-func (player *concretePlayer) Draw(cardSupplier func() card.Card) card.Card {
-	c := cardSupplier()
-	player.hand.Add(c)
+func (player *concretePlayer) Draw(cardSupplier card.Supplier) card.Card {
+	c := cardSupplier.Supply()
+	player.Hand().Add(c)
 	return c
 }
 
-func (player *concretePlayer) Hand() card.Cards {
-	return player.hand
+func (player *concretePlayer) Hand() *card.Cards {
+	return &player.hand
 }
 
 func (player *concretePlayer) Name() string {

@@ -8,9 +8,9 @@ import (
 
 // Player interface
 type Player interface {
-	Draw(func() card.Card) card.Card
+	Draw(card.Supplier) card.Card
 	Name() string
-	Hand() card.Cards
+	Hand() *card.Cards
 	fmt.Stringer
 
 	Iam(string)

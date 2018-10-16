@@ -12,8 +12,8 @@ func (deck *concreteDeck) IsEmpty() bool {
 	return deck.index >= Size // should be 40 as it's the deck's size
 }
 
-// RemoveTop func
-func (deck *concreteDeck) RemoveTop() card.Card {
+// Supply func
+func (deck *concreteDeck) Supply() card.Card {
 	index := deck.index
 	deck.index++
 	card, err := card.ByID(uint8(deck.cards[index] + 1))
