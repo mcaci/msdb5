@@ -41,6 +41,14 @@ func TestId40IsCudgel(t *testing.T) {
 	verifyCorrectSeed(t, 40, Cudgel)
 }
 
+func TestFromIdToCardToId(t *testing.T) {
+	id := uint8(1)
+	card, _ := ByID(id)
+	if id != card.ID() {
+		t.Fatalf("Card ids are not the same")
+	}
+}
+
 func verifyCorrectSeed(t *testing.T, id uint8, seed Seed) {
 	card, _ := ByID(id)
 	if card.seed != seed {

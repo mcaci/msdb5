@@ -6,6 +6,11 @@ type Card struct {
 	seed   Seed
 }
 
+// ID func
+func (card *Card) ID() uint8 {
+	return card.number + (uint8)(card.seed)*10
+}
+
 // Number func
 func (card *Card) Number() uint8 {
 	return card.number
