@@ -14,12 +14,19 @@ func (deck *concreteDeck) IsEmpty() bool {
 
 // Supply func
 func (deck *concreteDeck) Supply() card.Card {
-	id := uint8(deck.cards[deck.index] + 1)
-	card, err := card.ByID(id)
+	card, err := card.ByID(deck.topCardID())
 	if err != nil {
-		panic("should not be here")
+		panic("Should not be here: " + err.Error())
 	} else {
-		deck.index++
+		deck.updateTopCardIndex()
 	}
 	return card
+}
+
+func (deck *concreteDeck) updateTopCardIndex() {
+	deck.index++
+}
+
+func (deck *concreteDeck) topCardID() uint8 {
+	return uint8(deck.cards[deck.index] + 1)
 }
