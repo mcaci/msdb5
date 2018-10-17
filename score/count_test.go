@@ -14,20 +14,18 @@ func testScoreCount(t *testing.T, expectedScore uint8, cards ...card.Card) {
 	}
 }
 
-func deckCards() card.Cards {
-	var cards card.Cards
-	deck := deck.New()
-	for !deck.IsEmpty() {
-		cards = append(cards, deck.Supply())
-	}
-	return cards
-}
-
 func cards(ids ...uint8) card.Cards {
 	var cards card.Cards
-	for _, id := range ids {
-		card, _ := card.ByID(id)
-		cards = append(cards, card)
+	if len(ids) == 0 {
+		deck := deck.New()
+		for !deck.IsEmpty() {
+			cards = append(cards, deck.Supply())
+		}
+	} else {
+		for _, id := range ids {
+			card, _ := card.ByID(id)
+			cards = append(cards, card)
+		}
 	}
 	return cards
 }
@@ -48,5 +46,5 @@ func TestPileWithOneAceOneTwoOneThreeSums21(t *testing.T) {
 	testScoreCount(t, 21, cards(1, 2, 3)...)
 }
 func TestPileWithAllCardsSums120(t *testing.T) {
-	testScoreCount(t, 120, deckCards()...)
+	testScoreCount(t, 120, cards()...)
 }
