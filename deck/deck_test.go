@@ -23,3 +23,10 @@ func TestRemovingTwoCardsShouldGiveDifferentCards(t *testing.T) {
 		t.Fatalf("Drawn cards should be different but they are %v and %v", a, b)
 	}
 }
+
+func TestIDList(t *testing.T) {
+	d := New()
+	if len(d.GetIDs()) != Size {
+		t.Fatalf("Size should be 40")
+	}
+}
