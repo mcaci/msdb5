@@ -32,12 +32,12 @@ func TestPileWithOnehAceOnlySums11(t *testing.T) {
 	testScoreCount(t, 11, ace)
 }
 
-func TestPileWithAllCardsSums120(t *testing.T) {
-	testScoreCount(t, 120, deckCards()...)
+func TestPileWithOneTwoOnehAceOnlySums11(t *testing.T) {
+	ace, _ := card.ByID(1)
+	two, _ := card.ByID(2)
+	testScoreCount(t, 11, two, ace)
 }
 
-func TestPileWithOneTwoOnehAceOnlySums11(t *testing.T) {
-	two, _ := card.ByID(2)
-	ace, _ := card.ByID(1)
-	testScoreCount(t, 11, two, ace)
+func TestPileWithAllCardsSums120(t *testing.T) {
+	testScoreCount(t, 120, deckCards()...)
 }
