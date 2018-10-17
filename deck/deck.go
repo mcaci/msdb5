@@ -14,7 +14,7 @@ const Size = 40
 type Deck interface {
 	card.Supplier
 	IsEmpty() bool
-	Get() []int
+	GetIDs() []uint8
 }
 
 // New func

@@ -18,26 +18,11 @@ func cards(fill func(...uint8) card.Cards, ids ...uint8) card.Cards {
 	return fill(ids...)
 }
 
-func fromDeck(ids ...uint8) card.Cards {
-	var cards card.Cards
-	deck := deck.New()
-	cs := deck.Get()
-	i := 0
-	for i < len(cs) {
-		card, _ := card.ByID(uint8(cs[i] + 1))
-		cards.Add(card)
-		i++
-	}
-	return cards
-}
-
 func withIDs(ids ...uint8) card.Cards {
 	var cards card.Cards
-	i := 0
-	for i < len(ids) {
-		card, _ := card.ByID(ids[i])
+	for _, id := range ids {
+		card, _ := card.ByID(id)
 		cards.Add(card)
-		i++
 	}
 	return cards
 }
@@ -58,5 +43,5 @@ func TestPileWithOneAceOneTwoOneThreeSums21(t *testing.T) {
 	testScoreCount(t, 21, cards(withIDs, 1, 2, 3)...)
 }
 func TestPileWithAllCardsSums120(t *testing.T) {
-	testScoreCount(t, 120, cards(fromDeck)...)
+	testScoreCount(t, 120, cards(withIDs, deck.New().GetIDs()...)...)
 }

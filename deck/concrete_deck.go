@@ -8,8 +8,12 @@ type concreteDeck struct {
 }
 
 // Get func
-func (deck *concreteDeck) Get() []int {
-	return deck.cards
+func (deck *concreteDeck) GetIDs() []uint8 {
+	ids := []uint8{}
+	for _, card := range deck.cards {
+		ids = append(ids, uint8(card+1))
+	}
+	return ids
 }
 
 // IsEmpty func
