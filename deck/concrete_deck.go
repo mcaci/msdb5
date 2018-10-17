@@ -7,6 +7,11 @@ type concreteDeck struct {
 	index int
 }
 
+// Get func
+func (deck *concreteDeck) Get() []int {
+	return deck.cards
+}
+
 // IsEmpty func
 func (deck *concreteDeck) IsEmpty() bool {
 	return deck.index >= Size // should be 40 as it's the deck's size

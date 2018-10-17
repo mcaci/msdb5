@@ -21,18 +21,23 @@ func cards(fill func(...uint8) card.Cards, ids ...uint8) card.Cards {
 func fromDeck(ids ...uint8) card.Cards {
 	var cards card.Cards
 	deck := deck.New()
-	for !deck.IsEmpty() {
-		card := deck.Supply()
+	cs := deck.Get()
+	i := 0
+	for i < len(cs) {
+		card, _ := card.ByID(uint8(cs[i] + 1))
 		cards.Add(card)
+		i++
 	}
 	return cards
 }
 
 func withIDs(ids ...uint8) card.Cards {
 	var cards card.Cards
-	for _, id := range ids {
-		card, _ := card.ByID(id)
+	i := 0
+	for i < len(ids) {
+		card, _ := card.ByID(ids[i])
 		cards.Add(card)
+		i++
 	}
 	return cards
 }
