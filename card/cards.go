@@ -9,22 +9,12 @@ import (
 type Cards []uint8
 
 // Add func
-func (cards *Cards) Add(card Card) {
-	cards.AddID(card.ID())
-}
-
-// AddID func
-func (cards *Cards) AddID(id uint8) {
+func (cards *Cards) Add(id uint8) {
 	*cards = append(*cards, id)
 }
 
 // Has func
-func (cards Cards) Has(card Card) bool {
-	return cards.HasID(card.ID())
-}
-
-// HasID func
-func (cards Cards) HasID(id uint8) bool {
+func (cards Cards) Has(id uint8) bool {
 	var cardFound bool
 	for _, c := range cards {
 		cardFound = (c == id)
@@ -70,8 +60,7 @@ func Deck() Cards {
 func FillWithIDs(ids ...uint8) Cards {
 	var cards Cards
 	for _, id := range ids {
-		card, _ := ByID(id)
-		cards.Add(card)
+		cards.Add(id)
 	}
 	return cards
 }

@@ -16,8 +16,7 @@ type Player interface {
 	Iam(string)
 	MyHostIs(string)
 
-	Has(card.Card) bool
-	HasID(uint8) bool
+	Has(uint8) bool
 }
 
 // New func
