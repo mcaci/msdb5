@@ -1,6 +1,10 @@
 package player
 
-import "github.com/nikiforosFreespirit/msdb5/card"
+import (
+	"strconv"
+
+	"github.com/nikiforosFreespirit/msdb5/card"
+)
 
 type concretePlayer struct {
 	name string
@@ -40,7 +44,7 @@ func (player concretePlayer) String() string {
 	str += "Name:" + player.name + ";"
 	str += "Host:" + player.host + ";"
 	for _, card := range player.hand {
-		str += card.String() + " "
+		str += strconv.Itoa(int(card)) + " "
 	}
 	str += "]"
 	return str

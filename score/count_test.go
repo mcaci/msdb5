@@ -7,7 +7,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
-func testScoreCount(t *testing.T, expectedScore uint8, cards ...card.Card) {
+func testScoreCount(t *testing.T, expectedScore uint8, cards ...uint8) {
 	score := Compute(cards...)
 	if expectedScore != score {
 		t.Fatalf("Score expected is %d but %d was computed", expectedScore, score)

@@ -1,18 +1,18 @@
 package card
 
 // Cards type
-type Cards []Card
+type Cards []uint8
 
 // Add func
 func (cards *Cards) Add(card Card) {
-	*cards = append(*cards, card)
+	*cards = append(*cards, card.ID())
 }
 
 // Has func
 func (cards Cards) Has(card Card) bool {
 	var cardFound bool
 	for _, c := range cards {
-		cardFound = (c == card)
+		cardFound = (c == card.ID())
 		if cardFound {
 			break
 		}
