@@ -8,7 +8,7 @@ import (
 
 // Board struct
 type Board struct {
-	deck        deck.Deck
+	deck        deck.Cards
 	players     []player.Player
 	playedCards card.Cards
 }
@@ -24,7 +24,7 @@ func New() *Board {
 		b.players[i] = player.New()
 	}
 	for i := 0; !b.deck.IsEmpty(); i++ {
-		b.players[i%5].Draw(b.deck)
+		b.players[i%5].Draw(&b.deck)
 	}
 
 	b.playedCards = card.Cards{}
@@ -33,7 +33,7 @@ func New() *Board {
 }
 
 // Deck func
-func (b *Board) Deck() deck.Deck {
+func (b *Board) Deck() deck.Cards {
 	return b.deck
 }
 
