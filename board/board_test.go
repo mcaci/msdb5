@@ -29,7 +29,7 @@ func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
 		players[i] = player.New()
 	}
 
-	for i := 0; i < card.Size; i++ {
+	for i := 0; i < card.DeckSize; i++ {
 		players[i%5].Draw(&d)
 	}
 

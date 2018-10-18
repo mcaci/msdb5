@@ -9,7 +9,7 @@ func TestCreate(t *testing.T) {
 		count++
 		d.Supply()
 	}
-	if count != Size {
+	if count != DeckSize {
 		t.Fatalf("There should be 40 card in the deck")
 	}
 }

@@ -41,15 +41,15 @@ func (cards *Cards) updateDeck() {
 	(*cards) = (*cards)[1:]
 }
 
-// Size of a cards of cards
-const Size = 40
+// DeckSize of a cards of cards
+const DeckSize = 40
 
 // Deck func
 func Deck() Cards {
 	cards := new(Cards)
 
 	rand.Seed(time.Now().UnixNano())
-	ints := rand.Perm(Size)
+	ints := rand.Perm(DeckSize)
 	for index := range ints {
 		*cards = append(*cards, uint8(ints[index]+1))
 	}
