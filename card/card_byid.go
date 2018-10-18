@@ -4,8 +4,11 @@ import (
 	"errors"
 )
 
+// ID is the id of a card from 1 to 40
+type ID uint8
+
 // ByID func
-func ByID(id uint8) (Card, error) {
+func ByID(id ID) (Card, error) {
 	var card Card
 	var err error
 	if id < 1 {
@@ -13,7 +16,7 @@ func ByID(id uint8) (Card, error) {
 	} else if id > 40 {
 		err = errors.New("Index cannot be more than 40")
 	} else {
-		seedIndex := (id - 1) / 10
+		seedIndex := uint8(id-1) / 10
 		number := intoNumber(id, seedIndex)
 		seed := intoSeed(seedIndex)
 		card = Card{number: number, seed: seed}
@@ -21,8 +24,8 @@ func ByID(id uint8) (Card, error) {
 	return card, err
 }
 
-func intoNumber(id, seedIndex uint8) uint8 {
-	return id - (10 * seedIndex)
+func intoNumber(id ID, seedIndex uint8) uint8 {
+	return uint8(id) - (10 * seedIndex)
 }
 
 func intoSeed(seedIndex uint8) Seed {

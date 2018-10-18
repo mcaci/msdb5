@@ -8,7 +8,7 @@ import (
 
 // Player interface
 type Player interface {
-	Draw(card.Supplier) uint8
+	Draw(card.Supplier) card.ID
 	Name() string
 	Hand() *card.Cards
 	fmt.Stringer
@@ -16,7 +16,7 @@ type Player interface {
 	Iam(string)
 	MyHostIs(string)
 
-	Has(uint8) bool
+	Has(card.ID) bool
 }
 
 // New func

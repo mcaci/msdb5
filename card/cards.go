@@ -6,15 +6,15 @@ import (
 )
 
 // Cards type
-type Cards []uint8
+type Cards []ID
 
 // Add func
-func (cards *Cards) Add(id uint8) {
+func (cards *Cards) Add(id ID) {
 	*cards = append(*cards, id)
 }
 
 // Has func
-func (cards Cards) Has(id uint8) bool {
+func (cards Cards) Has(id ID) bool {
 	var cardFound bool
 	for _, c := range cards {
 		cardFound = (c == id)
@@ -31,7 +31,7 @@ func (cards *Cards) IsEmpty() bool {
 }
 
 // Supply func
-func (cards *Cards) Supply() uint8 {
+func (cards *Cards) Supply() ID {
 	card := (*cards)[0]
 	cards.updateDeck()
 	return card
@@ -51,13 +51,13 @@ func Deck() Cards {
 	rand.Seed(time.Now().UnixNano())
 	ints := rand.Perm(DeckSize)
 	for index := range ints {
-		*cards = append(*cards, uint8(ints[index]+1))
+		*cards = append(*cards, ID(ints[index]+1))
 	}
 	return *cards
 }
 
 // FillWithIDs func
-func FillWithIDs(ids ...uint8) Cards {
+func FillWithIDs(ids ...ID) Cards {
 	var cards Cards
 	for _, id := range ids {
 		cards.Add(id)

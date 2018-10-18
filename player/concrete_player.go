@@ -11,7 +11,7 @@ type concretePlayer struct {
 }
 
 // Draw func
-func (player *concretePlayer) Draw(cardSupplier card.Supplier) uint8 {
+func (player *concretePlayer) Draw(cardSupplier card.Supplier) card.ID {
 	c := cardSupplier.Supply()
 	player.Hand().Add(c)
 	return c
@@ -33,7 +33,7 @@ func (player *concretePlayer) MyHostIs(host string) {
 	player.host = host
 }
 
-func (player *concretePlayer) Has(id uint8) bool {
+func (player *concretePlayer) Has(id card.ID) bool {
 	return player.Hand().Has(id)
 }
 

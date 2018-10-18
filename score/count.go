@@ -5,7 +5,7 @@ import (
 )
 
 // Compute func
-func Compute(cards ...uint8) uint8 {
+func Compute(cards ...card.ID) uint8 {
 	var sum uint8
 	for _, id := range cards {
 		card, _ := card.ByID(id)
