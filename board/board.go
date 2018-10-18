@@ -2,13 +2,12 @@ package board
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 // Board struct
 type Board struct {
-	deck        deck.Cards
+	deck        card.Cards
 	players     []player.Player
 	playedCards card.Cards
 }
@@ -17,7 +16,7 @@ type Board struct {
 func New() *Board {
 	var b Board
 
-	b.deck = deck.Deck()
+	b.deck = card.Deck()
 
 	b.players = make([]player.Player, 5)
 	for i := range b.players {
@@ -33,7 +32,7 @@ func New() *Board {
 }
 
 // Deck func
-func (b *Board) Deck() deck.Cards {
+func (b *Board) Deck() card.Cards {
 	return b.deck
 }
 

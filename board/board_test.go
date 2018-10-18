@@ -3,7 +3,7 @@ package board
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/deck"
+	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
@@ -22,14 +22,14 @@ func TestBoardHas5Player(t *testing.T) {
 }
 
 func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
-	d := deck.Deck()
+	d := card.Deck()
 
 	var players [5]player.Player
 	for i := range players {
 		players[i] = player.New()
 	}
 
-	for i := 0; i < deck.Size; i++ {
+	for i := 0; i < card.Size; i++ {
 		players[i%5].Draw(&d)
 	}
 

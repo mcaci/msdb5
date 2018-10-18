@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
 func testScoreCount(t *testing.T, expectedScore uint8, cards ...uint8) {
@@ -30,5 +29,5 @@ func TestPileWithOneAceOneTwoOneThreeSums21(t *testing.T) {
 	testScoreCount(t, 21, card.FillWithIDs(1, 2, 3)...)
 }
 func TestPileWithAllCardsSums120(t *testing.T) {
-	testScoreCount(t, 120, card.FillWithIDs(deck.Deck()...)...)
+	testScoreCount(t, 120, card.FillWithIDs(card.Deck()...)...)
 }

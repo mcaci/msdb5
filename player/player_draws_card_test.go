@@ -3,11 +3,11 @@ package player
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/deck"
+	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
 func TestPlayerDrawsOneCard(t *testing.T) {
-	d := deck.Deck()
+	d := card.Deck()
 
 	player := New()
 	drawnCard := player.Draw(&d)
