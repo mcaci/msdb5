@@ -14,15 +14,15 @@ func TestBoardHasASetOfPlayedCards(t *testing.T) {
 
 func TestBoardsEmptySetOfPlayedCardsContainsNoCards(t *testing.T) {
 	b := New()
-	if b.PlayedCards().HasID(1) {
+	if b.PlayedCards().Has(1) {
 		t.Fatal("The deck should be empty at this point")
 	}
 }
 
 func TestBoardsSetOfPlayedCardsWithOneCardContainsIt(t *testing.T) {
 	b := New()
-	b.PlayedCards().AddID(1)
-	if !b.PlayedCards().HasID(1) {
+	b.PlayedCards().Add(1)
+	if !b.PlayedCards().Has(1) {
 		t.Fatal("The deck should contain one card")
 	}
 }
