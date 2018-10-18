@@ -3,7 +3,7 @@ package deck
 import "testing"
 
 func TestCreate(t *testing.T) {
-	d := New()
+	d := Deck()
 	count := 0
 	for !d.IsEmpty() {
 		count++
@@ -15,7 +15,7 @@ func TestCreate(t *testing.T) {
 }
 
 func TestRemovingTwoCardsShouldGiveDifferentCards(t *testing.T) {
-	d := New()
+	d := Deck()
 	a := d.Supply()
 	b := d.Supply()
 
@@ -25,7 +25,7 @@ func TestRemovingTwoCardsShouldGiveDifferentCards(t *testing.T) {
 }
 
 func TestIDList(t *testing.T) {
-	d := New()
+	d := Deck()
 	if len(d.GetIDs()) != Size {
 		t.Fatalf("Size should be 40")
 	}
