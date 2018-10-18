@@ -22,6 +22,9 @@ func New() Deck {
 	deck := new(concreteDeck)
 
 	rand.Seed(time.Now().UnixNano())
-	deck.cards = rand.Perm(Size)
+	ints := rand.Perm(Size)
+	for index := range ints {
+		deck.cards = append(deck.cards, uint8(ints[index]+1))
+	}
 	return deck
 }
