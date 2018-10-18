@@ -10,10 +10,6 @@ import (
 // Cards type
 type Cards []uint8
 
-// GetIDs func
-func (cards *Cards) GetIDs() []uint8 {
-	return []uint8(*cards)
-}
 
 // IsEmpty func
 func (cards *Cards) IsEmpty() bool {
