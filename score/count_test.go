@@ -19,16 +19,16 @@ func TestEmptyPileSums0(t *testing.T) {
 }
 
 func TestPileWithOnehAceOnlySums11(t *testing.T) {
-	testScoreCount(t, 11, card.Fill(card.WithIDs, 1)...)
+	testScoreCount(t, 11, card.FillWithIDs(1)...)
 }
 
 func TestPileWithOneTwoOneAceOnlySums11(t *testing.T) {
-	testScoreCount(t, 11, card.Fill(card.WithIDs, 2, 1)...)
+	testScoreCount(t, 11, card.FillWithIDs(2, 1)...)
 }
 
 func TestPileWithOneAceOneTwoOneThreeSums21(t *testing.T) {
-	testScoreCount(t, 21, card.Fill(card.WithIDs, 1, 2, 3)...)
+	testScoreCount(t, 21, card.FillWithIDs(1, 2, 3)...)
 }
 func TestPileWithAllCardsSums120(t *testing.T) {
-	testScoreCount(t, 120, card.Fill(card.WithIDs, deck.New().GetIDs()...)...)
+	testScoreCount(t, 120, card.FillWithIDs(deck.New().GetIDs()...)...)
 }

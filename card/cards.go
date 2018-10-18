@@ -20,13 +20,8 @@ func (cards Cards) Has(card Card) bool {
 	return cardFound
 }
 
-// Fill func
-func Fill(fill func(...uint8) Cards, ids ...uint8) Cards {
-	return fill(ids...)
-}
-
-// WithIDs func
-func WithIDs(ids ...uint8) Cards {
+// FillWithIDs func
+func FillWithIDs(ids ...uint8) Cards {
 	var cards Cards
 	for _, id := range ids {
 		card, _ := ByID(id)
