@@ -2,5 +2,5 @@ package card
 
 // Supplier card interface
 type Supplier interface {
-	Supply() Card
+	Supply() uint8
 }

@@ -11,7 +11,7 @@ func TestPlayerDrawsOneCard(t *testing.T) {
 
 	player := New()
 	drawnCard := player.Draw(&d)
-	if !player.Has(drawnCard) {
+	if !player.HasID(drawnCard) {
 		t.Fatalf("Expecting player to have drawn %v", drawnCard)
 	}
 }

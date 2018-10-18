@@ -10,14 +10,24 @@ type Cards []uint8
 
 // Add func
 func (cards *Cards) Add(card Card) {
-	*cards = append(*cards, card.ID())
+	cards.AddID(card.ID())
+}
+
+// AddID func
+func (cards *Cards) AddID(id uint8) {
+	*cards = append(*cards, id)
 }
 
 // Has func
 func (cards Cards) Has(card Card) bool {
+	return cards.HasID(card.ID())
+}
+
+// HasID func
+func (cards Cards) HasID(id uint8) bool {
 	var cardFound bool
 	for _, c := range cards {
-		cardFound = (c == card.ID())
+		cardFound = (c == id)
 		if cardFound {
 			break
 		}
@@ -31,13 +41,9 @@ func (cards *Cards) IsEmpty() bool {
 }
 
 // Supply func
-func (cards *Cards) Supply() Card {
-	card, err := ByID((*cards)[0])
-	if err != nil {
-		panic("Should not be here: " + err.Error())
-	} else {
-		cards.updateDeck()
-	}
+func (cards *Cards) Supply() uint8 {
+	card := (*cards)[0]
+	cards.updateDeck()
 	return card
 }
 
