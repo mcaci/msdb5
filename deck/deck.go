@@ -19,12 +19,12 @@ type Deck interface {
 
 // New func
 func New() Deck {
-	deck := new(concreteDeck)
+	deck := new(Cards)
 
 	rand.Seed(time.Now().UnixNano())
 	ints := rand.Perm(Size)
 	for index := range ints {
-		deck.cards = append(deck.cards, uint8(ints[index]+1))
+		*deck = append(*deck, uint8(ints[index]+1))
 	}
 	return deck
 }

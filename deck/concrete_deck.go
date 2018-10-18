@@ -2,22 +2,22 @@ package deck
 
 import "github.com/nikiforosFreespirit/msdb5/card"
 
-type concreteDeck struct {
-	cards []uint8
-}
+// Cards type
+type Cards []uint8
 
-func (deck *concreteDeck) GetIDs() []uint8 {
-	return deck.cards
+// GetIDs func
+func (deck *Cards) GetIDs() []uint8 {
+	return []uint8(*deck)
 }
 
 // IsEmpty func
-func (deck *concreteDeck) IsEmpty() bool {
-	return len(deck.cards) <= 0 // should be 40 as it's the deck's size
+func (deck *Cards) IsEmpty() bool {
+	return len(*deck) <= 0 // should be 40 as it's the deck's size
 }
 
 // Supply func
-func (deck *concreteDeck) Supply() card.Card {
-	card, err := card.ByID(deck.cards[0])
+func (deck *Cards) Supply() card.Card {
+	card, err := card.ByID((*deck)[0])
 	if err != nil {
 		panic("Should not be here: " + err.Error())
 	} else {
@@ -26,6 +26,6 @@ func (deck *concreteDeck) Supply() card.Card {
 	return card
 }
 
-func (deck *concreteDeck) updateDeck() {
-	deck.cards = deck.cards[1:]
+func (deck *Cards) updateDeck() {
+	(*deck) = (*deck)[1:]
 }
