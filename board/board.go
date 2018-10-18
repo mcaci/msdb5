@@ -17,7 +17,7 @@ type Board struct {
 func New() *Board {
 	var b Board
 
-	b.deck = deck.New()
+	b.deck = deck.Deck()
 
 	b.players = make([]player.Player, 5)
 	for i := range b.players {

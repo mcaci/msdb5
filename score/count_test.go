@@ -30,5 +30,5 @@ func TestPileWithOneAceOneTwoOneThreeSums21(t *testing.T) {
 	testScoreCount(t, 21, card.FillWithIDs(1, 2, 3)...)
 }
 func TestPileWithAllCardsSums120(t *testing.T) {
-	testScoreCount(t, 120, card.FillWithIDs(deck.New()...)...)
+	testScoreCount(t, 120, card.FillWithIDs(deck.Deck()...)...)
 }

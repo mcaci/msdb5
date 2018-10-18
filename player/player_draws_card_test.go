@@ -7,7 +7,7 @@ import (
 )
 
 func TestPlayerDrawsOneCard(t *testing.T) {
-	d := deck.New()
+	d := deck.Deck()
 
 	player := New()
 	drawnCard := player.Draw(&d)
@@ -17,7 +17,7 @@ func TestPlayerDrawsOneCard(t *testing.T) {
 }
 
 func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) { // not a Unit test
-	d := deck.New()
+	d := deck.Deck()
 
 	var players [5]Player
 	for i := range players {

@@ -38,8 +38,8 @@ func (deck *Cards) updateDeck() {
 // Size of a deck of cards
 const Size = 40
 
-// New func
-func New() Cards {
+// Deck func
+func Deck() Cards {
 	deck := new(Cards)
 
 	rand.Seed(time.Now().UnixNano())
