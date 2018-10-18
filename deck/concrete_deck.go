@@ -10,8 +10,8 @@ type concreteDeck struct {
 // Get func
 func (deck *concreteDeck) GetIDs() []uint8 {
 	ids := []uint8{}
-	for _, card := range deck.cards {
-		ids = append(ids, uint8(card+1))
+	for index := range deck.cards {
+		ids = append(ids, deck.idAt(index))
 	}
 	return ids
 }
@@ -23,7 +23,7 @@ func (deck *concreteDeck) IsEmpty() bool {
 
 // Supply func
 func (deck *concreteDeck) Supply() card.Card {
-	card, err := card.ByID(deck.topCardID())
+	card, err := card.ByID(deck.idAt(deck.index))
 	if err != nil {
 		panic("Should not be here: " + err.Error())
 	} else {
@@ -36,6 +36,6 @@ func (deck *concreteDeck) updateTopCardIndex() {
 	deck.index++
 }
 
-func (deck *concreteDeck) topCardID() uint8 {
-	return uint8(deck.cards[deck.index] + 1)
+func (deck *concreteDeck) idAt(index int) uint8 {
+	return uint8(deck.cards[index] + 1)
 }
