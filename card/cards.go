@@ -16,7 +16,7 @@ func (cards *Cards) Add(ids ...ID) {
 // Set func
 func Set(ids ...ID) Cards {
 	var cards Cards
-	cards = append(cards, ids...)
+	cards.Add(ids...)
 	return cards
 }
 
