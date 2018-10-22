@@ -22,7 +22,7 @@ func New() *Board {
 	for i := range b.players {
 		b.players[i] = player.New()
 	}
-	for i := 0; !b.deck.IsEmpty(); i++ {
+	for i := 0; i < card.DeckSize; i++ {
 		b.players[i%5].Draw(&b.deck)
 	}
 
