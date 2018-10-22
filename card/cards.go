@@ -24,11 +24,6 @@ func (cards Cards) Has(id ID) bool {
 	return found
 }
 
-// IsEmpty func
-func (cards *Cards) IsEmpty() bool {
-	return len(*cards) <= 0 // should be 40 as it's the cards's size
-}
-
 // Supply func
 func (cards *Cards) Supply() ID {
 	card := (*cards)[0]
