@@ -4,12 +4,7 @@ import "testing"
 
 func TestCreate(t *testing.T) {
 	d := Deck()
-	count := 0
-	for !d.IsEmpty() {
-		count++
-		d.Supply()
-	}
-	if count != DeckSize {
+	if len(d) != DeckSize {
 		t.Fatalf("There should be 40 card in the deck")
 	}
 }
