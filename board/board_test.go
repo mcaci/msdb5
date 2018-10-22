@@ -21,3 +21,9 @@ func Test5PlayersDrawUntilDeckIsEmpty(t *testing.T) {
 		t.Fatal("Not all cards have been distributed")
 	}
 }
+
+func TestPlayer1Has8Cards(t *testing.T) {
+	if b := New(); len(*b.Players()[0].Hand()) != 8 {
+		t.Fatalf("Player has %d cards", len(*b.Players()[0].Hand()))
+	}
+}

@@ -8,7 +8,7 @@ import (
 // Board struct
 type Board struct {
 	deck        card.Cards
-	players     []player.Player
+	players     []*player.Player
 	playedCards card.Cards
 }
 
@@ -18,7 +18,7 @@ func New() *Board {
 
 	b.deck = card.Deck()
 
-	b.players = make([]player.Player, 5)
+	b.players = make([]*player.Player, 5)
 	for i := range b.players {
 		b.players[i] = player.New()
 	}
@@ -37,7 +37,7 @@ func (b *Board) Deck() card.Cards {
 }
 
 // Players func
-func (b *Board) Players() []player.Player {
+func (b *Board) Players() []*player.Player {
 	return b.players
 }
 

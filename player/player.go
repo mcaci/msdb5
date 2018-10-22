@@ -12,10 +12,10 @@ type Player struct {
 }
 
 // New func
-func New() Player {
+func New() *Player {
 	player := new(Player)
 	player.hand = card.Cards{}
-	return *player
+	return player
 }
 
 // Draw func
