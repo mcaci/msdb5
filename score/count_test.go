@@ -7,8 +7,7 @@ import (
 )
 
 func testScoreCount(t *testing.T, expectedScore uint8, cards ...card.ID) {
-	score := Compute(cards...)
-	if expectedScore != score {
+	if score := Compute(cards...); expectedScore != score {
 		t.Fatalf("Score expected is %d but %d was computed", expectedScore, score)
 	}
 }

@@ -15,14 +15,13 @@ func (cards *Cards) Add(id ID) {
 
 // Has func
 func (cards Cards) Has(id ID) bool {
-	var cardFound bool
-	for _, c := range cards {
-		cardFound = (c == id)
-		if cardFound {
+	var found bool
+	for _, cardID := range cards {
+		if found = (cardID == id); found {
 			break
 		}
 	}
-	return cardFound
+	return found
 }
 
 // IsEmpty func

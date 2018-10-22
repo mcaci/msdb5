@@ -5,27 +5,6 @@ import (
 	"testing"
 )
 
-func NoErrorCheck(t *testing.T, number, seed string) {
-	_, err := ByName(number, seed)
-	if err != nil {
-		t.Fatal("An unexpected error was raised")
-	}
-}
-
-func NumberOfCardCheck(t *testing.T, number, seed string) {
-	card, _ := ByName(number, seed)
-	if strconv.Itoa(int(card.Number())) != number {
-		t.Fatalf("Card %v's number is not created well from %s and %s", card, number, seed)
-	}
-}
-
-func SeedOfCardCheck(t *testing.T, number, seed string) {
-	card, _ := ByName(number, seed)
-	if card.Seed().String() != seed {
-		t.Fatalf("Card %v's number is not created well from %s and %s", card, number, seed)
-	}
-}
-
 func Test1OfCoinIsCreatedCorrectly_NoError(t *testing.T) {
 	NoErrorCheck(t, "1", "Coin")
 }
@@ -94,9 +73,26 @@ func TestEmptySeedIsIncorrect(t *testing.T) {
 	errorCheck(t, "6", "")
 }
 
+func SeedOfCardCheck(t *testing.T, number, seed string) {
+	if card, _ := ByName(number, seed); card.Seed().String() != seed {
+		t.Fatalf("Card %v's number is not created well from %s and %s", card, number, seed)
+	}
+}
+
+func NumberOfCardCheck(t *testing.T, number, seed string) {
+	if card, _ := ByName(number, seed); strconv.Itoa(int(card.Number())) != number {
+		t.Fatalf("Card %v's number is not created well from %s and %s", card, number, seed)
+	}
+}
+
+func NoErrorCheck(t *testing.T, number, seed string) {
+	if _, err := ByName(number, seed); err != nil {
+		t.Fatal("An unexpected error was raised")
+	}
+}
+
 func errorCheck(t *testing.T, number, seed string) {
-	_, err := ByName(number, seed)
-	if err == nil {
+	if _, err := ByName(number, seed); err == nil {
 		t.Fatal("The " + number + " of " + seed + " isn't a valid card")
 	}
 }

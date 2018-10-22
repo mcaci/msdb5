@@ -44,29 +44,29 @@ func TestId40IsCudgel(t *testing.T) {
 }
 
 func TestFromIdToCardToId(t *testing.T) {
-	card, _ := ByID(1)
-	if 1 != card.ID() {
+	verifyIDsAreMatching(t, 1)
+}
+
+func verifyIDsAreMatching(t *testing.T, id ID) {
+	if card, _ := ByID(id); id != card.ID() {
 		t.Fatalf("Card ids are not the same")
 	}
 }
 
-func verifyCorrectSeed(t *testing.T, id ID, seed Seed) {
-	card, _ := ByID(id)
-	if card.seed != seed {
-		t.Fatalf("Card %v's seed is not %s", card, seed)
-	}
-}
-
 func verifyInvalidID(t *testing.T, id ID) {
-	_, err := ByID(id)
-	if err == nil {
+	if _, err := ByID(id); err == nil {
 		t.Fatalf("%d is not valid id", id)
 	}
 }
 
+func verifyCorrectSeed(t *testing.T, id ID, seed Seed) {
+	if card, _ := ByID(id); card.seed != seed {
+		t.Fatalf("Card %v's seed is not %s", card, seed)
+	}
+}
+
 func verifyCorrectNumber(t *testing.T, id ID, number uint8) {
-	card, _ := ByID(id)
-	if card.number != number {
+	if card, _ := ByID(id); card.number != number {
 		t.Fatalf("Card %v's number is not %d", card, number)
 	}
 }

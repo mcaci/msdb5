@@ -33,8 +33,7 @@ func TestScenarioWithTwoBriscolaCardsAndHighCardAtTheEnd(t *testing.T) {
 }
 
 func verifyRoundScenario(t *testing.T, cardsOnTheTable card.Cards, briscola card.Seed, expectedWinner uint8) {
-	index := IndexOfWinningCard(cardsOnTheTable, briscola)
-	if index != expectedWinner {
+	if index := IndexOfWinningCard(cardsOnTheTable, briscola); index != expectedWinner {
 		t.Fatalf("Unexpected winner: winner was %d", index)
 	}
 }

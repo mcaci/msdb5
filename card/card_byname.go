@@ -9,8 +9,7 @@ import (
 func ByName(number, seed string) (Card, error) {
 	var c Card
 	var err error
-	c.number, err = toNumber(number)
-	if err == nil {
+	if c.number, err = toNumber(number); err == nil {
 		c.seed, err = toSeed(seed)
 	}
 	return c, err

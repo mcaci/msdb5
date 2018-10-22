@@ -7,8 +7,7 @@ import (
 )
 
 func TestNominateId0WillComplain(t *testing.T) {
-	_, err := Nominate("0", "Coin")
-	if err == nil {
+	if _, err := Nominate("0", "Coin"); err == nil {
 		t.Fatal("Error should be present")
 	}
 }

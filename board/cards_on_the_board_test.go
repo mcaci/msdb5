@@ -5,16 +5,14 @@ import (
 )
 
 func TestBoardHasASetOfPlayedCards(t *testing.T) {
-	b := New()
-	if b.PlayedCards() == nil {
+	if b := New(); b.PlayedCards() == nil {
 		t.Fatal("The board has no set of played cards")
 	}
 
 }
 
 func TestBoardsEmptySetOfPlayedCardsContainsNoCards(t *testing.T) {
-	b := New()
-	if b.PlayedCards().Has(1) {
+	if b := New();  b.PlayedCards().Has(1) {
 		t.Fatal("The deck should be empty at this point")
 	}
 }
