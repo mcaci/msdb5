@@ -13,8 +13,8 @@ func (cards *Cards) Add(ids ...ID) {
 	*cards = append(*cards, ids...)
 }
 
-// FillWithIDs func
-func FillWithIDs(ids ...ID) Cards {
+// Set func
+func Set(ids ...ID) Cards {
 	var cards Cards
 	cards = append(cards, ids...)
 	return cards
