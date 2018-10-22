@@ -13,13 +13,6 @@ func (cards *Cards) Add(ids ...ID) {
 	*cards = append(*cards, ids...)
 }
 
-// Set func
-func Set(ids ...ID) Cards {
-	var cards Cards
-	cards.Add(ids...)
-	return cards
-}
-
 // Has func
 func (cards Cards) Has(id ID) bool {
 	var found bool
@@ -43,12 +36,19 @@ const DeckSize = 40
 
 // Deck func
 func Deck() Cards {
-	cards := new(Cards)
+	var cards Cards
 
 	rand.Seed(time.Now().UnixNano())
 	ints := rand.Perm(DeckSize)
 	for index := range ints {
-		*cards = append(*cards, ID(ints[index]+1))
+		cards = append(cards, ID(ints[index]+1))
 	}
-	return *cards
+	return cards
+}
+
+// Set func
+func Set(ids ...ID) Cards {
+	var cards Cards
+	cards.Add(ids...)
+	return cards
 }
