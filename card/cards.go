@@ -9,8 +9,17 @@ import (
 type Cards []ID
 
 // Add func
-func (cards *Cards) Add(id ID) {
-	*cards = append(*cards, id)
+func (cards *Cards) Add(id ...ID) {
+	*cards = append(*cards, id...)
+}
+
+// FillWithIDs func
+func FillWithIDs(ids ...ID) Cards {
+	var cards Cards
+	for _, id := range ids {
+		cards.Add(id)
+	}
+	return cards
 }
 
 // Has func
@@ -44,13 +53,4 @@ func Deck() Cards {
 		*cards = append(*cards, ID(ints[index]+1))
 	}
 	return *cards
-}
-
-// FillWithIDs func
-func FillWithIDs(ids ...ID) Cards {
-	var cards Cards
-	for _, id := range ids {
-		cards.Add(id)
-	}
-	return cards
 }
