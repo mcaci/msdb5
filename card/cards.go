@@ -9,16 +9,14 @@ import (
 type Cards []ID
 
 // Add func
-func (cards *Cards) Add(id ...ID) {
-	*cards = append(*cards, id...)
+func (cards *Cards) Add(ids ...ID) {
+	*cards = append(*cards, ids...)
 }
 
 // FillWithIDs func
 func FillWithIDs(ids ...ID) Cards {
 	var cards Cards
-	for _, id := range ids {
-		cards.Add(id)
-	}
+	cards = append(cards, ids...)
 	return cards
 }
 
