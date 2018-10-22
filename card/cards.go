@@ -27,12 +27,8 @@ func (cards Cards) Has(id ID) bool {
 // Supply func
 func (cards *Cards) Supply() ID {
 	card := (*cards)[0]
-	cards.updateDeck()
-	return card
-}
-
-func (cards *Cards) updateDeck() {
 	(*cards) = (*cards)[1:]
+	return card
 }
 
 // DeckSize of a cards of cards
