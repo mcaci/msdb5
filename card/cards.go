@@ -36,19 +36,11 @@ const DeckSize = 40
 
 // Deck func
 func Deck() Cards {
-	var cards Cards
-
+	var ids Cards
 	rand.Seed(time.Now().UnixNano())
 	ints := rand.Perm(DeckSize)
 	for index := range ints {
-		cards = append(cards, ID(ints[index]+1))
+		ids.Add(ID(ints[index] + 1))
 	}
-	return cards
-}
-
-// Set func
-func Set(ids ...ID) Cards {
-	var cards Cards
-	cards.Add(ids...)
-	return cards
+	return ids
 }

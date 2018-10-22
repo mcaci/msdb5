@@ -5,31 +5,31 @@ import "github.com/nikiforosFreespirit/msdb5/card"
 
 func TestScenarioWithAceOfCoinWinning(t *testing.T) {
 	// testing 1 to 5 of Coin
-	verifyRoundScenario(t, card.Set(1, 2, 3, 4, 5), card.Coin, 0)
+	verifyRoundScenario(t, card.Cards{1, 2, 3, 4, 5}, card.Coin, 0)
 }
 
 func TestScenarioWithThreeOfCoinWinning(t *testing.T) {
 	// 2 to 6 of Coin
-	verifyRoundScenario(t, card.Set(2, 3, 4, 5, 6), card.Coin, 1)
+	verifyRoundScenario(t, card.Cards{2, 3, 4, 5, 6}, card.Coin, 1)
 }
 
 func TestScenarioWithEightOfCoinWinning(t *testing.T) {
 	// 4 to 8 of Coin
-	verifyRoundScenario(t, card.Set(4, 5, 6, 7, 8), card.Cup, 4)
+	verifyRoundScenario(t, card.Cards{4, 5, 6, 7, 8}, card.Cup, 4)
 }
 
 func TestScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
 	// 4 of Cudgel, 10 of Cudgel, 3 of Coin, 2 of Sword, 5 of Cup
-	verifyRoundScenario(t, card.Set(34, 40, 3, 22, 15), card.Sword, 3)
+	verifyRoundScenario(t, card.Cards{34, 40, 3, 22, 15}, card.Sword, 3)
 }
 
 func TestScenarioWithTwoBriscolaCards(t *testing.T) {
 	// 4 of Cudgel, 10 of Cudgel, 3 of Coin, 2 of Sword, 5 of Cup
-	verifyRoundScenario(t, card.Set(34, 40, 3, 22, 15), card.Cudgel, 1)
+	verifyRoundScenario(t, card.Cards{34, 40, 3, 22, 15}, card.Cudgel, 1)
 }
 func TestScenarioWithTwoBriscolaCardsAndHighCardAtTheEnd(t *testing.T) {
 	// 4 of Cudgel, 10 of Cudgel, 3 of Coin, 2 of Sword, 1 of Cup
-	verifyRoundScenario(t, card.Set(34, 40, 3, 22, 11), card.Cudgel, 1)
+	verifyRoundScenario(t, card.Cards{34, 40, 3, 22, 11}, card.Cudgel, 1)
 }
 
 func verifyRoundScenario(t *testing.T, cardsOnTheTable card.Cards, briscola card.Seed, expectedWinner uint8) {
