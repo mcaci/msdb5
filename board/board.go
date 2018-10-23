@@ -45,3 +45,8 @@ func (b *Board) Players() []*player.Player {
 func (b *Board) PlayedCards() *card.Cards {
 	return &b.playedCards
 }
+
+// AuctionScore func
+func (b *Board) AuctionScore() uint8 {
+	return 61
+}
