@@ -12,16 +12,17 @@ func TestPlayerPresentInList(t *testing.T) {
 	}
 }
 
-func TestPlayerPresentInListNoErr(t *testing.T) {
-	if _, err := ByName("A", []*Player{&Player{name: "A"}, &Player{name: "B"}}); err != nil {
+func errorCheck(t *testing.T, name string, errorPredicate func(error) bool) {
+	if _, err := ByName(name, []*Player{&Player{name: "A"}, &Player{name: "B"}}); errorPredicate(err) {
 		t.Fatal(err)
 	}
 }
+func TestPlayerPresentInListNoErr(t *testing.T) {
+	errorCheck(t, "A", func(e error) bool { return e != nil })
+}
 
 func TestPlayerNotPresentToReturnErr(t *testing.T) {
-	if _, err := ByName("C", []*Player{&Player{name: "A"}, &Player{name: "B"}}); err == nil {
-		t.Fatal(err)
-	}
+	errorCheck(t, "C", func(e error) bool { return e == nil })
 }
 
 // func TestPlayerPresentInListByHost(t *testing.T) {
