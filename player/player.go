@@ -45,6 +45,11 @@ func (player *Player) MyHostIs(host string) {
 	player.host = host
 }
 
+// Host func
+func (player *Player) Host() string {
+	return player.host
+}
+
 // Has func
 func (player *Player) Has(id card.ID) bool {
 	return player.Hand().Has(id)

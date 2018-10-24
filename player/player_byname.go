@@ -13,6 +13,15 @@ func ByName(name string, players []*Player) (player *Player, err error) {
 		}
 	}
 	if !found {
+		for _, p := range players {
+			found = p.Host() == name
+			if found {
+				player = p
+				break
+			}
+		}
+	}
+	if !found {
 		err = errors.New("Player " + name + " not found")
 	}
 	return
