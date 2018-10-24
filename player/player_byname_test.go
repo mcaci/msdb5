@@ -4,16 +4,17 @@ import (
 	"testing"
 )
 
+var testPlayers = []*Player{&Player{name: "A"}, &Player{name: "B"}}
+
 func TestPlayerPresentInList(t *testing.T) {
-	player := Player{name: "A"}
-	playerByName, _ := ByName("A", []*Player{&Player{name: "A"}, &Player{name: "B"}})
-	if player.Name() != playerByName.Name() {
-		t.Fatalf("%v and %v are expected to be the same player", player, playerByName)
+	name := "A"
+	if player, _ := ByName(name, testPlayers); name != player.Name() {
+		t.Fatalf("%v and %v are expected to be the same player", name, player)
 	}
 }
 
 func errorCheck(t *testing.T, name string, errorPredicate func(error) bool) {
-	if _, err := ByName(name, []*Player{&Player{name: "A"}, &Player{name: "B"}}); errorPredicate(err) {
+	if _, err := ByName(name, testPlayers); errorPredicate(err) {
 		t.Fatal(err)
 	}
 }
@@ -31,7 +32,7 @@ func TestPlayerNotPresentToReturnErr(t *testing.T) {
 // 	if err != nil {
 // 		t.Fatal(err)
 // 	}
-// 	// if player.Name() != playerByName.Name() {
-// 	// 	t.Fatalf("%v and %v are expected to be the same player", player, playerByName)
+// 	// if player.Name() != player.Name() {
+// 	// 	t.Fatalf("%v and %v are expected to be the same player", player, player)
 // 	// }
 // }
