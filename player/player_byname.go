@@ -1,13 +1,19 @@
 package player
 
+import "errors"
+
 // ByName func
-func ByName(name string, players []*Player) *Player {
-	var p1 *Player
+func ByName(name string, players []*Player) (player *Player, err error) {
+	var found bool
 	for _, p := range players {
-		if p.Name() == name {
-			p1 = p
+		found = p.Name() == name
+		if found {
+			player = p
 			break
 		}
 	}
-	return p1
+	if !found {
+		err = errors.New("Player " + name + " not found")
+	}
+	return
 }
