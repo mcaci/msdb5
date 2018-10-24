@@ -9,20 +9,20 @@ var testPlayersWithHost = []*Player{&Player{host: "A"}, &Player{host: "B"}}
 
 func TestPlayerPresentInListByName(t *testing.T) {
 	name := "A"
-	if player, _ := ByName(name, testPlayers); name != player.Name() {
+	if player, _ := Find(name, testPlayers); name != player.Name() {
 		t.Fatalf("%v and %v are expected to be the same player", name, player)
 	}
 }
 
 func TestPlayerPresentInListByHost(t *testing.T) {
 	host := "A"
-	if player, _ := ByName(host, testPlayersWithHost); host != player.Host() {
+	if player, _ := Find(host, testPlayersWithHost); host != player.Host() {
 		t.Fatalf("%v and %v are expected to be the same player", host, player)
 	}
 }
 
 func errorCheck(t *testing.T, nameOrHost string, players []*Player, errorPredicate func(error) bool) {
-	if _, err := ByName(nameOrHost, players); errorPredicate(err) {
+	if _, err := Find(nameOrHost, players); errorPredicate(err) {
 		t.Fatal(err)
 	}
 }
