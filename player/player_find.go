@@ -3,43 +3,22 @@ package player
 import "errors"
 
 // Find func
-func Find(nameOrHost string, players []*Player) (player *Player, err error) {
-	player, err = ByName(nameOrHost, players)
-	if err != nil {
-		player, err = ByHost(nameOrHost, players)
+func Find(nameOrHost string, players []*Player) (p *Player, err error) {
+	p, found := findInfoIn(players, func(pl *Player) bool { return pl.Name() == nameOrHost })
+	if !found {
+		p, found = findInfoIn(players, func(pl *Player) bool { return pl.Host() == nameOrHost })
 	}
-	if err != nil {
+	if !found {
 		err = errors.New("Player " + nameOrHost + " not found")
 	}
 	return
 }
 
-func ByName(name string, players []*Player) (player *Player, err error) {
-	var found bool
+func findInfoIn(players []*Player, isInfoPresent func(*Player) bool) (player *Player, found bool) {
 	for _, p := range players {
-		found = p.Name() == name
-		if found {
-			player = p
-			break
+		if isInfoPresent(p) {
+			return p, true
 		}
-	}
-	if !found {
-		err = errors.New("Player " + name + " not found")
-	}
-	return
-}
-
-func ByHost(host string, players []*Player) (player *Player, err error) {
-	var found bool
-	for _, p := range players {
-		found = p.Host() == host
-		if found {
-			player = p
-			break
-		}
-	}
-	if !found {
-		err = errors.New("Player " + host + " not found")
 	}
 	return
 }
