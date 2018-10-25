@@ -7,9 +7,10 @@ import (
 
 // Board struct
 type Board struct {
-	deck        card.Cards
-	players     []*player.Player
-	playedCards card.Cards
+	deck         card.Cards
+	players      []*player.Player
+	playedCards  card.Cards
+	auctionScore uint8
 }
 
 // New func
@@ -48,5 +49,5 @@ func (b *Board) PlayedCards() *card.Cards {
 
 // AuctionScore func
 func (b *Board) AuctionScore() uint8 {
-	return 61
+	return b.auctionScore
 }
