@@ -55,6 +55,11 @@ func (player *Player) Has(id card.ID) bool {
 	return player.Hand().Has(id)
 }
 
+// Fold func
+func (player *Player) Fold() bool {
+	return true
+}
+
 func (player Player) String() string {
 	str := "Player["
 	str += "Name:" + player.name + ";"
