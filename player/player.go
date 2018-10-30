@@ -60,6 +60,10 @@ func (player *Player) Fold() bool {
 	return true
 }
 
+func (player Player) Pile() *card.Cards {
+	return &card.Cards{}
+}
+
 func (player Player) String() string {
 	str := "Player["
 	str += "Name:" + player.name + ";"
