@@ -9,6 +9,7 @@ import (
 type Board struct {
 	players      []*player.Player
 	playedCards  card.Cards
+	selectedCard card.Card
 	auctionScore uint8
 }
 
@@ -51,4 +52,9 @@ func (b *Board) SetAuctionScore(score uint8) {
 // AuctionScore func
 func (b *Board) AuctionScore() uint8 {
 	return b.auctionScore
+}
+
+// SelectedCard func
+func (b *Board) SelectedCard() *card.Card {
+	return &b.selectedCard
 }
