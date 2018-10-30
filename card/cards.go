@@ -1,10 +1,5 @@
 package card
 
-import (
-	"math/rand"
-	"time"
-)
-
 // Cards type
 type Cards []ID
 
@@ -29,18 +24,4 @@ func (cards *Cards) Supply() ID {
 	card := (*cards)[0]
 	(*cards) = (*cards)[1:]
 	return card
-}
-
-// DeckSize of a cards of cards
-const DeckSize = 40
-
-// Deck func
-func Deck() Cards {
-	var ids Cards
-	rand.Seed(time.Now().UnixNano())
-	ints := rand.Perm(DeckSize)
-	for index := range ints {
-		ids.Add(ID(ints[index] + 1))
-	}
-	return ids
 }
