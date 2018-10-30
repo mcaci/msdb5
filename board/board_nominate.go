@@ -12,3 +12,8 @@ func (b *Board) Nominate(number, seed string) (card.Card, error) {
 	}
 	return card, err
 }
+
+// NominatedCard func
+func (b *Board) NominatedCard() *card.Card {
+	return &b.selectedCard
+}

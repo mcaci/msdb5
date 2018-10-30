@@ -34,27 +34,3 @@ func playersDrawAllCards(players *[]*player.Player) {
 	}
 }
 
-// Players func
-func (b *Board) Players() []*player.Player {
-	return b.players
-}
-
-// PlayedCards func
-func (b *Board) PlayedCards() *card.Cards {
-	return &b.playedCards
-}
-
-// SetAuctionScore func
-func (b *Board) SetAuctionScore(score uint8) {
-	b.auctionScore = score
-}
-
-// AuctionScore func
-func (b *Board) AuctionScore() uint8 {
-	return b.auctionScore
-}
-
-// SelectedCard func
-func (b *Board) SelectedCard() *card.Card {
-	return &b.selectedCard
-}

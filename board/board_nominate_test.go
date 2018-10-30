@@ -25,7 +25,7 @@ func TestNominateId1WillNominateAceOfCoin(t *testing.T) {
 func TestCardNominatedIsStoredOnBoard(t *testing.T) {
 	board := New()
 	actualCard, err := board.Nominate("1", "Coin")
-	expectedCard := *board.SelectedCard()
+	expectedCard := *board.NominatedCard()
 	if err != nil || expectedCard != actualCard {
 		t.Fatalf("Card nominated should be %v but %v was computed", expectedCard, actualCard)
 	}
