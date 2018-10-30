@@ -1,4 +1,4 @@
-package score
+package board
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
