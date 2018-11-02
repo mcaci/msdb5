@@ -16,17 +16,17 @@ func ByID(id ID) (Card, error) {
 	} else if id > 40 {
 		err = errors.New("Index cannot be more than 40")
 	} else {
-		number := intoNumber(id)
-		seed := intoSeed(id)
+		number := extractNumber(id)
+		seed := extractSeed(id)
 		card = Card{number: number, seed: seed}
 	}
 	return card, err
 }
 
-func intoNumber(id ID) uint8 {
+func extractNumber(id ID) uint8 {
 	return (uint8(id)-1)%10 + 1
 }
 
-func intoSeed(id ID) Seed {
+func extractSeed(id ID) Seed {
 	return Seed((uint8(id) - 1) / 10)
 }
