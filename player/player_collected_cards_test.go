@@ -15,7 +15,7 @@ func TestPlayerHasNoCardsAtStartGame(t *testing.T) {
 func TestPlayerWinsCards(t *testing.T) {
 	p := New()
 	cards := card.Cards{1, 2, 3, 4, 5}
-	p.Pile().Add(cards...)
+	p.Collect(cards)
 
 	if collectedCards := p.Pile(); collectedCards == nil {
 		t.Fatalf("Player should have %v but has %v", cards, collectedCards)

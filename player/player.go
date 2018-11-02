@@ -36,8 +36,8 @@ func (player *Player) Name() string {
 	return player.name
 }
 
-// Iam func
-func (player *Player) Iam(name string) {
+// SetName func
+func (player *Player) SetName(name string) {
 	player.name = name
 }
 
@@ -66,14 +66,7 @@ func (player *Player) Pile() *card.Cards {
 	return &player.pile
 }
 
-func (player Player) String() string {
-	str := "Player["
-	str += "Name:" + player.name + ";"
-	str += "Host:" + player.host + ";"
-	for _, cardID := range player.hand {
-		c, _ := card.ByID(cardID)
-		str += c.String() + " "
-	}
-	str += "]"
-	return str
+// Collect func
+func (player *Player) Collect(cards card.Cards) {
+	player.pile.Add(cards...)
 }
