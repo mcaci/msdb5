@@ -1,4 +1,4 @@
-package round
+package rule
 
 import (
 	"testing"

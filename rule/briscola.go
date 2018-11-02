@@ -1,4 +1,4 @@
-package round
+package rule
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
