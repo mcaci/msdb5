@@ -2,10 +2,14 @@ package player
 
 func (player Player) String() string {
 	str := "Player["
-	str += "Name:" + player.name + ";"
-	str += "Host:" + player.host + ";"
-	str += "Hand:" + player.hand.String() + ";"
-	str += "Pile:" + player.pile.String() + ";"
+	str += print("Name", player.name)
+	str += print("Host", player.host)
+	str += print("Hand", player.hand.String())
+	str += print("Pile", player.pile.String())
 	str += "]"
 	return str
+}
+
+func print(info, field string) string {
+	return info + ":" + field + ";"
 }
