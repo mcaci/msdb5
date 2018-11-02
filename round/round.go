@@ -1,6 +1,9 @@
 package round
 
-import "github.com/nikiforosFreespirit/msdb5/card"
+import (
+	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/rule"
+)
 
 // IndexOfWinningCard func
 func IndexOfWinningCard(cardsOnTheTable card.Cards, briscola card.Seed) uint8 {
@@ -9,7 +12,7 @@ func IndexOfWinningCard(cardsOnTheTable card.Cards, briscola card.Seed) uint8 {
 	for i, otherID := range cardsOnTheTable {
 		base, _ := card.ByID(baseID)
 		other, _ := card.ByID(otherID)
-		if DoesOtherCardWin(base, other, briscola) {
+		if rule.DoesOtherCardWin(base, other, briscola) {
 			baseID = otherID
 			max = i
 		}
