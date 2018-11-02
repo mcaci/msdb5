@@ -4,9 +4,6 @@ import (
 	"errors"
 )
 
-// ID is the id of a card from 1 to 40
-type ID uint8
-
 // ByID func
 func ByID(id ID) (Card, error) {
 	var card Card
@@ -24,9 +21,9 @@ func ByID(id ID) (Card, error) {
 }
 
 func extractNumber(id ID) uint8 {
-	return (uint8(id)-1)%10 + 1
+	return toZeroBased(id)%10 + 1
 }
 
 func extractSeed(id ID) Seed {
-	return Seed((uint8(id) - 1) / 10)
+	return Seed(toZeroBased(id) / 10)
 }
