@@ -9,6 +9,7 @@ type Player struct {
 	name string
 	host string
 	hand card.Cards
+	pile card.Cards
 }
 
 // New func
@@ -60,8 +61,9 @@ func (player *Player) Fold() bool {
 	return true
 }
 
-func (player Player) Pile() *card.Cards {
-	return &card.Cards{}
+// Pile func
+func (player *Player) Pile() *card.Cards {
+	return &player.pile
 }
 
 func (player Player) String() string {
