@@ -23,6 +23,10 @@ func By(hc Creator) (Card, error) {
 	return c, err
 }
 
+func ByName(number, seed string) (Card, error) {
+	return By(HCard{number, seed})
+}
+
 func toZeroBased(id ID) uint8 {
 	return uint8(id) - 1
 }

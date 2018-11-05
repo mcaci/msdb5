@@ -5,10 +5,6 @@ import (
 	"strconv"
 )
 
-func ByName(number, seed string) (Card, error) {
-	return By(HCard{number, seed})
-}
-
 func (hc HCard) toNumber() (uint8, error) {
 	n, err := strconv.Atoi(hc.number)
 
