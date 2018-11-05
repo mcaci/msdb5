@@ -48,25 +48,25 @@ func TestFromIdToCardToId(t *testing.T) {
 }
 
 func verifyIDsAreMatching(t *testing.T, id ID) {
-	if card, _ := ByID(id); id != card.ID() {
+	if card, _ := By(id); id != card.ID() {
 		t.Fatalf("Card ids are not the same")
 	}
 }
 
 func verifyInvalidID(t *testing.T, id ID) {
-	if _, err := ByID(id); err == nil {
+	if _, err := By(id); err == nil {
 		t.Fatalf("%d is not valid id", id)
 	}
 }
 
 func verifyCorrectSeed(t *testing.T, id ID, seed Seed) {
-	if card, _ := ByID(id); card.seed != seed {
+	if card, _ := By(id); card.seed != seed {
 		t.Fatalf("Card %v's seed is not %s", card, seed)
 	}
 }
 
 func verifyCorrectNumber(t *testing.T, id ID, number uint8) {
-	if card, _ := ByID(id); card.number != number {
+	if card, _ := By(id); card.number != number {
 		t.Fatalf("Card %v's number is not %d", card, number)
 	}
 }

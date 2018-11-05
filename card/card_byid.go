@@ -4,10 +4,6 @@ import (
 	"errors"
 )
 
-func ByID(id ID) (Card, error) {
-	return Create(id)
-}
-
 func (id ID) toNumber() (uint8, error) {
 	var n uint8
 	var err error

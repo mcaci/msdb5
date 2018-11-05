@@ -13,8 +13,8 @@ type Creator interface {
 	toSeed() (Seed, error)
 }
 
-// Create func
-func Create(hc Creator) (Card, error) {
+// By func
+func By(hc Creator) (Card, error) {
 	var c Card
 	var err error
 	if c.number, err = hc.toNumber(); err == nil {
