@@ -12,11 +12,15 @@ func (id ID) toNumber() (uint8, error) {
 	} else if id > 40 {
 		err = errors.New("Index cannot be more than 40")
 	} else {
-		n = toZeroBased(id)%10 + 1
+		n = id.toZeroBased()%10 + 1
 	}
 	return n, err
 }
 
 func (id ID) toSeed() (Seed, error) {
-	return Seed(toZeroBased(id) / 10), nil
+	return Seed(id.toZeroBased() / 10), nil
+}
+
+func (id ID) toZeroBased() uint8 {
+	return uint8(id) - 1
 }

@@ -27,10 +27,6 @@ func ByName(number, seed string) (Card, error) {
 	return By(HCard{number, seed})
 }
 
-func toZeroBased(id ID) uint8 {
-	return uint8(id) - 1
-}
-
 func fromZeroBased(index uint8) ID {
 	return ID(index + 1)
 }
