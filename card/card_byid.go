@@ -4,17 +4,21 @@ import (
 	"errors"
 )
 
-// ByID func
 func ByID(id ID) (Card, error) {
+	return id.ByID()
+}
+
+// ByID func
+func (id ID) ByID() (Card, error) {
 	var c Card
 	var err error
-	if c.number, err = extractNumber(id); err == nil {
-		c.seed, _ = extractSeed(id)
+	if c.number, err = id.extractNumber(); err == nil {
+		c.seed, _ = id.extractSeed()
 	}
 	return c, err
 }
 
-func extractNumber(id ID) (uint8, error) {
+func (id ID) extractNumber() (uint8, error) {
 	var n uint8
 	var err error
 	if id < 1 {
@@ -27,6 +31,6 @@ func extractNumber(id ID) (uint8, error) {
 	return n, err
 }
 
-func extractSeed(id ID) (Seed, error) {
+func (id ID) extractSeed() (Seed, error) {
 	return Seed(toZeroBased(id) / 10), nil
 }
