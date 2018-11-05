@@ -9,13 +9,13 @@ import (
 func ByName(number, seed string) (Card, error) {
 	var c Card
 	var err error
-	if c.number, err = toNumber(number); err == nil {
-		c.seed, err = toSeed(seed)
+	if c.number, err = toNumber(number, seed); err == nil {
+		c.seed, err = toSeed(number, seed)
 	}
 	return c, err
 }
 
-func toNumber(number string) (uint8, error) {
+func toNumber(number, seed string) (uint8, error) {
 	n, err := strconv.Atoi(number)
 
 	if n > 10 || n < 1 {
@@ -24,7 +24,7 @@ func toNumber(number string) (uint8, error) {
 	return uint8(n), err
 }
 
-func toSeed(seed string) (Seed, error) {
+func toSeed(number, seed string) (Seed, error) {
 	var s Seed
 	var err error
 
