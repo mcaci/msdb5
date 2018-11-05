@@ -8,6 +8,21 @@ type HCard struct {
 	number, seed string
 }
 
+type Creator interface {
+	toNumber() (uint8, error)
+	toSeed() (Seed, error)
+}
+
+// Create func
+func Create(hc Creator) (Card, error) {
+	var c Card
+	var err error
+	if c.number, err = hc.toNumber(); err == nil {
+		c.seed, err = hc.toSeed()
+	}
+	return c, err
+}
+
 func toZeroBased(id ID) uint8 {
 	return uint8(id) - 1
 }

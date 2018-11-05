@@ -5,17 +5,7 @@ import (
 )
 
 func ByID(id ID) (Card, error) {
-	return id.Card()
-}
-
-// ByID func
-func (id ID) Card() (Card, error) {
-	var c Card
-	var err error
-	if c.number, err = id.toNumber(); err == nil {
-		c.seed, err = id.toSeed()
-	}
-	return c, err
+	return Create(id)
 }
 
 func (id ID) toNumber() (uint8, error) {

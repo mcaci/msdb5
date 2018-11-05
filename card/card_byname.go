@@ -6,18 +6,9 @@ import (
 )
 
 func ByName(number, seed string) (Card, error) {
-	return HCard{number, seed}.Card()
+	return Create(HCard{number, seed})
 }
 
-// ByName func
-func (hc HCard) Card() (Card, error) {
-	var c Card
-	var err error
-	if c.number, err = hc.toNumber(); err == nil {
-		c.seed, err = hc.toSeed()
-	}
-	return c, err
-}
 
 func (hc HCard) toNumber() (uint8, error) {
 	n, err := strconv.Atoi(hc.number)
