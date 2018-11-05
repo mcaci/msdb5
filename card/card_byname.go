@@ -6,11 +6,11 @@ import (
 )
 
 func ByName(number, seed string) (Card, error) {
-	return HCard{number, seed}.ByName()
+	return HCard{number, seed}.Card()
 }
 
 // ByName func
-func (hc HCard) ByName() (Card, error) {
+func (hc HCard) Card() (Card, error) {
 	var c Card
 	var err error
 	if c.number, err = hc.toNumber(); err == nil {

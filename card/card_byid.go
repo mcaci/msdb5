@@ -5,20 +5,20 @@ import (
 )
 
 func ByID(id ID) (Card, error) {
-	return id.ByID()
+	return id.Card()
 }
 
 // ByID func
-func (id ID) ByID() (Card, error) {
+func (id ID) Card() (Card, error) {
 	var c Card
 	var err error
-	if c.number, err = id.extractNumber(); err == nil {
-		c.seed, _ = id.extractSeed()
+	if c.number, err = id.toNumber(); err == nil {
+		c.seed, _ = id.toSeed()
 	}
 	return c, err
 }
 
-func (id ID) extractNumber() (uint8, error) {
+func (id ID) toNumber() (uint8, error) {
 	var n uint8
 	var err error
 	if id < 1 {
@@ -31,6 +31,6 @@ func (id ID) extractNumber() (uint8, error) {
 	return n, err
 }
 
-func (id ID) extractSeed() (Seed, error) {
+func (id ID) toSeed() (Seed, error) {
 	return Seed(toZeroBased(id) / 10), nil
 }
