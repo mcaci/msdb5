@@ -8,6 +8,7 @@ type HCard struct {
 	number, seed string
 }
 
+// Creator interface to represent what's needed to create a card
 type Creator interface {
 	toNumber() (uint8, error)
 	toSeed() (Seed, error)
@@ -33,4 +34,3 @@ func ByName(number, seed string) (Card, error) {
 	}
 	return c, err
 }
-
