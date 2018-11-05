@@ -9,7 +9,7 @@ func (hc HCard) toNumber() (uint8, error) {
 	n, err := strconv.Atoi(hc.number)
 
 	if n > 10 || n < 1 {
-		err = errors.New("hc.number '" + hc.number + "' doesn't exist")
+		err = errors.New("Number '" + hc.number + "' doesn't exist")
 	}
 	return uint8(n), err
 }
@@ -28,7 +28,7 @@ func (hc HCard) toSeed() (Seed, error) {
 	case Cudgel.String():
 		s = Cudgel
 	default:
-		err = errors.New("seed '" + hc.seed + "' doesn't exist")
+		err = errors.New("Seed '" + hc.seed + "' doesn't exist")
 	}
 	return s, err
 }
