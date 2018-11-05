@@ -18,3 +18,7 @@ func Deck() Cards {
 	}
 	return ids
 }
+
+func fromZeroBased(index uint8) ID {
+	return ID(index + 1)
+}

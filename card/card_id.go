@@ -23,10 +23,14 @@ func By(hc Creator) (Card, error) {
 	return c, err
 }
 
+// ByName func
 func ByName(number, seed string) (Card, error) {
-	return By(HCard{number, seed})
+	hc := HCard{number, seed}
+	var c Card
+	var err error
+	if c.number, err = hc.toNumber(); err == nil {
+		c.seed, err = hc.toSeed()
+	}
+	return c, err
 }
 
-func fromZeroBased(index uint8) ID {
-	return ID(index + 1)
-}
