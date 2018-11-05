@@ -13,7 +13,7 @@ func (id ID) Card() (Card, error) {
 	var c Card
 	var err error
 	if c.number, err = id.toNumber(); err == nil {
-		c.seed, _ = id.toSeed()
+		c.seed, err = id.toSeed()
 	}
 	return c, err
 }
