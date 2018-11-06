@@ -5,6 +5,22 @@ import (
 	"strconv"
 )
 
+// StrData is a card represented by string
+type StrData struct {
+	number, seed string
+}
+
+// ByName func
+func ByName(number, seed string) (ID, error) {
+	sCard := StrData{number, seed}
+	var c Data
+	var err error
+	if c.number, err = sCard.toNumber(); err == nil {
+		c.seed, err = sCard.toSeed()
+	}
+	return c.ID(), err
+}
+
 func (sCard StrData) toNumber() (uint8, error) {
 	n, err := strconv.Atoi(sCard.number)
 

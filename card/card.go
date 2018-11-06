@@ -8,10 +8,6 @@ type Data struct {
 	seed   Seed
 }
 
-// StrData is a card represented by string
-type StrData struct {
-	number, seed string
-}
 
 // ID is the id of a card from 1 to 40
 type ID uint8
@@ -20,16 +16,6 @@ type ID uint8
 type Creator interface {
 	ToNumber() uint8
 	ToSeed() Seed
-}
-
-// By func
-func By(sCard ID) (ID, error) {
-	var c Data
-	var err error
-	if c.number, err = sCard.toNumber(); err == nil {
-		c.seed, err = sCard.toSeed()
-	}
-	return c.ID(), err
 }
 
 // Card func
@@ -44,16 +30,6 @@ func Card(index uint8) (id ID, err error) {
 	return
 }
 
-// ByName func
-func ByName(number, seed string) (ID, error) {
-	sCard := StrData{number, seed}
-	var c Data
-	var err error
-	if c.number, err = sCard.toNumber(); err == nil {
-		c.seed, err = sCard.toSeed()
-	}
-	return c.ID(), err
-}
 
 // ID func
 func (card *Data) ID() ID {
