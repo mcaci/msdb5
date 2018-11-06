@@ -16,12 +16,12 @@ type ID uint8
 
 // Creator interface to represent what's needed to create a card
 type Creator interface {
-	toNumber() (uint8, error)
-	toSeed() (Seed, error)
+	ToNumber() uint8
+	ToSeed() Seed
 }
 
 // By func
-func By(sCard Creator) (Data, error) {
+func By(sCard ID) (Data, error) {
 	var c Data
 	var err error
 	if c.number, err = sCard.toNumber(); err == nil {
