@@ -1,23 +1,13 @@
 package card
 
-func (id ID) toNumber() (uint8, error) {
-	return id.toZeroBased()%10 + 1, nil
-}
-
-func (id ID) toSeed() (Seed, error) {
-	return Seed(id.toZeroBased() / 10), nil
-}
-
 // ToNumber func
 func (id ID) ToNumber() uint8 {
-	n, _ := id.toNumber()
-	return n
+	return id.toZeroBased()%10 + 1
 }
 
 // ToSeed func
 func (id ID) ToSeed() Seed {
-	s, _ := id.toSeed()
-	return s
+	return Seed(id.toZeroBased() / 10)
 }
 
 func (id ID) toZeroBased() uint8 {
