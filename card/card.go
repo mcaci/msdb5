@@ -1,5 +1,7 @@
 package card
 
+import "errors"
+
 // Data type
 type Data struct {
 	number uint8
@@ -28,6 +30,18 @@ func By(sCard ID) (ID, error) {
 		c.seed, err = sCard.toSeed()
 	}
 	return c.ID(), err
+}
+
+// Card func
+func Card(index uint8) (id ID, err error) {
+	if index < 1 {
+		err = errors.New("Index cannot be less than 1")
+	} else if index > 40 {
+		err = errors.New("Index cannot be more than 40")
+	} else {
+		id = ID(index)
+	}
+	return
 }
 
 // ByName func
