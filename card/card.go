@@ -21,24 +21,24 @@ type Creator interface {
 }
 
 // By func
-func By(sCard ID) (Data, error) {
+func By(sCard ID) (ID, error) {
 	var c Data
 	var err error
 	if c.number, err = sCard.toNumber(); err == nil {
 		c.seed, err = sCard.toSeed()
 	}
-	return c, err
+	return c.ID(), err
 }
 
 // ByName func
-func ByName(number, seed string) (Data, error) {
+func ByName(number, seed string) (ID, error) {
 	sCard := StrData{number, seed}
 	var c Data
 	var err error
 	if c.number, err = sCard.toNumber(); err == nil {
 		c.seed, err = sCard.toSeed()
 	}
-	return c, err
+	return c.ID(), err
 }
 
 // ID func
@@ -47,18 +47,18 @@ func (card *Data) ID() ID {
 }
 
 // Number func
-func (card *Data) Number() uint8 {
-	return card.number
+func (card *ID) Number() uint8 {
+	return card.ToNumber()
 }
 
 // Seed func
-func (card *Data) Seed() Seed {
-	return card.seed
+func (card *ID) Seed() Seed {
+	return card.ToSeed()
 }
 
 // Points func
-func (card *Data) Points() uint8 {
-	switch card.number {
+func (card *ID) Points() uint8 {
+	switch card.ToNumber() {
 	case 1:
 		return 11
 	case 3:

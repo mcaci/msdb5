@@ -21,11 +21,13 @@ func (id ID) toSeed() (Seed, error) {
 	return Seed(id.toZeroBased() / 10), nil
 }
 
+// ToNumber func
 func (id ID) ToNumber() uint8 {
 	n, _ := id.toNumber()
 	return n
 }
 
+// ToSeed func
 func (id ID) ToSeed() Seed {
 	s, _ := id.toSeed()
 	return s

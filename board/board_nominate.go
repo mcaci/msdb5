@@ -5,7 +5,7 @@ import (
 )
 
 // Nominate func
-func (b *Board) Nominate(number, seed string) (card.Data, error) {
+func (b *Board) Nominate(number, seed string) (card.ID, error) {
 	card, err := card.ByName(number, seed)
 	if err == nil {
 		b.selectedCard = card
@@ -14,6 +14,6 @@ func (b *Board) Nominate(number, seed string) (card.Data, error) {
 }
 
 // NominatedCard func
-func (b *Board) NominatedCard() *card.Data {
+func (b *Board) NominatedCard() *card.ID {
 	return &b.selectedCard
 }

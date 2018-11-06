@@ -9,7 +9,7 @@ import (
 type Board struct {
 	players      []*player.Player
 	playedCards  card.Cards
-	selectedCard card.Data
+	selectedCard card.ID
 	auctionScore uint8
 }
 

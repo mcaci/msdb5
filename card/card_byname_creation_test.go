@@ -74,28 +74,28 @@ func TestEmptySeedIsIncorrect(t *testing.T) {
 }
 
 func SeedOfCardCheck(t *testing.T, number, seed string) {
-	check := func(card Data, err error) bool { return card.Seed().String() != seed }
+	check := func(card ID, err error) bool { return card.Seed().String() != seed }
 	if check(ByName(number, seed)) {
 		t.Fatalf("Card's number is not created well from %s and %s", number, seed)
 	}
 }
 
 func NumberOfCardCheck(t *testing.T, number, seed string) {
-	check := func(card Data, err error) bool { return strconv.Itoa(int(card.Number())) != number }
+	check := func(card ID, err error) bool { return strconv.Itoa(int(card.Number())) != number }
 	if check(ByName(number, seed)) {
 		t.Fatalf("Card's number is not created well from %s and %s", number, seed)
 	}
 }
 
 func NoErrorCheck(t *testing.T, number, seed string) {
-	check := func(card Data, err error) bool { return err != nil }
+	check := func(card ID, err error) bool { return err != nil }
 	if check(ByName(number, seed)) {
 		t.Fatalf("An unexpected error was raised")
 	}
 }
 
 func errorCheck(t *testing.T, number, seed string) {
-	check := func(card Data, err error) bool { return err == nil }
+	check := func(card ID, err error) bool { return err == nil }
 	if check(ByName(number, seed)) {
 		t.Fatalf("The %s of %s isn't a valid card", number, seed)
 	}
