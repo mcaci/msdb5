@@ -5,10 +5,8 @@ import (
 )
 
 // Compute func
-func Compute(cards ...card.ID) uint8 {
-	var sum uint8
-	for _, id := range cards {
-		card, _ := card.By(id)
+func Compute(cards card.Cards) (sum uint8) {
+	for _, card := range cards {
 		sum += card.Points()
 	}
 	return sum
