@@ -6,8 +6,8 @@ type Card struct {
 	seed   Seed
 }
 
-// HCard is a card represented by string
-type HCard struct {
+// StrCard is a card represented by string
+type StrCard struct {
 	number, seed string
 }
 
@@ -21,22 +21,22 @@ type Creator interface {
 }
 
 // By func
-func By(hc Creator) (Card, error) {
+func By(sCard Creator) (Card, error) {
 	var c Card
 	var err error
-	if c.number, err = hc.toNumber(); err == nil {
-		c.seed, err = hc.toSeed()
+	if c.number, err = sCard.toNumber(); err == nil {
+		c.seed, err = sCard.toSeed()
 	}
 	return c, err
 }
 
 // ByName func
 func ByName(number, seed string) (Card, error) {
-	hc := HCard{number, seed}
+	sCard := StrCard{number, seed}
 	var c Card
 	var err error
-	if c.number, err = hc.toNumber(); err == nil {
-		c.seed, err = hc.toSeed()
+	if c.number, err = sCard.toNumber(); err == nil {
+		c.seed, err = sCard.toSeed()
 	}
 	return c, err
 }
