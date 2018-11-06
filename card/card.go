@@ -8,15 +8,8 @@ type Data struct {
 	seed   Seed
 }
 
-
 // ID is the id of a card from 1 to 40
 type ID uint8
-
-// Creator interface to represent what's needed to create a card
-type Creator interface {
-	ToNumber() uint8
-	ToSeed() Seed
-}
 
 // Card func
 func Card(index uint8) (id ID, err error) {
@@ -29,7 +22,6 @@ func Card(index uint8) (id ID, err error) {
 	}
 	return
 }
-
 
 // ID func
 func (card *Data) ID() ID {
