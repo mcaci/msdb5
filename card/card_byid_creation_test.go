@@ -49,7 +49,7 @@ func TestFromIdToCardToId(t *testing.T) {
 
 func verifyIDsAreMatching(t *testing.T, id ID) {
 	if card, _ := By(id); id != card.ID() {
-		t.Fatalf("Data ids are not the same")
+		t.Fatalf("Card ids are not the same")
 	}
 }
 
@@ -61,12 +61,12 @@ func verifyInvalidID(t *testing.T, id ID) {
 
 func verifyCorrectSeed(t *testing.T, id ID, seed Seed) {
 	if card, _ := By(id); card.seed != seed {
-		t.Fatalf("Data %v's seed is not %s", card, seed)
+		t.Fatalf("Card %v's seed is not %s", card, seed)
 	}
 }
 
 func verifyCorrectNumber(t *testing.T, id ID, number uint8) {
 	if card, _ := By(id); card.number != number {
-		t.Fatalf("Data %v's number is not %d", card, number)
+		t.Fatalf("Card %v's number is not %d", card, number)
 	}
 }

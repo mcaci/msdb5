@@ -76,14 +76,14 @@ func TestEmptySeedIsIncorrect(t *testing.T) {
 func SeedOfCardCheck(t *testing.T, number, seed string) {
 	check := func(card Data, err error) bool { return card.Seed().String() != seed }
 	if check(By(StrData{number, seed})) {
-		t.Fatalf("Data's number is not created well from %s and %s", number, seed)
+		t.Fatalf("Card's number is not created well from %s and %s", number, seed)
 	}
 }
 
 func NumberOfCardCheck(t *testing.T, number, seed string) {
 	check := func(card Data, err error) bool { return strconv.Itoa(int(card.Number())) != number }
 	if check(By(StrData{number, seed})) {
-		t.Fatalf("Data's number is not created well from %s and %s", number, seed)
+		t.Fatalf("Card's number is not created well from %s and %s", number, seed)
 	}
 }
 
