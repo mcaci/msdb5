@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func (sCard StrCard) toNumber() (uint8, error) {
+func (sCard StrData) toNumber() (uint8, error) {
 	n, err := strconv.Atoi(sCard.number)
 
 	if n > 10 || n < 1 {
@@ -14,7 +14,7 @@ func (sCard StrCard) toNumber() (uint8, error) {
 	return uint8(n), err
 }
 
-func (sCard StrCard) toSeed() (Seed, error) {
+func (sCard StrData) toSeed() (Seed, error) {
 	var s Seed
 	var err error
 

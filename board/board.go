@@ -9,7 +9,7 @@ import (
 type Board struct {
 	players      []*player.Player
 	playedCards  card.Cards
-	selectedCard card.Card
+	selectedCard card.Data
 	auctionScore uint8
 }
 
@@ -33,4 +33,3 @@ func playersDrawAllCards(players *[]*player.Player) {
 		(*players)[i%5].Draw(&deck)
 	}
 }
-

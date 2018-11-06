@@ -1,13 +1,13 @@
 package card
 
-// Card type
-type Card struct {
+// Data type
+type Data struct {
 	number uint8
 	seed   Seed
 }
 
-// StrCard is a card represented by string
-type StrCard struct {
+// StrData is a card represented by string
+type StrData struct {
 	number, seed string
 }
 
@@ -21,8 +21,8 @@ type Creator interface {
 }
 
 // By func
-func By(sCard Creator) (Card, error) {
-	var c Card
+func By(sCard Creator) (Data, error) {
+	var c Data
 	var err error
 	if c.number, err = sCard.toNumber(); err == nil {
 		c.seed, err = sCard.toSeed()
@@ -31,9 +31,9 @@ func By(sCard Creator) (Card, error) {
 }
 
 // ByName func
-func ByName(number, seed string) (Card, error) {
-	sCard := StrCard{number, seed}
-	var c Card
+func ByName(number, seed string) (Data, error) {
+	sCard := StrData{number, seed}
+	var c Data
 	var err error
 	if c.number, err = sCard.toNumber(); err == nil {
 		c.seed, err = sCard.toSeed()
@@ -42,22 +42,22 @@ func ByName(number, seed string) (Card, error) {
 }
 
 // ID func
-func (card *Card) ID() ID {
+func (card *Data) ID() ID {
 	return ID(card.number + (uint8)(card.seed)*10)
 }
 
 // Number func
-func (card *Card) Number() uint8 {
+func (card *Data) Number() uint8 {
 	return card.number
 }
 
 // Seed func
-func (card *Card) Seed() Seed {
+func (card *Data) Seed() Seed {
 	return card.seed
 }
 
 // Points func
-func (card *Card) Points() uint8 {
+func (card *Data) Points() uint8 {
 	switch card.number {
 	case 1:
 		return 11

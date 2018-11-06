@@ -74,29 +74,29 @@ func TestEmptySeedIsIncorrect(t *testing.T) {
 }
 
 func SeedOfCardCheck(t *testing.T, number, seed string) {
-	check := func(card Card, err error) bool { return card.Seed().String() != seed }
-	if check(By(StrCard{number, seed})) {
-		t.Fatalf("Card's number is not created well from %s and %s", number, seed)
+	check := func(card Data, err error) bool { return card.Seed().String() != seed }
+	if check(By(StrData{number, seed})) {
+		t.Fatalf("Data's number is not created well from %s and %s", number, seed)
 	}
 }
 
 func NumberOfCardCheck(t *testing.T, number, seed string) {
-	check := func(card Card, err error) bool { return strconv.Itoa(int(card.Number())) != number }
-	if check(By(StrCard{number, seed})) {
-		t.Fatalf("Card's number is not created well from %s and %s", number, seed)
+	check := func(card Data, err error) bool { return strconv.Itoa(int(card.Number())) != number }
+	if check(By(StrData{number, seed})) {
+		t.Fatalf("Data's number is not created well from %s and %s", number, seed)
 	}
 }
 
 func NoErrorCheck(t *testing.T, number, seed string) {
-	check := func(card Card, err error) bool { return err != nil }
-	if check(By(StrCard{number, seed})) {
+	check := func(card Data, err error) bool { return err != nil }
+	if check(By(StrData{number, seed})) {
 		t.Fatalf("An unexpected error was raised")
 	}
 }
 
 func errorCheck(t *testing.T, number, seed string) {
-	check := func(card Card, err error) bool { return err == nil }
-	if check(By(StrCard{number, seed})) {
+	check := func(card Data, err error) bool { return err == nil }
+	if check(By(StrData{number, seed})) {
 		t.Fatalf("The %s of %s isn't a valid card", number, seed)
 	}
 }

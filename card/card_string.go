@@ -3,6 +3,6 @@ package card
 
 import "strconv"
 
-func (card Card) String() string {
+func (card Data) String() string {
 	return "(" + strconv.Itoa(int(card.number)) + " of " + card.seed.String() + ")"
 }
