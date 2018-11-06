@@ -97,6 +97,7 @@ func NoErrorCheck(t *testing.T, number, seed string) {
 func errorCheck(t *testing.T, number, seed string) {
 	check := func(card ID, err error) bool { return err == nil }
 	if check(ByName(number, seed)) {
-		t.Fatalf("The %s of %s isn't a valid card", number, seed)
+		t.Log(ByName(number, seed))
+		t.Fatalf("The %s of %s isnseed a valid card", number, seed)
 	}
 }

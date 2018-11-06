@@ -6,13 +6,15 @@ import (
 )
 
 // ByName func
-func ByName(number, seed string) (ID, error) {
-	var c Data
-	var err error
-	if c.number, err = toNumber(number); err == nil {
-		c.seed, err = toSeed(seed)
+func ByName(number, seed string) (id ID, err error) {
+	var n uint8
+	var s Seed
+	if n, err = toNumber(number); err == nil {
+		if s, err = toSeed(seed); err == nil {
+			id = ID(n + (uint8)(s)*10)
+		}
 	}
-	return ID(c.number + (uint8)(c.seed)*10), err
+	return
 }
 
 func toNumber(number string) (uint8, error) {
