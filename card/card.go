@@ -2,12 +2,6 @@ package card
 
 import "errors"
 
-// Data type
-type Data struct {
-	number uint8
-	seed   Seed
-}
-
 // ID is the id of a card from 1 to 40
 type ID uint8
 
