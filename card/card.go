@@ -23,11 +23,6 @@ func Card(index uint8) (id ID, err error) {
 	return
 }
 
-// ID func
-func (card *Data) ID() ID {
-	return ID(card.number + (uint8)(card.seed)*10)
-}
-
 // Number func
 func (card *ID) Number() uint8 {
 	return card.ToNumber()

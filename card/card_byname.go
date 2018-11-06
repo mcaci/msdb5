@@ -12,7 +12,7 @@ func ByName(number, seed string) (ID, error) {
 	if c.number, err = toNumber(number); err == nil {
 		c.seed, err = toSeed(seed)
 	}
-	return c.ID(), err
+	return ID(c.number + (uint8)(c.seed)*10), err
 }
 
 func toNumber(number string) (uint8, error) {
