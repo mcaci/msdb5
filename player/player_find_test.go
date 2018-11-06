@@ -39,15 +39,9 @@ func TestPlayerNotPresentToReturnErr(t *testing.T) {
 func TestPlayerPresentInListByHostNoErr(t *testing.T) {
 	host := "A"
 	errorCheck(t, host, testPlayersWithHost, func(e error) bool { return e != nil })
-	// if player.Name() != player.Name() {
-	// 	t.Fatalf("%v and %v are expected to be the same player", player, player)
-	// }
 }
 
 func TestPlayerPresentInListNotPresentByHost(t *testing.T) {
 	host := "C"
 	errorCheck(t, host, testPlayersWithHost, func(e error) bool { return e == nil })
-	// if player.Name() != player.Name() {
-	// 	t.Fatalf("%v and %v are expected to be the same player", player, player)
-	// }
 }
