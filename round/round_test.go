@@ -1,7 +1,11 @@
 package round
 
-import "testing"
-import "github.com/nikiforosFreespirit/msdb5/card"
+import (
+	"testing"
+
+	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/rule"
+)
 
 func TestScenarioWithAceOfCoinWinning(t *testing.T) {
 	// testing 1 to 5 of Coin
@@ -33,7 +37,7 @@ func TestScenarioWithTwoBriscolaCardsAndHighCardAtTheEnd(t *testing.T) {
 }
 
 func verifyRoundScenario(t *testing.T, cardsOnTheTable card.Cards, briscola card.Seed, expectedWinner uint8) {
-	if index := IndexOfWinningCard(cardsOnTheTable, briscola); index != expectedWinner {
+	if index := IndexOfWinningCard(cardsOnTheTable, briscola, rule.DoesOtherCardWin); index != expectedWinner {
 		t.Fatalf("Unexpected winner: winner was %d", index)
 	}
 }
