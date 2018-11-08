@@ -70,3 +70,8 @@ func (player *Player) Pile() *card.Cards {
 func (player *Player) Collect(cards card.Cards) {
 	player.pile.Add(cards...)
 }
+
+// Supply func
+func (player *Player) Supply() card.ID {
+	return 1
+}
