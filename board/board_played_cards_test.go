@@ -2,6 +2,8 @@ package board
 
 import (
 	"testing"
+
+	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
 func TestBoardHasASetOfPlayedCards(t *testing.T) {
@@ -11,7 +13,7 @@ func TestBoardHasASetOfPlayedCards(t *testing.T) {
 }
 
 func TestBoardsEmptySetOfPlayedCardsContainsNoCards(t *testing.T) {
-	if b := New();  b.PlayedCards().Has(1) {
+	if b := New(); b.PlayedCards().Has(1) {
 		t.Fatal("The deck should be empty at this point")
 	}
 }
@@ -26,5 +28,20 @@ func TestBoardsSetOfPlayedCardsWithOneCardContainsIt(t *testing.T) {
 
 func TestPlayerPlaysOneCardAndCardIsOnTheBoard(t *testing.T) {
 	b := New()
-	card := b.Players()[0].Supply()
+	h := b.Players()[0].Hand()
+	card := (*h)[0]
+	removeCardFromH(card, h)
+	b.PlayedCards().Add(card)
+	// missing test assertion
+}
+
+func removeCardFromH(c card.ID, h *card.Cards) {
+	// index := 0
+	// for i, card := range *h {
+	// 	if card == c {
+	// 		index = i
+	// 		break
+	// 	}
+	// }
+	// *h = append((*h)[:index], (*h)[index+1])
 }
