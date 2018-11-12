@@ -38,5 +38,12 @@ func TestPlayerPlaysOneCardAndCardIsOnTheBoard(t *testing.T) {
 }
 
 func removeCardFromH(c card.ID, h *card.Cards) {
-
+	index := 0
+	for i, card := range *h {
+		if card == c {
+			index = i
+			break
+		}
+	}
+	*h = append((*h)[:index], (*h)[index+1])
 }
