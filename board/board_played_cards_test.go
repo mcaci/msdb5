@@ -32,16 +32,11 @@ func TestPlayerPlaysOneCardAndCardIsOnTheBoard(t *testing.T) {
 	card := (*h)[0]
 	removeCardFromH(card, h)
 	b.PlayedCards().Add(card)
-	// missing test assertion
+	if h.Has(card) {
+		t.Fatalf("Hand should not have %v", card)
+	}
 }
 
 func removeCardFromH(c card.ID, h *card.Cards) {
-	// index := 0
-	// for i, card := range *h {
-	// 	if card == c {
-	// 		index = i
-	// 		break
-	// 	}
-	// }
-	// *h = append((*h)[:index], (*h)[index+1])
+
 }
