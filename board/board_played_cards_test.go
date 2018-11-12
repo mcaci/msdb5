@@ -26,15 +26,28 @@ func TestBoardsSetOfPlayedCardsWithOneCardContainsIt(t *testing.T) {
 	}
 }
 
+func TestPlayerPlaysOneCardAndCardIsRemovedFromHand(t *testing.T) {
+	b := New()
+	card := playCard(b)
+	if b.Players()[0].Hand().Has(card) {
+		t.Fatalf("Hand should not have %v", card)
+	}
+}
+
 func TestPlayerPlaysOneCardAndCardIsOnTheBoard(t *testing.T) {
 	b := New()
+	card := playCard(b)
+	if !b.PlayedCards().Has(card) {
+		t.Fatalf("Played cards should have %v", card)
+	}
+}
+
+func playCard(b *Board) card.ID {
 	h := b.Players()[0].Hand()
 	card := (*h)[0]
 	removeCardFromH(card, h)
 	b.PlayedCards().Add(card)
-	if h.Has(card) {
-		t.Fatalf("Hand should not have %v", card)
-	}
+	return card
 }
 
 func removeCardFromH(c card.ID, h *card.Cards) {
