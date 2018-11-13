@@ -2,7 +2,7 @@ package set
 
 import "testing"
 
-func TestCreate(t *testing.T) {
+func TestCreateDeck(t *testing.T) {
 	d := Deck()
 	if len(d) != DeckSize {
 		t.Fatalf("There should be 40 card in the deck")
