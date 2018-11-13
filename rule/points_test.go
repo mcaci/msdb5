@@ -1,4 +1,4 @@
-package score
+package rule
 
 import (
 	"testing"
@@ -8,7 +8,7 @@ import (
 )
 
 func testScoreCount(t *testing.T, expectedScore uint8, cards set.Cards) {
-	if score := Compute(cards); expectedScore != score {
+	if score := Points(cards); expectedScore != score {
 		t.Fatalf("Score expected is %d but %d was computed", expectedScore, score)
 	}
 }

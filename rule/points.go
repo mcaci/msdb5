@@ -1,9 +1,9 @@
-package score
+package rule
 
 import "github.com/nikiforosFreespirit/msdb5/card/set"
 
-// Compute func
-func Compute(cards set.Cards) (sum uint8) {
+// Points func
+func Points(cards set.Cards) (sum uint8) {
 	for _, card := range cards {
 		sum += card.Points()
 	}
