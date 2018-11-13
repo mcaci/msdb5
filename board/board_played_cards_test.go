@@ -30,7 +30,7 @@ func TestBoardsSetOfPlayedCardsWithOneCardContainsIt(t *testing.T) {
 func TestPlayerPlaysOneCardAndCardIsRemovedFromHand(t *testing.T) {
 	b := New()
 	card := playCard(b)
-	if b.Players()[0].Hand().Has(card) {
+	if b.Players()[0].Has(card) {
 		t.Fatalf("Hand should not have %v", card)
 	}
 }
