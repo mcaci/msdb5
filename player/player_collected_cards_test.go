@@ -3,7 +3,7 @@ package player
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/card/set"
 )
 
 func TestPlayerHasNoCardsAtStartGame(t *testing.T) {
@@ -14,7 +14,7 @@ func TestPlayerHasNoCardsAtStartGame(t *testing.T) {
 
 func TestPlayerWinsCards(t *testing.T) {
 	p := New()
-	cards := card.Cards{1, 2, 3, 4, 5}
+	cards := set.Cards{1, 2, 3, 4, 5}
 	p.Collect(cards)
 
 	if collectedCards := p.Pile(); collectedCards == nil {

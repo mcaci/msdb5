@@ -2,20 +2,21 @@ package player
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/card/set"
 )
 
 // Player struct
 type Player struct {
 	name string
 	host string
-	hand card.Cards
-	pile card.Cards
+	hand set.Cards
+	pile set.Cards
 }
 
 // New func
 func New() *Player {
 	player := new(Player)
-	player.hand = card.Cards{}
+	player.hand = set.Cards{}
 	return player
 }
 
@@ -27,7 +28,7 @@ func (player *Player) Draw(cardSupplier card.Supplier) card.ID {
 }
 
 // Hand func
-func (player *Player) Hand() *card.Cards {
+func (player *Player) Hand() *set.Cards {
 	return &player.hand
 }
 
@@ -62,12 +63,12 @@ func (player *Player) Fold() bool {
 }
 
 // Pile func
-func (player *Player) Pile() *card.Cards {
+func (player *Player) Pile() *set.Cards {
 	return &player.pile
 }
 
 // Collect func
-func (player *Player) Collect(cards card.Cards) {
+func (player *Player) Collect(cards set.Cards) {
 	player.pile.Add(cards...)
 }
 

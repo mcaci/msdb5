@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/card/set"
 )
 
 func TestBoardHasASetOfPlayedCards(t *testing.T) {
@@ -50,7 +51,7 @@ func playCard(b *Board) card.ID {
 	return card
 }
 
-func removeCardFromH(c card.ID, h *card.Cards) {
+func removeCardFromH(c card.ID, h *set.Cards) {
 	index := 0
 	for i, card := range *h {
 		if card == c {
