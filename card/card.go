@@ -26,21 +26,3 @@ func (card *ID) Number() uint8 {
 func (card *ID) Seed() Seed {
 	return card.ToSeed()
 }
-
-// Points func
-func (card *ID) Points() uint8 {
-	switch card.ToNumber() {
-	case 1:
-		return 11
-	case 3:
-		return 10
-	case 8:
-		return 2
-	case 9:
-		return 3
-	case 10:
-		return 4
-	default:
-		return 0
-	}
-}
