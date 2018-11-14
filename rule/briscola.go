@@ -8,19 +8,19 @@ import (
 func DoesOtherCardWin(base, other card.ID, briscola card.Seed) bool {
 	baseIsNotBriscola := base.Seed() != briscola
 	otherIsBriscola := other.Seed() == briscola
-	onlyOtherCardIsBriscola := baseIsNotBriscola && otherIsBriscola
-	areSeedDifferent := base.Seed() != other.Seed()
+	isSameSeed := base.Seed() == other.Seed()
 	isOtherGreaterOnPoints := Points(base) < Points(other)
-	isOtherGreaterOnNumberOnly := Points(base) == Points(other) && base.Number() < other.Number()
-	otherCardIsBiggerAndOfSameSeed := !areSeedDifferent && (isOtherGreaterOnPoints || isOtherGreaterOnNumberOnly)
-	return onlyOtherCardIsBriscola || otherCardIsBiggerAndOfSameSeed
+	isOtherGreaterOnNumberOnly := base.Number() < other.Number() && Points(base) == Points(other)
+	// onlyOtherCardIsBriscola := baseIsNotBriscola && otherIsBriscola
+	// otherCardIsBiggerAndOfSameSeed := !isSameSeed && (isOtherGreaterOnPoints || isOtherGreaterOnNumberOnly)
+	return (baseIsNotBriscola && otherIsBriscola) || (isSameSeed && isOtherGreaterOnPoints) || (isSameSeed && isOtherGreaterOnNumberOnly)
 }
 
 func doesOtherCardWin(base, other card.ID) bool {
-	areSeedDifferent := base.Seed() != other.Seed()
+	isSameSeed := base.Seed() == other.Seed()
 	isOtherGreaterOnPoints := Points(base) < Points(other)
 	isOtherGreaterOnNumberOnly := Points(base) == Points(other) && base.Number() < other.Number()
-	return !areSeedDifferent && (isOtherGreaterOnPoints || isOtherGreaterOnNumberOnly)
+	return isSameSeed && (isOtherGreaterOnPoints || isOtherGreaterOnNumberOnly)
 }
 
 func isBriscola(card card.ID, briscola card.Seed) bool {
