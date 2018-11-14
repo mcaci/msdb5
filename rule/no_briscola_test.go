@@ -27,15 +27,27 @@ func TestComparisonWithSameSeedThat1isHigherThan9(t *testing.T) {
 	verifyCardComparison(t, a, b, firstCardWins)
 }
 
-func TestComparisonWithSameSeedThat8isHigherThan7(t *testing.T) {
-	a, _ := card.ByName("8", "Coin")
-	b, _ := card.ByName("7", "Coin")
+func TestComparisonWithSameSeedThat7isHigherThan6(t *testing.T) {
+	a, _ := card.ByName("7", "Coin")
+	b, _ := card.ByName("6", "Coin")
 	verifyCardComparison(t, a, b, firstCardWins)
 }
 
-func TestComparisonWithSecondCardOfDifferentSeedThatFirstCardAlwaysWins(t *testing.T) {
+func TestComparisonWithSameSeedThat7isHigherThan6InReverseOrder(t *testing.T) {
+	a, _ := card.ByName("6", "Coin")
+	b, _ := card.ByName("7", "Coin")
+	verifyCardComparison(t, a, b, firstCardLoses)
+}
+
+func TestComparisonWithSecondLowerCardOfDifferentSeedThatFirstCardAlwaysWins(t *testing.T) {
 	a, _ := card.ByName("2", "Sword")
 	b, _ := card.ByName("3", "Cup")
+	verifyCardComparison(t, a, b, firstCardWins)
+}
+
+func TestComparisonWithSecondHigherCardOfDifferentSeedThatFirstCardAlwaysWins(t *testing.T) {
+	a, _ := card.ByName("5", "Cudgel")
+	b, _ := card.ByName("4", "Cup")
 	verifyCardComparison(t, a, b, firstCardWins)
 }
 

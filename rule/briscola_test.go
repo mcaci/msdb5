@@ -8,14 +8,29 @@ func TestScenarioWithAceOfCoinWinning(t *testing.T) {
 	verifyRoundScenario(t, 1, 2, card.Coin, false)
 }
 
-func TestScenarioWithThreeOfCoinWinning(t *testing.T) {
+func TestScenarioWithTwoOfCoinLosing(t *testing.T) {
 	// 2 and 3 of Coin, briscola is Coin
 	verifyRoundScenario(t, 2, 3, card.Coin, true)
 }
 
-func TestScenarioWithEightOfCoinWinning(t *testing.T) {
+func TestScenarioWithSixOfCoinWinningBecauseHigher(t *testing.T) {
+	// 5 and 6 of Coin, briscola is Coin
+	verifyRoundScenario(t, 5, 6, card.Coin, true)
+}
+
+func TestScenarioWithSixOfCoinWinningBecausePlayedFirst(t *testing.T) {
+	// 6 and 5 of Coin, briscola is Coin
+	verifyRoundScenario(t, 6, 5, card.Coin, false)
+}
+
+func TestScenarioWithTenOfCoinWinning(t *testing.T) {
 	// 10 and 4 of Coin, briscola is Cup
 	verifyRoundScenario(t, 10, 4, card.Cup, false)
+}
+
+func TestScenarioWithTenOfCoinLosing(t *testing.T) {
+	// 10 and 4 of Coin, briscola is Cup
+	verifyRoundScenario(t, 10, 3, card.Coin, true)
 }
 
 func TestScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
