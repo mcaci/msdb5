@@ -1,11 +1,32 @@
-package player
+package set
 
 import (
 	"testing"
+
+	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
-var testPlayers = []*Player{&Player{name: "A"}, &Player{name: "B"}}
-var testPlayersWithHost = []*Player{&Player{host: "A"}, &Player{host: "B"}}
+var (
+	testPlayers         Players
+	testPlayersWithHost Players
+)
+
+func init() {
+	// &player.Player{name: "A"}, &player.Player{name: "B"}
+	var a player.Player
+	a.SetName("A")
+	testPlayers.Add(a)
+	var b player.Player
+	b.SetName("B")
+	testPlayers.Add(b)
+	//  Players{&player.Player{host: "A"}, &player.Player{host: "B"}}
+	var a1 player.Player
+	a1.MyHostIs("A")
+	testPlayersWithHost.Add(a1)
+	var b1 player.Player
+	b1.MyHostIs("B")
+	testPlayersWithHost.Add(b1)
+}
 
 func TestPlayerPresentInListByName(t *testing.T) {
 	name := "A"
@@ -21,7 +42,7 @@ func TestPlayerPresentInListByHost(t *testing.T) {
 	}
 }
 
-func errorCheck(t *testing.T, nameOrHost string, players []*Player, errorPredicate func(error) bool) {
+func errorCheck(t *testing.T, nameOrHost string, players Players, errorPredicate func(error) bool) {
 	if _, err := Find(nameOrHost, players); errorPredicate(err) {
 		t.Fatal(err)
 	}
