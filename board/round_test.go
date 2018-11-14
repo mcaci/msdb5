@@ -1,4 +1,4 @@
-package round
+package board
 
 import (
 	"testing"
