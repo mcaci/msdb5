@@ -58,7 +58,7 @@ func TestComparisonWithEmptyCardThatNonEmptyCardWins(t *testing.T) {
 }
 
 func verifyCardComparison(t *testing.T, a, b card.ID, isOtherCardExpectedToWin func(bool) bool) {
-	result := doesOtherCardWin(a, b)
+	result := doesOtherCardWinOnAttributes(a, b)
 	if !isOtherCardExpectedToWin(result) {
 		t.Fatalf("Expected %v to be higher than %v", b, a)
 	}
