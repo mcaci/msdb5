@@ -23,3 +23,13 @@ func TestPlayerHasScoreOf2WhenCollectingCard8AndOtherCardsScoring0(t *testing.T)
 		t.Fatalf("Score should be %d but is %d", expected, actual)
 	}
 }
+
+func TestPlayerHasScoreOf120WhenCollectingAllCards(t *testing.T) {
+	p := New()
+	p.Collect(set.Deck())
+	expected := uint8(120)
+	actual := p.Score()
+	if expected != actual {
+		t.Fatalf("Score should be %d but is %d", expected, actual)
+	}
+}
