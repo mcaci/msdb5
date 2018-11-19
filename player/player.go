@@ -75,11 +75,7 @@ func (player *Player) Collect(cards set.Cards) {
 
 // Score func
 func (player *Player) Score() uint8 {
-	var sum uint8
-	for _, id := range *player.Pile() {
-		sum += rule.Points(id)
-	}
-	return sum
+	return rule.Count(*player.Pile())
 }
 
 // Supply func
