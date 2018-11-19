@@ -3,6 +3,7 @@ package player
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/card/set"
+	"github.com/nikiforosFreespirit/msdb5/rule"
 )
 
 // Player struct
@@ -69,7 +70,16 @@ func (player *Player) Pile() *set.Cards {
 
 // Collect func
 func (player *Player) Collect(cards set.Cards) {
-	player.pile.Add(cards...)
+	player.Pile().Add(cards...)
+}
+
+// Score func
+func (player *Player) Score() uint8 {
+	var sum uint8
+	for _, id := range *player.Pile() {
+		sum += rule.Points(id)
+	}
+	return sum
 }
 
 // Supply func
