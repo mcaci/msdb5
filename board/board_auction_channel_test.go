@@ -7,7 +7,7 @@ import (
 func TestAuctionSentByChannel(t *testing.T) {
 	b, cToPlayer, cFromPlayer := setUp()
 
-	b.SetAuctionScore(tellAuction(b.AuctionScore(), cToPlayer, cFromPlayer))
+	b.SetAuctionScore(playerRound(b.AuctionScore(), cToPlayer, cFromPlayer))
 
 	verification(t, 61, b.AuctionScore())
 }
@@ -15,8 +15,8 @@ func TestAuctionSentByChannel(t *testing.T) {
 func TestAuctionSentByChannelTwice(t *testing.T) {
 	b, cToPlayer, cFromPlayer := setUp()
 
-	b.SetAuctionScore(tellAuction(b.AuctionScore(), cToPlayer, cFromPlayer))
-	b.SetAuctionScore(tellAuction(b.AuctionScore(), cToPlayer, cFromPlayer))
+	b.SetAuctionScore(playerRound(b.AuctionScore(), cToPlayer, cFromPlayer))
+	b.SetAuctionScore(playerRound(b.AuctionScore(), cToPlayer, cFromPlayer))
 
 	verification(t, 62, b.AuctionScore())
 }
@@ -24,9 +24,9 @@ func TestAuctionSentByChannelTwice(t *testing.T) {
 func TestAuctionSentByChannelThrice(t *testing.T) {
 	b, cToPlayer, cFromPlayer := setUp()
 
-	b.SetAuctionScore(tellAuction(b.AuctionScore(), cToPlayer, cFromPlayer))
-	b.SetAuctionScore(tellAuction(b.AuctionScore(), cToPlayer, cFromPlayer))
-	b.SetAuctionScore(tellAuction(b.AuctionScore(), cToPlayer, cFromPlayer))
+	b.SetAuctionScore(playerRound(b.AuctionScore(), cToPlayer, cFromPlayer))
+	b.SetAuctionScore(playerRound(b.AuctionScore(), cToPlayer, cFromPlayer))
+	b.SetAuctionScore(playerRound(b.AuctionScore(), cToPlayer, cFromPlayer))
 
 	verification(t, 63, b.AuctionScore())
 }
@@ -39,7 +39,7 @@ func setUp() (*Board, chan uint8, chan uint8) {
 	return b, cToPlayer, cFromPlayer
 }
 
-func tellAuction(previousScore uint8, cToPlayer chan uint8, cFromPlayer chan uint8) uint8 {
+func playerRound(previousScore uint8, cToPlayer chan uint8, cFromPlayer chan uint8) uint8 {
 	// send score to player
 	cToPlayer <- previousScore
 	// player sends his score
