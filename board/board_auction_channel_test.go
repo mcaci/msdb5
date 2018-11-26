@@ -49,8 +49,7 @@ func playerRound(previousScore uint8, cToPlayer chan uint8, cFromPlayer chan uin
 }
 
 func playerTellsScore(cToPlayer <-chan uint8, cFromPlayer chan<- uint8) {
-	actualScore := <-cToPlayer
-	cFromPlayer <- actualScore + 1
+	cFromPlayer <- <-cToPlayer + 1
 }
 
 func verification(t *testing.T, expected, actual uint8) {
