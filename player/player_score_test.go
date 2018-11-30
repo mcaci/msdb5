@@ -10,6 +10,7 @@ import (
 
 func TestPlayerHasScoreOf0WhenCreated(t *testing.T) {
 	p := New()
+	p.Collect(set.Cards{})
 	expected := uint8(0)
 	actual := p.Score(rule.Count)
 	if expected != actual {
