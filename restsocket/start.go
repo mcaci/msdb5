@@ -18,6 +18,7 @@ const tpl = `
 	</body>
 </html>`
 
+// Any struct
 type Any struct {
 	Title string
 	Items []string
@@ -29,6 +30,7 @@ func check(err error) {
 	}
 }
 
+// Start func
 func Start(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.New("webpage").Parse(tpl)

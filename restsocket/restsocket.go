@@ -7,10 +7,12 @@ import (
 	"github.com/gorilla/mux"
 )
 
+// Hello func
 func Hello(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("Hello restful world")
 }
 
+// EchoPlus func
 func EchoPlus(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	var message string
