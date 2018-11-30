@@ -9,7 +9,7 @@ import (
 	"sync"
 )
 
-func FirstServe() {
+func firstServe() {
 	var addr = flag.String("addr", ":8080", "The addr of the  application.")
 	flag.Parse() // parse the flags
 	r := newRoom()
