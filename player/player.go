@@ -3,7 +3,6 @@ package player
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/card/set"
-	"github.com/nikiforosFreespirit/msdb5/rule"
 )
 
 // Player struct
@@ -74,8 +73,8 @@ func (player *Player) Collect(cards set.Cards) {
 }
 
 // Score func
-func (player *Player) Score() uint8 {
-	return rule.Count(*player.Pile())
+func (player *Player) Score(count func(cards set.Cards) uint8) uint8 {
+	return count(*player.Pile())
 }
 
 // Supply func
