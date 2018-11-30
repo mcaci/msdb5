@@ -14,7 +14,7 @@ func TestPlayerHasScoreOf0WhenCreated(t *testing.T) {
 	expected := uint8(0)
 	actual := p.Score(rule.Count)
 	if expected != actual {
-		t.Fatal("Score should be 0 at the beginning")
+		t.Fatalf("Score should be %d but is %d", expected, actual)
 	}
 }
 
