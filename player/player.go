@@ -69,7 +69,9 @@ func (player *Player) Pile() *set.Cards {
 
 // Collect func
 func (player *Player) Collect(cards set.Cards) {
-	player.Pile().Add(cards...)
+	if len(cards) > 0 {
+		player.Pile().Add(cards...)
+	}
 }
 
 // Score func
