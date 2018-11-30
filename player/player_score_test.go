@@ -10,8 +10,9 @@ import (
 
 func TestPlayerHasScoreOf0WhenCreated(t *testing.T) {
 	p := New()
+	expected := uint8(0)
 	actual := p.Score(rule.Count)
-	if 0 != actual {
+	if expected != actual {
 		t.Fatal("Score should be 0 at the beginning")
 	}
 }
