@@ -10,18 +10,3 @@ import (
 func (b *Board) PlayedCards() *set.Cards {
 	return &b.playedCards
 }
-
-// PromptNext func
-func PromptNext(actualWinningCard card.ID, briscola card.Seed, prompt func(chan<- card.ID), cardChan chan card.ID) card.ID {
-	nextID := Prompt(prompt, cardChan)
-	if &actualWinningCard == nil || rule.DoesOtherCardWin(actualWinningCard, nextID, briscola) {
-		actualWinningCard = nextID
-	}
-	return actualWinningCard
-}
-
-// Prompt func
-func Prompt(prompt func(chan<- card.ID), cardChan chan card.ID) card.ID {
-	go prompt(cardChan)
-	return <-cardChan
-}
