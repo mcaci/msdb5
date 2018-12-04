@@ -10,6 +10,7 @@ import (
 // Board struct
 type Board struct {
 	players      pset.Players
+	pChans       []chan card.ID
 	playedCards  cset.Cards
 	selectedCard card.ID
 	auctionScore uint8
@@ -18,6 +19,10 @@ type Board struct {
 // New func
 func New() *Board {
 	b := new(Board)
+	b.pChans = make([]chan card.ID, 5)
+	for i := range b.pChans {
+		b.pChans[i] = make(chan card.ID)
+	}
 	makePlayers(b)
 	playersDrawAllCards(&b.players)
 	return b
