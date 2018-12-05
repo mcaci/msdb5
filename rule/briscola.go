@@ -10,7 +10,7 @@ func IndexOfWinningCard(cardsOnTheTable set.Cards, briscola card.Seed) uint8 {
 	base := cardsOnTheTable[0]
 	max := 0
 	for i, other := range cardsOnTheTable {
-		if DoesOtherCardWin(base, other, briscola) {
+		if WinningCard(base, other, briscola) == other {
 			base = other
 			max = i
 		}
