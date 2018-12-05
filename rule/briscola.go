@@ -4,6 +4,14 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
+// WinningCard func
+func WinningCard(base, other card.ID, briscola card.Seed) card.ID {
+	if &base == nil || DoesOtherCardWin(base, other, briscola) {
+		base = other
+	}
+	return base
+}
+
 // DoesOtherCardWin function
 func DoesOtherCardWin(first, other card.ID, briscola card.Seed) bool {
 	otherIsBriscola := other.Seed() == briscola

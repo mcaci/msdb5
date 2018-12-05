@@ -29,9 +29,10 @@ func TestBoardRoundExecutionOneShot(t *testing.T) {
 	var expectedWinningCardIndex uint8 = 2
 	briscola := card.Coin
 	for i, prompt := range prompts {
-		b.PlayedCards().Add(Prompt(prompt, b.pChans[i]))
+		nextCard := Prompt(prompt, b.pChans[i])
+		b.PlayedCards().Add(nextCard)
 	}
-	if expectedWinningCardIndex != IndexOfWinningCard(*b.PlayedCards(), briscola, rule.DoesOtherCardWin) {
+	if expectedWinningCardIndex != rule.IndexOfWinningCard(*b.PlayedCards(), briscola, rule.DoesOtherCardWin) {
 		t.Fatal("Unexpected winner")
 	}
 }
@@ -40,11 +41,12 @@ func TestBoardRoundExecutionStepByStep(t *testing.T) {
 	b := New()
 	expectedWinningCard := card.ID(3)
 	briscola := card.Coin
-	var actualWinningCard card.ID
+	var winningCard card.ID
 	for i, prompt := range prompts {
-		actualWinningCard = PromptNext(actualWinningCard, briscola, prompt, b.pChans[i])
+		nextCard := Prompt(prompt, b.pChans[i])
+		winningCard = rule.WinningCard(winningCard, nextCard, briscola)
 	}
-	if expectedWinningCard != actualWinningCard {
+	if expectedWinningCard != winningCard {
 		t.Fatal("Unexpected winner")
 	}
 }
