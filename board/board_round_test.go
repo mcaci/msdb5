@@ -32,7 +32,7 @@ func TestBoardRoundExecutionOneShot(t *testing.T) {
 		nextCard := Prompt(prompt, b.pChans[i])
 		b.PlayedCards().Add(nextCard)
 	}
-	if expectedWinningCardIndex != rule.IndexOfWinningCard(*b.PlayedCards(), briscola, rule.DoesOtherCardWin) {
+	if expectedWinningCardIndex != rule.IndexOfWinningCard(*b.PlayedCards(), briscola) {
 		t.Fatal("Unexpected winner")
 	}
 }

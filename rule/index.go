@@ -6,11 +6,11 @@ import (
 )
 
 // IndexOfWinningCard func
-func IndexOfWinningCard(cardsOnTheTable set.Cards, briscola card.Seed, rule func(card.ID, card.ID, card.Seed) bool) uint8 {
+func IndexOfWinningCard(cardsOnTheTable set.Cards, briscola card.Seed) uint8 {
 	base := cardsOnTheTable[0]
 	max := 0
 	for i, other := range cardsOnTheTable {
-		if rule(base, other, briscola) {
+		if DoesOtherCardWin(base, other, briscola) {
 			base = other
 			max = i
 		}
