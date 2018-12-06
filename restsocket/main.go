@@ -8,7 +8,7 @@ import (
 )
 
 // our main function
-func main() {
+func mymux() {
 	router := mux.NewRouter()
 	router.HandleFunc("/hello", Hello).Methods("GET")
 	router.HandleFunc("/start", Start).Methods("GET")
