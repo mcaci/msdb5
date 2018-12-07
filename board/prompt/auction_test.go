@@ -24,7 +24,7 @@ func TestAuctionPromptRound_BlockIfScoreIsLower(t *testing.T) {
 	expectedScore := uint8(61)
 	actualScore := PromptScore(playerSays61, scoreChan)
 	err := EvaluateScore(beforeScore, actualScore)
-	if expectedScore != actualScore {
-		t.Fatal("Unexpected score")
+	if err != nil {
+		t.Fatal("Error is expected")
 	}
 }
