@@ -1,4 +1,4 @@
-package board
+package prompt
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
