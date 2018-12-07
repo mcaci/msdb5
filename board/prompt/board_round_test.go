@@ -3,6 +3,7 @@ package board
 import (
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/rule"
 )
@@ -25,11 +26,11 @@ var prompts = []func(chan<- card.ID){
 	}}
 
 func TestBoardRoundExecutionOneShot(t *testing.T) {
-	b := New()
+	b := board.New()
 	var expectedWinningCardIndex uint8 = 2
 	briscola := card.Coin
 	for i, prompt := range prompts {
-		nextCard := PromptCard(prompt, b.pChans[i])
+		nextCard := PromptCard(prompt, b.PChans()[i])
 		b.PlayedCards().Add(nextCard)
 	}
 	if expectedWinningCardIndex != rule.IndexOfWinningCard(*b.PlayedCards(), briscola) {
@@ -38,12 +39,12 @@ func TestBoardRoundExecutionOneShot(t *testing.T) {
 }
 
 func TestBoardRoundExecutionStepByStep(t *testing.T) {
-	b := New()
+	b := board.New()
 	expectedWinningCard := card.ID(3)
 	briscola := card.Coin
 	var winningCard card.ID
 	for i, prompt := range prompts {
-		nextCard := PromptCard(prompt, b.pChans[i])
+		nextCard := PromptCard(prompt, b.PChans()[i])
 		winningCard = rule.WinningCard(winningCard, nextCard, briscola)
 	}
 	if expectedWinningCard != winningCard {
