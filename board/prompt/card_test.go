@@ -8,7 +8,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/rule"
 )
 
-var prompts = []func(chan<- card.ID){
+var cardPrompts = []func(chan<- card.ID){
 	func(cardChan chan<- card.ID) {
 		cardChan <- 5
 	},
@@ -29,7 +29,7 @@ func TestBoardRoundExecutionOneShot(t *testing.T) {
 	b := board.New()
 	var expectedWinningCardIndex uint8 = 2
 	briscola := card.Coin
-	for i, prompt := range prompts {
+	for i, prompt := range cardPrompts {
 		nextCard := PromptCard(prompt, b.PChans()[i])
 		b.PlayedCards().Add(nextCard)
 	}
@@ -43,7 +43,7 @@ func TestBoardRoundExecutionStepByStep(t *testing.T) {
 	expectedWinningCard := card.ID(3)
 	briscola := card.Coin
 	var winningCard card.ID
-	for i, prompt := range prompts {
+	for i, prompt := range cardPrompts {
 		nextCard := PromptCard(prompt, b.PChans()[i])
 		winningCard = rule.WinningCard(winningCard, nextCard, briscola)
 	}
