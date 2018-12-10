@@ -8,7 +8,7 @@ func TestNominateId1WillNominateAceOfCoin(t *testing.T) {
 	board := New()
 	actualCard := board.AskNominatedCard()
 	expectedCard := board.NominatedCard()
-	if expectedCard != actualCard {
+	if *expectedCard != actualCard {
 		t.Fatalf("Card nominated should be %v but %v was computed", expectedCard, actualCard)
 	}
 }
