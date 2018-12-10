@@ -30,7 +30,7 @@ func TestBoardRoundExecutionOneShot(t *testing.T) {
 	var expectedWinningCardIndex uint8 = 2
 	briscola := card.Coin
 	for i, prompt := range cardPrompts {
-		nextCard := PromptCard(prompt, b.PChans()[i])
+		nextCard := Card(prompt, b.PChans()[i])
 		b.PlayedCards().Add(nextCard)
 	}
 	if expectedWinningCardIndex != rule.IndexOfWinningCard(*b.PlayedCards(), briscola) {
@@ -44,7 +44,7 @@ func TestBoardRoundExecutionStepByStep(t *testing.T) {
 	briscola := card.Coin
 	var winningCard card.ID
 	for i, prompt := range cardPrompts {
-		nextCard := PromptCard(prompt, b.PChans()[i])
+		nextCard := Card(prompt, b.PChans()[i])
 		winningCard = rule.WinningCard(winningCard, nextCard, briscola)
 	}
 	if expectedWinningCard != winningCard {
