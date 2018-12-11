@@ -3,8 +3,8 @@ package prompt
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/card/set"
 	"github.com/nikiforosFreespirit/msdb5/rule"
 )
 
@@ -26,27 +26,34 @@ var cardPrompts = []func(chan<- card.ID){
 	}}
 
 func TestBoardRoundExecutionOneShot(t *testing.T) {
-	b := board.New()
-	var expectedWinningCardIndex uint8 = 2
 	briscola := card.Coin
-	for i, prompt := range cardPrompts {
-		nextCard := Card(prompt, b.PChans()[i])
-		b.PlayedCards().Add(nextCard)
+	pChans := make([]chan card.ID, 5)
+	for i := range pChans {
+		pChans[i] = make(chan card.ID)
 	}
-	if expectedWinningCardIndex != rule.IndexOfWinningCard(*b.PlayedCards(), briscola) {
+	playedCards := set.Cards{}
+	for i, prompt := range cardPrompts {
+		nextCard := Card(prompt, pChans[i])
+		playedCards.Add(nextCard)
+	}
+	var expectedWinningCardIndex uint8 = 2
+	if expectedWinningCardIndex != rule.IndexOfWinningCard(playedCards, briscola) {
 		t.Fatal("Unexpected winner")
 	}
 }
 
 func TestBoardRoundExecutionStepByStep(t *testing.T) {
-	b := board.New()
-	expectedWinningCard := card.ID(3)
 	briscola := card.Coin
+	pChans := make([]chan card.ID, 5)
+	for i := range pChans {
+		pChans[i] = make(chan card.ID)
+	}
 	var winningCard card.ID
 	for i, prompt := range cardPrompts {
-		nextCard := Card(prompt, b.PChans()[i])
+		nextCard := Card(prompt, pChans[i])
 		winningCard = rule.WinningCard(winningCard, nextCard, briscola)
 	}
+	expectedWinningCard := card.ID(3)
 	if expectedWinningCard != winningCard {
 		t.Fatal("Unexpected winner")
 	}
