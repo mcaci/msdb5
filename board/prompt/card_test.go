@@ -25,34 +25,40 @@ var cardPrompts = []func(chan<- card.ID){
 		cardChan <- 27
 	}}
 
-func RoundData() (winningCard card.ID, winningCardIndex uint8) {
+type RoundData struct {
+	winningCardIndex uint8
+	winningCard      card.ID
+}
+
+func Round() RoundData {
 	briscola := card.Coin
 	pChans := make([]chan card.ID, 5)
 	for i := range pChans {
 		pChans[i] = make(chan card.ID)
 	}
 	var playedCards set.Cards
+	var roundData RoundData
 	for i, prompt := range cardPrompts {
 		nextCard := Card(prompt, pChans[i])
 		playedCards.Add(nextCard)
-		winningCard = rule.WinningCard(winningCard, nextCard, briscola)
-		winningCardIndex = rule.IndexOfWinningCard(playedCards, briscola)
+		roundData.winningCard = rule.WinningCard(roundData.winningCard, nextCard, briscola)
+		roundData.winningCardIndex = rule.IndexOfWinningCard(playedCards, briscola)
 	}
-	return
+	return roundData{winningCardIndex, winningCard}
 }
 
 func TestBoardRoundExecutionOneShot(t *testing.T) {
 	var expectedWinningCardIndex uint8 = 2
-	_, winningCardIndex := RoundData()
-	if expectedWinningCardIndex != winningCardIndex {
+	data := Round()
+	if expectedWinningCardIndex != data.winningCardIndex {
 		t.Fatal("Unexpected winner")
 	}
 }
 
 func TestBoardRoundExecutionStepByStep(t *testing.T) {
-	winningCard, _ := RoundData()
+	data := Round()
 	expectedWinningCard := card.ID(3)
-	if expectedWinningCard != winningCard {
+	if expectedWinningCard != data.winningCard {
 		t.Fatal("Unexpected winner")
 	}
 }
