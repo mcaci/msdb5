@@ -25,34 +25,32 @@ var cardPrompts = []func(chan<- card.ID){
 		cardChan <- 27
 	}}
 
-func TestBoardRoundExecutionOneShot(t *testing.T) {
+func RoundData() (winningCard card.ID, winningCardIndex uint8) {
 	briscola := card.Coin
 	pChans := make([]chan card.ID, 5)
 	for i := range pChans {
 		pChans[i] = make(chan card.ID)
 	}
-	playedCards := set.Cards{}
+	var playedCards set.Cards
 	for i, prompt := range cardPrompts {
 		nextCard := Card(prompt, pChans[i])
 		playedCards.Add(nextCard)
+		winningCard = rule.WinningCard(winningCard, nextCard, briscola)
+		winningCardIndex = rule.IndexOfWinningCard(playedCards, briscola)
 	}
+	return
+}
+
+func TestBoardRoundExecutionOneShot(t *testing.T) {
 	var expectedWinningCardIndex uint8 = 2
-	if expectedWinningCardIndex != rule.IndexOfWinningCard(playedCards, briscola) {
+	_, winningCardIndex := RoundData()
+	if expectedWinningCardIndex != winningCardIndex {
 		t.Fatal("Unexpected winner")
 	}
 }
 
 func TestBoardRoundExecutionStepByStep(t *testing.T) {
-	briscola := card.Coin
-	pChans := make([]chan card.ID, 5)
-	for i := range pChans {
-		pChans[i] = make(chan card.ID)
-	}
-	var winningCard card.ID
-	for i, prompt := range cardPrompts {
-		nextCard := Card(prompt, pChans[i])
-		winningCard = rule.WinningCard(winningCard, nextCard, briscola)
-	}
+	winningCard, _ := RoundData()
 	expectedWinningCard := card.ID(3)
 	if expectedWinningCard != winningCard {
 		t.Fatal("Unexpected winner")
