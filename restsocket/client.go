@@ -1,7 +1,11 @@
 package main
 
 import (
+	"log"
+	"strings"
+
 	"github.com/gorilla/websocket"
+	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
 // client represents a single chatting user.
@@ -27,9 +31,19 @@ func (c *client) read() {
 func (c *client) write() {
 	defer c.socket.Close()
 	for msg := range c.send {
-		err := c.socket.WriteMessage(websocket.TextMessage, msg)
-		if err != nil {
-			return
-		}
+		c.actualWrite(msg)
+		info := strings.Split(string(msg), " ")
+		myCard, _ := card.ByName(info[0], info[1])
+		c.actualWrite([]byte(myCard.String()))
+		// if err != nil {
+		// 	return
+		// }
+	}
+}
+
+func (c *client) actualWrite(msg []byte) {
+	err := c.socket.WriteMessage(websocket.TextMessage, msg)
+	if err != nil {
+		log.Println("Actual Write Error:", err)
 	}
 }
