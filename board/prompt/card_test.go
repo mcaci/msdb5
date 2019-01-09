@@ -44,7 +44,7 @@ func Round() RoundData {
 		roundData.winningCard = rule.WinningCard(roundData.winningCard, nextCard, briscola)
 		roundData.winningCardIndex = rule.IndexOfWinningCard(playedCards, briscola)
 	}
-	return roundData{winningCardIndex, winningCard}
+	return roundData
 }
 
 func TestBoardRoundExecutionOneShot(t *testing.T) {
