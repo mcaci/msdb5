@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
+	"github.com/nikiforosFreespirit/msdb5/board"
 )
 
 type room struct {
@@ -17,15 +18,18 @@ type room struct {
 	leave chan *client
 	// clients holds all current clients in this room.
 	clients map[*client]bool
+	// game board
+	msdb5board *board.Board
 }
 
 // newRoom makes a new room.
 func newRoom() *room {
 	return &room{
-		forward: make(chan []byte),
-		join:    make(chan *client),
-		leave:   make(chan *client),
-		clients: make(map[*client]bool),
+		forward:    make(chan []byte),
+		join:       make(chan *client),
+		leave:      make(chan *client),
+		clients:    make(map[*client]bool),
+		msdb5board: board.New(),
 	}
 }
 
@@ -68,6 +72,7 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		room:   r,
 	}
 	r.join <- client
+	r.forward <- []byte(r.msdb5board.String())
 	defer func() { r.leave <- client }()
 	go client.write()
 	client.read()
