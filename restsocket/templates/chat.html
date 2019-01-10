@@ -7,18 +7,21 @@
     </style> 
   </head> 
   <body> 
-    <ul id="messages"></ul> 
-    <form id="chatbox"> 
-      <textarea></textarea> 
+    <form id="connect"> 
+      <input type="submit" value="Connect" /> 
+    </form>  
+    <form id="play"> 
+      <textarea></textarea>
       <input type="submit" value="Send" /> 
     </form> 
+    <ul id="messages"></ul> 
     <script  src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> </script> 
     <script> 
       $(function(){ 
         var socket = null; 
-        var msgBox = $("#chatbox textarea"); 
+        var msgBox = $("#play textarea"); 
         var messages = $("#messages"); 
-        $("#chatbox").submit(function(){ 
+        $("#play").submit(function(){ 
           if (!msgBox.val()) return false; 
           if (!socket) { 
             alert("Error: There is no socket connection."); 
