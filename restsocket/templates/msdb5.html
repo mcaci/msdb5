@@ -13,10 +13,10 @@
         <input type="submit" value="Connect" /> 
       </p>
     </form>
-    <form id="play"> 
+    <form id="auction"> 
       <p>
         <label>Auction points</label>
-        <input type="text" name="auction" id="auction">
+        <input type="text" name="auction" id="auctionvalue">
       </p>
       <input type="submit" value="Send" /> 
     </form>
@@ -38,8 +38,9 @@
     <script>
       $(function(){ 
         var socket = null; 
-        var msgBox = $("#play textarea"); 
         var nameBox = $("#connect #name"); 
+        var auctionBox = $("#auctionvalue"); 
+        var msgBox = $("#play textarea"); 
         var messages = $("#messages"); 
         $("#connect").submit(function(){
           if (!nameBox.val()) return false; 
@@ -49,6 +50,16 @@
           }
           socket.send(nameBox.val()); 
           nameBox.val(""); 
+          return false; 
+        });
+        $("#auction").submit(function(){
+          if (!auctionBox.val()) return false; 
+          if (!socket) { 
+            alert("Error: There is no socket connection."); 
+            return false; 
+          }
+          socket.send(auctionBox.val()); 
+          auctionBox.val(""); 
           return false; 
         });
         $("#play").submit(function(){
@@ -66,7 +77,7 @@
         } else { 
           socket = new WebSocket("ws://{{.Host}}/room"); 
           socket.onclose = function() {
-            alert("Connection has been closed."); 
+            // alert("Connection has been closed."); 
           } 
           socket.onmessage = function(e) { 
             messages.prepend($("<li>").text(e.data)); 
