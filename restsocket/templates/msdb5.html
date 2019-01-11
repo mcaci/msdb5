@@ -12,12 +12,21 @@
       <input type="submit" value="Connect" /> 
     </form>  
     <form id="play"> 
-      <textarea></textarea>
+      <p>
+        <label for="spinner">Card number and seed:</label>
+        <input type="number" name="number" id="number" min="1" max="10">
+        <select name="seed" id="seed">
+          <option value="coin">Coin</option>
+          <option value="cup">Cup</option>
+          <option value="sword">Sword</option>
+          <option value="cudgel">Cudgel</option>
+        </select>
+      </p>
       <input type="submit" value="Send" /> 
     </form> 
     <ul id="messages"></ul> 
     <script  src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> </script> 
-    <script> 
+    <script>
       $(function(){ 
         var socket = null; 
         var msgBox = $("#play textarea"); 
