@@ -11,7 +11,7 @@ func main() {
 	flag.Parse() // parse the flags
 
 	r := newRoom()
-	http.Handle("/", &templateHandler{filename: "chat.html"})
+	http.Handle("/", &templateHandler{filename: "msdb5.html"})
 	http.Handle("/room", r)
 
 	// get the room going
