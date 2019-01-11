@@ -8,12 +8,21 @@
   </head> 
   <body> 
     <form id="connect"> 
-      Name:<input type="text" name="name" id="name"/><br>
-      <input type="submit" value="Connect" /> 
-    </form>  
+      <p>
+        Name:<input type="text" name="name" id="name"/><br>
+        <input type="submit" value="Connect" /> 
+      </p>
+    </form>
     <form id="play"> 
       <p>
-        <label for="spinner">Card number and seed:</label>
+        <label>Auction points</label>
+        <input type="text" name="auction" id="auction">
+      </p>
+      <input type="submit" value="Send" /> 
+    </form>
+    <form id="play"> 
+      <p>
+        <label>Card number and seed</label>
         <input type="number" name="number" id="number" min="1" max="10">
         <select name="seed" id="seed">
           <option value="coin">Coin</option>
@@ -22,7 +31,7 @@
           <option value="cudgel">Cudgel</option>
         </select>
       </p>
-      <input type="submit" value="Send" /> 
+      <input type="submit" value="Play" /> 
     </form> 
     <ul id="messages"></ul> 
     <script  src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> </script> 
