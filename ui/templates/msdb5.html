@@ -38,38 +38,39 @@
     <script>
       $(function(){ 
         var socket = null; 
-        var nameBox = $("#connect #name"); 
-        var auctionBox = $("#auctionvalue"); 
-        var msgBox = $("#play textarea"); 
+        var playerName = $("#connect #name"); 
+        var auction = $("#auctionvalue"); 
+        var number = $("#play number");
+        var seed = $("#play seed"); 
         var messages = $("#messages"); 
         $("#connect").submit(function(){
-          if (!nameBox.val()) return false; 
+          if (!playerName.val()) return false; 
           if (!socket) { 
             alert("Error: There is no socket connection."); 
             return false; 
           }
-          socket.send(nameBox.val()); 
-          nameBox.val(""); 
+          socket.send("Join#" + playerName.val()); 
+          playerName.val(""); 
           return false; 
         });
         $("#auction").submit(function(){
-          if (!auctionBox.val()) return false; 
+          if (!auction.val()) return false; 
           if (!socket) { 
             alert("Error: There is no socket connection."); 
             return false; 
           }
-          socket.send(auctionBox.val()); 
-          auctionBox.val(""); 
+          socket.send("Auction#" + auction.val()); 
+          auction.val(""); 
           return false; 
         });
         $("#play").submit(function(){
-          if (!msgBox.val()) return false; 
+          if (!number.val()) return false; 
           if (!socket) { 
             alert("Error: There is no socket connection."); 
             return false; 
           } 
-          socket.send(msgBox.val()); 
-          msgBox.val(""); 
+          socket.send("Play#" + number.val() + "#" + seed.val()); 
+          number.val(""); 
           return false; 
         });
         if (!window["WebSocket"]) {
