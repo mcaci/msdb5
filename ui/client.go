@@ -2,6 +2,8 @@ package main
 
 import (
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/gorilla/websocket"
 )
@@ -33,11 +35,15 @@ func (c *client) write() {
 		if err != nil {
 			log.Println("Actual Write Error:", err)
 		}
-		// info := strings.Split(string(msg), " ")
-		// myCard, _ := card.ByName(info[0], info[1])
-		// c.actualWrite([]byte(myCard.String()))
-		// if err != nil {
-		// 	return
-		// }
+		info := strings.Split(string(msg), "#")
+		switch info[0] {
+		case "Join":
+			c.room.msdb5board.Players()[0].SetName(info[1])
+		case "Auction":
+			score, _ := strconv.Atoi(info[1])
+			c.room.msdb5board.SetAuctionScore(uint8(score))
+		case "Play":
+			c.room.msdb5board.Nominate(info[1], info[2])
+		}
 	}
 }
