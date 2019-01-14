@@ -25,10 +25,10 @@
         <label>Card number and seed</label>
         <input type="number" name="number" id="number" min="1" max="10">
         <select name="seed" id="seed">
-          <option value="coin">Coin</option>
-          <option value="cup">Cup</option>
-          <option value="sword">Sword</option>
-          <option value="cudgel">Cudgel</option>
+          <option value="Coin">Coin</option>
+          <option value="Cup">Cup</option>
+          <option value="Sword">Sword</option>
+          <option value="Cudgel">Cudgel</option>
         </select>
       </p>
       <input type="submit" value="Play" /> 
@@ -40,8 +40,8 @@
         var socket = null; 
         var playerName = $("#connect #name"); 
         var auction = $("#auctionvalue"); 
-        var number = $("#play number");
-        var seed = $("#play seed"); 
+        var number = $("#play #number");
+        var seed = $("#play #seed"); 
         var messages = $("#messages"); 
         $("#connect").submit(function(){
           if (!playerName.val()) return false; 
@@ -65,6 +65,7 @@
         });
         $("#play").submit(function(){
           if (!number.val()) return false; 
+          if (!seed.val()) return false; 
           if (!socket) { 
             alert("Error: There is no socket connection."); 
             return false; 
