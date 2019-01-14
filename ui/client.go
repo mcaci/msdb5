@@ -26,6 +26,7 @@ func (c *client) read() {
 			return
 		}
 		c.room.forward <- msg
+		c.room.forward <- []byte(c.room.msdb5board.String())
 	}
 }
 func (c *client) write() {
