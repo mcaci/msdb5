@@ -25,17 +25,6 @@ func (c *client) read() {
 		if err != nil {
 			return
 		}
-		c.room.forward <- msg
-	}
-}
-
-func (c *client) write() {
-	defer c.socket.Close()
-	for msg := range c.send {
-		err := c.socket.WriteMessage(websocket.TextMessage, msg)
-		if err != nil {
-			log.Println("Actual Write Error:", err)
-		}
 		info := strings.Split(string(msg), "#")
 		switch info[0] {
 		case "Join":
@@ -49,6 +38,17 @@ func (c *client) write() {
 		case "Play":
 			c.room.msdb5board.Nominate(info[1], info[2])
 			c.room.forward <- []byte(c.room.msdb5board.String())
+		}
+		c.room.forward <- msg
+	}
+}
+
+func (c *client) write() {
+	defer c.socket.Close()
+	for msg := range c.send {
+		err := c.socket.WriteMessage(websocket.TextMessage, msg)
+		if err != nil {
+			log.Println("Write Error:", err)
 		}
 	}
 }
