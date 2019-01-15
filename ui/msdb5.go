@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	var addr = flag.String("addr", ":8080", "The addr of the  application.")
+	var addr = flag.String("addr", ":8080", "The addr of the application.")
 	flag.Parse() // parse the flags
 
 	r := newRoom()

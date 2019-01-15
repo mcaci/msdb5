@@ -72,7 +72,7 @@ func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		room:   r,
 	}
 	r.join <- client
-	r.forward <- []byte(r.msdb5board.String())
+	r.forward <- []byte("Enter name and connect")
 	defer func() { r.leave <- client }()
 	go client.write()
 	client.read()
