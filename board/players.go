@@ -14,3 +14,9 @@ func (b *Board) Players() set.Players {
 func (b *Board) PChans() []chan card.ID {
 	return b.pChans
 }
+
+// Join func
+func (b *Board) Join(name, remoteAddr string) {
+	b.Players()[0].SetName(name)
+	b.Players()[0].MyHostIs(remoteAddr)
+}
