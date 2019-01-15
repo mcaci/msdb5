@@ -1,6 +1,8 @@
 package board
 
 import (
+	"log"
+
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/player/set"
 )
@@ -17,6 +19,12 @@ func (b *Board) PChans() []chan card.ID {
 
 // Join func
 func (b *Board) Join(name, remoteAddr string) {
-	b.Players()[0].SetName(name)
-	b.Players()[0].MyHostIs(remoteAddr)
+	for _, player := range b.Players() {
+		if player.Name() == "" {
+			player.SetName(name)
+			player.MyHostIs(remoteAddr)
+			return
+		}
+	}
+	log.Println("All players have joined, no further players are expected")
 }
