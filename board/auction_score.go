@@ -4,9 +4,13 @@ import "strconv"
 
 // RaiseAuction func
 func (b *Board) RaiseAuction(score string) {
+	prevScore := int(b.AuctionScore())
 	intScore, _ := strconv.Atoi(score)
 	if intScore < 61 {
 		intScore = 61
+	}
+	if intScore < prevScore {
+		intScore = prevScore
 	}
 	b.SetAuctionScore(uint8(intScore))
 }
