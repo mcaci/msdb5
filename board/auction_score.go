@@ -9,8 +9,11 @@ func (b *Board) RaiseAuction(score string) {
 	if intScore < 61 {
 		intScore = 61
 	}
-	if intScore < prevScore {
+	if intScore <= prevScore {
 		intScore = prevScore
+	}
+	if intScore > 120 {
+		intScore = 120
 	}
 	b.SetAuctionScore(uint8(intScore))
 }
