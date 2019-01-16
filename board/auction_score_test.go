@@ -62,3 +62,11 @@ func TestInvalidSecondRaiseAuctionScoreAlwaysDrops(t *testing.T) {
 		t.Fatalf("Auction score should be set at 90 but is %d", b.AuctionScore())
 	}
 }
+
+func TestRaiseAuctionCannotPass120Score(t *testing.T) {
+	b := New()
+	b.RaiseAuction("99")
+	if b.RaiseAuction("125"); b.AuctionScore() != 120 {
+		t.Fatalf("Auction score should be set at 120 but is %d", b.AuctionScore())
+	}
+}
