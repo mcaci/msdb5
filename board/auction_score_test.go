@@ -24,3 +24,10 @@ func TestRaiseAuctionScoreFirstAssignment(t *testing.T) {
 		t.Fatalf("Auction score should be set at 61 but is %d", b.AuctionScore())
 	}
 }
+
+func TestRaiseAuctionScoreFirstAssignmentShouldBeSuperiorThan61ElseEither61(t *testing.T) {
+	b := New()
+	if b.RaiseAuction("1"); b.AuctionScore() != 61 {
+		t.Fatalf("Auction score should be set at 61 but is %d", b.AuctionScore())
+	}
+}
