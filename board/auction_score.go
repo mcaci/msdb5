@@ -8,12 +8,12 @@ const maxScore = 120
 // RaiseAuction func
 func (b *Board) RaiseAuction(score string) {
 	prevScore := int(b.AuctionScore())
-	intScore, _ := strconv.Atoi(score)
+	intScore, err := strconv.Atoi(score)
+	if err != nil || intScore <= prevScore {
+		intScore = prevScore
+	}
 	if intScore < minScore {
 		intScore = minScore
-	}
-	if intScore <= prevScore {
-		intScore = prevScore
 	}
 	if intScore > maxScore {
 		intScore = maxScore
