@@ -2,10 +2,13 @@ package board
 
 import "strconv"
 
-// SetAuctionScore func
+// RaiseAuction func
 func (b *Board) RaiseAuction(score string) {
-	scores, _ := strconv.Atoi(score)
-	b.SetAuctionScore(uint8(scores))
+	intScore, _ := strconv.Atoi(score)
+	if intScore < 61 {
+		intScore = 61
+	}
+	b.SetAuctionScore(uint8(intScore))
 }
 
 // SetAuctionScore func
