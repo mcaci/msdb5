@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"strconv"
 	"strings"
 
 	"github.com/gorilla/websocket"
@@ -32,8 +31,7 @@ func (c *client) read() {
 			c.room.forward <- []byte(c.room.msdb5board.String())
 			c.room.forward <- []byte("Wait for other players")
 		case "Auction":
-			score, _ := strconv.Atoi(info[1])
-			c.room.msdb5board.SetAuctionScore(uint8(score))
+			c.room.msdb5board.RaiseAuction(info[1])
 			c.room.forward <- []byte(c.room.msdb5board.String())
 		case "Play":
 			c.room.msdb5board.Nominate(info[1], info[2])

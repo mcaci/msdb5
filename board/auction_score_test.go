@@ -10,11 +10,17 @@ func TestBoardAuctionScoreAtCreationIs0(t *testing.T) {
 	}
 }
 
-
 func TestBoardAuctionScoreCanBeSet(t *testing.T) {
 	b := New()
 	b.SetAuctionScore(80)
 	if b.AuctionScore() != 80 {
 		t.Fatalf("Auction score for a new board should be 80 but is %d", b.AuctionScore())
+	}
+}
+
+func TestRaiseAuctionScoreFirstAssignment(t *testing.T) {
+	b := New()
+	if b.RaiseAuction("61"); b.AuctionScore() != 61 {
+		t.Fatalf("Auction score should be set at 61 but is %d", b.AuctionScore())
 	}
 }
