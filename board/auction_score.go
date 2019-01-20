@@ -23,22 +23,23 @@ func (b *Board) RaiseAuction(score string) {
 
 // RaiseAuction2 func
 func (b *Board) RaiseAuction2(score, host string) {
-	prevScore := int(b.AuctionScore())
+	prevScore := b.AuctionScore()
 	intScore, err := strconv.Atoi(score)
-	if err != nil || intScore <= prevScore {
-		intScore = prevScore
+	currentScore := uint8(intScore)
+	if err != nil || currentScore <= prevScore {
+		currentScore = prevScore
 	}
-	if intScore < minScore {
-		intScore = minScore
-	} else if intScore > maxScore {
-		intScore = maxScore
+	if currentScore < minScore {
+		currentScore = minScore
+	} else if currentScore > maxScore {
+		currentScore = maxScore
 	}
-	b.SetAuctionScore(uint8(intScore))
+	b.SetAuctionScore(currentScore)
 	p, _ := b.Players().Find(host)
-	if prevScore >= minScore && intScore <= prevScore {
-		intScore = 0
+	if prevScore >= minScore && currentScore <= prevScore {
+		currentScore = 0
 	}
-	p.SetAuctionScore(uint8(intScore))
+	p.SetAuctionScore(currentScore)
 }
 
 // SetAuctionScore func
