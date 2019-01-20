@@ -31,7 +31,15 @@ func TestInvalidRaiseAuctionScoreWithHostFirstAssignmentShouldBeAlways61(t *test
 	testPlayerScore(t, b.Players()[0].AuctionScore(), 61)
 }
 
-// func TestRaiseAuctionScoreSecondAssignmentShouldBeSuperiorThanFirstOne(t *testing.T) {
+func TestRaiseAuctionTo65WithHost(t *testing.T) {
+	b := New()
+	b.Join("name", "100.1.1.1")
+	b.RaiseAuction2("65", "100.1.1.1")
+	testPlayerScore(t, b.Players()[0].AuctionScore(), 65)
+
+}
+
+// func Test2Players(t *testing.T) {
 // 	b := New()
 // 	b.RaiseAuction2("65", "")
 // 	if b.RaiseAuction2("80", ""); b.AuctionScore() != 80 {
