@@ -34,13 +34,11 @@ func (b *Board) RaiseAuction2(score, host string) {
 		intScore = maxScore
 	}
 	b.SetAuctionScore(uint8(intScore))
+	p, _ := b.Players().Find(host)
 	if prevScore >= minScore && intScore <= prevScore {
-		p, _ := b.Players().Find(host)
-		p.SetAuctionScore(0)
-	} else {
-		p, _ := b.Players().Find(host)
-		p.SetAuctionScore(uint8(intScore))
+		intScore = 0
 	}
+	p.SetAuctionScore(uint8(intScore))
 }
 
 // SetAuctionScore func
