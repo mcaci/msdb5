@@ -74,6 +74,11 @@ func (player *Player) Collect(cards set.Cards) {
 	}
 }
 
+// AuctionScore func
+func (player *Player) AuctionScore() uint8 {
+	return 61
+}
+
 // Score func
 func (player *Player) Score(count func(cards set.Cards) uint8) uint8 {
 	return count(*player.Pile())
