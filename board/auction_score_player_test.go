@@ -56,6 +56,15 @@ func Test2PlayersRaisingAuctionWithHostSecondPlayer(t *testing.T) {
 	testPlayerScore(t, b.Players()[1].AuctionScore(), 80)
 }
 
+func Test2PlayersRaisingAuctionWithHostSecondPlayerDropsWithLowerScore(t *testing.T) {
+	b := New()
+	b.Join("A", "100.1.1.1")
+	b.Join("B", "100.1.1.2")
+	b.RaiseAuction2("65", "100.1.1.1")
+	b.RaiseAuction2("61", "100.1.1.2")
+	testPlayerScore(t, b.Players()[1].AuctionScore(), 0)
+}
+
 // func TestRaiseAuctionScoreSecondAssignmentShouldBeSuperiorThanFirstOneElseDrop(t *testing.T) {
 // 	b := New()
 // 	b.RaiseAuction2("65", "")
