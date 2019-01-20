@@ -4,22 +4,24 @@ import (
 	"testing"
 )
 
+func testPlayerScore(t *testing.T, expectedScore, actualScore uint8) {
+	if expectedScore != actualScore {
+		t.Fatalf("Auction score should be set at %d but is %d", expectedScore, actualScore)
+	}
+}
+
 func TestRaiseAuctionScoreWithHostFirstAssignment(t *testing.T) {
 	b := New()
 	b.Join("name", "100.1.1.1")
 	b.RaiseAuction2("61", "100.1.1.1")
-	if player0AuctionScore := b.Players()[0].AuctionScore(); player0AuctionScore != 61 {
-		t.Fatalf("Auction score should be set at 61 but is %d", player0AuctionScore)
-	}
+	testPlayerScore(t, b.Players()[0].AuctionScore(), 61)
 }
 
 func TestRaiseAuctionScoreWithHostFirstAssignmentShouldBeSuperiorThan61ElseEither61(t *testing.T) {
 	b := New()
 	b.Join("name", "100.1.1.1")
 	b.RaiseAuction2("1", "100.1.1.1")
-	if player0AuctionScore := b.Players()[0].AuctionScore(); player0AuctionScore != 61 {
-		t.Fatalf("Auction score should be set at 61 but is %d", player0AuctionScore)
-	}
+	testPlayerScore(t, b.Players()[0].AuctionScore(), 61)
 }
 
 // func TestInvalidRaiseAuctionScoreFirstAssignmentShouldBeAlways61(t *testing.T) {
