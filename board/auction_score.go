@@ -35,7 +35,7 @@ func (b *Board) RaiseAuction2(score, host string) {
 		intScore = maxScore
 	}
 	b.SetAuctionScore(uint8(intScore))
-	b.Players()[0].SetAuctionScore(uint8(intScore))
+	b.Players().Find(host).SetAuctionScore(uint8(intScore))
 }
 
 // SetAuctionScore func
