@@ -7,7 +7,7 @@ import (
 )
 
 // Find func
-func Find(nameOrHost string, players Players) (*player.Player, error) {
+func (players Players) Find(nameOrHost string) (*player.Player, error) {
 	isInfoPresent := func(p *player.Player) bool { return p.Name() == nameOrHost || p.Host() == nameOrHost }
 	for _, p := range players {
 		if isInfoPresent(p) {

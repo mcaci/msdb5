@@ -30,20 +30,20 @@ func init() {
 
 func TestPlayerPresentInListByName(t *testing.T) {
 	name := "A"
-	if player, _ := Find(name, testPlayers); name != player.Name() {
+	if player, _ := testPlayers.Find(name); name != player.Name() {
 		t.Fatalf("%v and %v are expected to be the same player", name, player)
 	}
 }
 
 func TestPlayerPresentInListByHost(t *testing.T) {
 	host := "A"
-	if player, _ := Find(host, testPlayersWithHost); host != player.Host() {
+	if player, _ := testPlayersWithHost.Find(host); host != player.Host() {
 		t.Fatalf("%v and %v are expected to be the same player", host, player)
 	}
 }
 
 func errorCheck(t *testing.T, nameOrHost string, players Players, errorPredicate func(error) bool) {
-	if _, err := Find(nameOrHost, players); errorPredicate(err) {
+	if _, err := players.Find(nameOrHost); errorPredicate(err) {
 		t.Fatal(err)
 	}
 }
