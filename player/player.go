@@ -7,10 +7,11 @@ import (
 
 // Player struct
 type Player struct {
-	name string
-	host string
-	hand set.Cards
-	pile set.Cards
+	name         string
+	host         string
+	hand         set.Cards
+	pile         set.Cards
+	auctionScore uint8
 }
 
 // New func
@@ -74,9 +75,14 @@ func (player *Player) Collect(cards set.Cards) {
 	}
 }
 
+// SetAuctionScore func
+func (player *Player) SetAuctionScore(auctionScore uint8) {
+	player.auctionScore = auctionScore
+}
+
 // AuctionScore func
 func (player *Player) AuctionScore() uint8 {
-	return 61
+	return player.auctionScore
 }
 
 // Score func
