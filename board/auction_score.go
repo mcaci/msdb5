@@ -30,8 +30,7 @@ func (b *Board) RaiseAuction2(score, host string) {
 	}
 	if intScore < minScore {
 		intScore = minScore
-	}
-	if intScore > maxScore {
+	} else if intScore > maxScore {
 		intScore = maxScore
 	}
 	b.SetAuctionScore(uint8(intScore))
