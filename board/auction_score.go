@@ -37,7 +37,7 @@ func (b *Board) RaiseAuction2(score, host string) {
 	}
 	b.SetAuctionScore(currentScore)
 
-	if prevScore >= minScore && currentScore <= prevScore {
+	if currentScore <= prevScore {
 		currentScore = 0
 	}
 	p, _ := b.Players().Find(host)
