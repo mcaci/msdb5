@@ -7,8 +7,9 @@ import (
 func TestRaiseAuctionScoreWithHostFirstAssignment(t *testing.T) {
 	b := New()
 	b.Join("name", "100.1.1.1")
-	if b.RaiseAuction2("61", "100.1.1.1"); b.AuctionScore() != 61 {
-		t.Fatalf("Auction score should be set at 61 but is %d", b.AuctionScore())
+	b.RaiseAuction2("61", "100.1.1.1")
+	if player0AuctionScore := b.Players()[0].AuctionScore(); player0AuctionScore != 61 {
+		t.Fatalf("Auction score should be set at 61 but is %d", player0AuctionScore)
 	}
 }
 
