@@ -30,9 +30,9 @@ func (b *Board) RaiseAuction2(score, host string) {
 	if currentScore <= prevScore {
 		currentScore = prevScore
 	}
-	if currentScore < minScore {
+	if currentScore <= minScore {
 		currentScore = minScore
-	} else if currentScore > maxScore {
+	} else if currentScore >= maxScore {
 		currentScore = maxScore
 	}
 	b.SetAuctionScore(currentScore)
