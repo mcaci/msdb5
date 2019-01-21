@@ -26,19 +26,21 @@ func (b *Board) RaiseAuction2(score, host string) {
 	prevScore := int(b.AuctionScore())
 	currentScore, _ := strconv.Atoi(score)
 
-	fun := func(x, m, r int) int {
-		if currentScore*m <= x*m {
-			return x * r
+	LT := func(a, b int) bool { return a <= b }
+	GT := func(a, b int) bool { return a >= b }
+	fun := func(comp func(a, b int) bool, x, y, z int) int {
+		if comp(x, y) {
+			return z
 		}
-		return currentScore
+		return x
 	}
 
-	currentScore = fun(prevScore, 1, 1)
-	currentScore = fun(minScore, 1, 1)
-	currentScore = fun(maxScore, -1, 1)
+	currentScore = fun(LT, currentScore, prevScore, prevScore)
+	currentScore = fun(LT, currentScore, minScore, minScore)
+	currentScore = fun(GT, currentScore, maxScore, maxScore)
 	b.SetAuctionScore(uint8(currentScore))
 
-	currentScore = fun(prevScore, 1, 0)
+	currentScore = fun(LT, currentScore, prevScore, 0)
 	p, _ := b.Players().Find(host)
 	p.SetAuctionScore(uint8(currentScore))
 }
