@@ -1,33 +1,32 @@
 package board
 
-// AuctionCompare struct
-type AuctionCompare struct {
+// AuctionComparisonData struct
+type AuctionComparisonData struct {
 	scoreToCompare, scoreToReturn int
 	compareFunction               func(int, int) bool
 }
 
 // NewAuction func
-func NewAuction(score int, compare func(int, int) bool) AuctionCompare {
+func NewAuction(score int, compare func(int, int) bool) *AuctionComparisonData {
 	return NewAuctionWithReturnScore(score, score, compare)
 }
 
 // NewAuctionWithReturnScore func
-func NewAuctionWithReturnScore(score, ret int, compare func(int, int) bool) AuctionCompare {
-	return AuctionCompare{score, ret, compare}
+func NewAuctionWithReturnScore(score, ret int, compare func(int, int) bool) *AuctionComparisonData {
+	return &AuctionComparisonData{score, ret, compare}
 }
 
-// CompareAndAssignAuction func
-func CompareAndAssignAuction(comp func(int, int) bool, x, y, z int) int {
-	if comp(x, y) {
-		return z
+func (data *AuctionComparisonData) compareAndAssign(currentScore int) int {
+	if data.compareFunction(currentScore, data.scoreToCompare) {
+		return data.scoreToReturn
 	}
-	return x
+	return currentScore
 }
 
 // Compose func
-func Compose(currentScore int, data ...AuctionCompare) int {
+func Compose(currentScore int, data ...*AuctionComparisonData) int {
 	for _, d := range data {
-		currentScore = CompareAndAssignAuction(d.compareFunction, currentScore, d.scoreToCompare, d.scoreToReturn)
+		currentScore = d.compareAndAssign(currentScore)
 	}
 	return currentScore
 }
