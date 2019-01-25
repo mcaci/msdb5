@@ -19,7 +19,7 @@ type room struct {
 	// clients holds all current clients in this room.
 	clients map[*client]bool
 	// game board
-	msdb5board *board.Board
+	msdb5board board.API
 }
 
 // newRoom makes a new room.
@@ -29,7 +29,7 @@ func newRoom() *room {
 		join:       make(chan *client),
 		leave:      make(chan *client),
 		clients:    make(map[*client]bool),
-		msdb5board: board.New(),
+		msdb5board: board.NewAPI(),
 	}
 }
 

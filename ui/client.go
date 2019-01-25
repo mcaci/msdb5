@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"strings"
 
 	"github.com/gorilla/websocket"
 )
@@ -24,20 +23,9 @@ func (c *client) read() {
 		if err != nil {
 			return
 		}
-		info := strings.Split(string(msg), "#")
-		switch info[0] {
-		case "Join":
-			c.room.msdb5board.Join(info[1], c.socket.RemoteAddr().String())
-			c.room.forward <- []byte(c.room.msdb5board.String())
-			c.room.forward <- []byte("Wait for other players")
-		case "Auction":
-			c.room.msdb5board.RaiseAuction(info[1], c.socket.RemoteAddr().String())
-			c.room.forward <- []byte(c.room.msdb5board.String())
-		case "Play":
-			c.room.msdb5board.Nominate(info[1], info[2])
-			c.room.forward <- []byte(c.room.msdb5board.String())
-		}
+		c.room.msdb5board.Action(string(msg), c.socket.RemoteAddr().String())
 		c.room.forward <- msg
+		c.room.forward <- []byte(c.room.msdb5board.String())
 	}
 }
 

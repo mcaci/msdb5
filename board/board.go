@@ -28,6 +28,11 @@ func New() *Board {
 	return b
 }
 
+// NewAPI func
+func NewAPI() API {
+	return New()
+}
+
 func makePlayers(b *Board) {
 	for i := 0; i < 5; i++ {
 		b.players = append(b.players, player.New())
