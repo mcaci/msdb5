@@ -1,15 +1,8 @@
 package board
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/board/prompt"
 	"github.com/nikiforosFreespirit/msdb5/card"
 )
-
-// AskNominatedCard func
-func (b *Board) AskNominatedCard(promptFunc func(chan<- card.ID), playerToAsk chan card.ID) card.ID {
-	b.selectedCard = prompt.Card(promptFunc, playerToAsk)
-	return b.selectedCard
-}
 
 // Nominate func
 func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {

@@ -1,23 +1,20 @@
 package player
 
-import (
-	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/card/set"
-)
+import "github.com/nikiforosFreespirit/msdb5/card"
 
 // Player struct
 type Player struct {
 	name         string
 	host         string
-	hand         set.Cards
-	pile         set.Cards
+	hand         card.Cards
+	pile         card.Cards
 	auctionScore uint8
 }
 
 // New func
 func New() *Player {
 	player := new(Player)
-	player.hand = set.Cards{}
+	player.hand = card.Cards{}
 	return player
 }
 
@@ -29,7 +26,7 @@ func (player *Player) Draw(cardSupplier card.Supplier) card.ID {
 }
 
 // Hand func
-func (player *Player) Hand() *set.Cards {
+func (player *Player) Hand() *card.Cards {
 	return &player.hand
 }
 
@@ -58,18 +55,12 @@ func (player *Player) Has(id card.ID) bool {
 	return player.Hand().Has(id)
 }
 
-// Fold func
-func (player *Player) Fold() bool {
-	return true
-}
-
 // Pile func
-func (player *Player) Pile() *set.Cards {
+func (player *Player) Pile() *card.Cards {
 	return &player.pile
 }
 
-// Collect func
-func (player *Player) Collect(cards set.Cards) {
+func (player *Player) collect(cards card.Cards) {
 	if len(cards) > 0 {
 		player.Pile().Add(cards...)
 	}
@@ -85,12 +76,6 @@ func (player *Player) AuctionScore() uint8 {
 	return player.auctionScore
 }
 
-// Score func
-func (player *Player) Score(count func(cards set.Cards) uint8) uint8 {
+func (player *Player) score(count func(cards card.Cards) uint8) uint8 {
 	return count(*player.Pile())
-}
-
-// Supply func
-func (player *Player) Supply() card.ID {
-	return 1
 }

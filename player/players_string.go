@@ -1,4 +1,4 @@
-package set
+package player
 
 func (players Players) String() string {
 	var str string

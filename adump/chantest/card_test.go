@@ -1,10 +1,9 @@
-package prompt
+package chantest
 
 import (
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/card/set"
 	"github.com/nikiforosFreespirit/msdb5/rule"
 )
 
@@ -36,7 +35,7 @@ func Round() RoundData {
 	for i := range pChans {
 		pChans[i] = make(chan card.ID)
 	}
-	var playedCards set.Cards
+	var playedCards card.Cards
 	var roundData RoundData
 	for i, prompt := range cardPrompts {
 		nextCard := Card(prompt, pChans[i])

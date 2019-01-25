@@ -2,19 +2,17 @@ package rule
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/card/set"
 )
 
 // Count func
-func Count(cards set.Cards) (sum uint8) {
+func Count(cards card.Cards) (sum uint8) {
 	for _, card := range cards {
-		sum += Points(card)
+		sum += points(card)
 	}
 	return sum
 }
 
-// Points func
-func Points(card card.ID) uint8 {
+func points(card card.ID) uint8 {
 	switch card.ToNumber() {
 	case 1:
 		return 11

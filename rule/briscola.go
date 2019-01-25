@@ -2,11 +2,10 @@ package rule
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/card/set"
 )
 
-// IndexOfWinningCard func
-func IndexOfWinningCard(cardsOnTheTable set.Cards, briscola card.Seed) uint8 {
+// IndexOfWinningCard func - ADUMP - TESTED
+func IndexOfWinningCard(cardsOnTheTable card.Cards, briscola card.Seed) uint8 {
 	base := cardsOnTheTable[0]
 	max := 0
 	for i, other := range cardsOnTheTable {
@@ -18,16 +17,15 @@ func IndexOfWinningCard(cardsOnTheTable set.Cards, briscola card.Seed) uint8 {
 	return uint8(max)
 }
 
-// WinningCard func
+// WinningCard func - ADUMP - Used above in IndexOfWinningCard
 func WinningCard(base, other card.ID, briscola card.Seed) card.ID {
-	if &base == nil || DoesOtherCardWin(base, other, briscola) {
+	if &base == nil || doesOtherCardWin(base, other, briscola) {
 		base = other
 	}
 	return base
 }
 
-// DoesOtherCardWin function
-func DoesOtherCardWin(first, other card.ID, briscola card.Seed) bool {
+func doesOtherCardWin(first, other card.ID, briscola card.Seed) bool {
 	otherIsBriscola := other.Seed() == briscola
 	isSameSeed := first.Seed() == other.Seed()
 	return (!isSameSeed && otherIsBriscola) || isOtherHigher(first, other)
@@ -35,8 +33,8 @@ func DoesOtherCardWin(first, other card.ID, briscola card.Seed) bool {
 
 func isOtherHigher(first, other card.ID) bool {
 	isSameSeed := first.Seed() == other.Seed()
-	isOtherGreaterOnPoints := Points(first) < Points(other)
-	isSamePoints := Points(first) == Points(other)
+	isOtherGreaterOnPoints := points(first) < points(other)
+	isSamePoints := points(first) == points(other)
 	isOtherGreaterOnNumber := first.Number() < other.Number()
 	return isSameSeed && ((isSamePoints && isOtherGreaterOnNumber) || isOtherGreaterOnPoints)
 }

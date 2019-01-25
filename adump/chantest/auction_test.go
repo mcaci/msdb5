@@ -1,4 +1,4 @@
-package prompt
+package chantest
 
 import (
 	"testing"

@@ -39,7 +39,7 @@ func TestScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
 }
 
 func verifyRoundScenario(t *testing.T, a, b card.ID, briscola card.Seed, expectedWinner bool) {
-	if index := DoesOtherCardWin(a, b, briscola); index != expectedWinner {
+	if index := doesOtherCardWin(a, b, briscola); index != expectedWinner {
 		t.Fatal("Unexpected winner")
 	}
 }

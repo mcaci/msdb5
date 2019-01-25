@@ -1,7 +1,9 @@
-package board
+package chantest
 
 import (
 	"testing"
+
+	"github.com/nikiforosFreespirit/msdb5/board"
 )
 
 func TestAuctionSentByChannel(t *testing.T) {
@@ -31,8 +33,8 @@ func TestAuctionSentByChannelThrice(t *testing.T) {
 	verification(t, 63, b.AuctionScore())
 }
 
-func setUp() (*Board, chan uint8, chan uint8) {
-	b := New()
+func setUp() (*board.Board, chan uint8, chan uint8) {
+	b := board.New()
 	b.SetAuctionScore(60)
 	cToPlayer := make(chan uint8, 1)
 	cFromPlayer := make(chan uint8, 1)

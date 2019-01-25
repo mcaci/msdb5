@@ -64,27 +64,3 @@ func Test2PlayersRaisingAuctionWithHostSecondPlayerDropsWithLowerScore(t *testin
 	b.RaiseAuction("61", "100.1.1.2")
 	testPlayerScore(t, b.Players()[1].AuctionScore(), 0)
 }
-
-// func TestRaiseAuctionScoreSecondAssignmentShouldBeSuperiorThanFirstOneElseDrop(t *testing.T) {
-// 	b := New()
-// 	b.RaiseAuction("65", "")
-// 	if b.RaiseAuction("63", ""); b.AuctionScore() != 65 {
-// 		t.Fatalf("Auction score should be set at 65 but is %d", b.AuctionScore())
-// 	}
-// }
-
-// func TestInvalidSecondRaiseAuctionScoreAlwaysDrops(t *testing.T) {
-// 	b := New()
-// 	b.RaiseAuction("90", "")
-// 	if b.RaiseAuction("ciao", ""); b.AuctionScore() != 90 {
-// 		t.Fatalf("Auction score should be set at 90 but is %d", b.AuctionScore())
-// 	}
-// }
-
-// func TestRaiseAuctionCannotPass120Score(t *testing.T) {
-// 	b := New()
-// 	b.RaiseAuction("99", "")
-// 	if b.RaiseAuction("125", ""); b.AuctionScore() != 120 {
-// 		t.Fatalf("Auction score should be set at 120 but is %d", b.AuctionScore())
-// 	}
-// }

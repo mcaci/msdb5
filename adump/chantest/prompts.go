@@ -1,10 +1,17 @@
-package prompt
+package chantest
 
 import (
 	"errors"
 
+	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/card"
 )
+
+// AskNominatedCard func
+func AskNominatedCard(b *board.Board, promptFunc func(chan<- card.ID), playerToAsk chan card.ID) card.ID {
+	b.Nominate("1", "Coin", "localhost")
+	return *b.NominatedCard()
+}
 
 // Card func
 func Card(prompt func(chan<- card.ID), cardChan chan card.ID) card.ID {

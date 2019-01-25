@@ -5,8 +5,7 @@ import "errors"
 // ID is the id of a card from 1 to 40
 type ID uint8
 
-// Card func
-func Card(index uint8) (id ID, err error) {
+func byID(index uint8) (id ID, err error) {
 	if index < 1 {
 		err = errors.New("Index cannot be less than 1")
 	} else if index > 40 {

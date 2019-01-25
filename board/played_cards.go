@@ -1,10 +1,8 @@
 package board
 
-import (
-	"github.com/nikiforosFreespirit/msdb5/card/set"
-)
+import "github.com/nikiforosFreespirit/msdb5/card"
 
 // PlayedCards func
-func (b *Board) PlayedCards() *set.Cards {
+func (b *Board) PlayedCards() *card.Cards {
 	return &b.playedCards
 }

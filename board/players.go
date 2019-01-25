@@ -4,11 +4,11 @@ import (
 	"log"
 
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/player/set"
+	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 // Players func
-func (b *Board) Players() set.Players {
+func (b *Board) Players() player.Players {
 	return b.players
 }
 

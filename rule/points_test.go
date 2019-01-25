@@ -3,10 +3,10 @@ package rule
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/card/set"
+	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
-func testScoreCount(t *testing.T, expectedScore uint8, cards set.Cards) {
+func testScoreCount(t *testing.T, expectedScore uint8, cards card.Cards) {
 	if score := Count(cards); expectedScore != score {
 		t.Fatalf("Score expected is %d but %d was computed", expectedScore, score)
 	}
@@ -17,16 +17,16 @@ func TestEmptyPileSums0(t *testing.T) {
 }
 
 func TestPileWithOnehAceOnlySums11(t *testing.T) {
-	testScoreCount(t, 11, set.Cards{1})
+	testScoreCount(t, 11, card.Cards{1})
 }
 
 func TestPileWithOneTwoOneAceOnlySums11(t *testing.T) {
-	testScoreCount(t, 11, set.Cards{2, 1})
+	testScoreCount(t, 11, card.Cards{2, 1})
 }
 
 func TestPileWithOneAceOneTwoOneThreeSums21(t *testing.T) {
-	testScoreCount(t, 21, set.Cards{1, 2, 3})
+	testScoreCount(t, 21, card.Cards{1, 2, 3})
 }
 func TestPileWithAllCardsSums120(t *testing.T) {
-	testScoreCount(t, 120, set.Deck())
+	testScoreCount(t, 120, card.Deck())
 }

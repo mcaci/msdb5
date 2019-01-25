@@ -1,4 +1,4 @@
-package set
+package card
 
 func (cards Cards) String() string {
 	var str string

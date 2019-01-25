@@ -2,16 +2,14 @@ package board
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
-	cset "github.com/nikiforosFreespirit/msdb5/card/set"
 	"github.com/nikiforosFreespirit/msdb5/player"
-	pset "github.com/nikiforosFreespirit/msdb5/player/set"
 )
 
 // Board struct
 type Board struct {
-	players      pset.Players
+	players      player.Players
 	pChans       []chan card.ID
-	playedCards  cset.Cards
+	playedCards  card.Cards
 	selectedCard card.ID
 	auctionScore uint8
 }
@@ -39,9 +37,9 @@ func makePlayers(b *Board) {
 	}
 }
 
-func playersDrawAllCards(players *pset.Players) {
-	deck := cset.Deck()
-	for i := 0; i < cset.DeckSize; i++ {
+func playersDrawAllCards(players *player.Players) {
+	deck := card.Deck()
+	for i := 0; i < card.DeckSize; i++ {
 		(*players)[i%5].Draw(&deck)
 	}
 }
