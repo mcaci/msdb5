@@ -12,7 +12,7 @@ func (b *Board) AskNominatedCard(promptFunc func(chan<- card.ID), playerToAsk ch
 }
 
 // Nominate func
-func (b *Board) Nominate(number, seed string) (card.ID, error) {
+func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
 	card, err := card.ByName(number, seed)
 	if err == nil {
 		b.selectedCard = card

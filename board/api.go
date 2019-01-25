@@ -20,6 +20,6 @@ func (b *Board) Action(request, origin string) {
 	case "Auction":
 		b.RaiseAuction(data[1], origin)
 	case "Play":
-		b.Nominate(data[1], data[2])
+		b.Nominate(data[1], data[2], origin)
 	}
 }
