@@ -13,6 +13,6 @@ func TestRemoveCardFromSet(t *testing.T) {
 	cards := Cards{15}
 	cards.Remove(0)
 	if cards.Has(15) {
-		t.Fatalf("Deck should be empty")
+		t.Fatalf("Cards should be empty")
 	}
 }

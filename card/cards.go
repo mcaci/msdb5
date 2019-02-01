@@ -8,6 +8,11 @@ func (cards *Cards) Add(ids ...ID) {
 	*cards = append(*cards, ids...)
 }
 
+// Remove func
+func (cards *Cards) Remove(index int) {
+	*cards = append((*cards)[:index], (*cards)[index+1:]...)
+}
+
 // Has func
 func (cards Cards) Has(id ID) bool {
 	var found bool
