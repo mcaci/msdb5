@@ -23,12 +23,21 @@ func TestAPICreationAndAuctionUsage(t *testing.T) {
 	}
 }
 
-func TestAPICreationAndPlayUsage(t *testing.T) {
+func TestAPICreationAndPCompanionUsage(t *testing.T) {
 	b := NewAPI()
 	b.Action("Join#A", "100.1.1.1")
-	b.Action("Play#6#Cudgel", "100.1.1.1")
+	b.Action("Companion#3#Cup", "100.1.1.1")
+	board, ok := b.(*Board)
+	if !ok || *board.NominatedCard() != 13 {
+		t.Fatal("Card action was not properly performed")
+	}
+}
+func TestAPICreationAndPlayCardUsage(t *testing.T) {
+	b := NewAPI()
+	b.Action("Join#A", "100.1.1.1")
+	b.Action("Companion#6#Cudgel", "100.1.1.1")
 	board, ok := b.(*Board)
 	if !ok || *board.NominatedCard() != 36 {
-		t.Fatal("Play action was not properly performed")
+		t.Fatal("Card action was not properly performed")
 	}
 }
