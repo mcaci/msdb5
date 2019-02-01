@@ -29,7 +29,7 @@ func TestAPICreationAndPCompanionUsage(t *testing.T) {
 	b.Action("Companion#3#Cup", "100.1.1.1")
 	board, ok := b.(*Board)
 	if !ok || *board.NominatedCard() != 13 {
-		t.Fatal("Card action was not properly performed")
+		t.Fatal("Companion action was not properly performed")
 	}
 }
 func TestAPICreationAndPlayCardUsage(t *testing.T) {
@@ -37,7 +37,7 @@ func TestAPICreationAndPlayCardUsage(t *testing.T) {
 	b.Action("Join#A", "100.1.1.1")
 	b.Action("Card#6#Cudgel", "100.1.1.1")
 	board, ok := b.(*Board)
-	if !ok || *board.NominatedCard() != 36 {
+	if !ok || !board.PlayedCards().Has(36) {
 		t.Fatal("Card action was not properly performed")
 	}
 }
