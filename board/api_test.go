@@ -35,7 +35,7 @@ func TestAPICreationAndPCompanionUsage(t *testing.T) {
 func TestAPICreationAndPlayCardUsage(t *testing.T) {
 	b := NewAPI()
 	b.Action("Join#A", "100.1.1.1")
-	b.Action("Companion#6#Cudgel", "100.1.1.1")
+	b.Action("Card#6#Cudgel", "100.1.1.1")
 	board, ok := b.(*Board)
 	if !ok || *board.NominatedCard() != 36 {
 		t.Fatal("Card action was not properly performed")
