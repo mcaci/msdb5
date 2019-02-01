@@ -19,8 +19,9 @@ func (b *Board) Action(request, origin string) {
 		b.Join(data[1], origin)
 	case "Auction":
 		b.RaiseAuction(data[1], origin)
-	case "Play":
+	case "Companion":
 		b.Nominate(data[1], data[2], origin)
-		// TODO: ADD real play case
+	case "Card":
+		b.Nominate(data[1], data[2], origin)
 	}
 }
