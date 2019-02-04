@@ -1,38 +1,27 @@
 package board
 
-// AuctionComparisonData struct
-type AuctionComparisonData struct {
-	scoreToCompare, scoreToReturn int
-	compareFunction               func(int, int) bool
+import "strconv"
+
+const minScore = 61
+const maxScore = 120
+
+// RaiseAuction func
+func (b *Board) RaiseAuction(score, host string) {
+	prevScore := int(b.AuctionScore())
+	currentScore, _ := strconv.Atoi(score)
+	currentScore = Compose(currentScore, NewAuction(prevScore, LT), NewAuction(minScore, LT), NewAuction(maxScore, GT))
+	b.SetAuctionScore(uint8(currentScore))
+	currentScore = Compose(currentScore, NewAuctionWithReturnScore(prevScore, 0, LT))
+	p, _ := b.Players().Find(host)
+	p.SetAuctionScore(uint8(currentScore))
 }
 
-// NewAuction func
-func NewAuction(score int, compare func(int, int) bool) *AuctionComparisonData {
-	return NewAuctionWithReturnScore(score, score, compare)
+// SetAuctionScore func
+func (b *Board) SetAuctionScore(score uint8) {
+	b.auctionScore = score
 }
 
-// NewAuctionWithReturnScore func
-func NewAuctionWithReturnScore(score, ret int, compare func(int, int) bool) *AuctionComparisonData {
-	return &AuctionComparisonData{score, ret, compare}
+// AuctionScore func
+func (b *Board) AuctionScore() uint8 {
+	return b.auctionScore
 }
-
-func (data *AuctionComparisonData) compareAndAssign(currentScore int) int {
-	if data.compareFunction(currentScore, data.scoreToCompare) {
-		return data.scoreToReturn
-	}
-	return currentScore
-}
-
-// Compose func
-func Compose(currentScore int, data ...*AuctionComparisonData) int {
-	for _, d := range data {
-		currentScore = d.compareAndAssign(currentScore)
-	}
-	return currentScore
-}
-
-// LT var
-var LT = func(a, b int) bool { return a <= b }
-
-// GT var
-var GT = func(a, b int) bool { return a >= b }
