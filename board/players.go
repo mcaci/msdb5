@@ -1,8 +1,6 @@
 package board
 
 import (
-	"log"
-
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
@@ -15,16 +13,4 @@ func (b *Board) Players() player.Players {
 // PChans func
 func (b *Board) PChans() []chan card.ID {
 	return b.pChans
-}
-
-// Join func
-func (b *Board) Join(name, remoteAddr string) {
-	for _, player := range b.Players() {
-		if player.Name() == "" {
-			player.SetName(name)
-			player.MyHostIs(remoteAddr)
-			return
-		}
-	}
-	log.Println("All players have joined, no further players are expected")
 }
