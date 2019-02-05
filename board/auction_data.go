@@ -16,13 +16,6 @@ func NewAuctionWithReturnScore(score, ret int, compare func(int, int) bool) *Auc
 	return &AuctionComparisonData{score, ret, compare}
 }
 
-func (data *AuctionComparisonData) compareAndAssign(currentScore int) int {
-	if data.compareFunction(currentScore, data.scoreToCompare) {
-		return data.scoreToReturn
-	}
-	return currentScore
-}
-
 // Compose func
 func Compose(currentScore int, data ...*AuctionComparisonData) int {
 	for _, d := range data {
@@ -36,3 +29,10 @@ var LT = func(a, b int) bool { return a <= b }
 
 // GT var
 var GT = func(a, b int) bool { return a >= b }
+
+func (data *AuctionComparisonData) compareAndAssign(currentScore int) int {
+	if data.compareFunction(currentScore, data.scoreToCompare) {
+		return data.scoreToReturn
+	}
+	return currentScore
+}
