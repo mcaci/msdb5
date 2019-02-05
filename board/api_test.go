@@ -4,8 +4,8 @@ import (
 	"testing"
 )
 
-func TestAPICreationAndJoinUsage(t *testing.T) {
-	b := NewAPI()
+func TestActionCreationAndJoinUsage(t *testing.T) {
+	b := NewAction()
 	b.Action("Join#A", "100.1.1.1")
 	board, ok := b.(*Board)
 	if !ok || board.Players()[0].Name() != "A" {
@@ -13,8 +13,8 @@ func TestAPICreationAndJoinUsage(t *testing.T) {
 	}
 }
 
-func TestAPICreationAndAuctionUsage(t *testing.T) {
-	b := NewAPI()
+func TestActionCreationAndAuctionUsage(t *testing.T) {
+	b := NewAction()
 	b.Action("Join#A", "100.1.1.1")
 	b.Action("Auction#102", "100.1.1.1")
 	board, ok := b.(*Board)
@@ -23,8 +23,8 @@ func TestAPICreationAndAuctionUsage(t *testing.T) {
 	}
 }
 
-func TestAPICreationAndPCompanionUsage(t *testing.T) {
-	b := NewAPI()
+func TestActionCreationAndPCompanionUsage(t *testing.T) {
+	b := NewAction()
 	b.Action("Join#A", "100.1.1.1")
 	b.Action("Companion#3#Cup", "100.1.1.1")
 	board, ok := b.(*Board)
@@ -32,8 +32,8 @@ func TestAPICreationAndPCompanionUsage(t *testing.T) {
 		t.Fatal("Companion action was not properly performed")
 	}
 }
-func TestAPICreationAndPlayCardUsage(t *testing.T) {
-	b := NewAPI()
+func TestActionCreationAndPlayCardUsage(t *testing.T) {
+	b := NewAction()
 	b.Action("Join#A", "100.1.1.1")
 	b.Action("Card#6#Cudgel", "100.1.1.1")
 	board, ok := b.(*Board)

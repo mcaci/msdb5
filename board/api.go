@@ -1,15 +1,8 @@
 package board
 
 import (
-	"fmt"
 	"strings"
 )
-
-// API interface
-type API interface {
-	Action(request, origin string)
-	fmt.Stringer
-}
 
 // Action interface
 func (b *Board) Action(request, origin string) {

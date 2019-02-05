@@ -3,7 +3,7 @@ package board
 import (
 	"strconv"
 
-	"github.com/nikiforosFreespirit/msdb5/auction"
+	"github.com/nikiforosFreespirit/msdb5/board/auction"
 )
 
 const minScore = 61

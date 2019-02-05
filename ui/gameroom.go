@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
+	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/board"
 )
 
@@ -19,7 +20,7 @@ type room struct {
 	// clients holds all current clients in this room.
 	clients map[*client]bool
 	// game board
-	msdb5board board.API
+	msdb5board api.Action
 }
 
 // newRoom makes a new room.
@@ -29,7 +30,7 @@ func newRoom() *room {
 		join:       make(chan *client),
 		leave:      make(chan *client),
 		clients:    make(map[*client]bool),
-		msdb5board: board.NewAPI(),
+		msdb5board: board.NewAction(),
 	}
 }
 

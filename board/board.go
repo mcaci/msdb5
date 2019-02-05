@@ -1,6 +1,7 @@
 package board
 
 import (
+	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
@@ -23,8 +24,8 @@ func New() *Board {
 	return b
 }
 
-// NewAPI func
-func NewAPI() API {
+// NewAction func
+func NewAction() api.Action {
 	return New()
 }
 
