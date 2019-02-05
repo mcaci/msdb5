@@ -1,4 +1,4 @@
-package board
+package auction
 
 // AuctionComparisonData struct
 type AuctionComparisonData struct {
