@@ -2,6 +2,13 @@ package board
 
 import "github.com/nikiforosFreespirit/msdb5/card"
 
+// Play func
+func (b *Board) Play(number, seed, origin string) {
+	p, _ := b.Players().Find(origin)
+	c, _ := p.Play(number, seed)
+	b.PlayedCards().Add(c)
+}
+
 func playCard(b *Board) card.ID {
 	h := b.Players()[0].Hand()
 	card := (*h)[0]

@@ -22,8 +22,6 @@ func (b *Board) Action(request, origin string) {
 	case "Companion":
 		b.Nominate(data[1], data[2], origin)
 	case "Card":
-		p, _ := b.Players().Find(origin)
-		c, _ := p.Play(data[1], data[2])
-		b.PlayedCards().Add(c)
+		b.Play(data[1], data[2], origin)
 	}
 }
