@@ -2,8 +2,6 @@ package board
 
 import (
 	"testing"
-
-	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
 func TestBoardHasASetOfPlayedCards(t *testing.T) {
@@ -24,39 +22,4 @@ func TestBoardsSetOfPlayedCardsWithOneCardContainsIt(t *testing.T) {
 	if !b.PlayedCards().Has(1) {
 		t.Fatal("The deck should contain one card")
 	}
-}
-
-func TestPlayerPlaysOneCardAndCardIsRemovedFromHand(t *testing.T) {
-	b := New()
-	card := playCard(b)
-	if b.Players()[0].Has(card) {
-		t.Fatalf("Hand should not have %v", card)
-	}
-}
-
-func TestPlayerPlaysOneCardAndCardIsOnTheBoard(t *testing.T) {
-	b := New()
-	card := playCard(b)
-	if !b.PlayedCards().Has(card) {
-		t.Fatalf("Played cards should have %v", card)
-	}
-}
-
-func playCard(b *Board) card.ID {
-	h := b.Players()[0].Hand()
-	card := (*h)[0]
-	removeCardFromHand(card, h)
-	b.PlayedCards().Add(card)
-	return card
-}
-
-func removeCardFromHand(c card.ID, h *card.Cards) {
-	index := 0
-	for i, card := range *h {
-		if card == c {
-			index = i
-			break
-		}
-	}
-	*h = append((*h)[:index], (*h)[index+1])
 }
