@@ -17,10 +17,7 @@ type Board struct {
 // New func
 func New() *Board {
 	b := new(Board)
-	b.pChans = make([]chan card.ID, 5)
-	for i := range b.pChans {
-		b.pChans[i] = make(chan card.ID)
-	}
+	makePChans(b)
 	makePlayers(b)
 	playersDrawAllCards(&b.players)
 	return b
@@ -29,6 +26,13 @@ func New() *Board {
 // NewAPI func
 func NewAPI() API {
 	return New()
+}
+
+func makePChans(b *Board) {
+	b.pChans = make([]chan card.ID, 5)
+	for i := range b.pChans {
+		b.pChans[i] = make(chan card.ID)
+	}
 }
 
 func makePlayers(b *Board) {
