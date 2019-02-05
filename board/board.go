@@ -33,7 +33,7 @@ func NewAPI() API {
 
 func makePlayers(b *Board) {
 	for i := 0; i < 5; i++ {
-		b.players = append(b.players, player.New())
+		b.players.Add(*player.New())
 	}
 }
 
