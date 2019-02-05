@@ -1,6 +1,10 @@
 package board
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/nikiforosFreespirit/msdb5/auction"
+)
 
 const minScore = 61
 const maxScore = 120
@@ -9,9 +13,9 @@ const maxScore = 120
 func (b *Board) RaiseAuction(score, host string) {
 	prevScore := int(b.AuctionScore())
 	currentScore, _ := strconv.Atoi(score)
-	currentScore = Compose(currentScore, NewAuction(prevScore, LT), NewAuction(minScore, LT), NewAuction(maxScore, GT))
+	currentScore = auction.Compose(currentScore, auction.NewAuction(prevScore, auction.LT), auction.NewAuction(minScore, auction.LT), auction.NewAuction(maxScore, auction.GT))
 	b.SetAuctionScore(uint8(currentScore))
-	currentScore = Compose(currentScore, NewAuctionWithReturnScore(prevScore, 0, LT))
+	currentScore = auction.Compose(currentScore, auction.NewAuctionWithReturnScore(prevScore, 0, auction.LT))
 	p, _ := b.Players().Find(host)
 	p.SetAuctionScore(uint8(currentScore))
 }
