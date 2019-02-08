@@ -34,8 +34,8 @@ func doesOtherCardWin(first, other card.ID, briscola card.Seed) bool {
 
 func isOtherHigher(first, other card.ID) bool {
 	isSameSeed := first.Seed() == other.Seed()
-	isOtherGreaterOnPoints := first.Points() < other.Points()
-	isSamePoints := first.Points() == other.Points()
+	isOtherGreaterOnPoints := Points(first) < Points(other)
+	isSamePoints := Points(first) == Points(other)
 	isOtherGreaterOnNumber := first.Number() < other.Number()
 	return isSameSeed && ((isSamePoints && isOtherGreaterOnNumber) || isOtherGreaterOnPoints)
 }

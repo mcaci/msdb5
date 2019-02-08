@@ -7,11 +7,12 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/player"
+	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 // Board struct
 type Board struct {
-	players      player.Players
+	players      playerset.Players
 	playedCards  deck.Cards
 	selectedCard card.ID
 	auctionScore uint8
@@ -36,7 +37,7 @@ func makePlayers(b *Board) {
 	}
 }
 
-func playersDrawAllCards(players *player.Players) {
+func playersDrawAllCards(players *playerset.Players) {
 	d := deck.Deck()
 	for i := 0; i < deck.DeckSize; i++ {
 		(*players)[i%5].Draw(d)
@@ -44,7 +45,7 @@ func playersDrawAllCards(players *player.Players) {
 }
 
 // Players func
-func (b *Board) Players() player.Players {
+func (b *Board) Players() playerset.Players {
 	return b.players
 }
 

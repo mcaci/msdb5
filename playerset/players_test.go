@@ -1,7 +1,9 @@
-package player
+package playerset
 
 import (
 	"testing"
+
+	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 var (
@@ -11,17 +13,17 @@ var (
 
 func init() {
 	// &player.Player{name: "A"}, &player.Player{name: "B"}
-	var a Player
+	var a player.Player
 	a.SetName("A")
 	testPlayers.Add(a)
-	var b Player
+	var b player.Player
 	b.SetName("B")
 	testPlayers.Add(b)
 	//  Players{&player.Player{host: "A"}, &player.Player{host: "B"}}
-	var a1 Player
+	var a1 player.Player
 	a1.MyHostIs("A")
 	testPlayersWithHost.Add(a1)
-	var b1 Player
+	var b1 player.Player
 	b1.MyHostIs("B")
 	testPlayersWithHost.Add(b1)
 }
