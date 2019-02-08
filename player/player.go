@@ -6,27 +6,27 @@ import "github.com/nikiforosFreespirit/msdb5/card"
 type Player struct {
 	name         string
 	host         string
-	hand         card.Cards
-	pile         card.Cards
+	hand         deck.Cards
+	pile         deck.Cards
 	auctionScore uint8
 }
 
 // New func
 func New() *Player {
 	player := new(Player)
-	player.hand = card.Cards{}
+	player.hand = deck.Cards{}
 	return player
 }
 
 // Draw func
-func (player *Player) Draw(cards card.Cards) card.ID {
+func (player *Player) Draw(cards deck.Cards) card.ID {
 	c := cards.Supply()
 	player.Hand().Add(c)
 	return c
 }
 
 // Hand func
-func (player *Player) Hand() *card.Cards {
+func (player *Player) Hand() *deck.Cards {
 	return &player.hand
 }
 
@@ -56,11 +56,11 @@ func (player *Player) Has(id card.ID) bool {
 }
 
 // Pile func
-func (player *Player) Pile() *card.Cards {
+func (player *Player) Pile() *deck.Cards {
 	return &player.pile
 }
 
-func (player *Player) collect(cards card.Cards) {
+func (player *Player) collect(cards deck.Cards) {
 	if len(cards) > 0 {
 		player.Pile().Add(cards...)
 	}
@@ -76,7 +76,7 @@ func (player *Player) AuctionScore() uint8 {
 	return player.auctionScore
 }
 
-func (player *Player) score(count func(cards card.Cards) uint8) uint8 {
+func (player *Player) score(count func(cards deck.Cards) uint8) uint8 {
 	return count(*player.Pile())
 }
 

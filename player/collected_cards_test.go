@@ -14,7 +14,7 @@ func TestPlayerHasNoCardsAtStartGame(t *testing.T) {
 
 func TestPlayerWinsCards(t *testing.T) {
 	p := New()
-	cards := card.Cards{1, 2, 3, 4, 5}
+	cards := deck.Cards{1, 2, 3, 4, 5}
 	p.collect(cards)
 
 	if collectedCards := p.Pile(); collectedCards == nil {

@@ -1,11 +1,11 @@
-package rule
+package briscola
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
 // IndexOfWinningCard func - ADUMP - TESTED
-func IndexOfWinningCard(cardsOnTheTable card.Cards, briscola card.Seed) uint8 {
+func IndexOfWinningCard(cardsOnTheTable deck.Cards, briscola card.Seed) uint8 {
 	base := cardsOnTheTable[0]
 	max := 0
 	for i, other := range cardsOnTheTable {

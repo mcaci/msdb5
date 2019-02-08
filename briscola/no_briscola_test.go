@@ -1,4 +1,4 @@
-package rule
+package briscola
 
 import (
 	"testing"

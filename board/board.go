@@ -11,7 +11,7 @@ import (
 // Board struct
 type Board struct {
 	players      player.Players
-	playedCards  card.Cards
+	playedCards  deck.Cards
 	selectedCard card.ID
 	auctionScore uint8
 }
@@ -63,7 +63,7 @@ func (b *Board) NominatedCard() *card.ID {
 }
 
 // PlayedCards func
-func (b *Board) PlayedCards() *card.Cards {
+func (b *Board) PlayedCards() *deck.Cards {
 	return &b.playedCards
 }
 

@@ -8,7 +8,7 @@ import (
 
 func TestPlayerDrawsOneCard(t *testing.T) {
 	player := New()
-	cards := card.Cards{}
+	cards := deck.Cards{}
 	cards.Add(1)
 	drawnCard := player.Draw(cards)
 	if !player.Has(drawnCard) {

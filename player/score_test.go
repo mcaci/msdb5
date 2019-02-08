@@ -7,7 +7,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/rule"
 )
 
-func setupAndVerify(t *testing.T, cards card.Cards, expectedScore uint8) {
+func setupAndVerify(t *testing.T, cards deck.Cards, expectedScore uint8) {
 	p := New()
 	p.collect(cards)
 	actualScore := p.score(rule.Count)
@@ -17,11 +17,11 @@ func setupAndVerify(t *testing.T, cards card.Cards, expectedScore uint8) {
 }
 
 func TestPlayerHasScoreOf0WhenCreated(t *testing.T) {
-	setupAndVerify(t, card.Cards{}, 0)
+	setupAndVerify(t, deck.Cards{}, 0)
 }
 
 func TestPlayerHasScoreOf2WhenCollectingCard8AndOtherCardsScoring0(t *testing.T) {
-	setupAndVerify(t, card.Cards{8, 32, 16, 4, 35}, 2)
+	setupAndVerify(t, deck.Cards{8, 32, 16, 4, 35}, 2)
 }
 
 func TestPlayerHasScoreOf120WhenCollectingAllCards(t *testing.T) {

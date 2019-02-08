@@ -1,11 +1,11 @@
-package rule
+package point
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
 // Count func
-func Count(cards card.Cards) (sum uint8) {
+func Count(cards deck.Cards) (sum uint8) {
 	for _, card := range cards {
 		sum += points(card)
 	}
