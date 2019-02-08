@@ -79,3 +79,31 @@ func (player *Player) AuctionScore() uint8 {
 func (player *Player) score(count func(cards card.Cards) uint8) uint8 {
 	return count(*player.Pile())
 }
+
+// Play function
+func (player *Player) Play(number, seed string) (card.ID, bool) {
+	card, _ := card.ByName(number, seed)
+	found := false
+	for index, c := range *(player.Hand()) {
+		found = c == card
+		if found {
+			player.Hand().Remove(index)
+			break
+		}
+	}
+	return card, found
+}
+
+func (player Player) String() string {
+	str := "Player["
+	str += print("Name", player.name)
+	str += print("Host", player.host)
+	str += print("Hand", player.hand.String())
+	str += print("Pile", player.pile.String())
+	str += "]"
+	return str
+}
+
+func print(info, field string) string {
+	return info + ":" + field + ";"
+}
