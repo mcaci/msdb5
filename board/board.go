@@ -9,7 +9,6 @@ import (
 // Board struct
 type Board struct {
 	players      player.Players
-	pChans       []chan card.ID
 	playedCards  card.Cards
 	selectedCard card.ID
 	auctionScore uint8
@@ -18,7 +17,6 @@ type Board struct {
 // New func
 func New() *Board {
 	b := new(Board)
-	makePChans(b)
 	makePlayers(b)
 	playersDrawAllCards(&b.players)
 	return b
@@ -27,13 +25,6 @@ func New() *Board {
 // NewAction func
 func NewAction() api.Action {
 	return New()
-}
-
-func makePChans(b *Board) {
-	b.pChans = make([]chan card.ID, 5)
-	for i := range b.pChans {
-		b.pChans[i] = make(chan card.ID)
-	}
 }
 
 func makePlayers(b *Board) {
