@@ -1,6 +1,9 @@
 package card
 
-import "errors"
+import (
+	"errors"
+	"strconv"
+)
 
 // ID is the id of a card from 1 to 40
 type ID uint8
@@ -17,13 +20,13 @@ func byID(index uint8) (id ID, err error) {
 }
 
 // Number func
-func (card *ID) Number() uint8 {
-	return card.ToNumber()
+func (id *ID) Number() uint8 {
+	return id.ToNumber()
 }
 
 // Seed func
-func (card *ID) Seed() Seed {
-	return card.ToSeed()
+func (id *ID) Seed() Seed {
+	return id.ToSeed()
 }
 
 // ToNumber func
@@ -38,4 +41,8 @@ func (id ID) ToSeed() Seed {
 
 func (id ID) toZeroBased() uint8 {
 	return uint8(id) - 1
+}
+
+func (id ID) String() string {
+	return "(" + strconv.Itoa(int(id.ToNumber())) + " of " + id.ToSeed().String() + ")"
 }

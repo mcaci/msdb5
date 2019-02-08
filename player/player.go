@@ -19,8 +19,8 @@ func New() *Player {
 }
 
 // Draw func
-func (player *Player) Draw(cardSupplier card.Supplier) card.ID {
-	c := cardSupplier.Supply()
+func (player *Player) Draw(cards card.Cards) card.ID {
+	c := cards.Supply()
 	player.Hand().Add(c)
 	return c
 }

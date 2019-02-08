@@ -38,7 +38,7 @@ func makePlayers(b *Board) {
 func playersDrawAllCards(players *player.Players) {
 	deck := card.Deck()
 	for i := 0; i < card.DeckSize; i++ {
-		(*players)[i%5].Draw(&deck)
+		(*players)[i%5].Draw(deck)
 	}
 }
 
