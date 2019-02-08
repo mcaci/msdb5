@@ -5,6 +5,7 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
@@ -36,9 +37,9 @@ func makePlayers(b *Board) {
 }
 
 func playersDrawAllCards(players *player.Players) {
-	deck := card.Deck()
-	for i := 0; i < card.DeckSize; i++ {
-		(*players)[i%5].Draw(deck)
+	d := deck.Deck()
+	for i := 0; i < deck.DeckSize; i++ {
+		(*players)[i%5].Draw(d)
 	}
 }
 

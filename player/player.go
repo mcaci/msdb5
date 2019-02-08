@@ -1,6 +1,9 @@
 package player
 
-import "github.com/nikiforosFreespirit/msdb5/card"
+import (
+	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/deck"
+)
 
 // Player struct
 type Player struct {
@@ -74,10 +77,6 @@ func (player *Player) SetAuctionScore(auctionScore uint8) {
 // AuctionScore func
 func (player *Player) AuctionScore() uint8 {
 	return player.auctionScore
-}
-
-func (player *Player) score(count func(cards deck.Cards) uint8) uint8 {
-	return count(*player.Pile())
 }
 
 // Play function

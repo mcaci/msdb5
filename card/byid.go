@@ -8,7 +8,8 @@ import (
 // ID is the id of a card from 1 to 40
 type ID uint8
 
-func byID(index uint8) (id ID, err error) {
+// ByID func
+func ByID(index uint8) (id ID, err error) {
 	if index < 1 {
 		err = errors.New("Index cannot be less than 1")
 	} else if index > 40 {
@@ -45,4 +46,22 @@ func (id ID) toZeroBased() uint8 {
 
 func (id ID) String() string {
 	return "(" + strconv.Itoa(int(id.ToNumber())) + " of " + id.ToSeed().String() + ")"
+}
+
+// Points func
+func (id ID) Points() uint8 {
+	switch id.ToNumber() {
+	case 1:
+		return 11
+	case 3:
+		return 10
+	case 8:
+		return 2
+	case 9:
+		return 3
+	case 10:
+		return 4
+	default:
+		return 0
+	}
 }

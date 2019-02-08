@@ -3,7 +3,7 @@ package point
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
 func testScoreCount(t *testing.T, expectedScore uint8, cards deck.Cards) {
@@ -28,5 +28,5 @@ func TestPileWithOneAceOneTwoOneThreeSums21(t *testing.T) {
 	testScoreCount(t, 21, deck.Cards{1, 2, 3})
 }
 func TestPileWithAllCardsSums120(t *testing.T) {
-	testScoreCount(t, 120, card.Deck())
+	testScoreCount(t, 120, deck.Deck())
 }

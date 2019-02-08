@@ -3,14 +3,14 @@ package player
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/rule"
+	"github.com/nikiforosFreespirit/msdb5/deck"
+	"github.com/nikiforosFreespirit/msdb5/point"
 )
 
 func setupAndVerify(t *testing.T, cards deck.Cards, expectedScore uint8) {
 	p := New()
 	p.collect(cards)
-	actualScore := p.score(rule.Count)
+	actualScore := point.Count(cards)
 	if expectedScore != actualScore {
 		t.Fatalf("Score should be %d but is %d", expectedScore, actualScore)
 	}
@@ -25,5 +25,5 @@ func TestPlayerHasScoreOf2WhenCollectingCard8AndOtherCardsScoring0(t *testing.T)
 }
 
 func TestPlayerHasScoreOf120WhenCollectingAllCards(t *testing.T) {
-	setupAndVerify(t, card.Deck(), 120)
+	setupAndVerify(t, deck.Deck(), 120)
 }

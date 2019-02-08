@@ -2,9 +2,10 @@ package briscola
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
-// IndexOfWinningCard func - ADUMP - TESTED
+// IndexOfWinningCard func
 func IndexOfWinningCard(cardsOnTheTable deck.Cards, briscola card.Seed) uint8 {
 	base := cardsOnTheTable[0]
 	max := 0
@@ -17,7 +18,7 @@ func IndexOfWinningCard(cardsOnTheTable deck.Cards, briscola card.Seed) uint8 {
 	return uint8(max)
 }
 
-// WinningCard func - ADUMP - Used above in IndexOfWinningCard
+// WinningCard func
 func WinningCard(base, other card.ID, briscola card.Seed) card.ID {
 	if &base == nil || doesOtherCardWin(base, other, briscola) {
 		base = other
@@ -33,8 +34,8 @@ func doesOtherCardWin(first, other card.ID, briscola card.Seed) bool {
 
 func isOtherHigher(first, other card.ID) bool {
 	isSameSeed := first.Seed() == other.Seed()
-	isOtherGreaterOnPoints := points(first) < points(other)
-	isSamePoints := points(first) == points(other)
+	isOtherGreaterOnPoints := first.Points() < other.Points()
+	isSamePoints := first.Points() == other.Points()
 	isOtherGreaterOnNumber := first.Number() < other.Number()
 	return isSameSeed && ((isSamePoints && isOtherGreaterOnNumber) || isOtherGreaterOnPoints)
 }
