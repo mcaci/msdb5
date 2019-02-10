@@ -7,12 +7,12 @@ type ID uint8
 
 // Number func
 func (id ID) Number() uint8 {
-	return toZeroBased(id)%10 + 1
+	return mapIDToNumber(id)
 }
 
 // Seed func
 func (id ID) Seed() Seed {
-	return Seed(toZeroBased(id) / 10)
+	return mapIDToSeed(id)
 }
 
 func (id ID) String() string {
