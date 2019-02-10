@@ -2,7 +2,6 @@ package card
 
 import (
 	"errors"
-	"strconv"
 )
 
 // ByID func
@@ -16,4 +15,3 @@ func ByID(index uint8) (id ID, err error) {
 	}
 	return
 }
-
