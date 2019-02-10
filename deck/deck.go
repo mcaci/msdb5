@@ -16,7 +16,7 @@ func Deck() Cards {
 	rand.Seed(time.Now().UnixNano())
 	ints := rand.Perm(DeckSize)
 	for _, cardID := range ints {
-		card, _ := card.ByID(mapToValidID(cardID))
+		card, _ := card.Create(mapToValidID(cardID))
 		ids.Add(card)
 	}
 	return ids

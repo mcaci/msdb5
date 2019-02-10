@@ -4,8 +4,8 @@ import (
 	"errors"
 )
 
-// ByID func
-func ByID(index uint8) (id ID, err error) {
+// Create func
+func Create(index uint8) (id ID, err error) {
 	if index < 1 {
 		err = errors.New("Index cannot be less than 1")
 	} else if index > 40 {
