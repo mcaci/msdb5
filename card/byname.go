@@ -11,10 +11,14 @@ func ByName(number, seed string) (id ID, err error) {
 	var s Seed
 	if n, err = nameToNumber(number); err == nil {
 		if s, err = nameToSeed(seed); err == nil {
-			id = ID(n + (uint8)(s)*10)
+			id, err = ByID(mapToID(n, s))
 		}
 	}
 	return
+}
+
+func mapToID(number uint8, seed Seed) uint8 {
+	return number + (uint8)(seed)*10
 }
 
 func nameToNumber(number string) (uint8, error) {

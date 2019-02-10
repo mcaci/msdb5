@@ -17,19 +17,3 @@ func ByID(index uint8) (id ID, err error) {
 	return
 }
 
-func (id ID) idToNumber() uint8 {
-	return id.toZeroBased()%10 + 1
-}
-
-func (id ID) idToSeed() Seed {
-	return Seed(id.toZeroBased() / 10)
-}
-
-func (id ID) toZeroBased() uint8 {
-	return uint8(id) - 1
-}
-
-func (id ID) String() string {
-	return "(" + strconv.Itoa(int(id.idToNumber())) + " of " + id.idToSeed().String() + ")"
-}
-
