@@ -12,10 +12,11 @@ import (
 
 // Board struct
 type Board struct {
-	players      playerset.Players
-	playedCards  deck.Cards
-	selectedCard card.ID
-	auctionScore uint8
+	players        playerset.Players
+	playedCards    deck.Cards
+	selectedCard   card.ID
+	selectedPlayer player.Player
+	auctionScore   uint8
 }
 
 // New func
@@ -62,6 +63,11 @@ func (b *Board) AuctionScore() uint8 {
 // NominatedCard func
 func (b *Board) NominatedCard() *card.ID {
 	return &b.selectedCard
+}
+
+// NominatedPlayer func
+func (b *Board) NominatedPlayer() *player.Player {
+	return &b.selectedPlayer
 }
 
 // PlayedCards func
