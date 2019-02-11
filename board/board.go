@@ -82,6 +82,7 @@ func (b Board) String() string {
 	str += "Players[" + b.players.String() + "]"
 	str += "PlayedCards[" + b.playedCards.String() + "]"
 	str += "SelectedCard[" + b.selectedCard.String() + "]"
+	str += "SelectedPlayer[" + b.selectedPlayer.String() + "]"
 	str += "AuctionScore[" + strconv.Itoa(int(b.auctionScore)) + "]"
 	str += ")"
 	return str
