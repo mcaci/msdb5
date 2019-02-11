@@ -50,6 +50,7 @@ func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
 	card, err := card.ByName(number, seed)
 	if err == nil {
 		b.selectedCard = card
+		b.selectedPlayer = *b.Players()[0]
 	}
 	return card, err
 }
