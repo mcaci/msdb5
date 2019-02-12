@@ -8,8 +8,7 @@ import (
 
 func TestPlayerDrawsOneCard(t *testing.T) {
 	player := New()
-	cards := deck.Cards{}
-	cards.Add(1)
+	cards := deck.Cards{1}
 	drawnCard := player.Draw(cards)
 	if !player.Has(drawnCard) {
 		t.Fatalf("Expecting player to have drawn %v", drawnCard)
