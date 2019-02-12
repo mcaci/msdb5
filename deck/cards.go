@@ -1,6 +1,8 @@
 package deck
 
-import "github.com/nikiforosFreespirit/msdb5/card"
+import (
+	"github.com/nikiforosFreespirit/msdb5/card"
+)
 
 // Cards type
 type Cards []card.ID
@@ -29,7 +31,7 @@ func (cards Cards) Has(id card.ID) bool {
 // Supply func
 func (cards *Cards) Supply() card.ID {
 	card := (*cards)[0]
-	(*cards) = (*cards)[1:]
+	cards.Remove(0)
 	return card
 }
 

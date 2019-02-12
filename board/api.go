@@ -7,6 +7,7 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/board/auction"
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 // Action interface
@@ -50,7 +51,14 @@ func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
 	card, err := card.ByName(number, seed)
 	if err == nil {
 		b.selectedCard = card
-		b.selectedPlayer = *b.Players()[0]
+		var p player.Player
+		for _, pl := range b.Players() {
+			if pl.Has(card) {
+				p = *pl
+				break
+			}
+		}
+		b.selectedPlayer = p
 	}
 	return card, err
 }
