@@ -81,7 +81,7 @@ func (player *Player) AuctionScore() uint8 {
 
 // Play function
 func (player *Player) Play(number, seed string) (card.ID, bool) {
-	card, _ := card.ByName(number, seed)
+	card, _ := card.Create(number, seed)
 	found := false
 	for index, c := range *(player.Hand()) {
 		found = c == card

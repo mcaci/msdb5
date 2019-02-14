@@ -48,7 +48,7 @@ func (b *Board) Play(number, seed, origin string) {
 
 // Nominate func
 func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
-	card, err := card.ByName(number, seed)
+	card, err := card.Create(number, seed)
 	if err == nil {
 		b.selectedCard = card
 		var p player.Player

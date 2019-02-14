@@ -6,25 +6,29 @@ import (
 )
 
 // Create func
-func Create(index uint8) (id ID, err error) {
-	if index < 1 {
-		err = errors.New("Index cannot be less than 1")
-	} else if index > 40 {
-		err = errors.New("Index cannot be more than 40")
-	} else {
-		id = ID(index)
+func Create(number, seed string) (id ID, err error) {
+	n, err := nameToNumber(number)
+	if err != nil {
+		return
 	}
-	return
+	s, err := nameToSeed(seed)
+	if err != nil {
+		return
+	}
+	index, err := mapToID(n, s)
+	if err != nil {
+		return
+	}
+	return ID(index), err
 }
 
-// ByName func
-func ByName(number, seed string) (id ID, err error) {
-	var n uint8
-	var s Seed
-	if n, err = nameToNumber(number); err == nil {
-		if s, err = nameToSeed(seed); err == nil {
-			id, err = Create(mapToID(n, s))
-		}
+func mapToID(number uint8, seed Seed) (index uint8, err error) {
+	index = number + (uint8)(seed)*10
+	if index < 1 {
+		err = errors.New("Index cannot be less than 1")
+	}
+	if index > 40 {
+		err = errors.New("Index cannot be more than 40")
 	}
 	return
 }
@@ -33,7 +37,7 @@ func nameToNumber(number string) (uint8, error) {
 	n, err := strconv.Atoi(number)
 
 	if n > 10 || n < 1 {
-		err = errors.New("Number '" + number + "' doesn't exist")
+		err = errors.New("Number '" + number + "' is not valid for card")
 	}
 	return uint8(n), err
 }

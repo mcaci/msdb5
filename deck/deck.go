@@ -11,15 +11,13 @@ import (
 const DeckSize = 40
 
 // Deck func
-func Deck() Cards {
-	var ids Cards
+func Deck() (cards Cards) {
 	rand.Seed(time.Now().UnixNano())
 	ints := rand.Perm(DeckSize)
 	for _, cardID := range ints {
-		card, _ := card.Create(fromZeroBased(cardID))
-		ids.Add(card)
+		cards.Add(card.ID(fromZeroBased(cardID)))
 	}
-	return ids
+	return
 }
 
 func fromZeroBased(index int) uint8 {
