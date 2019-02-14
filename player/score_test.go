@@ -3,6 +3,7 @@ package player
 import (
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/point"
 )
@@ -10,7 +11,7 @@ import (
 func setupAndVerify(t *testing.T, cards deck.Cards, expectedScore uint8) {
 	p := New()
 	p.collect(cards)
-	actualScore := point.Count(cards)
+	actualScore := point.Count(cards, briscola.Points)
 	if expectedScore != actualScore {
 		t.Fatalf("Score should be %d but is %d", expectedScore, actualScore)
 	}

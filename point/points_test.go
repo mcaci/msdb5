@@ -3,11 +3,12 @@ package point
 import (
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
 func testScoreCount(t *testing.T, expectedScore uint8, cards deck.Cards) {
-	if score := Count(cards); expectedScore != score {
+	if score := Count(cards, briscola.Points); expectedScore != score {
 		t.Fatalf("Score expected is %d but %d was computed", expectedScore, score)
 	}
 }
