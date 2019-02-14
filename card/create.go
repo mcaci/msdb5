@@ -5,6 +5,18 @@ import (
 	"strconv"
 )
 
+// Create func
+func Create(index uint8) (id ID, err error) {
+	if index < 1 {
+		err = errors.New("Index cannot be less than 1")
+	} else if index > 40 {
+		err = errors.New("Index cannot be more than 40")
+	} else {
+		id = ID(index)
+	}
+	return
+}
+
 // ByName func
 func ByName(number, seed string) (id ID, err error) {
 	var n uint8
