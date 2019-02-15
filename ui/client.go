@@ -16,6 +16,7 @@ type client struct {
 	room *room
 }
 
+// Reads commands from UI
 func (c *client) read() {
 	defer c.socket.Close()
 	for {
@@ -24,11 +25,12 @@ func (c *client) read() {
 			return
 		}
 		c.room.msdb5board.Action(string(msg), c.socket.RemoteAddr().String())
-		c.room.forward <- msg
-		c.room.forward <- []byte(c.room.msdb5board.String())
+		sendMessage(msg, c.room.forward)
+		sendMessage([]byte(c.room.msdb5board.String()), c.send)
 	}
 }
 
+// Writes messages to UI
 func (c *client) write() {
 	defer c.socket.Close()
 	for msg := range c.send {
@@ -37,4 +39,8 @@ func (c *client) write() {
 			log.Println("Write Error:", err)
 		}
 	}
+}
+
+func sendMessage(message []byte, roomChan chan []byte) {
+	roomChan <- message
 }
