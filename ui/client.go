@@ -25,8 +25,11 @@ func (c *client) read() {
 			return
 		}
 		c.room.msdb5board.Action(string(msg), c.socket.RemoteAddr().String())
-		sendMessage(msg, c.room.forward)
-		sendMessage([]byte(c.room.msdb5board.String()), c.send)
+		log.Println(msg)
+		// TODO: format msg with info for others
+		sendMessage(msg, c.room.forward) // to room
+		// TODO: format boad with info for myself
+		sendMessage([]byte(c.room.msdb5board.String()), c.send) // to myself
 	}
 }
 
