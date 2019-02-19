@@ -1,4 +1,4 @@
-package main
+package ui
 
 import (
 	"log"
@@ -9,7 +9,8 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/board"
 )
 
-type room struct {
+// Room struct
+type Room struct {
 	// forward is a channel that holds incoming messages
 	// that should be forwarded to the other clients.
 	forward chan []byte
@@ -23,9 +24,9 @@ type room struct {
 	msdb5board api.Action
 }
 
-// newRoom makes a new room.
-func newRoom() *room {
-	return &room{
+// NewRoom makes a new room.
+func NewRoom() *Room {
+	return &Room{
 		forward:    make(chan []byte),
 		join:       make(chan *client),
 		leave:      make(chan *client),
@@ -34,7 +35,8 @@ func newRoom() *room {
 	}
 }
 
-func (r *room) run() {
+// Run func
+func (r *Room) Run() {
 	for {
 		select {
 		case client := <-r.join:
@@ -61,7 +63,7 @@ const (
 var upgrader = &websocket.Upgrader{ReadBufferSize: socketBufferSize,
 	WriteBufferSize: socketBufferSize}
 
-func (r *room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+func (r *Room) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	socket, err := upgrader.Upgrade(w, req, nil)
 	if err != nil {
 		log.Fatal("ServeHTTP:", err)

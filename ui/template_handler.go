@@ -1,4 +1,4 @@
-package main
+package ui
 
 import (
 	"html/template"
@@ -7,15 +7,20 @@ import (
 	"sync"
 )
 
-// templ represents a single template
-type templateHandler struct {
+// TemplateHandler templ represents a single template
+type TemplateHandler struct {
 	once     sync.Once
 	filename string
 	templ    *template.Template
 }
 
+// NewTemplateHandler func
+func NewTemplateHandler() *TemplateHandler {
+	return &TemplateHandler{filename: "msdb5.html"}
+}
+
 // ServeHTTP handles the HTTP request.
-func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (t *TemplateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
 		t.templ = template.Must(template.ParseFiles(filepath.Join("templates",
 			t.filename)))

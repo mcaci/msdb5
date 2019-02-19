@@ -4,19 +4,21 @@ import (
 	"flag"
 	"log"
 	"net/http"
+
+	"github.com/nikiforosFreespirit/msdb5/ui"
 )
 
 func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
 	flag.Parse() // parse the flags
 
-	r := newRoom()
-	http.Handle("/", &templateHandler{filename: "msdb5.html"})
+	r := ui.NewRoom()
+	http.Handle("/", ui.NewTemplateHandler())
 	http.Handle("/room", r)
 
 	// get the room going
-	go r.run()
-	
+	go r.Run()
+
 	// start the web server
 	log.Println("Starting web server on", *addr)
 	if err := http.ListenAndServe(*addr, nil); err != nil {
