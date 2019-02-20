@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gorilla/websocket"
+	"github.com/nikiforosFreespirit/msdb5/api"
 )
 
 // client represents a single chatting user.
@@ -20,16 +21,21 @@ type client struct {
 func (c *client) read() {
 	defer c.socket.Close()
 	for {
+		// read player input
 		_, msg, err := c.socket.ReadMessage()
 		if err != nil {
 			return
 		}
-		c.room.msdb5board.Action(string(msg), c.socket.RemoteAddr().String())
+		// log action
 		log.Println(msg)
-		// TODO: format msg with info for others
-		sendMessage(msg, c.room.forward) // to room
+		// execute action
+		command := string(msg)
+		run(c.room.msdb5board, command, c.socket.RemoteAddr().String())
+		// TODO: format command with info for others
+		send(command, c.room.forward) // to room
 		// TODO: format boad with info for myself
-		sendMessage([]byte(c.room.msdb5board.String()), c.send) // to myself
+		status := c.room.msdb5board.String()
+		send(status, c.send) // to myself
 	}
 }
 
@@ -44,6 +50,10 @@ func (c *client) write() {
 	}
 }
 
-func sendMessage(message []byte, roomChan chan []byte) {
-	roomChan <- message
+func run(room api.Action, command, origin string) {
+	room.Action(command, origin)
+}
+
+func send(message string, to chan []byte) {
+	to <- []byte(message)
 }
