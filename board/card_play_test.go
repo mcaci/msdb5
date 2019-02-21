@@ -10,3 +10,7 @@ func TestPlayerPlaysOneCardAndCardIsOnTheBoard(t *testing.T) {
 		t.Fatal("Board should have One of Coin as played card")
 	}
 }
+
+func TestWhenPlayersPlayOneRoundOfFiveCardsCardsAreAssignedToWinner(t *testing.T) {
+	
+}
