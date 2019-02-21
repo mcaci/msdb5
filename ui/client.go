@@ -31,9 +31,9 @@ func (c *client) read() {
 		// execute action
 		command := string(msg)
 		run(c.room.msdb5board, command, c.socket.RemoteAddr().String())
-		// TODO: format command with info for others
+		// TODO: format command with info for others: command with public info for board
 		send(command, c.room.forward) // to room
-		// TODO: format boad with info for myself
+		// TODO: format board with info for myself / my hand and collected cards
 		status := c.room.msdb5board.String()
 		send(status, c.send) // to myself
 	}
