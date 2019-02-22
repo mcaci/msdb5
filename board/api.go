@@ -31,7 +31,7 @@ const maxScore = 120
 // RaiseAuction func
 func (b *Board) RaiseAuction(score, origin string) error {
 	prevScore := b.AuctionScore()
-	intScore, err := strconv.Atoi(score) // THIS ERR IS LOST IF ERR BELOW IS NOT
+	intScore, err := strconv.Atoi(score) // TODO: THIS ERR IS LOST IF ERR BELOW IS NOT
 	currentScore := uint8(intScore)
 
 	if currentScore <= prevScore {
