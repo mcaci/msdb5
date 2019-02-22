@@ -11,6 +11,14 @@ func TestCreateSet(t *testing.T) {
 	}
 }
 
+func TestAddCardToSet(t *testing.T) {
+	cards := Cards{}
+	cards.Add(33)
+	if !cards.Has(33) {
+		t.Fatal("There should be the 3 of Cudgel card in the set")
+	}
+}
+
 func TestRemoveCardFromSet(t *testing.T) {
 	cards := Cards{15}
 	cards.Remove(0)
