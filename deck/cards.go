@@ -1,6 +1,8 @@
 package deck
 
 import (
+	"errors"
+
 	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
@@ -23,15 +25,20 @@ func (cards *Cards) Move(destination *Cards) {
 	*cards = Cards{}
 }
 
-// Has func
-func (cards Cards) Has(id card.ID) bool {
-	var found bool
-	for _, cardID := range cards {
-		if found = (cardID == id); found {
-			break
+// Find func
+func (cards *Cards) Find(isInfoPresent func(c card.ID) bool) (int, error) {
+	for index, c := range *cards {
+		if isInfoPresent(c) {
+			return index, nil
 		}
 	}
-	return found
+	return -1, errors.New("Card not found")
+}
+
+// Has func
+func (cards Cards) Has(id card.ID) bool {
+	_, err := cards.Find(func(c card.ID) bool { return c == id })
+	return err == nil
 }
 
 // Supply func

@@ -80,17 +80,13 @@ func (player *Player) AuctionScore() uint8 {
 }
 
 // Play function
-func (player *Player) Play(number, seed string) (card.ID, bool) {
-	card, _ := card.Create(number, seed)
-	found := false
-	for index, c := range *(player.Hand()) {
-		found = c == card
-		if found {
-			player.Hand().Remove(index)
-			break
-		}
+func (player *Player) Play(number, seed string) (card.ID, error) {
+	inputCard, err := card.Create(number, seed)
+	index, err := player.Hand().Find(func(c card.ID) bool { return c == inputCard })
+	if err == nil {
+		player.Hand().Remove(index)
 	}
-	return card, found
+	return inputCard, err
 }
 
 func (player Player) String() string {
