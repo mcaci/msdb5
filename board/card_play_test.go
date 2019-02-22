@@ -1,6 +1,8 @@
 package board
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestPlayerPlaysOneCardAndCardIsOnTheBoard(t *testing.T) {
 	b := New()
@@ -9,8 +11,4 @@ func TestPlayerPlaysOneCardAndCardIsOnTheBoard(t *testing.T) {
 	if !b.PlayedCards().Has(1) {
 		t.Fatal("Board should have One of Coin as played card")
 	}
-}
-
-func TestWhenPlayersPlayOneRoundOfFiveCardsCardsAreAssignedToWinner(t *testing.T) {
-	
 }
