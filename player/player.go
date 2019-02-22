@@ -1,6 +1,8 @@
 package player
 
 import (
+	"strconv"
+
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 )
@@ -95,6 +97,7 @@ func (player Player) String() string {
 	str += print("Host", player.host)
 	str += print("Hand", player.hand.String())
 	str += print("Pile", player.pile.String())
+	str += print("AuctionScore", strconv.Itoa(int(player.auctionScore)))
 	str += "]"
 	return str
 }
