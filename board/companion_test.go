@@ -29,9 +29,6 @@ func TestCardNominatedWithOriginInfo_SetNominatedPlayerB(t *testing.T) {
 	b.Join("A", "100.1.1.1")
 	b.Join("B", "100.1.1.2")
 	card := (*b.Players()[1].Hand())[0]
-	t.Log(b.Players()[0].Hand())
-	t.Log(b.Players()[1].Hand())
-	t.Log(card)
 	b.Nominate(strconv.Itoa((int)(card.Number())), card.Seed().String(), "100.1.1.1")
 	if b.NominatedPlayer().Name() != "B" {
 		t.Fatalf("Nominated player is not B, but %s", b.NominatedPlayer().Name())
