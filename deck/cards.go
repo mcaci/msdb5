@@ -17,6 +17,12 @@ func (cards *Cards) Remove(index int) {
 	*cards = append((*cards)[:index], (*cards)[index+1:]...)
 }
 
+// Move func
+func (cards *Cards) Move(destination *Cards) {
+	destination.Add(*cards...)
+	// *cards = Cards{}
+}
+
 // Has func
 func (cards Cards) Has(id card.ID) bool {
 	var found bool
