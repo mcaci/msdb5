@@ -20,7 +20,7 @@ func (cards *Cards) Remove(index int) {
 // Move func
 func (cards *Cards) Move(destination *Cards) {
 	destination.Add(*cards...)
-	// *cards = Cards{}
+	*cards = Cards{}
 }
 
 // Has func
