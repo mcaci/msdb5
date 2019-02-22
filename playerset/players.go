@@ -14,7 +14,7 @@ func (playerSet *Players) Add(p player.Player) {
 	*playerSet = append(*playerSet, &p)
 }
 
-// Find2 func
+// Find func
 func (playerSet Players) Find(isInfoPresent func(p *player.Player) bool) (*player.Player, error) {
 	for _, p := range playerSet {
 		if isInfoPresent(p) {
