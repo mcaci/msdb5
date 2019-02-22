@@ -7,6 +7,7 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/board/auction"
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
@@ -44,6 +45,9 @@ func (b *Board) Play(number, seed, origin string) {
 	p, _ := b.Players().Find(origin)
 	c, _ := p.Play(number, seed)
 	b.PlayedCards().Add(c)
+	if len(*b.PlayedCards()) >= 5 {
+		*b.PlayedCards() = deck.Cards{}
+	}
 }
 
 // Nominate func
