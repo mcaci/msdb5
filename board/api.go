@@ -6,8 +6,8 @@ import (
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/board/auction"
+	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
@@ -46,7 +46,8 @@ func (b *Board) Play(number, seed, origin string) {
 	c, _ := p.Play(number, seed)
 	b.PlayedCards().Add(c)
 	if len(*b.PlayedCards()) >= 5 {
-		*b.PlayedCards() = deck.Cards{}
+		playerIndex := briscola.IndexOfWinningCard(*b.PlayedCards(), card.Coin)
+		b.PlayedCards().Move(b.Players()[playerIndex].Pile())
 	}
 }
 
