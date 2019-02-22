@@ -96,6 +96,7 @@ func (b *Board) Join(name, origin string) error {
 		p.MyHostIs(origin)
 	} else {
 		log.Println("All players have joined, no further players are expected: " + err.Error())
+		log.Println(b.Players())
 	}
 	return err
 }
