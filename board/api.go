@@ -30,13 +30,13 @@ const minScore = 61
 const maxScore = 120
 
 // RaiseAuction func
-func (b *Board) RaiseAuction(score, host string) {
+func (b *Board) RaiseAuction(score, origin string) {
 	prevScore := int(b.AuctionScore())
 	currentScore, _ := strconv.Atoi(score)
 	currentScore = auction.Compose(currentScore, auction.NewAuction(prevScore, auction.LT), auction.NewAuction(minScore, auction.LT), auction.NewAuction(maxScore, auction.GT))
 	b.SetAuctionScore(uint8(currentScore))
 	currentScore = auction.Compose(currentScore, auction.NewAuctionWithReturnScore(prevScore, 0, auction.LT))
-	p, _ := b.Players().Find(host)
+	p, _ := b.Players().Find(origin)
 	p.SetAuctionScore(uint8(currentScore))
 }
 
@@ -69,11 +69,11 @@ func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
 }
 
 // Join func
-func (b *Board) Join(name, remoteAddr string) {
+func (b *Board) Join(name, origin string) {
 	for _, player := range b.Players() {
 		if player.Name() == "" {
 			player.SetName(name)
-			player.MyHostIs(remoteAddr)
+			player.MyHostIs(origin)
 			return
 		}
 	}
