@@ -5,7 +5,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nikiforosFreespirit/msdb5/board/auction"
 	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/player"
@@ -30,43 +29,85 @@ const minScore = 61
 const maxScore = 120
 
 // RaiseAuction func
-func (b *Board) RaiseAuction(score, origin string) {
-	prevScore := int(b.AuctionScore())
-	currentScore, _ := strconv.Atoi(score)
-	currentScore = auction.Compose(currentScore, auction.NewAuction(prevScore, auction.LT), auction.NewAuction(minScore, auction.LT), auction.NewAuction(maxScore, auction.GT))
-	b.SetAuctionScore(uint8(currentScore))
-	currentScore = auction.Compose(currentScore, auction.NewAuctionWithReturnScore(prevScore, 0, auction.LT))
+func (b *Board) RaiseAuction(score, origin string) error {
+	prevScore := b.AuctionScore()
+	intScore, err := strconv.Atoi(score)
+	currentScore := uint8(intScore)
+
+	if currentScore <= prevScore {
+		currentScore = prevScore
+	}
+	if currentScore < minScore {
+		currentScore = minScore
+	} else if currentScore > maxScore {
+		currentScore = maxScore
+	}
+	b.SetAuctionScore(currentScore)
+
+	if prevScore >= minScore && currentScore <= prevScore {
+		currentScore = 0
+	}
 	isInfoPresent := func(p *player.Player) bool { return p.Host() == origin }
-	p, _ := b.Players().Find(isInfoPresent)
-	p.SetAuctionScore(uint8(currentScore))
+	p, err := b.Players().Find(isInfoPresent)
+	if err == nil {
+		p.SetAuctionScore(currentScore)
+	}
+	return err
 }
 
+// func (b *Board) raiseAuction2(score, origin string) error {
+// 	prevScore := int(b.AuctionScore())
+// 	currentScore, err := strconv.Atoi(score)
+// 	// if err == nil {
+// 	currentScore = auction.Compose(currentScore, auction.NewAuction(prevScore, auction.LT), auction.NewAuction(minScore, auction.LT), auction.NewAuction(maxScore, auction.GT))
+// 	b.SetAuctionScore(uint8(currentScore))
+// 	currentScore = auction.Compose(currentScore, auction.NewAuctionWithReturnScore(prevScore, 0, auction.LT))
+// 	isInfoPresent := func(p *player.Player) bool { return p.Host() == origin }
+// 	p, err := b.Players().Find(isInfoPresent)
+// 	fmt.Println(p)
+// 	fmt.Println(err)
+// 	// if err == nil {
+// 	p.SetAuctionScore(uint8(currentScore))
+// 	// }
+// 	// }
+// 	// return err
+// 	return nil
+// }
+
 // Play func
-func (b *Board) Play(number, seed, origin string) {
+func (b *Board) Play(number, seed, origin string) error {
 	isInfoPresent := func(p *player.Player) bool { return p.Host() == origin }
-	p, _ := b.Players().Find(isInfoPresent)
-	c, _ := p.Play(number, seed)
-	b.PlayedCards().Add(c)
-	if len(*b.PlayedCards()) >= 5 {
-		playerIndex := briscola.IndexOfWinningCard(*b.PlayedCards(), card.Coin)
-		b.PlayedCards().Move(b.Players()[playerIndex].Pile())
+	p, err := b.Players().Find(isInfoPresent)
+	if err == nil {
+		c, _ := p.Play(number, seed)
+		// c, err := p.Play(number, seed)
+		// if err == nil { // TODO: FOR SOME CHECKS IT'S TRUE
+		b.PlayedCards().Add(c)
+		if len(*b.PlayedCards()) >= 5 {
+			playerIndex := briscola.IndexOfWinningCard(*b.PlayedCards(), card.Coin)
+			b.PlayedCards().Move(b.Players()[playerIndex].Pile())
+		}
+		// }
 	}
+	return err
 }
 
 // Nominate func
 func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
 	card, err := card.Create(number, seed)
-	isInfoPresent := func(p *player.Player) bool { return p.Has(card) }
-	p, err := b.Players().Find(isInfoPresent)
 	if err == nil {
-		b.selectedCard = card
-		b.selectedPlayer = *p
+		isInfoPresent := func(p *player.Player) bool { return p.Has(card) }
+		p, err := b.Players().Find(isInfoPresent)
+		if err == nil {
+			b.selectedCard = card
+			b.selectedPlayer = *p
+		}
 	}
 	return card, err
 }
 
 // Join func
-func (b *Board) Join(name, origin string) {
+func (b *Board) Join(name, origin string) error {
 	isInfoPresent := func(p *player.Player) bool { return p.Name() == "" }
 	p, err := b.Players().Find(isInfoPresent)
 	if err == nil {
@@ -75,4 +116,5 @@ func (b *Board) Join(name, origin string) {
 	} else {
 		log.Println("All players have joined, no further players are expected: " + err.Error())
 	}
+	return err
 }
