@@ -31,7 +31,7 @@ const maxScore = 120
 // RaiseAuction func
 func (b *Board) RaiseAuction(score, origin string) error {
 	prevScore := b.AuctionScore()
-	intScore, err := strconv.Atoi(score)
+	intScore, err := strconv.Atoi(score) // THIS ERR IS LOST IF ERR BELOW IS NOT
 	currentScore := uint8(intScore)
 
 	if currentScore <= prevScore {
@@ -54,25 +54,6 @@ func (b *Board) RaiseAuction(score, origin string) error {
 	}
 	return err
 }
-
-// func (b *Board) raiseAuction2(score, origin string) error {
-// 	prevScore := int(b.AuctionScore())
-// 	currentScore, err := strconv.Atoi(score)
-// 	// if err == nil {
-// 	currentScore = auction.Compose(currentScore, auction.NewAuction(prevScore, auction.LT), auction.NewAuction(minScore, auction.LT), auction.NewAuction(maxScore, auction.GT))
-// 	b.SetAuctionScore(uint8(currentScore))
-// 	currentScore = auction.Compose(currentScore, auction.NewAuctionWithReturnScore(prevScore, 0, auction.LT))
-// 	isInfoPresent := func(p *player.Player) bool { return p.Host() == origin }
-// 	p, err := b.Players().Find(isInfoPresent)
-// 	fmt.Println(p)
-// 	fmt.Println(err)
-// 	// if err == nil {
-// 	p.SetAuctionScore(uint8(currentScore))
-// 	// }
-// 	// }
-// 	// return err
-// 	return nil
-// }
 
 // Play func
 func (b *Board) Play(number, seed, origin string) error {
