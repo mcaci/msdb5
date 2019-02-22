@@ -36,13 +36,15 @@ func (b *Board) RaiseAuction(score, origin string) {
 	currentScore = auction.Compose(currentScore, auction.NewAuction(prevScore, auction.LT), auction.NewAuction(minScore, auction.LT), auction.NewAuction(maxScore, auction.GT))
 	b.SetAuctionScore(uint8(currentScore))
 	currentScore = auction.Compose(currentScore, auction.NewAuctionWithReturnScore(prevScore, 0, auction.LT))
-	p, _ := b.Players().Find(origin)
+	isInfoPresent := func(p *player.Player) bool { return p.Host() == origin }
+	p, _ := b.Players().Find(isInfoPresent)
 	p.SetAuctionScore(uint8(currentScore))
 }
 
 // Play func
 func (b *Board) Play(number, seed, origin string) {
-	p, _ := b.Players().Find(origin)
+	isInfoPresent := func(p *player.Player) bool { return p.Host() == origin }
+	p, _ := b.Players().Find(isInfoPresent)
 	c, _ := p.Play(number, seed)
 	b.PlayedCards().Add(c)
 	if len(*b.PlayedCards()) >= 5 {
@@ -54,28 +56,23 @@ func (b *Board) Play(number, seed, origin string) {
 // Nominate func
 func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
 	card, err := card.Create(number, seed)
+	isInfoPresent := func(p *player.Player) bool { return p.Has(card) }
+	p, err := b.Players().Find(isInfoPresent)
 	if err == nil {
 		b.selectedCard = card
-		var p player.Player
-		for _, pl := range b.Players() {
-			if pl.Has(card) {
-				p = *pl
-				break
-			}
-		}
-		b.selectedPlayer = p
+		b.selectedPlayer = *p
 	}
 	return card, err
 }
 
 // Join func
 func (b *Board) Join(name, origin string) {
-	for _, player := range b.Players() {
-		if player.Name() == "" {
-			player.SetName(name)
-			player.MyHostIs(origin)
-			return
-		}
+	isInfoPresent := func(p *player.Player) bool { return p.Name() == "" }
+	p, err := b.Players().Find(isInfoPresent)
+	if err == nil {
+		p.SetName(name)
+		p.MyHostIs(origin)
+	} else {
+		log.Println("All players have joined, no further players are expected: " + err.Error())
 	}
-	log.Println("All players have joined, no further players are expected")
 }

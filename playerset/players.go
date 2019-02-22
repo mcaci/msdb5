@@ -10,23 +10,23 @@ import (
 type Players []*player.Player
 
 // Add func
-func (set *Players) Add(p player.Player) {
-	*set = append(*set, &p)
+func (playerSet *Players) Add(p player.Player) {
+	*playerSet = append(*playerSet, &p)
 }
 
-// Find func
-func (set Players) Find(nameOrHost string) (*player.Player, error) {
-	isInfoPresent := func(p *player.Player) bool { return p.Name() == nameOrHost || p.Host() == nameOrHost }
-	for _, p := range set {
+// Find2 func
+func (playerSet Players) Find(isInfoPresent func(p *player.Player) bool) (*player.Player, error) {
+	for _, p := range playerSet {
 		if isInfoPresent(p) {
 			return p, nil
 		}
 	}
-	return nil, errors.New("Player " + nameOrHost + " not found")
+	return nil, errors.New("Player not found")
 }
-func (set Players) String() string {
+
+func (playerSet Players) String() string {
 	var str string
-	for _, player := range set {
+	for _, player := range playerSet {
 		str += player.String() + " "
 	}
 	return str
