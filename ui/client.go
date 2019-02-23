@@ -24,6 +24,7 @@ func (c *client) read() {
 		// read player input
 		_, msg, err := c.socket.ReadMessage()
 		if err != nil {
+			log.Println("Error from reading UI input:", err)
 			return
 		}
 		// log action
@@ -45,7 +46,7 @@ func (c *client) write() {
 	for msg := range c.send {
 		err := c.socket.WriteMessage(websocket.TextMessage, msg)
 		if err != nil {
-			log.Println("Write Error:", err)
+			log.Println("Write to UI error:", err)
 		}
 	}
 }
