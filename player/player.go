@@ -91,6 +91,18 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 	return inputCard, err
 }
 
+// Info function
+func (player Player) Info() string {
+	str := "Player["
+	str += print("Name", player.name)
+	str += print("Hand", player.hand.String())
+	if player.auctionScore > 0 {
+		str += print("AuctionScore", strconv.Itoa(int(player.auctionScore)))
+	}
+	str += "]"
+	return str
+}
+
 func (player Player) String() string {
 	str := "Player["
 	str += print("Name", player.name)
