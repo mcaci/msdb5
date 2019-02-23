@@ -22,7 +22,7 @@ func NewTemplateHandler() *TemplateHandler {
 // ServeHTTP handles the HTTP request.
 func (t *TemplateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
-		t.templ = template.Must(template.ParseFiles(filepath.Join("templates",
+		t.templ = template.Must(template.ParseFiles(filepath.Join("ui/templates",
 			t.filename)))
 	})
 	t.templ.Execute(w, r)
