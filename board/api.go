@@ -45,15 +45,15 @@ func (b *Board) RaiseAuction(score, origin string) error {
 func updateAuction(baseScore, prevScore, currentScore uint8, set func(uint8)) {
 	const minScore = 61
 	const maxScore = 120
+	actualScore := currentScore
 	if currentScore < prevScore {
-		set(baseScore)
+		actualScore = baseScore
 	} else if currentScore < minScore {
-		set(minScore)
+		actualScore = minScore
 	} else if currentScore > maxScore {
-		set(maxScore)
-	} else {
-		set(currentScore)
+		actualScore = maxScore
 	}
+	set(actualScore)
 }
 
 // Play func
