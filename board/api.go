@@ -57,18 +57,6 @@ func setPlayerAuction(p *player.Player, baseScore, prevScore, currentScore uint8
 	}
 }
 
-func setBoardAuction(b *Board, baseScore, prevScore, currentScore uint8) {
-	if prevScore > 0 && prevScore >= currentScore {
-		b.SetAuctionScore(baseScore)
-	} else if currentScore < minScore {
-		b.SetAuctionScore(minScore)
-	} else if currentScore > maxScore {
-		b.SetAuctionScore(maxScore)
-	} else {
-		b.SetAuctionScore(currentScore)
-	}
-}
-
 // Play func
 func (b *Board) Play(number, seed, origin string) error {
 	p, err := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
