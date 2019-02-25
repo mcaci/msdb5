@@ -39,13 +39,13 @@ func (b *Board) RaiseAuction(score, origin string) error {
 
 	p, err := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
 	if err == nil {
-		setPlayerAuction(p, 0, prevScore, currentScore, p.SetAuctionScore)
+		updateAuction(0, prevScore, currentScore, p.SetAuctionScore)
 	}
-	setPlayerAuction(p, prevScore, prevScore, currentScore, b.SetAuctionScore)
+	updateAuction(prevScore, prevScore, currentScore, b.SetAuctionScore)
 	return err
 }
 
-func setPlayerAuction(p *player.Player, baseScore, prevScore, currentScore uint8, set func(auctionScore uint8)) {
+func updateAuction(baseScore, prevScore, currentScore uint8, set func(auctionScore uint8)) {
 	if prevScore > 0 && prevScore >= currentScore {
 		set(baseScore)
 	} else if currentScore < minScore {
