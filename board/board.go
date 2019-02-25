@@ -75,7 +75,17 @@ func (b *Board) PlayedCards() *deck.Cards {
 	return &b.playedCards
 }
 
-// String func
+// Info func
+func (b Board) Info() string {
+	var str string
+	str += "Board("
+	str += "PlayedCards[" + b.playedCards.String() + "]"
+	str += "Companion[" + b.selectedCard.String() + "]"
+	str += "AuctionScore[" + strconv.Itoa(int(b.auctionScore)) + "]"
+	str += ")"
+	return str
+}
+
 func (b Board) String() string {
 	var str string
 	str += "Board("

@@ -29,19 +29,17 @@ func (c *client) read() {
 			log.Println("Error from reading UI input:", err)
 			return
 		}
-		// log action
-		log.Println(msg)
 		// execute action
 		command := string(msg)
 		origin := c.socket.RemoteAddr().String()
 		run(c.room.msdb5board, command, origin)
-		// TODO: format command with info for others: command with public info for board
-		send(command, c.room.forward) // to room
-		// TODO: format board with info for myself / my hand and collected cards
+		// Simpler board info sent to everyone
 		b, _ := c.room.msdb5board.(*board.Board)
+		send(command, c.room.forward)
+		send(b.Info(), c.room.forward)
+		// Player info sent to myself only
 		p, _ := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-		status := p.Info()
-		send(status, c.send) // to myself
+		send(p.Info(), c.send)
 	}
 }
 
