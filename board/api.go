@@ -42,8 +42,6 @@ func (b *Board) RaiseAuction(score, origin string) error {
 	} else if currentScore > maxScore {
 		currentScore = maxScore
 	}
-	b.SetAuctionScore(currentScore)
-
 	if prevScore >= minScore && currentScore <= prevScore {
 		currentScore = 0
 	}
@@ -52,6 +50,11 @@ func (b *Board) RaiseAuction(score, origin string) error {
 	if err == nil {
 		p.SetAuctionScore(currentScore)
 	}
+
+	if prevScore < currentScore {
+		b.SetAuctionScore(currentScore)
+	}
+
 	return err
 }
 
