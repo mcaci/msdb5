@@ -45,7 +45,7 @@ func (b *Board) RaiseAuction(score, origin string) error {
 	return err
 }
 
-func updateAuction(baseScore, prevScore, currentScore uint8, set func(auctionScore uint8)) {
+func updateAuction(baseScore, prevScore, currentScore uint8, set func(uint8)) {
 	if prevScore > 0 && prevScore >= currentScore {
 		set(baseScore)
 	} else if currentScore < minScore {
