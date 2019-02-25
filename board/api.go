@@ -25,9 +25,6 @@ func (b *Board) Action(request, origin string) {
 	}
 }
 
-const minScore = 61
-const maxScore = 120
-
 // RaiseAuction func
 func (b *Board) RaiseAuction(score, origin string) error {
 	prevScore := b.AuctionScore()
@@ -46,7 +43,9 @@ func (b *Board) RaiseAuction(score, origin string) error {
 }
 
 func updateAuction(baseScore, prevScore, currentScore uint8, set func(uint8)) {
-	if prevScore > 0 && prevScore >= currentScore {
+	const minScore = 61
+	const maxScore = 120
+	if currentScore < prevScore {
 		set(baseScore)
 	} else if currentScore < minScore {
 		set(minScore)
