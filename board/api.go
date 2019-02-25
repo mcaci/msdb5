@@ -28,17 +28,15 @@ func (b *Board) Action(request, origin string) {
 // RaiseAuction func
 func (b *Board) RaiseAuction(score, origin string) error {
 	p, err := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-	if err != nil {
-		return err
+	if err == nil {
+		prevScore := b.AuctionScore()
+		currentScore, err := strconv.Atoi(score)
+		if err != nil {
+			log.Printf("Error was raised during auction: %v\n", err)
+		}
+		updateAuction(0, prevScore, uint8(currentScore), p.SetAuctionScore)
+		updateAuction(prevScore, prevScore, uint8(currentScore), b.SetAuctionScore)
 	}
-	prevScore := b.AuctionScore()
-	intScore, err := strconv.Atoi(score) // TODO: THIS ERR IS LOST IF ERR BELOW IS NOT
-	if err != nil {
-		log.Printf("Error was raised during auction: %v\n", err)
-	}
-	currentScore := uint8(intScore)
-	updateAuction(0, prevScore, currentScore, p.SetAuctionScore)
-	updateAuction(prevScore, prevScore, currentScore, b.SetAuctionScore)
 	return err
 }
 
