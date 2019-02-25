@@ -32,36 +32,46 @@ const maxScore = 120
 func (b *Board) RaiseAuction(score, origin string) error {
 	prevScore := b.AuctionScore()
 	intScore, err := strconv.Atoi(score) // TODO: THIS ERR IS LOST IF ERR BELOW IS NOT
+	if err != nil {
+		log.Printf("Error was raised during auction: %v\n", err)
+	}
 	currentScore := uint8(intScore)
 
-	if currentScore <= prevScore {
-		currentScore = prevScore
-	}
-	if currentScore < minScore {
-		currentScore = minScore
-	} else if currentScore > maxScore {
-		currentScore = maxScore
-	}
-	if prevScore >= minScore && currentScore <= prevScore {
-		currentScore = 0
-	}
-	isInfoPresent := func(p *player.Player) bool { return p.Host() == origin }
-	p, err := b.Players().Find(isInfoPresent)
+	p, err := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
 	if err == nil {
-		p.SetAuctionScore(currentScore)
+		setPlayerAuction(p, 0, prevScore, currentScore, p.SetAuctionScore)
 	}
+	setPlayerAuction(p, prevScore, prevScore, currentScore, b.SetAuctionScore)
+	return err
+}
 
-	if prevScore < currentScore {
+func setPlayerAuction(p *player.Player, baseScore, prevScore, currentScore uint8, set func(auctionScore uint8)) {
+	if prevScore > 0 && prevScore >= currentScore {
+		set(baseScore)
+	} else if currentScore < minScore {
+		set(minScore)
+	} else if currentScore > maxScore {
+		set(maxScore)
+	} else {
+		set(currentScore)
+	}
+}
+
+func setBoardAuction(b *Board, baseScore, prevScore, currentScore uint8) {
+	if prevScore > 0 && prevScore >= currentScore {
+		b.SetAuctionScore(baseScore)
+	} else if currentScore < minScore {
+		b.SetAuctionScore(minScore)
+	} else if currentScore > maxScore {
+		b.SetAuctionScore(maxScore)
+	} else {
 		b.SetAuctionScore(currentScore)
 	}
-
-	return err
 }
 
 // Play func
 func (b *Board) Play(number, seed, origin string) error {
-	isInfoPresent := func(p *player.Player) bool { return p.Host() == origin }
-	p, err := b.Players().Find(isInfoPresent)
+	p, err := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
 	if err == nil {
 		c, _ := p.Play(number, seed)
 		// c, err := p.Play(number, seed)
@@ -80,8 +90,7 @@ func (b *Board) Play(number, seed, origin string) error {
 func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
 	card, err := card.Create(number, seed)
 	if err == nil {
-		isInfoPresent := func(p *player.Player) bool { return p.Has(card) }
-		p, err := b.Players().Find(isInfoPresent)
+		p, err := b.Players().Find(func(p *player.Player) bool { return p.Has(card) })
 		if err == nil {
 			b.selectedCard = card
 			b.selectedPlayer = *p
@@ -92,8 +101,7 @@ func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
 
 // Join func
 func (b *Board) Join(name, origin string) error {
-	isInfoPresent := func(p *player.Player) bool { return p.Name() == "" }
-	p, err := b.Players().Find(isInfoPresent)
+	p, err := b.Players().Find(func(p *player.Player) bool { return p.Name() == "" })
 	if err == nil {
 		p.SetName(name)
 		p.MyHostIs(origin)
