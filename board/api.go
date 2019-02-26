@@ -5,24 +5,28 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 // Action interface
-func (b *Board) Action(request, origin string) {
+func (b *Board) Action(request, origin string) (api.Info, api.Info, error) {
 	data := strings.Split(string(request), "#")
+	var err error
 	switch data[0] {
 	case "Join":
-		b.Join(data[1], origin)
+		err = b.Join(data[1], origin)
 	case "Auction":
-		b.RaiseAuction(data[1], origin)
+		err = b.RaiseAuction(data[1], origin)
 	case "Companion":
-		b.Nominate(data[1], data[2], origin)
+		_, err = b.Nominate(data[1], data[2], origin)
 	case "Card":
-		b.Play(data[1], data[2], origin)
+		err = b.Play(data[1], data[2], origin)
 	}
+	pInfo, err := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
+	return b, pInfo, err
 }
 
 // RaiseAuction func

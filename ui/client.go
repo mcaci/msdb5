@@ -5,8 +5,6 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/nikiforosFreespirit/msdb5/api"
-	"github.com/nikiforosFreespirit/msdb5/board"
-	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 // client represents a single chatting user.
@@ -32,14 +30,12 @@ func (c *client) read() {
 		// execute action
 		command := string(msg)
 		origin := c.socket.RemoteAddr().String()
-		run(c.room.msdb5board, command, origin)
+		bInfo, pInfo, _ := run(c.room.msdb5board, command, origin)
 		// Simpler board info sent to everyone
-		b, _ := c.room.msdb5board.(*board.Board)
 		send(command, c.room.forward)
-		send(b.Print(), c.room.forward)
+		send(bInfo.Print(), c.room.forward)
 		// Player info sent to myself only
-		p, _ := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-		send(p.Print(), c.send)
+		send(pInfo.Print(), c.send)
 	}
 }
 
@@ -54,8 +50,8 @@ func (c *client) write() {
 	}
 }
 
-func run(room api.Action, command, origin string) {
-	room.Action(command, origin)
+func run(room api.Action, command, origin string) (api.Info, api.Info, error) {
+	return room.Action(command, origin)
 }
 
 func send(message string, to chan []byte) {

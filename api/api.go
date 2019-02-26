@@ -1,10 +1,12 @@
 package api
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Action interface
 type Action interface {
-	Action(request, origin string)
+	Action(request, origin string) (Info, Info, error)
 	fmt.Stringer
 }
 
