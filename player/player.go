@@ -92,7 +92,7 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 }
 
 // Info function
-func (player Player) Info() string {
+func (player Player) Print() string {
 	str := "Player["
 	str += print("Name", player.name)
 	str += print("Hand", player.hand.String())

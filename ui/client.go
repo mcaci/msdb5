@@ -36,10 +36,10 @@ func (c *client) read() {
 		// Simpler board info sent to everyone
 		b, _ := c.room.msdb5board.(*board.Board)
 		send(command, c.room.forward)
-		send(b.Info(), c.room.forward)
+		send(b.Print(), c.room.forward)
 		// Player info sent to myself only
 		p, _ := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-		send(p.Info(), c.send)
+		send(p.Print(), c.send)
 	}
 }
 

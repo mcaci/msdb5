@@ -76,7 +76,7 @@ func (b *Board) PlayedCards() *deck.Cards {
 }
 
 // Info func
-func (b Board) Info() string {
+func (b Board) Print() string {
 	var str string
 	str += "Board("
 	str += "PlayedCards[" + b.playedCards.String() + "]"

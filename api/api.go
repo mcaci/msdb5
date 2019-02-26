@@ -7,3 +7,8 @@ type Action interface {
 	Action(request, origin string)
 	fmt.Stringer
 }
+
+// Info interface
+type Info interface {
+	Print() string
+}
