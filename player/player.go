@@ -103,13 +103,14 @@ func (player Player) Print() string {
 }
 
 func (player Player) String() string {
-	str := "Player["
+	var str string
+	str += print("Player[", "")
 	str += print("Name", player.name)
 	str += print("Host", player.host)
 	str += print("Hand", player.hand.String())
 	str += print("Pile", player.pile.String())
 	str += print("AuctionScore", strconv.Itoa(int(player.auctionScore)))
-	str += "]"
+	str += print("]", "")
 	return str
 }
 
