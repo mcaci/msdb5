@@ -85,8 +85,9 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 	index, err := player.Hand().Find(func(c card.ID) bool { return c == inputCard })
 	if err == nil {
 		player.Hand().Remove(index)
+		return inputCard, nil
 	}
-	return inputCard, err
+	return 0, err
 }
 
 // Print function
