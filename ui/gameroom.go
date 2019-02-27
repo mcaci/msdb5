@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/nikiforosFreespirit/msdb5/api"
-	"github.com/nikiforosFreespirit/msdb5/board"
+	"github.com/nikiforosFreespirit/msdb5/api/orchestrator"
 )
 
 // Room struct
@@ -31,7 +31,7 @@ func NewRoom() *Room {
 		join:       make(chan *client),
 		leave:      make(chan *client),
 		clients:    make(map[*client]bool),
-		msdb5board: board.NewAction(),
+		msdb5board: orchestrator.NewAction(),
 	}
 }
 

@@ -91,7 +91,7 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 	return inputCard, err
 }
 
-// Info function
+// Print function
 func (player Player) Print() string {
 	str := "Player["
 	str += print("Name", player.name)

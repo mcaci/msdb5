@@ -1,9 +1,11 @@
-package board
+package orchestrator
 
 import (
 	"log"
 	"strconv"
 	"strings"
+
+	"github.com/nikiforosFreespirit/msdb5/companion"
 
 	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/briscola"
@@ -12,34 +14,34 @@ import (
 )
 
 // Action interface
-func (b *Board) Action(request, origin string) (api.Info, api.Info, error) {
+func (g *Game) Action(request, origin string) (api.Info, api.Info, error) {
 	data := strings.Split(string(request), "#")
 	var err error
 	switch data[0] {
 	case "Join":
-		err = b.Join(data[1], origin)
+		err = g.Join(data[1], origin)
 	case "Auction":
-		err = b.RaiseAuction(data[1], origin)
+		err = g.RaiseAuction(data[1], origin)
 	case "Companion":
-		_, err = b.Nominate(data[1], data[2], origin)
+		_, err = g.Nominate(data[1], data[2], origin)
 	case "Card":
-		err = b.Play(data[1], data[2], origin)
+		err = g.Play(data[1], data[2], origin)
 	}
-	pInfo, err := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-	return b, pInfo, err
+	pInfo, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
+	return g.info, pInfo, err
 }
 
 // RaiseAuction func
-func (b *Board) RaiseAuction(score, origin string) error {
-	p, err := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
+func (g *Game) RaiseAuction(score, origin string) error {
+	p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
 	if err == nil {
-		prevScore := b.AuctionScore()
+		prevScore := g.info.AuctionScore()
 		currentScore, err := strconv.Atoi(score)
 		if err != nil {
 			log.Printf("Error was raised during auction: %v\n", err)
 		}
 		updateAuction(0, prevScore, uint8(currentScore), p.SetAuctionScore)
-		updateAuction(prevScore, prevScore, uint8(currentScore), b.SetAuctionScore)
+		updateAuction(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
 	}
 	return err
 }
@@ -59,16 +61,16 @@ func updateAuction(baseScore, prevScore, currentScore uint8, set func(uint8)) {
 }
 
 // Play func
-func (b *Board) Play(number, seed, origin string) error {
-	p, err := b.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
+func (g *Game) Play(number, seed, origin string) error {
+	p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
 	if err == nil {
 		c, _ := p.Play(number, seed)
 		// c, err := p.Play(number, seed)
 		// if err == nil { // TODO: FOR SOME CHECKS IT'S TRUE
-		b.PlayedCards().Add(c)
-		if len(*b.PlayedCards()) >= 5 {
-			playerIndex := briscola.IndexOfWinningCard(*b.PlayedCards(), card.Coin)
-			b.PlayedCards().Move(b.Players()[playerIndex].Pile())
+		g.info.PlayedCards().Add(c)
+		if len(*g.info.PlayedCards()) >= 5 {
+			playerIndex := briscola.IndexOfWinningCard(*g.info.PlayedCards(), card.Coin)
+			g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
 		}
 		// }
 	}
@@ -76,27 +78,26 @@ func (b *Board) Play(number, seed, origin string) error {
 }
 
 // Nominate func
-func (b *Board) Nominate(number, seed, origin string) (card.ID, error) {
+func (g *Game) Nominate(number, seed, origin string) (card.ID, error) {
 	card, err := card.Create(number, seed)
 	if err == nil {
-		p, err := b.Players().Find(func(p *player.Player) bool { return p.Has(card) })
+		p, err := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
 		if err == nil {
-			b.selectedCard = card
-			b.selectedPlayer = *p
+			g.companion = *companion.New(card, p)
 		}
 	}
 	return card, err
 }
 
 // Join func
-func (b *Board) Join(name, origin string) error {
-	p, err := b.Players().Find(func(p *player.Player) bool { return p.Name() == "" })
+func (g *Game) Join(name, origin string) error {
+	p, err := g.Players().Find(func(p *player.Player) bool { return p.Name() == "" })
 	if err == nil {
 		p.SetName(name)
 		p.MyHostIs(origin)
 	} else {
 		log.Println("All players have joined, no further players are expected: " + err.Error())
-		log.Println(b.Players())
+		log.Println(g.Players())
 	}
 	return err
 }
