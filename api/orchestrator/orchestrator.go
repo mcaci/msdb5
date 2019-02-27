@@ -5,11 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nikiforosFreespirit/msdb5/companion"
-
 	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/companion"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
