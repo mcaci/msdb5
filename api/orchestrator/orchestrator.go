@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/api"
+	"github.com/nikiforosFreespirit/msdb5/auction"
 	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/companion"
@@ -22,7 +23,7 @@ func (g *Game) Action(request, origin string) (api.Info, api.Info, error) {
 	case "Auction":
 		err = g.RaiseAuction(data[1], origin)
 	case "Companion":
-		_, err = g.Nominate(data[1], data[2], origin)
+		err = g.Nominate(data[1], data[2], origin)
 	case "Card":
 		err = g.Play(data[1], data[2], origin)
 	}
@@ -39,24 +40,10 @@ func (g *Game) RaiseAuction(score, origin string) error {
 		if err != nil {
 			log.Printf("Error was raised during auction: %v\n", err)
 		}
-		updateAuction(0, prevScore, uint8(currentScore), p.SetAuctionScore)
-		updateAuction(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
+		auction.Update(0, prevScore, uint8(currentScore), p.SetAuctionScore)
+		auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
 	}
 	return err
-}
-
-func updateAuction(baseScore, prevScore, currentScore uint8, set func(uint8)) {
-	const minScore = 61
-	const maxScore = 120
-	actualScore := currentScore
-	if currentScore < prevScore {
-		actualScore = baseScore
-	} else if currentScore < minScore {
-		actualScore = minScore
-	} else if currentScore > maxScore {
-		actualScore = maxScore
-	}
-	set(actualScore)
 }
 
 // Play func
@@ -77,7 +64,7 @@ func (g *Game) Play(number, seed, origin string) error {
 }
 
 // Nominate func
-func (g *Game) Nominate(number, seed, origin string) (card.ID, error) {
+func (g *Game) Nominate(number, seed, origin string) error {
 	card, err := card.Create(number, seed)
 	if err == nil {
 		p, err := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
@@ -85,7 +72,7 @@ func (g *Game) Nominate(number, seed, origin string) (card.ID, error) {
 			g.companion = *companion.New(card, p)
 		}
 	}
-	return card, err
+	return err
 }
 
 // Join func
