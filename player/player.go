@@ -102,15 +102,23 @@ func (player Player) Print() string {
 	return str
 }
 
+func (player Player) head() string {
+	return "Player"
+}
+
+func (player Player) tail() string {
+	return ""
+}
+
 func (player Player) String() string {
 	var str string
-	str += print("Player[", "")
-	str += print("Name", player.name)
-	str += print("Host", player.host)
+	str += print("Type", player.head())
+	str += print("Name", player.Name())
+	str += print("Host", player.Host())
 	str += print("Hand", player.hand.String())
 	str += print("Pile", player.pile.String())
 	str += print("AuctionScore", strconv.Itoa(int(player.auctionScore)))
-	str += print("]", "")
+	str += print("End", player.tail())
 	return str
 }
 
