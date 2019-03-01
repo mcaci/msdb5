@@ -90,18 +90,6 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 	return 0, err
 }
 
-// Print function
-func (player Player) Print() string {
-	str := "Player["
-	str += print("Name", player.name)
-	str += print("Hand", player.hand.String())
-	if player.auctionScore > 0 {
-		str += print("AuctionScore", strconv.Itoa(int(player.auctionScore)))
-	}
-	str += "]"
-	return str
-}
-
 func (player Player) head() string {
 	return "Player"
 }
@@ -122,8 +110,7 @@ func (player Player) auctionScoreInfo() string {
 	return strconv.Itoa(int(player.auctionScore))
 }
 
-func (player Player) String() string {
-	var str string
+func (player Player) String() (str string) {
 	str += print("Type", player.head())
 	str += print("Name", player.Name())
 	str += print("Host", player.Host())
@@ -131,7 +118,19 @@ func (player Player) String() string {
 	str += print("Pile", player.pileInfo())
 	str += print("AuctionScore", player.auctionScoreInfo())
 	str += print("End", player.tail())
-	return str
+	return
+}
+
+// Print function
+func (player Player) Print() (str string) {
+	str += print("Type", player.head())
+	str += print("Name", player.Name())
+	str += print("Hand", player.handInfo())
+	if player.auctionScore > 0 {
+		str += print("AuctionScore", player.auctionScoreInfo())
+	}
+	str += print("End", player.tail())
+	return
 }
 
 func print(info, field string) string {
