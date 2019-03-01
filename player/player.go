@@ -110,14 +110,26 @@ func (player Player) tail() string {
 	return ""
 }
 
+func (player Player) handInfo() string {
+	return player.hand.String()
+}
+
+func (player Player) pileInfo() string {
+	return player.pile.String()
+}
+
+func (player Player) auctionScoreInfo() string {
+	return strconv.Itoa(int(player.auctionScore))
+}
+
 func (player Player) String() string {
 	var str string
 	str += print("Type", player.head())
 	str += print("Name", player.Name())
 	str += print("Host", player.Host())
-	str += print("Hand", player.hand.String())
-	str += print("Pile", player.pile.String())
-	str += print("AuctionScore", strconv.Itoa(int(player.auctionScore)))
+	str += print("Hand", player.handInfo())
+	str += print("Pile", player.pileInfo())
+	str += print("AuctionScore", player.auctionScoreInfo())
 	str += print("End", player.tail())
 	return str
 }
