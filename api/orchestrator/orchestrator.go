@@ -5,16 +5,16 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/auction"
 	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/companion"
+	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 // Action interface
-func (g *Game) Action(request, origin string) (api.Info, api.Info, error) {
+func (g *Game) Action(request, origin string) (display.Info, display.Info, error) {
 	data := strings.Split(string(request), "#")
 	var err error
 	switch data[0] {

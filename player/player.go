@@ -5,6 +5,7 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
+	"github.com/nikiforosFreespirit/msdb5/display"
 )
 
 // Player struct
@@ -111,28 +112,33 @@ func (player Player) auctionScoreInfo() string {
 }
 
 func (player Player) String() (str string) {
-	str += print("Type", player.head())
-	str += print("Name", player.Name())
-	str += print("Host", player.Host())
-	str += print("Hand", player.handInfo())
-	str += print("Pile", player.pileInfo())
-	str += print("AuctionScore", player.auctionScoreInfo())
-	str += print("End", player.tail())
+	head := display.NewInfo("", "", player.head(), "[")
+	name := display.NewInfo("Name", "", player.Name(), ";")
+	host := display.NewInfo("Host", "", player.Host(), ";")
+	hand := display.NewInfo("Hand", "", player.handInfo(), ";")
+	pile := display.NewInfo("Pile", "", player.pileInfo(), ";")
+	aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
+	tail := display.NewInfo("", "", player.tail(), "]")
+	str = head.PrintIt() + name.PrintIt() + host.PrintIt() + hand.PrintIt() + pile.PrintIt() +
+		aSco.PrintIt() + tail.PrintIt()
 	return
 }
 
 // Print function
 func (player Player) Print() (str string) {
-	str += print("Type", player.head())
-	str += print("Name", player.Name())
-	str += print("Hand", player.handInfo())
+	head := display.NewInfo("", "", player.head(), "[")
+	name := display.NewInfo("Name", "", player.Name(), ";")
+	hand := display.NewInfo("Hand", "", player.handInfo(), ";")
+	tail := display.NewInfo("", "", player.tail(), "]")
+	str = head.PrintIt() + name.PrintIt() + hand.PrintIt()
 	if player.auctionScore > 0 {
-		str += print("AuctionScore", player.auctionScoreInfo())
+		aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
+		str += aSco.PrintIt()
 	}
-	str += print("End", player.tail())
+	str += tail.PrintIt()
 	return
 }
 
-func print(info, field string) string {
-	return info + ":" + field + ";"
+func print(info, sep1, field, sep2 string) string {
+	return info + sep1 + field + sep2
 }
