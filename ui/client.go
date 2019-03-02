@@ -5,6 +5,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/nikiforosFreespirit/msdb5/api"
+	"github.com/nikiforosFreespirit/msdb5/display"
 )
 
 // client represents a single chatting user.
@@ -33,9 +34,9 @@ func (c *client) read() {
 		bInfo, pInfo, _ := run(c.room.msdb5board, command, origin)
 		// Simpler board info sent to everyone
 		send(command, c.room.forward)
-		send(bInfo.Print(), c.room.forward)
+		send(display.All(bInfo...), c.room.forward)
 		// Player info sent to myself only
-		send(pInfo.Print(), c.send)
+		send(display.All(pInfo...), c.send)
 	}
 }
 
@@ -50,7 +51,7 @@ func (c *client) write() {
 	}
 }
 
-func run(room api.Action, command, origin string) (api.Info, api.Info, error) {
+func run(room api.Action, command, origin string) ([]display.Info, []display.Info, error) {
 	return room.Action(command, origin)
 }
 
