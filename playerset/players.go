@@ -3,7 +3,6 @@ package playerset
 import (
 	"errors"
 
-	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
@@ -25,6 +24,9 @@ func (playerSet Players) Find(isInfoPresent func(p *player.Player) bool) (*playe
 	return nil, errors.New("Player not found")
 }
 
-func (playerSet Players) String() string {
-	return display.ToString(playerSet)
+func (playerSet Players) String() (str string) {
+	for _, p := range playerSet {
+		str += p.String() + " "
+	}
+	return
 }

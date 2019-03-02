@@ -4,7 +4,6 @@ import (
 	"errors"
 
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/display"
 )
 
 // Cards type
@@ -49,7 +48,9 @@ func (cards *Cards) Supply() card.ID {
 	return card
 }
 
-// String func
-func (cards Cards) String() string {
-	return display.ToString(cards)
+func (cards Cards) String() (str string) {
+	for _, card := range cards {
+		str += card.String() + " "
+	}
+	return
 }
