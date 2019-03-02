@@ -92,22 +92,18 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 }
 
 func (player Player) String() string {
-	head := display.NewInfo("", "", func() string { return "Player" }(), "[")
 	name := display.NewInfo("Name", ":", player.Name(), ";")
 	host := display.NewInfo("Host", ":", player.Host(), ";")
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
 	pile := display.NewInfo("Pile", ":", player.pile.String(), ";")
 	aSco := display.NewInfo("AuctionScore", ":", strconv.Itoa(int(player.auctionScore)), ";")
-	tail := display.NewInfo("", "", func() string { return "" }(), "]")
-	return display.PrintAll(head, name, host, hand, pile, aSco, tail)
+	return display.All(display.Wrap("Player", name, host, hand, pile, aSco)...)
 }
 
-// Print function
-func (player Player) Print() string {
-	head := display.NewInfo("", "", func() string { return "Player" }(), "[")
+// Info function
+func (player Player) Info() []display.Info {
 	name := display.NewInfo("Name", ":", player.Name(), ";")
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
 	aSco := display.NewInfo("AuctionScore", ":", strconv.Itoa(int(player.auctionScore)), ";")
-	tail := display.NewInfo("", "", func() string { return "" }(), "]")
-	return display.PrintAll(head, name, hand, aSco, tail)
+	return display.Wrap("Player", name, hand, aSco)
 }
