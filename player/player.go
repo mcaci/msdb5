@@ -91,6 +91,27 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 	return 0, err
 }
 
+func (player Player) String() string {
+	head := display.NewInfo("", "", player.head(), "[")
+	name := display.NewInfo("Name", "", player.Name(), ";")
+	host := display.NewInfo("Host", "", player.Host(), ";")
+	hand := display.NewInfo("Hand", "", player.handInfo(), ";")
+	pile := display.NewInfo("Pile", "", player.pileInfo(), ";")
+	aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
+	tail := display.NewInfo("", "", player.tail(), "]")
+	return display.PrintAll(head, name, host, hand, pile, aSco, tail)
+}
+
+// Print function
+func (player Player) Print() string {
+	head := display.NewInfo("", "", player.head(), "[")
+	name := display.NewInfo("Name", "", player.Name(), ";")
+	hand := display.NewInfo("Hand", "", player.handInfo(), ";")
+	aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
+	tail := display.NewInfo("", "", player.tail(), "]")
+	return display.PrintAll(head, name, hand, aSco, tail)
+}
+
 func (player Player) head() string {
 	return "Player"
 }
@@ -109,30 +130,4 @@ func (player Player) pileInfo() string {
 
 func (player Player) auctionScoreInfo() string {
 	return strconv.Itoa(int(player.auctionScore))
-}
-
-func (player Player) String() string {
-	head := display.NewInfo("", "", player.head(), "[")
-	name := display.NewInfo("Name", "", player.Name(), ";")
-	host := display.NewInfo("Host", "", player.Host(), ";")
-	hand := display.NewInfo("Hand", "", player.handInfo(), ";")
-	pile := display.NewInfo("Pile", "", player.pileInfo(), ";")
-	aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
-	tail := display.NewInfo("", "", player.tail(), "]")
-	return head.PrintIt() + name.PrintIt() + host.PrintIt() + hand.PrintIt() + pile.PrintIt() +
-		aSco.PrintIt() + tail.PrintIt()
-}
-
-// Print function
-func (player Player) Print() string {
-	head := display.NewInfo("", "", player.head(), "[")
-	name := display.NewInfo("Name", "", player.Name(), ";")
-	hand := display.NewInfo("Hand", "", player.handInfo(), ";")
-	aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
-	tail := display.NewInfo("", "", player.tail(), "]")
-	return head.PrintIt() + name.PrintIt() + hand.PrintIt() + aSco.PrintIt() + tail.PrintIt()
-}
-
-func print(info, sep1, field, sep2 string) string {
-	return info + sep1 + field + sep2
 }
