@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/nikiforosFreespirit/msdb5/deck"
+	"github.com/nikiforosFreespirit/msdb5/display"
 )
 
 // Board struct
@@ -34,10 +35,9 @@ func (b *Board) PlayedCards() *deck.Cards {
 
 // Print func
 func (b Board) Print() string {
-	var str string
-	str += "Board("
-	str += "PlayedCards[" + b.playedCards.String() + "]"
-	str += "AuctionScore[" + strconv.Itoa(int(b.auctionScore)) + "]"
-	str += ")"
-	return str
+	head := display.NewInfo("", "", func() string { return "Board" }(), "(")
+	pCar := display.NewInfo("PlayedCards", ":", b.playedCards.String(), ";")
+	aSco := display.NewInfo("AuctionScore", ":", strconv.Itoa(int(b.auctionScore)), ";")
+	tail := display.NewInfo("", "", func() string { return "" }(), ")")
+	return display.PrintAll(head, pCar, aSco, tail)
 }
