@@ -19,3 +19,11 @@ func (info InfoStruct) PrintIt() string {
 func NewInfo(info, sep1, field, sep2 string) InfoStruct {
 	return InfoStruct{info, sep1, field, sep2}
 }
+
+// PrintAll func
+func PrintAll(infos ...InfoStruct) (str string) {
+	for _, info := range infos {
+		str += info.PrintIt()
+	}
+	return
+}
