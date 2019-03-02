@@ -1,5 +1,7 @@
 package display
 
+import "fmt"
+
 // Info interface
 type Info interface {
 	Print() string
@@ -26,4 +28,13 @@ func PrintAll(infos ...InfoStruct) (str string) {
 		str += info.PrintIt()
 	}
 	return
+}
+
+// ToString func
+func ToString(infos ...fmt.Stringer) string {
+	var str string
+	for _, info := range infos {
+		str += info.String() + " "
+	}
+	return str
 }
