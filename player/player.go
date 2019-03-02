@@ -111,7 +111,7 @@ func (player Player) auctionScoreInfo() string {
 	return strconv.Itoa(int(player.auctionScore))
 }
 
-func (player Player) String() (str string) {
+func (player Player) String() string {
 	head := display.NewInfo("", "", player.head(), "[")
 	name := display.NewInfo("Name", "", player.Name(), ";")
 	host := display.NewInfo("Host", "", player.Host(), ";")
@@ -119,24 +119,18 @@ func (player Player) String() (str string) {
 	pile := display.NewInfo("Pile", "", player.pileInfo(), ";")
 	aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
 	tail := display.NewInfo("", "", player.tail(), "]")
-	str = head.PrintIt() + name.PrintIt() + host.PrintIt() + hand.PrintIt() + pile.PrintIt() +
+	return head.PrintIt() + name.PrintIt() + host.PrintIt() + hand.PrintIt() + pile.PrintIt() +
 		aSco.PrintIt() + tail.PrintIt()
-	return
 }
 
 // Print function
-func (player Player) Print() (str string) {
+func (player Player) Print() string {
 	head := display.NewInfo("", "", player.head(), "[")
 	name := display.NewInfo("Name", "", player.Name(), ";")
 	hand := display.NewInfo("Hand", "", player.handInfo(), ";")
+	aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
 	tail := display.NewInfo("", "", player.tail(), "]")
-	str = head.PrintIt() + name.PrintIt() + hand.PrintIt()
-	if player.auctionScore > 0 {
-		aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
-		str += aSco.PrintIt()
-	}
-	str += tail.PrintIt()
-	return
+	return head.PrintIt() + name.PrintIt() + hand.PrintIt() + aSco.PrintIt() + tail.PrintIt()
 }
 
 func print(info, sep1, field, sep2 string) string {
