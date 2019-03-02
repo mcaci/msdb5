@@ -14,7 +14,7 @@ import (
 )
 
 // Action interface
-func (g *Game) Action(request, origin string) (display.Info, display.Info, error) {
+func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, error) {
 	data := strings.Split(string(request), "#")
 	var err error
 	switch data[0] {
@@ -28,7 +28,7 @@ func (g *Game) Action(request, origin string) (display.Info, display.Info, error
 		err = g.Play(data[1], data[2], origin)
 	}
 	pInfo, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-	return g.info, pInfo, err
+	return g.info.Info(), pInfo.Info(), err
 }
 
 // RaiseAuction func
@@ -50,15 +50,14 @@ func (g *Game) RaiseAuction(score, origin string) error {
 func (g *Game) Play(number, seed, origin string) error {
 	p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
 	if err == nil {
-		c, _ := p.Play(number, seed)
-		// c, err := p.Play(number, seed)
-		// if err == nil { // TODO: FOR SOME CHECKS IT'S TRUE
-		g.info.PlayedCards().Add(c)
-		if len(*g.info.PlayedCards()) >= 5 {
-			playerIndex := briscola.IndexOfWinningCard(*g.info.PlayedCards(), card.Coin)
-			g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
+		c, err := p.Play(number, seed)
+		if err == nil {
+			roundHasEnded := g.info.PlayedCardIs(c)
+			if roundHasEnded {
+				playerIndex := briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed())
+				g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
+			}
 		}
-		// }
 	}
 	return err
 }
