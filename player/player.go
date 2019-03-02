@@ -92,42 +92,22 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 }
 
 func (player Player) String() string {
-	head := display.NewInfo("", "", player.head(), "[")
+	head := display.NewInfo("", "", func() string { return "Player" }(), "[")
 	name := display.NewInfo("Name", "", player.Name(), ";")
 	host := display.NewInfo("Host", "", player.Host(), ";")
-	hand := display.NewInfo("Hand", "", player.handInfo(), ";")
-	pile := display.NewInfo("Pile", "", player.pileInfo(), ";")
-	aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
-	tail := display.NewInfo("", "", player.tail(), "]")
+	hand := display.NewInfo("Hand", "", player.hand.String(), ";")
+	pile := display.NewInfo("Pile", "", player.pile.String(), ";")
+	aSco := display.NewInfo("AuctionScore", "", strconv.Itoa(int(player.auctionScore)), ";")
+	tail := display.NewInfo("", "", func() string { return "" }(), "]")
 	return display.PrintAll(head, name, host, hand, pile, aSco, tail)
 }
 
 // Print function
 func (player Player) Print() string {
-	head := display.NewInfo("", "", player.head(), "[")
+	head := display.NewInfo("", "", func() string { return "Player" }(), "[")
 	name := display.NewInfo("Name", "", player.Name(), ";")
-	hand := display.NewInfo("Hand", "", player.handInfo(), ";")
-	aSco := display.NewInfo("AuctionScore", "", player.auctionScoreInfo(), ";")
-	tail := display.NewInfo("", "", player.tail(), "]")
+	hand := display.NewInfo("Hand", "", player.hand.String(), ";")
+	aSco := display.NewInfo("AuctionScore", "", strconv.Itoa(int(player.auctionScore)), ";")
+	tail := display.NewInfo("", "", func() string { return "" }(), "]")
 	return display.PrintAll(head, name, hand, aSco, tail)
-}
-
-func (player Player) head() string {
-	return "Player"
-}
-
-func (player Player) tail() string {
-	return ""
-}
-
-func (player Player) handInfo() string {
-	return player.hand.String()
-}
-
-func (player Player) pileInfo() string {
-	return player.pile.String()
-}
-
-func (player Player) auctionScoreInfo() string {
-	return strconv.Itoa(int(player.auctionScore))
 }
