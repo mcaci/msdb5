@@ -34,19 +34,15 @@ func (player *Player) Hand() *deck.Cards {
 	return &player.hand
 }
 
+// Join func
+func (player *Player) Join(name, origin string) {
+	player.name = name
+	player.host = origin
+}
+
 // Name func
 func (player *Player) Name() string {
 	return player.name
-}
-
-// SetName func
-func (player *Player) SetName(name string) {
-	player.name = name
-}
-
-// MyHostIs func
-func (player *Player) MyHostIs(host string) {
-	player.host = host
 }
 
 // Host func

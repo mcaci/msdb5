@@ -78,8 +78,7 @@ func (g *Game) Nominate(number, seed, origin string) error {
 func (g *Game) Join(name, origin string) error {
 	p, err := g.Players().Find(func(p *player.Player) bool { return p.Name() == "" })
 	if err == nil {
-		p.SetName(name)
-		p.MyHostIs(origin)
+		p.Join(name, origin)
 	} else {
 		log.Println("All players have joined, no further players are expected: " + err.Error())
 		log.Println(g.Players())
