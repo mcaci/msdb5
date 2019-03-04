@@ -45,7 +45,7 @@ func TestPlayer5Joins(t *testing.T) {
 	gameTest.Join("A", "127.0.0.3")
 	gameTest.Join("gameTester", "127.0.0.4")
 	err := gameTest.Join("C", "127.0.0.5")
-	if err == nil {
+	if err != nil {
 		t.Fatal("All players should have joined correctly")
 	}
 }
@@ -57,7 +57,7 @@ func TestPlayer5JoinsAndStatusChangesToAuction(t *testing.T) {
 	gameTest.Join("A", "127.0.0.3")
 	gameTest.Join("gameTester", "127.0.0.4")
 	gameTest.Join("C", "127.0.0.5")
-	if gameTest.statusInfo != auction {
+	if gameTest.statusInfo != scoreAuction {
 		t.Fatal("Status is not correct")
 	}
 }

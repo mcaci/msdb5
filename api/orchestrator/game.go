@@ -21,6 +21,7 @@ type status uint8
 
 const (
 	joining status = iota
+	scoreAuction
 )
 
 // NewGame func
