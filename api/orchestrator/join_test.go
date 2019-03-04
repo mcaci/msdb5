@@ -32,9 +32,9 @@ func TestPlayer2Joins(t *testing.T) {
 func TestPlayer2JoinsStatusIsJoining(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("Michi", "127.0.0.1")
-	err := gameTest.Join("Mary", "127.0.0.2")
-	if err != nil {
-		t.Fatal("Double join operation was not successful for second player")
+	gameTest.Join("Mary", "127.0.0.2")
+	if gameTest.statusInfo != joining {
+		t.Fatal("Status is not correct")
 	}
 }
 
