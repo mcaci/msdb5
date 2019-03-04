@@ -17,13 +17,6 @@ type Game struct {
 	statusInfo status
 }
 
-type status uint8
-
-const (
-	joining status = iota
-	scoreAuction
-)
-
 // NewGame func
 func NewGame() *Game {
 	g := new(Game)
