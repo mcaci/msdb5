@@ -34,15 +34,15 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 
 // Join func
 func (g *Game) Join(name, origin string) (err error) {
-	if g.statusInfo != joining {
-		err = errors.New("Status is not joining")
+	if g.phase != joining {
+		err = errors.New("Phase is not joining")
 	} else {
 		nextPlayerJoining := func(p *player.Player) bool { return p.Name() == "" }
 		p, err := g.Players().Find(nextPlayerJoining)
 		if err == nil {
 			p.Join(name, origin)
 			if _, errNext := g.Players().Find(nextPlayerJoining); errNext != nil {
-				g.statusInfo = scoreAuction
+				g.phase = scoreAuction
 			}
 		}
 	}
@@ -50,16 +50,20 @@ func (g *Game) Join(name, origin string) (err error) {
 }
 
 // RaiseAuction func
-func (g *Game) RaiseAuction(score, origin string) error {
-	p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-	if err == nil {
-		prevScore := g.info.AuctionScore()
-		currentScore, err := strconv.Atoi(score)
-		if err != nil {
-			log.Printf("Error was raised during auction: %v\n", err)
+func (g *Game) RaiseAuction(score, origin string) (err error) {
+	if g.phase != scoreAuction {
+		err = errors.New("Phase is not joining")
+	} else {
+		p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
+		if err == nil {
+			prevScore := g.info.AuctionScore()
+			currentScore, err := strconv.Atoi(score)
+			if err != nil {
+				log.Printf("Error was raised during auction: %v\n", err)
+			}
+			auction.Update(0, prevScore, uint8(currentScore), p.SetAuctionScore)
+			auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
 		}
-		auction.Update(0, prevScore, uint8(currentScore), p.SetAuctionScore)
-		auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
 	}
 	return err
 }
