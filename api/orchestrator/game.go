@@ -11,10 +11,17 @@ import (
 
 // Game struct
 type Game struct {
-	players   playerset.Players
-	companion companion.Companion
-	info      board.Board
+	players    playerset.Players
+	companion  companion.Companion
+	info       board.Board
+	statusInfo status
 }
+
+type status uint8
+
+const (
+	joining status = iota
+)
 
 // NewGame func
 func NewGame() *Game {

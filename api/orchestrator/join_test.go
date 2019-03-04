@@ -15,8 +15,8 @@ func TestPlayer1Joins(t *testing.T) {
 func TestPlayer1JoinsStatusIsJoining(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("A", "127.0.0.1")
-	if gameTest.Status() != joining {
-		t.Fatal("Single join operation was not successful")
+	if gameTest.statusInfo != joining {
+		t.Fatal("Status is not correct")
 	}
 }
 
