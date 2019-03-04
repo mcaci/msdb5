@@ -2,44 +2,64 @@ package orchestrator
 
 import (
 	"testing"
-
-	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
-func TestPlayer1JoinsCheckName(t *testing.T) {
-	b := NewGame()
-	b.Join("Michi", "127.0.0.1")
-	if name := b.Players()[0].Name(); name != "Michi" {
-		t.Fatalf("Player's name was not registered correctly, found '%s'", name)
+func TestPlayer1Joins(t *testing.T) {
+	gameTest := NewGame()
+	err := gameTest.Join("A", "127.0.0.1")
+	if err != nil {
+		t.Fatal("Single join operation was not successful")
 	}
 }
 
-func TestPlayer1JoinsCheckIP(t *testing.T) {
-	b := NewGame()
-	b.Join("Michi", "127.0.0.1")
-	if host := b.Players()[0].Host(); host != "127.0.0.1" {
-		t.Fatalf("Player's ip was not registered correctly, found '%s'", host)
+func TestPlayer1JoinsStatusIsJoining(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "127.0.0.1")
+	if gameTest.Status() != joining {
+		t.Fatal("Single join operation was not successful")
 	}
 }
 
-func TestPlayer2JoinsCheckName(t *testing.T) {
-	b := NewGame()
-	b.Join("Michi", "127.0.0.1")
-	b.Join("Mary", "127.0.0.2")
-	if name := b.Players()[1].Name(); name != "Mary" {
-		t.Fatalf("Player's name was not registered correctly, found '%s'", name)
+func TestPlayer2Joins(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("Michi", "127.0.0.1")
+	err := gameTest.Join("Mary", "127.0.0.2")
+	if err != nil {
+		t.Fatal("Double join operation was not successful for second player")
+	}
+}
+
+func TestPlayer2JoinsStatusIsJoining(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("Michi", "127.0.0.1")
+	err := gameTest.Join("Mary", "127.0.0.2")
+	if err != nil {
+		t.Fatal("Double join operation was not successful for second player")
 	}
 }
 
 func TestPlayer6CannotJoin(t *testing.T) {
-	b := NewGame()
-	b.Join("Michi", "127.0.0.1")
-	b.Join("Mary", "127.0.0.2")
-	b.Join("A", "127.0.0.3")
-	b.Join("B", "127.0.0.4")
-	b.Join("C", "127.0.0.5")
-	b.Join("Nope", "127.0.0.6")
-	if p, err := b.Players().Find(func(p *player.Player) bool { return p.Name() == "Nope" }); err == nil {
-		t.Fatalf("Player '%s' should not be registered", p.Name())
+	gameTest := NewGame()
+	gameTest.Join("Michi", "127.0.0.1")
+	gameTest.Join("Mary", "127.0.0.2")
+	gameTest.Join("A", "127.0.0.3")
+	gameTest.Join("gameTest", "127.0.0.4")
+	gameTest.Join("C", "127.0.0.5")
+	err := gameTest.Join("Nope", "127.0.0.6")
+	if err == nil {
+		t.Fatal("Player 'Nope' should not be joining as there is no sixth player")
+	}
+}
+
+func TestPlayer6CannotJoinStatusChangesToAuction(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("Michi", "127.0.0.1")
+	gameTest.Join("Mary", "127.0.0.2")
+	gameTest.Join("A", "127.0.0.3")
+	gameTest.Join("gameTest", "127.0.0.4")
+	gameTest.Join("C", "127.0.0.5")
+	err := gameTest.Join("Nope", "127.0.0.6")
+	if err == nil {
+		t.Fatal("Player 'Nope' should not be joining as there is no sixth player")
 	}
 }

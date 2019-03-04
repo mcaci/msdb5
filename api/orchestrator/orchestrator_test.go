@@ -4,15 +4,6 @@ import (
 	"testing"
 )
 
-func TestActionCreationAndJoinUsage(t *testing.T) {
-	b := NewAction()
-	b.Action("Join#A", "100.1.1.1")
-	board, ok := b.(*Game)
-	if !ok || board.Players()[0].Name() != "A" {
-		t.Fatal("Join action was not properly performed")
-	}
-}
-
 func TestActionCreationAndAuctionUsage(t *testing.T) {
 	b := NewAction()
 	b.Action("Join#A", "100.1.1.1")
