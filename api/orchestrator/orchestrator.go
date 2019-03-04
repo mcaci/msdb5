@@ -87,9 +87,6 @@ func (g *Game) Join(name, origin string) error {
 		if _, errNext := g.Players().Find(nextPlayerJoining); errNext != nil {
 			g.statusInfo = scoreAuction
 		}
-	} else {
-		log.Println("All players have joined, no further players are expected: " + err.Error())
-		log.Println(g.Players())
 	}
 	return err
 }
