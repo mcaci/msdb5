@@ -32,6 +32,23 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 	return g.info.Info(), pInfo.Info(), err
 }
 
+// Join func
+func (g *Game) Join(name, origin string) (err error) {
+	if g.statusInfo != joining {
+		err = errors.New("Status is not joining")
+	} else {
+		nextPlayerJoining := func(p *player.Player) bool { return p.Name() == "" }
+		p, err := g.Players().Find(nextPlayerJoining)
+		if err == nil {
+			p.Join(name, origin)
+			if _, errNext := g.Players().Find(nextPlayerJoining); errNext != nil {
+				g.statusInfo = scoreAuction
+			}
+		}
+	}
+	return err
+}
+
 // RaiseAuction func
 func (g *Game) RaiseAuction(score, origin string) error {
 	p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
@@ -70,23 +87,6 @@ func (g *Game) Nominate(number, seed, origin string) error {
 		p, err := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
 		if err == nil {
 			g.companion = *companion.New(card, p)
-		}
-	}
-	return err
-}
-
-// Join func
-func (g *Game) Join(name, origin string) (err error) {
-	if g.statusInfo != joining {
-		err = errors.New("Status is not joining")
-	} else {
-		nextPlayerJoining := func(p *player.Player) bool { return p.Name() == "" }
-		p, err := g.Players().Find(nextPlayerJoining)
-		if err == nil {
-			p.Join(name, origin)
-			if _, errNext := g.Players().Find(nextPlayerJoining); errNext != nil {
-				g.statusInfo = scoreAuction
-			}
 		}
 	}
 	return err
