@@ -76,9 +76,13 @@ func (g *Game) Nominate(number, seed, origin string) error {
 
 // Join func
 func (g *Game) Join(name, origin string) error {
-	p, err := g.Players().Find(func(p *player.Player) bool { return p.Name() == "" })
+	nextPlayerJoining := func(p *player.Player) bool { return p.Name() == "" }
+	p, err := g.Players().Find(nextPlayerJoining)
 	if err == nil {
 		p.Join(name, origin)
+		if _, errNext := g.Players().Find(nextPlayerJoining); errNext != nil {
+			g.statusInfo = scoreAuction
+		}
 	} else {
 		log.Println("All players have joined, no further players are expected: " + err.Error())
 		log.Println(g.Players())
