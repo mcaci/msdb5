@@ -11,10 +11,10 @@ import (
 
 // Game struct
 type Game struct {
-	players    playerset.Players
-	companion  companion.Companion
-	info       board.Board
-	statusInfo status
+	players   playerset.Players
+	companion companion.Companion
+	info      board.Board
+	phase     phase
 }
 
 // NewGame func

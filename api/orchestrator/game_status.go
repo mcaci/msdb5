@@ -1,8 +1,8 @@
 package orchestrator
 
-type status uint8
+type phase uint8
 
 const (
-	joining status = iota
+	joining phase = iota
 	scoreAuction
 )

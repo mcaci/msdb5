@@ -12,11 +12,11 @@ func TestPlayer1Joins(t *testing.T) {
 	}
 }
 
-func TestPlayer1JoinsStatusIsJoining(t *testing.T) {
+func TestPlayer1JoinsPhaseIsJoining(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("A", "127.0.0.1")
-	if gameTest.statusInfo != joining {
-		t.Fatal("Status is not correct")
+	if gameTest.phase != joining {
+		t.Fatal("Phase is not correct")
 	}
 }
 
@@ -29,12 +29,12 @@ func TestPlayer2Joins(t *testing.T) {
 	}
 }
 
-func TestPlayer2JoinsStatusIsJoining(t *testing.T) {
+func TestPlayer2JoinsPhaseIsJoining(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("Michi", "127.0.0.1")
 	gameTest.Join("Mary", "127.0.0.2")
-	if gameTest.statusInfo != joining {
-		t.Fatal("Status is not correct")
+	if gameTest.phase != joining {
+		t.Fatal("Phase is not correct")
 	}
 }
 
@@ -50,15 +50,15 @@ func TestPlayer5Joins(t *testing.T) {
 	}
 }
 
-func TestPlayer5JoinsAndStatusChangesToAuction(t *testing.T) {
+func TestPlayer5JoinsAndPhaseChangesToAuction(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("Michi", "127.0.0.1")
 	gameTest.Join("Mary", "127.0.0.2")
 	gameTest.Join("A", "127.0.0.3")
 	gameTest.Join("gameTester", "127.0.0.4")
 	gameTest.Join("C", "127.0.0.5")
-	if gameTest.statusInfo != scoreAuction {
-		t.Fatal("Status is not correct")
+	if gameTest.phase != scoreAuction {
+		t.Fatal("Phase is not correct")
 	}
 }
 
@@ -75,11 +75,11 @@ func TestPlayer6CannotJoin(t *testing.T) {
 	}
 }
 
-func TestPlayerCannotJoinIfStatusIsNotJoining(t *testing.T) {
+func TestPlayerCannotJoinIfPhaseIsNotJoining(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.statusInfo = scoreAuction
+	gameTest.phase = scoreAuction
 	err := gameTest.Join("A", "127.0.0.1")
 	if err == nil {
-		t.Fatal("Player cannot join if status is not joining")
+		t.Fatal("Player cannot join if phase is not joining")
 	}
 }
