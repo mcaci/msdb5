@@ -74,3 +74,12 @@ func TestPlayer6CannotJoin(t *testing.T) {
 		t.Fatal("Player 'Nope' should not be joining as there is no sixth player")
 	}
 }
+
+func TestPlayerCannotJoinIfStatusIsNotJoining(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.statusInfo = scoreAuction
+	err := gameTest.Join("A", "127.0.0.1")
+	if err == nil {
+		t.Fatal("Player cannot join if status is not joining")
+	}
+}
