@@ -52,3 +52,15 @@ func TestSecondPlayerCanRaiseAuctionAfterFirstPlayer(t *testing.T) {
 		t.Fatal("Second player should be able to act after first player has raised the auction")
 	}
 }
+
+func TestSkipPlayerThatHasFolded(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "100.1.1.1")
+	gameTest.players[0].Fold()
+	gameTest.Join("B", "100.1.1.2")
+	gameTest.phase = scoreAuction
+	err := gameTest.RaiseAuction("81", "100.1.1.2")
+	if err != nil {
+		t.Fatal("Second player should be able to act after first player has raised the auction")
+	}
+}
