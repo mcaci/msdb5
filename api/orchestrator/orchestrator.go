@@ -58,13 +58,15 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 		var p *player.Player
 		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.players[g.playerInTurn] })
 		if err == nil {
-			prevScore := g.info.AuctionScore()
-			currentScore, err := strconv.Atoi(score)
-			if err != nil {
-				log.Printf("Error was raised during auction: %v\n", err)
+			if !p.Folded() {
+				prevScore := g.info.AuctionScore()
+				currentScore, err := strconv.Atoi(score)
+				if err != nil {
+					log.Printf("Error was raised during auction: %v\n", err)
+				}
+				auction.Update(0, prevScore, uint8(currentScore), p.SetAuctionScore)
+				auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
 			}
-			auction.Update(0, prevScore, uint8(currentScore), p.SetAuctionScore)
-			auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
 			g.playerInTurn = (g.playerInTurn + 1) % 5
 		}
 	}
