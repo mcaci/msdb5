@@ -107,7 +107,7 @@ func TestCompleteRound(t *testing.T) {
 	}
 }
 
-func TestCompleteGame(t *testing.T) {
+func TestCompletedGame(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("A", "100.1.1.1")
 	gameTest.Join("B", "100.1.1.2")
