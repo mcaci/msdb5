@@ -99,6 +99,7 @@ func (g *Game) Nominate(number, seed, origin string) (err error) {
 				p, err = g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
 				if err == nil {
 					g.companion = *companion.New(c, p)
+					g.phase = playBriscola
 				}
 			}
 		}
