@@ -86,15 +86,21 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 }
 
 // Nominate func
-func (g *Game) Nominate(number, seed, origin string) error {
-	card, err := card.Create(number, seed)
-	if err == nil {
-		p, err := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
+func (g *Game) Nominate(number, seed, origin string) (err error) {
+	if g.phase != scoreAuction {
+		err = errors.New("Phase is not auction")
+	} else {
+		var c card.ID
+		c, err = card.Create(number, seed)
 		if err == nil {
-			g.companion = *companion.New(card, p)
+			var p *player.Player
+			p, err = g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
+			if err == nil {
+				g.companion = *companion.New(c, p)
+			}
 		}
 	}
-	return err
+	return
 }
 
 // Play func

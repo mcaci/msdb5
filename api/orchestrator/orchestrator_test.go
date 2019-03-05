@@ -16,9 +16,8 @@ func TestActionCreationAndAuctionUsage(t *testing.T) {
 func TestActionCreationAndPCompanionUsage(t *testing.T) {
 	b := NewAction()
 	b.Action("Join#A", "100.1.1.1")
-	b.Action("Companion#3#Cup", "100.1.1.1")
-	board, ok := b.(*Game)
-	if !ok || board.companion.Card() != 13 {
+	_, pInfo, _ := b.Action("Companion#3#Cup", "100.1.1.1")
+	if pInfo == nil {
 		t.Fatal("Companion action was not properly performed")
 	}
 }
