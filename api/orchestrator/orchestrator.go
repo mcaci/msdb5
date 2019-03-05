@@ -71,6 +71,15 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 				nextPlayerIndex = (nextPlayerIndex + 1) % 5
 			}
 			g.playerInTurn = nextPlayerIndex
+			foldCount := 0
+			for _, pl := range g.players {
+				if pl.Folded() {
+					foldCount++
+				}
+			}
+			if foldCount == 4 {
+				g.phase = companionChoice
+			}
 		}
 	}
 	return
