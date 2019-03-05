@@ -103,8 +103,9 @@ func (player Player) String() string {
 	host := display.NewInfo("Host", ":", player.Host(), ";")
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
 	pile := display.NewInfo("Pile", ":", player.pile.String(), ";")
+	fold := display.NewInfo("Folded", ":", strconv.FormatBool(player.Folded()), ";")
 	aSco := display.NewInfo("AuctionScore", ":", strconv.Itoa(int(player.auctionScore)), ";")
-	return display.All(display.Wrap("Player", name, host, hand, pile, aSco)...)
+	return display.All(display.Wrap("Player", name, host, hand, pile, fold, aSco)...)
 }
 
 // Info function
