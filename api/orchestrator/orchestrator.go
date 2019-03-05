@@ -113,7 +113,7 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 		err = errors.New("Phase is not auction")
 	} else {
 		var p *player.Player
-		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
+		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.players[g.playerInTurn] })
 		if err == nil {
 			var c card.ID
 			c, err = p.Play(number, seed)
