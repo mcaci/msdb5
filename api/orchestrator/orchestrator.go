@@ -108,17 +108,23 @@ func (g *Game) Nominate(number, seed, origin string) (err error) {
 }
 
 // Play func
-func (g *Game) Play(number, seed, origin string) error {
-	p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-	if err == nil {
-		c, err := p.Play(number, seed)
+func (g *Game) Play(number, seed, origin string) (err error) {
+	if g.phase != playBriscola {
+		err = errors.New("Phase is not auction")
+	} else {
+		var p *player.Player
+		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
 		if err == nil {
-			roundHasEnded := g.info.PlayedCardIs(c)
-			if roundHasEnded {
-				playerIndex := briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed())
-				g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
+			var c card.ID
+			c, err = p.Play(number, seed)
+			if err == nil {
+				roundHasEnded := g.info.PlayedCardIs(c)
+				if roundHasEnded {
+					playerIndex := briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed())
+					g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
+				}
 			}
 		}
 	}
-	return err
+	return
 }
