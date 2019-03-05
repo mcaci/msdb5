@@ -122,7 +122,7 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 				if roundHasEnded {
 					playerIndex := briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed())
 					g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
-					g.playerInTurn = (g.playerInTurn + 1) % 5
+					g.playerInTurn = playerIndex
 				} else {
 					g.playerInTurn = (g.playerInTurn + 1) % 5
 				}
