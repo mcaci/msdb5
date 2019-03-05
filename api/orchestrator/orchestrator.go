@@ -43,6 +43,7 @@ func (g *Game) Join(name, origin string) (err error) {
 			p.Join(name, origin)
 			if _, errNext := g.Players().Find(nextPlayerJoining); errNext != nil {
 				g.phase = scoreAuction
+				g.playerInTurn = g.players[0]
 			}
 		}
 	}
