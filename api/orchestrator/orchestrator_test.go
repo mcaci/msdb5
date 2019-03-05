@@ -22,6 +22,7 @@ func TestActionCreationAndPCompanionUsage(t *testing.T) {
 		t.Fatal("Companion action was not properly performed")
 	}
 }
+
 func TestActionCreationAndPlayCardUsage(t *testing.T) {
 	b := NewAction()
 	b.Action("Join#A", "100.1.1.1")
