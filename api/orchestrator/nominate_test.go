@@ -43,3 +43,14 @@ func TestAnyOtherPlayerNotInTurnCantNominate(t *testing.T) {
 		t.Fatal("Expecting not in turn player to being able to nominate companion card")
 	}
 }
+
+func TestTransitionToPlayPhase(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "100.1.1.1")
+	gameTest.phase = companionChoice
+	gameTest.playerInTurn = 0
+	gameTest.Nominate("2", "Cudgel", "100.1.1.1")
+	if gameTest.phase != playBriscola {
+		t.Fatal("Expecting in turn player to nominate companion card with success")
+	}
+}
