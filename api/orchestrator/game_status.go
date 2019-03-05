@@ -6,4 +6,5 @@ const (
 	joining phase = iota
 	scoreAuction
 	companionChoice
+	playBriscola
 )
