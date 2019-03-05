@@ -23,6 +23,30 @@ func TestPlayerPlaysOwnedCard(t *testing.T) {
 	}
 }
 
+func TestNothingHappensIfPlayerPlaysNotOwnedCard(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "100.1.1.1")
+	gameTest.players[0].Hand().Add(23)
+	gameTest.phase = playBriscola
+	err := gameTest.Play("0", "Coin", "100.1.1.1")
+	if err == nil {
+		t.Fatal("Play card action not expected at beginning of game")
+	}
+}
+
+func TestSceondPlayerCannotPlayIfFirstPlayerPlaysNotOwnedCard(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "100.1.1.1")
+	gameTest.Join("B", "100.1.1.2")
+	gameTest.players[1].Hand().Add(1)
+	gameTest.phase = playBriscola
+	gameTest.Play("0", "Coin", "100.1.1.1")
+	err := gameTest.Play("1", "Coin", "100.1.1.2")
+	if err == nil {
+		t.Fatal("Play card action not expected at beginning of game")
+	}
+}
+
 func TestSecondPlayerCannotPlayCardBeforeFirstPlayer(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("A", "100.1.1.1")
