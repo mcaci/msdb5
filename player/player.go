@@ -67,16 +67,6 @@ func (player *Player) collect(cards deck.Cards) {
 	}
 }
 
-// SetAuctionScore func
-func (player *Player) SetAuctionScore(auctionScore uint8) {
-	player.auctionScore = auctionScore
-}
-
-// AuctionScore func
-func (player *Player) AuctionScore() uint8 {
-	return player.auctionScore
-}
-
 // Fold func
 func (player *Player) Fold() {
 	player.fold = true
@@ -104,14 +94,12 @@ func (player Player) String() string {
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
 	pile := display.NewInfo("Pile", ":", player.pile.String(), ";")
 	fold := display.NewInfo("Folded", ":", strconv.FormatBool(player.Folded()), ";")
-	aSco := display.NewInfo("AuctionScore", ":", strconv.Itoa(int(player.auctionScore)), ";")
-	return display.All(display.Wrap("Player", name, host, hand, pile, fold, aSco)...)
+	return display.All(display.Wrap("Player", name, host, hand, pile, fold)...)
 }
 
 // Info function
 func (player Player) Info() []display.Info {
 	name := display.NewInfo("Name", ":", player.Name(), ";")
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
-	aSco := display.NewInfo("AuctionScore", ":", strconv.Itoa(int(player.auctionScore)), ";")
-	return display.Wrap("Player", name, hand, aSco)
+	return display.Wrap("Player", name, hand)
 }
