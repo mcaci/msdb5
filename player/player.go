@@ -76,6 +76,11 @@ func (player *Player) AuctionScore() uint8 {
 	return player.auctionScore
 }
 
+// Fold func
+func (player *Player) Fold() {
+
+}
+
 // Play function
 func (player *Player) Play(number, seed string) (card.ID, error) {
 	inputCard, err := card.Create(number, seed)
