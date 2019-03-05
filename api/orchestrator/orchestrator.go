@@ -43,7 +43,7 @@ func (g *Game) Join(name, origin string) (err error) {
 			p.Join(name, origin)
 			if _, errNext := g.Players().Find(nextPlayerJoining); errNext != nil {
 				g.phase = scoreAuction
-				g.playerInTurn = g.players[0]
+				g.playerInTurn = 0
 			}
 		}
 	}
@@ -56,7 +56,7 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 		err = errors.New("Phase is not auction")
 	} else {
 		var p *player.Player
-		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.playerInTurn })
+		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.players[g.playerInTurn] })
 		if err == nil {
 			prevScore := g.info.AuctionScore()
 			currentScore, err := strconv.Atoi(score)
@@ -65,6 +65,7 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 			}
 			auction.Update(0, prevScore, uint8(currentScore), p.SetAuctionScore)
 			auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
+			g.playerInTurn = (g.playerInTurn + 1) % 5
 		}
 	}
 	return

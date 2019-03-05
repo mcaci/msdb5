@@ -11,7 +11,7 @@ import (
 
 // Game struct
 type Game struct {
-	playerInTurn *player.Player
+	playerInTurn uint8
 	players      playerset.Players
 	companion    companion.Companion
 	info         board.Board

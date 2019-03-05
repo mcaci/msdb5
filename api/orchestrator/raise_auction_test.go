@@ -23,7 +23,7 @@ func TestFirstPlayerCanRaiseAuction(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("A", "100.1.1.1")
 	gameTest.phase = scoreAuction
-	gameTest.playerInTurn = gameTest.players[0]
+	gameTest.playerInTurn = 0
 	err := gameTest.RaiseAuction("102", "100.1.1.1")
 	if err != nil {
 		t.Fatal("Expecting first player to raise auction with success")
