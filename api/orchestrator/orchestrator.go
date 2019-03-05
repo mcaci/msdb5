@@ -87,7 +87,7 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 
 // Nominate func
 func (g *Game) Nominate(number, seed, origin string) (err error) {
-	if g.phase != scoreAuction {
+	if g.phase != companionChoice {
 		err = errors.New("Phase is not auction")
 	} else {
 		var c card.ID
