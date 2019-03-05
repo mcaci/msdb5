@@ -90,13 +90,16 @@ func (g *Game) Nominate(number, seed, origin string) (err error) {
 	if g.phase != companionChoice {
 		err = errors.New("Phase is not auction")
 	} else {
-		var c card.ID
-		c, err = card.Create(number, seed)
+		_, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.players[g.playerInTurn] })
 		if err == nil {
-			var p *player.Player
-			p, err = g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
+			var c card.ID
+			c, err = card.Create(number, seed)
 			if err == nil {
-				g.companion = *companion.New(c, p)
+				var p *player.Player
+				p, err = g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
+				if err == nil {
+					g.companion = *companion.New(c, p)
+				}
 			}
 		}
 	}
