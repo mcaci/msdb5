@@ -28,3 +28,14 @@ func TestFirstPlayerCanRaiseAuction(t *testing.T) {
 		t.Fatal("Expecting first player to raise auction with success")
 	}
 }
+
+func TestSecondPlayerCannotRaiseAuctionIfNotDoneByFirstPlayer(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "100.1.1.1")
+	gameTest.Join("B", "100.1.1.2")
+	gameTest.phase = scoreAuction
+	err := gameTest.RaiseAuction("97", "100.1.1.2")
+	if err == nil {
+		t.Fatal("Expecting error for second player not being able to act before first player has raised the auction")
+	}
+}
