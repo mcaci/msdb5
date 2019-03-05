@@ -64,10 +64,17 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 				if err != nil {
 					log.Printf("Error was raised during auction: %v\n", err)
 				}
-				auction.Update(0, prevScore, uint8(currentScore), p.SetAuctionScore)
-				auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
+				if uint8(currentScore) <= prevScore {
+					p.Fold()
+				} else {
+					auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
+				}
 			}
-			g.playerInTurn = (g.playerInTurn + 1) % 5
+			nextPlayerIndex := (g.playerInTurn + 1) % 5
+			for g.players[nextPlayerIndex].Folded() {
+				nextPlayerIndex = (nextPlayerIndex + 1) % 5
+			}
+			g.playerInTurn = nextPlayerIndex
 		}
 	}
 	return
