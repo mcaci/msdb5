@@ -52,7 +52,7 @@ func (g *Game) Join(name, origin string) (err error) {
 // RaiseAuction func
 func (g *Game) RaiseAuction(score, origin string) (err error) {
 	if g.phase != scoreAuction {
-		err = errors.New("Phase is not joining")
+		err = errors.New("Phase is not auction")
 	} else {
 		p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
 		if err == nil {
