@@ -9,3 +9,14 @@ func TestPlayerCannotChooseCompanionIfPhaseIsNotCompanion(t *testing.T) {
 		t.Fatal("Nominate action not expected at beginning of game")
 	}
 }
+
+func TestPlayerInTurnCanNominate(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "100.1.1.1")
+	gameTest.phase = companionChoice
+	gameTest.playerInTurn = 0
+	err := gameTest.Nominate("2", "Cudgel", "100.1.1.1")
+	if err != nil {
+		t.Fatal("Expecting in turn player to nominate companion card with success")
+	}
+}
