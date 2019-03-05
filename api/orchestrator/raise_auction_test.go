@@ -79,3 +79,43 @@ func TestSkipPlayerThatHasFolded(t *testing.T) {
 		t.Fatal("Folded player, player 2, was not skipped")
 	}
 }
+
+func TestGoToNominateWhenAuctionEnds(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "100.1.1.1")
+	gameTest.Join("B", "100.1.1.2")
+	gameTest.Join("C", "100.1.1.3")
+	gameTest.Join("D", "100.1.1.4")
+	gameTest.Join("E", "100.1.1.5")
+	gameTest.phase = scoreAuction
+	gameTest.playerInTurn = 0
+	gameTest.players[1].Fold()
+	gameTest.players[2].Fold()
+	gameTest.players[3].Fold()
+	gameTest.RaiseAuction("80", "100.1.1.1")
+	gameTest.RaiseAuction("85", "100.1.1.3")
+	gameTest.RaiseAuction("ciao", "100.1.1.1")
+	if gameTest.phase == companionChoice {
+		t.Fatal("C should be the auction winner")
+	}
+}
+
+func TestAuctionWinnerSelectionWhenAuctionEnds(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "100.1.1.1")
+	gameTest.Join("B", "100.1.1.2")
+	gameTest.Join("C", "100.1.1.3")
+	gameTest.Join("D", "100.1.1.4")
+	gameTest.Join("E", "100.1.1.5")
+	gameTest.phase = scoreAuction
+	gameTest.playerInTurn = 0
+	gameTest.players[1].Fold()
+	gameTest.players[2].Fold()
+	gameTest.players[3].Fold()
+	gameTest.RaiseAuction("80", "100.1.1.1")
+	gameTest.RaiseAuction("85", "100.1.1.3")
+	gameTest.RaiseAuction("ciao", "100.1.1.1")
+	if gameTest.playerInTurn == 2 {
+		t.Fatal("C should be the auction winner")
+	}
+}
