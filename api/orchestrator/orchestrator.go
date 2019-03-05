@@ -2,7 +2,6 @@ package orchestrator
 
 import (
 	"errors"
-	"log"
 	"strconv"
 	"strings"
 
@@ -61,10 +60,7 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 			if !p.Folded() {
 				prevScore := g.info.AuctionScore()
 				currentScore, err := strconv.Atoi(score)
-				if err != nil {
-					log.Printf("Error was raised during auction: %v\n", err)
-				}
-				if uint8(currentScore) <= prevScore {
+				if err != nil || uint8(currentScore) <= prevScore {
 					p.Fold()
 				} else {
 					auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
