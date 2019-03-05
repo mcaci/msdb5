@@ -7,4 +7,5 @@ const (
 	scoreAuction
 	companionChoice
 	playBriscola
+	end
 )
