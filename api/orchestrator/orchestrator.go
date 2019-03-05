@@ -68,6 +68,18 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 	return err
 }
 
+// Nominate func
+func (g *Game) Nominate(number, seed, origin string) error {
+	card, err := card.Create(number, seed)
+	if err == nil {
+		p, err := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
+		if err == nil {
+			g.companion = *companion.New(card, p)
+		}
+	}
+	return err
+}
+
 // Play func
 func (g *Game) Play(number, seed, origin string) error {
 	p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
@@ -79,18 +91,6 @@ func (g *Game) Play(number, seed, origin string) error {
 				playerIndex := briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed())
 				g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
 			}
-		}
-	}
-	return err
-}
-
-// Nominate func
-func (g *Game) Nominate(number, seed, origin string) error {
-	card, err := card.Create(number, seed)
-	if err == nil {
-		p, err := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
-		if err == nil {
-			g.companion = *companion.New(card, p)
 		}
 	}
 	return err
