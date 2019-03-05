@@ -110,7 +110,7 @@ func (g *Game) Nominate(number, seed, origin string) (err error) {
 // Play func
 func (g *Game) Play(number, seed, origin string) (err error) {
 	if g.phase != playBriscola {
-		err = errors.New("Phase is not auction")
+		err = errors.New("Phase is not play")
 	} else {
 		var p *player.Player
 		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.players[g.playerInTurn] })
@@ -125,6 +125,15 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 					g.playerInTurn = (g.playerInTurn + 1) % 5
 				} else {
 					g.playerInTurn = (g.playerInTurn + 1) % 5
+				}
+				gameHasEnded := true
+				for _, pl := range g.players {
+					if len(*pl.Hand()) > 0 {
+						gameHasEnded = false
+					}
+				}
+				if gameHasEnded {
+					g.phase = end
 				}
 			}
 		}
