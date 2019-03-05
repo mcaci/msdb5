@@ -21,6 +21,17 @@ func TestPlayerInTurnCanNominate(t *testing.T) {
 	}
 }
 
+func TestNominatedInfoIsFilled(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("A", "100.1.1.1")
+	gameTest.phase = companionChoice
+	gameTest.playerInTurn = 0
+	gameTest.Nominate("2", "Cudgel", "100.1.1.1")
+	if gameTest.companion.Card() != 32 {
+		t.Fatal("Expecting in turn player to nominate companion card with success")
+	}
+}
+
 func TestAnyOtherPlayerNotInTurnCantNominate(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("A", "100.1.1.1")
