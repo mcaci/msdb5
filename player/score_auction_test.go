@@ -13,3 +13,18 @@ func TestPlayerAuctionScoreSetting(t *testing.T) {
 		t.Fatalf("Auction score should be %d but is %d", expectedScore, actualScore)
 	}
 }
+
+func TestPlayerHasFolded(t *testing.T) {
+	p := New()
+	p.Fold()
+	if !p.Folded() {
+		t.Fatal("Player should have folded")
+	}
+}
+
+func TestPlayerHasntFolded(t *testing.T) {
+	p := New()
+	if p.Folded() {
+		t.Fatal("Player should not have folded")
+	}
+}

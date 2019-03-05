@@ -15,6 +15,7 @@ type Player struct {
 	hand         deck.Cards
 	pile         deck.Cards
 	auctionScore uint8
+	fold         bool
 }
 
 // New func
@@ -78,12 +79,12 @@ func (player *Player) AuctionScore() uint8 {
 
 // Fold func
 func (player *Player) Fold() {
-
+	player.fold = true
 }
 
 // Folded func
 func (player *Player) Folded() bool {
-	return true
+	return player.fold
 }
 
 // Play function
