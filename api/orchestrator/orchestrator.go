@@ -54,7 +54,8 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 	if g.phase != scoreAuction {
 		err = errors.New("Phase is not auction")
 	} else {
-		p, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
+		var p *player.Player
+		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.playerInTurn })
 		if err == nil {
 			prevScore := g.info.AuctionScore()
 			currentScore, err := strconv.Atoi(score)
@@ -65,7 +66,7 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 			auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
 		}
 	}
-	return err
+	return
 }
 
 // Nominate func
