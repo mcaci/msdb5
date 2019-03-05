@@ -11,6 +11,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/companion"
 	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
+	"github.com/nikiforosFreespirit/msdb5/point"
 )
 
 // Action interface
@@ -26,6 +27,19 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 		err = g.Nominate(data[1], data[2], origin)
 	case "Card":
 		err = g.Play(data[1], data[2], origin)
+	}
+	if g.phase == end {
+		caller, _ := g.Players().Find(func(p *player.Player) bool { return !p.Folded() })
+		score1 := point.Count(*caller.Pile(), briscola.Points) + point.Count(*g.companion.Ref().Pile(), briscola.Points)
+		score2 := uint8(0)
+		for _, pl := range g.Players() {
+			if pl != caller && pl != g.companion.Ref() {
+				score2 += point.Count(*pl.Pile(), briscola.Points)
+			}
+		}
+		score1info := display.NewInfo("Callers", ":", strconv.Itoa(int(score1)), ";")
+		score2info := display.NewInfo("Others", ":", strconv.Itoa(int(score2)), ";")
+		return display.Wrap("Final Score", score1info, score2info), nil, nil
 	}
 	pInfo, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
 	return g.info.Info(), pInfo.Info(), err

@@ -20,3 +20,8 @@ func New(card card.ID, ref *player.Player) *Companion {
 func (c *Companion) Card() card.ID {
 	return c.card
 }
+
+// Ref func
+func (c *Companion) Ref() *player.Player {
+	return c.ref
+}
