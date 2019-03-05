@@ -7,9 +7,8 @@ import (
 func TestActionCreationAndAuctionUsage(t *testing.T) {
 	b := NewAction()
 	b.Action("Join#A", "100.1.1.1")
-	b.Action("Auction#102", "100.1.1.1")
-	board, ok := b.(*Game)
-	if !ok || board.info.AuctionScore() != 102 {
+	_, pInfo, _ := b.Action("Auction#102", "100.1.1.1")
+	if pInfo == nil {
 		t.Fatal("Auction action was not properly performed")
 	}
 }
