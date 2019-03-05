@@ -62,6 +62,18 @@ func TestPlayer5JoinsAndPhaseChangesToAuction(t *testing.T) {
 	}
 }
 
+func TestPlayer5JoinsAndSetPlayerInTurnToFirstJoiner(t *testing.T) {
+	gameTest := NewGame()
+	gameTest.Join("Michi", "127.0.0.1")
+	gameTest.Join("Mary", "127.0.0.2")
+	gameTest.Join("A", "127.0.0.3")
+	gameTest.Join("gameTester", "127.0.0.4")
+	gameTest.Join("C", "127.0.0.5")
+	if gameTest.playerInTurn != gameTest.players[0] {
+		t.Fatal("Player in turn is not set correctly")
+	}
+}
+
 func TestPlayer6CannotJoin(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.Join("Michi", "127.0.0.1")
