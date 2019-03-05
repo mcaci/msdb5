@@ -81,6 +81,11 @@ func (player *Player) Fold() {
 
 }
 
+// Folded func
+func (player *Player) Folded() bool {
+	return true
+}
+
 // Play function
 func (player *Player) Play(number, seed string) (card.ID, error) {
 	inputCard, err := card.Create(number, seed)
