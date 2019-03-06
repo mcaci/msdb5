@@ -82,7 +82,7 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 				if err != nil || uint8(currentScore) <= prevScore {
 					p.Fold()
 				} else {
-					auction.Update(prevScore, prevScore, uint8(currentScore), g.info.SetAuctionScore)
+					auction.Update(prevScore, uint8(currentScore), g.info.SetAuctionScore)
 				}
 			}
 			nextPlayerIndex := (g.playerInTurn + 1) % 5
