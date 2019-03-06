@@ -38,12 +38,3 @@ func All(infos ...Info) (str string) {
 	}
 	return
 }
-
-// ToString func
-// func ToString(infos ...fmt.Stringer) string {
-// 	var str string
-// 	for _, info := range infos {
-// 		str += info.String() + " "
-// 	}
-// 	return str
-// }
