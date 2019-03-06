@@ -31,12 +31,16 @@ func (c *client) read() {
 		// execute action
 		command := string(msg)
 		origin := c.socket.RemoteAddr().String()
-		bInfo, pInfo, _ := run(c.room.msdb5board, command, origin)
+		infoForAll, infoForPlayer, err := run(c.room.msdb5board, command, origin)
 		// Simpler board info sent to everyone
 		send(command, c.room.forward)
-		send(display.All(bInfo...), c.room.forward)
-		// Player info sent to myself only
-		send(display.All(pInfo...), c.send)
+		if err == nil {
+			send(display.All(infoForAll...), c.room.forward)
+			// Player info sent to myself only
+			send(display.All(infoForPlayer...), c.send)
+		} else {
+			send(display.All(display.NewInfo("Error", ":", err.Error(), ";")), c.send)
+		}
 	}
 }
 
