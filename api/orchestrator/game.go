@@ -53,7 +53,7 @@ func (g *Game) Players() playerset.Players {
 // Info func
 func (g Game) Info() []display.Info {
 	gameInfo := g.info.Info()
-	plInTurn := display.NewInfo("PlayerInTurn", ":", g.players[g.playerInTurn].String(), ";")
+	plInTurn := display.NewInfo("PlayerInTurn", ":", g.players[g.playerInTurn].Name(), ";")
 	gameInfo = append(gameInfo, plInTurn)
 	compCard := display.NewInfo("Companion", ":", g.companion.Card().String(), ";")
 	gameInfo = append(gameInfo, compCard)

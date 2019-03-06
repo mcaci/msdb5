@@ -130,7 +130,7 @@ func TestCompleteRoundWithNextPlayerSelection(t *testing.T) {
 	gameTest.Play("1", "Cup", "100.1.1.4")
 	gameTest.Play("3", "Cup", "100.1.1.5")
 	if gameTest.playerInTurn != 2 {
-		t.Fatal("C should be next player to start")
+		t.Fatalf("C should be next player to start, but is %d", gameTest.playerInTurn)
 	}
 }
 

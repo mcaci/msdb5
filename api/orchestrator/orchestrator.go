@@ -42,7 +42,7 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 		return display.Wrap("Final Score", score1info, score2info), nil, nil
 	}
 	pInfo, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-	return g.info.Info(), pInfo.Info(), err
+	return g.Info(), pInfo.Info(), err
 }
 
 // Join func
@@ -134,7 +134,7 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 			if err == nil {
 				roundHasEnded := g.info.PlayedCardIs(c)
 				if roundHasEnded {
-					playerIndex := briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed())
+					playerIndex := (g.playerInTurn + briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed()) + 1) % 5
 					g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
 					g.playerInTurn = playerIndex
 				} else {
