@@ -5,6 +5,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/companion"
 	"github.com/nikiforosFreespirit/msdb5/deck"
+	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
@@ -47,4 +48,14 @@ func NewAction() api.Action {
 // Players func
 func (g *Game) Players() playerset.Players {
 	return g.players
+}
+
+// Info func
+func (g Game) Info() []display.Info {
+	gameInfo := g.info.Info()
+	plInTurn := display.NewInfo("PlayerInTurn", ":", g.players[g.playerInTurn].String(), ";")
+	gameInfo = append(gameInfo, plInTurn)
+	compCard := display.NewInfo("Companion", ":", g.companion.Card().String(), ";")
+	gameInfo = append(gameInfo, compCard)
+	return display.Wrap("Game", gameInfo...)
 }
