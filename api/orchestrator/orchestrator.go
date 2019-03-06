@@ -2,6 +2,7 @@ package orchestrator
 
 import (
 	"errors"
+	"log"
 	"strconv"
 	"strings"
 
@@ -28,6 +29,11 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 	case "Card":
 		err = g.Play(data[1], data[2], origin)
 	}
+	playerLogged, _ := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
+	log.Printf("New Action by %s\n", playerLogged.Name())
+	log.Printf("Action is %s\n", request)
+	log.Printf("Any error raised: %v\n", err)
+	log.Printf("Game info after action: %s\n", g.String())
 	if g.phase == end {
 		caller, _ := g.Players().Find(func(p *player.Player) bool { return !p.Folded() })
 		score1 := point.Count(*caller.Pile(), briscola.Points) + point.Count(*g.companion.Ref().Pile(), briscola.Points)
@@ -41,8 +47,7 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 		score2info := display.NewInfo("Others", ":", strconv.Itoa(int(score2)), ";")
 		return display.Wrap("Final Score", score1info, score2info), nil, nil
 	}
-	pInfo, err := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
-	return g.Info(), pInfo.Info(), err
+	return g.Info(), g.players[g.playerInTurn].Info(), err
 }
 
 // Join func

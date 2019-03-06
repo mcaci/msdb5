@@ -1,6 +1,8 @@
 package orchestrator
 
 import (
+	"strconv"
+
 	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/companion"
@@ -58,4 +60,18 @@ func (g Game) Info() []display.Info {
 	compCard := display.NewInfo("Companion", ":", g.companion.Card().String(), ";")
 	gameInfo = append(gameInfo, compCard)
 	return display.Wrap("Game", gameInfo...)
+}
+
+func (g Game) String() string {
+	gameInfo := g.Info()
+	players := display.NewInfo("Players", ":", g.players.String(), ";")
+	gameInfo = append(gameInfo, players)
+	if g.companion.Ref() != nil {
+		companion := display.NewInfo("PlayerInTurn", ":", g.companion.Ref().Name(), ";")
+		gameInfo = append(gameInfo, companion)
+	}
+	gameInfo = append(gameInfo, g.info.Info()...)
+	phase := display.NewInfo("PlayerInTurn", ":", strconv.Itoa(int(g.phase)), ";")
+	gameInfo = append(gameInfo, phase)
+	return display.All(display.Wrap("Game", gameInfo...)...)
 }
