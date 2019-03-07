@@ -32,8 +32,8 @@ func TestScenarioWithTwoBriscolaCardsIndex(t *testing.T) {
 	verifyIndexScenario(t, deck.Cards{34, 40, 3, 22, 15}, card.Cudgel, 1)
 }
 func TestScenarioWithTwoBriscolaCardsAndHighCardAtTheEndIndex(t *testing.T) {
-	// 4 of Cudgel, 10 of Cudgel, 3 of Coin, 2 of Sword, 1 of Cup
-	verifyIndexScenario(t, deck.Cards{34, 40, 3, 22, 11}, card.Cudgel, 1)
+	// 4 of Cudgel, 10 of Cudgel, 9 of Coin, 2 of Sword, 1 of Cup
+	verifyIndexScenario(t, deck.Cards{34, 40, 9, 22, 11}, card.Cudgel, 1)
 }
 
 func verifyIndexScenario(t *testing.T, cardsOnTheTable deck.Cards, briscola card.Seed, expectedWinner uint8) {
