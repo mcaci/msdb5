@@ -1,22 +1,12 @@
 package orchestrator
 
 import (
-	"errors"
-	"log"
-	"strconv"
 	"strings"
 
-	"github.com/nikiforosFreespirit/msdb5/auction"
-	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/companion"
 	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
-
-var playerSearchCriteria = func(g *Game, p *player.Player, origin string) bool {
-	return p.IsRemoteHost(origin) && p == g.players[g.playerInTurn]
-}
 
 // Action interface
 func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, error) {
@@ -32,39 +22,26 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 	case "Card":
 		err = g.Play(data[1], data[2], origin)
 	}
-	playerLogged, _ := g.Players().Find(func(p *player.Player) bool { return p.IsRemoteHost(origin) })
-	log.Printf("New Action by %s\n", playerLogged.Name())
-	log.Printf("Action is %s\n", request)
-	log.Printf("Any error raised: %v\n", err)
-	log.Printf("Game info after action: %s\n", g.String())
+	logEndTurn(g, request, origin, err)
+	infoForAllPlayers := g.Info()
+	infoForSinglePlayer := g.players[g.playerInTurn].Info()
 	if g.phase == end {
-		caller, _ := g.Players().Find(func(p *player.Player) bool { return !p.Folded() })
-		score1 := caller.Count() + g.companion.Ref().Count()
-		score2 := uint8(0)
-		for _, pl := range g.Players() {
-			if pl != caller && pl != g.companion.Ref() {
-				score2 += pl.Count()
-			}
-		}
-		score1info := display.NewInfo("Callers", ":", strconv.Itoa(int(score1)), ";")
-		score2info := display.NewInfo("Others", ":", strconv.Itoa(int(score2)), ";")
-		return display.Wrap("Final Score", score1info, score2info), nil, nil
+		infoForAllPlayers, infoForSinglePlayer, err = endGame(g)
 	}
-	return g.Info(), g.players[g.playerInTurn].Info(), err
+	return infoForAllPlayers, infoForSinglePlayer, err
 }
 
 // Join func
 func (g *Game) Join(name, origin string) (err error) {
-	if g.phase != joining {
-		err = errors.New("Phase is not joining")
-	} else {
+	err = phaseCheck(g, joining)
+	if err == nil {
 		nextPlayerJoining := func(p *player.Player) bool { return p.Name() == "" }
 		p, err := g.Players().Find(nextPlayerJoining)
 		if err == nil {
 			p.Join(name, origin)
 			if _, errNext := g.Players().Find(nextPlayerJoining); errNext != nil {
-				g.phase = scoreAuction
-				g.playerInTurn = 0
+				nextPhase(g, scoreAuction)
+				nextPlayerToFirst(g)
 			}
 		}
 	}
@@ -73,34 +50,16 @@ func (g *Game) Join(name, origin string) (err error) {
 
 // RaiseAuction func
 func (g *Game) RaiseAuction(score, origin string) (err error) {
-	if g.phase != scoreAuction {
-		err = errors.New("Phase is not auction")
-	} else {
+	err = phaseCheck(g, scoreAuction)
+	if err == nil {
 		var p *player.Player
 		p, err = g.Players().Find(func(p *player.Player) bool { return playerSearchCriteria(g, p, origin) })
 		if err == nil {
-			if !p.Folded() {
-				prevScore := g.info.AuctionScore()
-				currentScore, err := strconv.Atoi(score)
-				if err != nil || uint8(currentScore) <= prevScore {
-					p.Fold()
-				} else {
-					auction.Update(prevScore, uint8(currentScore), g.info.SetAuctionScore)
-				}
-			}
-			nextPlayerIndex := (g.playerInTurn + 1) % 5
-			for g.players[nextPlayerIndex].Folded() {
-				nextPlayerIndex = (nextPlayerIndex + 1) % 5
-			}
-			g.playerInTurn = nextPlayerIndex
-			foldCount := 0
-			for _, pl := range g.players {
-				if pl.Folded() {
-					foldCount++
-				}
-			}
+			updateAuction(g, p, score)
+			nextAuctionPlayer(g)
+			foldCount := countFoldedPlayers(g.players)
 			if foldCount == 4 {
-				g.phase = companionChoice
+				nextPhase(g, companionChoice)
 			}
 		}
 	}
@@ -109,9 +68,8 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 
 // Nominate func
 func (g *Game) Nominate(number, seed, origin string) (err error) {
-	if g.phase != companionChoice {
-		err = errors.New("Phase is not auction")
-	} else {
+	err = phaseCheck(g, companionChoice)
+	if err == nil {
 		_, err = g.Players().Find(func(p *player.Player) bool { return playerSearchCriteria(g, p, origin) })
 		if err == nil {
 			var c card.ID
@@ -120,8 +78,8 @@ func (g *Game) Nominate(number, seed, origin string) (err error) {
 				var p *player.Player
 				p, err = g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
 				if err == nil {
-					g.companion = *companion.New(c, p)
-					g.phase = playBriscola
+					setCompanion(g, c, p)
+					nextPhase(g, playBriscola)
 				}
 			}
 		}
@@ -131,32 +89,21 @@ func (g *Game) Nominate(number, seed, origin string) (err error) {
 
 // Play func
 func (g *Game) Play(number, seed, origin string) (err error) {
-	if g.phase != playBriscola {
-		err = errors.New("Phase is not play")
-	} else {
+	err = phaseCheck(g, playBriscola)
+	if err == nil {
 		var p *player.Player
 		p, err = g.Players().Find(func(p *player.Player) bool { return playerSearchCriteria(g, p, origin) })
 		if err == nil {
 			var c card.ID
 			c, err = p.Play(number, seed)
 			if err == nil {
-				roundHasEnded := g.info.PlayedCardIs(c)
+				roundHasEnded := verifyEndRound(g, c)
 				if roundHasEnded {
-					playerIndex := (g.playerInTurn + briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed()) + 1) % 5
-					g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
-					g.playerInTurn = playerIndex
+					startNewRound(g)
 				} else {
-					g.playerInTurn = (g.playerInTurn + 1) % 5
+					nextPlayer(g)
 				}
-				gameHasEnded := true
-				for _, pl := range g.players {
-					if len(*pl.Hand()) > 0 {
-						gameHasEnded = false
-					}
-				}
-				if gameHasEnded {
-					g.phase = end
-				}
+				verifyEndGame(g)
 			}
 		}
 	}
