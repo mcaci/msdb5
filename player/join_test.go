@@ -13,7 +13,7 @@ func TestJoinPlayerName(t *testing.T) {
 func TestJoinPlayerHost(t *testing.T) {
 	p := New()
 	p.Join("Michi", "127.0.0.1")
-	if p.Host() != "127.0.0.1" {
+	if p.IsRemoteHost("127.0.0.1") {
 		t.Fatal("Unexpected name")
 	}
 }

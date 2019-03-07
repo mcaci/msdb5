@@ -46,9 +46,9 @@ func (player *Player) Name() string {
 	return player.name
 }
 
-// Host func
-func (player *Player) Host() string {
-	return player.host
+// IsRemoteHost func
+func (player *Player) IsRemoteHost(origin string) bool {
+	return player.host == origin
 }
 
 // Has func
@@ -90,7 +90,7 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 
 func (player Player) String() string {
 	name := display.NewInfo("Name", ":", player.Name(), ";")
-	host := display.NewInfo("Host", ":", player.Host(), ";")
+	host := display.NewInfo("Host", ":", player.host, ";")
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
 	pile := display.NewInfo("Pile", ":", player.pile.String(), ";")
 	fold := display.NewInfo("Folded", ":", strconv.FormatBool(player.Folded()), ";")
