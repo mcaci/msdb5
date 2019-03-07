@@ -1,18 +1,23 @@
 package orchestrator
 
-import "testing"
+import (
+	"testing"
+)
 
-func TestPlayerCannotRaiseAuctionIfPhaseIsNotAuction(t *testing.T) {
-	gameTest := NewGame()
-	err := gameTest.RaiseAuction("102", "100.1.1.1")
-	if err == nil {
-		t.Fatal("Auction action not expected at beginning of game")
-	}
-}
-
-func TestPlayerCannotRaiseAuctionIfPhaseIsNotAuctionEvenAfterFirstJoin(t *testing.T) {
+func mockGameAuctionTest() *Game {
 	gameTest := NewGame()
 	gameTest.Join("A", "100.1.1.1")
+	gameTest.Join("B", "100.1.1.2")
+	gameTest.Join("C", "100.1.1.3")
+	gameTest.Join("D", "100.1.1.4")
+	gameTest.Join("E", "100.1.1.5")
+	gameTest.phase = scoreAuction
+	return gameTest
+}
+
+func TestPlayerCannotRaiseAuctionIfPhaseIsNotAuction(t *testing.T) {
+	gameTest := mockGameAuctionTest()
+	gameTest.phase = joining
 	err := gameTest.RaiseAuction("102", "100.1.1.1")
 	if err == nil {
 		t.Fatal("Auction action not expected at beginning of game")
@@ -20,10 +25,7 @@ func TestPlayerCannotRaiseAuctionIfPhaseIsNotAuctionEvenAfterFirstJoin(t *testin
 }
 
 func TestFirstPlayerCanRaiseAuction(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.phase = scoreAuction
-	gameTest.playerInTurn = 0
+	gameTest := mockGameAuctionTest()
 	err := gameTest.RaiseAuction("102", "100.1.1.1")
 	if err != nil {
 		t.Fatal("Expecting first player to raise auction with success")
@@ -31,10 +33,7 @@ func TestFirstPlayerCanRaiseAuction(t *testing.T) {
 }
 
 func TestSecondPlayerCannotRaiseAuctionIfNotDoneByFirstPlayer(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
-	gameTest.phase = scoreAuction
+	gameTest := mockGameAuctionTest()
 	err := gameTest.RaiseAuction("97", "100.1.1.2")
 	if err == nil {
 		t.Fatal("Expecting error for second player not being able to act before first player has raised the auction")
@@ -42,10 +41,7 @@ func TestSecondPlayerCannotRaiseAuctionIfNotDoneByFirstPlayer(t *testing.T) {
 }
 
 func TestSecondPlayerCanRaiseAuctionAfterFirstPlayer(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
-	gameTest.phase = scoreAuction
+	gameTest := mockGameAuctionTest()
 	gameTest.RaiseAuction("78", "100.1.1.1")
 	err := gameTest.RaiseAuction("81", "100.1.1.2")
 	if err != nil {
@@ -54,10 +50,7 @@ func TestSecondPlayerCanRaiseAuctionAfterFirstPlayer(t *testing.T) {
 }
 
 func TestSecondPlayerCanFoldAuctionAfterFirstPlayer(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
-	gameTest.phase = scoreAuction
+	gameTest := mockGameAuctionTest()
 	gameTest.RaiseAuction("98", "100.1.1.1")
 	err := gameTest.RaiseAuction("ciao", "100.1.1.2")
 	if err != nil {
@@ -66,12 +59,7 @@ func TestSecondPlayerCanFoldAuctionAfterFirstPlayer(t *testing.T) {
 }
 
 func TestSkipPlayerThatHasFolded(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
-	gameTest.Join("C", "100.1.1.3")
-	gameTest.phase = scoreAuction
-	gameTest.playerInTurn = 0
+	gameTest := mockGameAuctionTest()
 	gameTest.players[1].Fold()
 	gameTest.RaiseAuction("80", "100.1.1.1")
 	err := gameTest.RaiseAuction("85", "100.1.1.3")
@@ -81,14 +69,7 @@ func TestSkipPlayerThatHasFolded(t *testing.T) {
 }
 
 func TestGoToNominateWhenAuctionEnds(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
-	gameTest.Join("C", "100.1.1.3")
-	gameTest.Join("D", "100.1.1.4")
-	gameTest.Join("E", "100.1.1.5")
-	gameTest.phase = scoreAuction
-	gameTest.playerInTurn = 0
+	gameTest := mockGameAuctionTest()
 	gameTest.players[1].Fold()
 	gameTest.players[2].Fold()
 	gameTest.players[4].Fold()
@@ -101,14 +82,7 @@ func TestGoToNominateWhenAuctionEnds(t *testing.T) {
 }
 
 func TestAuctionWinnerSelectionWhenAuctionEnds(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
-	gameTest.Join("C", "100.1.1.3")
-	gameTest.Join("D", "100.1.1.4")
-	gameTest.Join("E", "100.1.1.5")
-	gameTest.phase = scoreAuction
-	gameTest.playerInTurn = 0
+	gameTest := mockGameAuctionTest()
 	gameTest.players[1].Fold()
 	gameTest.players[2].Fold()
 	gameTest.players[4].Fold()
