@@ -3,6 +3,9 @@ package player
 import (
 	"strconv"
 
+	"github.com/nikiforosFreespirit/msdb5/briscola"
+	"github.com/nikiforosFreespirit/msdb5/point"
+
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/display"
@@ -59,6 +62,11 @@ func (player *Player) Has(id card.ID) bool {
 // Pile func
 func (player *Player) Pile() *deck.Cards {
 	return &player.pile
+}
+
+// Count func
+func (player *Player) Count() uint8 {
+	return point.Count(player.pile, briscola.Points)
 }
 
 func (player *Player) collect(cards deck.Cards) {
