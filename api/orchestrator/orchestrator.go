@@ -12,8 +12,11 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/companion"
 	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
-	"github.com/nikiforosFreespirit/msdb5/point"
 )
+
+var playerSearchCriteria = func(g *Game, p *player.Player, origin string) bool {
+	return p.IsRemoteHost(origin) && p == g.players[g.playerInTurn]
+}
 
 // Action interface
 func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, error) {
@@ -29,18 +32,18 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 	case "Card":
 		err = g.Play(data[1], data[2], origin)
 	}
-	playerLogged, _ := g.Players().Find(func(p *player.Player) bool { return p.Host() == origin })
+	playerLogged, _ := g.Players().Find(func(p *player.Player) bool { return p.IsRemoteHost(origin) })
 	log.Printf("New Action by %s\n", playerLogged.Name())
 	log.Printf("Action is %s\n", request)
 	log.Printf("Any error raised: %v\n", err)
 	log.Printf("Game info after action: %s\n", g.String())
 	if g.phase == end {
 		caller, _ := g.Players().Find(func(p *player.Player) bool { return !p.Folded() })
-		score1 := point.Count(*caller.Pile(), briscola.Points) + point.Count(*g.companion.Ref().Pile(), briscola.Points)
+		score1 := caller.Count() + g.companion.Ref().Count()
 		score2 := uint8(0)
 		for _, pl := range g.Players() {
 			if pl != caller && pl != g.companion.Ref() {
-				score2 += point.Count(*pl.Pile(), briscola.Points)
+				score2 += pl.Count()
 			}
 		}
 		score1info := display.NewInfo("Callers", ":", strconv.Itoa(int(score1)), ";")
@@ -74,7 +77,7 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 		err = errors.New("Phase is not auction")
 	} else {
 		var p *player.Player
-		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.players[g.playerInTurn] })
+		p, err = g.Players().Find(func(p *player.Player) bool { return playerSearchCriteria(g, p, origin) })
 		if err == nil {
 			if !p.Folded() {
 				prevScore := g.info.AuctionScore()
@@ -109,7 +112,7 @@ func (g *Game) Nominate(number, seed, origin string) (err error) {
 	if g.phase != companionChoice {
 		err = errors.New("Phase is not auction")
 	} else {
-		_, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.players[g.playerInTurn] })
+		_, err = g.Players().Find(func(p *player.Player) bool { return playerSearchCriteria(g, p, origin) })
 		if err == nil {
 			var c card.ID
 			c, err = card.Create(number, seed)
@@ -132,7 +135,7 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 		err = errors.New("Phase is not play")
 	} else {
 		var p *player.Player
-		p, err = g.Players().Find(func(p *player.Player) bool { return p.Host() == origin && p == g.players[g.playerInTurn] })
+		p, err = g.Players().Find(func(p *player.Player) bool { return playerSearchCriteria(g, p, origin) })
 		if err == nil {
 			var c card.ID
 			c, err = p.Play(number, seed)
