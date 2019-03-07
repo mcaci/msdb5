@@ -5,99 +5,95 @@ import (
 	"testing"
 )
 
+var noErrCheck = func(card ID, err error) bool { return err != nil }
+var errCheck = func(card ID, err error) bool { return err == nil }
+
 func Test1OfCoinIsCreatedCorrectly_NoError(t *testing.T) {
-	noErrorCheck(t, "1", "Coin")
+	applyCheck(t, "1", "Coin", noErrCheck, "An unexpected error was raised")
 }
 
 func Test1OfCoinIsCreatedCorrectly_NumberIs1(t *testing.T) {
-	numberOfCardCheck(t, "1", "Coin")
+	number := "1"
+	check := func(card ID, err error) bool { return strconv.Itoa(int(card.Number())) != number }
+	applyCheck(t, number, "Coin", check, "Card's number is not created well from %s and %s")
 }
 
 func Test1OfCoinIsCreatedCorrectly_SeedIsCoin(t *testing.T) {
-	seedOfCardCheck(t, "1", "Coin")
+	seed := "Coin"
+	check := func(card ID, err error) bool { return card.Seed().String() != seed }
+	applyCheck(t, "1", seed, check, "Card's seed is not created well from %s and %s")
 }
 
 func Test2OfSwordIsCreatedCorrectly_NoError(t *testing.T) {
-	noErrorCheck(t, "2", "Sword")
+	applyCheck(t, "2", "Sword", noErrCheck, "An unexpected error was raised")
 }
 
 func Test2OfSwordIsCreatedCorrectly_NumberIs2(t *testing.T) {
-	numberOfCardCheck(t, "2", "Sword")
+	number := "2"
+	check := func(card ID, err error) bool { return strconv.Itoa(int(card.Number())) != number }
+	applyCheck(t, number, "Sword", check, "Card's number is not created well from %s and %s")
 }
 
 func Test2OfSwordIsCreatedCorrectly_SeedIsSword(t *testing.T) {
-	seedOfCardCheck(t, "2", "Sword")
+	seed := "Sword"
+	check := func(card ID, err error) bool { return card.Seed().String() != seed }
+	applyCheck(t, "2", seed, check, "Card's seed is not created well from %s and %s")
 }
 
 func Test8OfCupIsCreatedCorrectly_NoError(t *testing.T) {
-	noErrorCheck(t, "8", "Cup")
+	applyCheck(t, "8", "Cup", noErrCheck, "An unexpected error was raised")
 }
 
 func Test8OfCupIsCreatedCorrectly_NumberIs8(t *testing.T) {
-	numberOfCardCheck(t, "8", "Cup")
+	number := "8"
+	check := func(card ID, err error) bool { return strconv.Itoa(int(card.Number())) != number }
+	applyCheck(t, number, "Cup", check, "Card's number is not created well from %s and %s")
 }
 
 func Test8OfCupIsCreatedCorrectly_SeedIsCup(t *testing.T) {
-	seedOfCardCheck(t, "8", "Cup")
+	seed := "Cup"
+	check := func(card ID, err error) bool { return card.Seed().String() != seed }
+	applyCheck(t, "8", seed, check, "Card's seed is not created well from %s and %s")
 }
 
 func Test10OfCudgelIsCreatedCorrectly_NoError(t *testing.T) {
-	noErrorCheck(t, "10", "Cudgel")
+	applyCheck(t, "10", "Cudgel", noErrCheck, "An unexpected error was raised")
 }
 
 func Test10OfCudgelIsCreatedCorrectly_NumberIs10(t *testing.T) {
-	numberOfCardCheck(t, "10", "Cudgel")
+	number := "10"
+	check := func(card ID, err error) bool { return strconv.Itoa(int(card.Number())) != number }
+	applyCheck(t, number, "Cudgel", check, "Card's number is not created well from %s and %s")
 }
 
 func Test10OfCudgelIsCreatedCorrectly_SeedIsCudgel(t *testing.T) {
-	seedOfCardCheck(t, "10", "Cudgel")
+	seed := "Cudgel"
+	check := func(card ID, err error) bool { return card.Seed().String() != seed }
+	applyCheck(t, "10", seed, check, "Card's seed is not created well from %s and %s")
 }
 
 func Test15OfCupDoesntExist(t *testing.T) {
-	errorCheck(t, "15", "Cup")
+	applyCheck(t, "15", "Cup", errCheck, "The %s of %s is not a valid card")
 }
 
 func Test8OfSpadesDoesntExist(t *testing.T) {
-	errorCheck(t, "8", "Spades")
+	applyCheck(t, "8", "Spades", errCheck, "The %s of %s is not a valid card")
 }
 
 func TestTwoOfCudgelIsIncorrect(t *testing.T) {
-	errorCheck(t, "Two", "Cudgel")
+	applyCheck(t, "Two", "Cudgel", errCheck, "The %s of %s is not a valid card")
 }
 
 func TestEmptyNumberIsIncorrect(t *testing.T) {
-	errorCheck(t, "", "Cudgel")
+	applyCheck(t, "", "Cudgel", errCheck, "The %s of %s is not a valid card")
 }
 
 func TestEmptySeedIsIncorrect(t *testing.T) {
-	errorCheck(t, "6", "")
+	applyCheck(t, "6", "", errCheck, "The %s of %s is not a valid card")
 }
 
-func seedOfCardCheck(t *testing.T, number, seed string) {
-	check := func(card ID, err error) bool { return card.Seed().String() != seed }
-	if check(Create(number, seed)) {
-		t.Fatalf("Card's number is not created well from %s and %s", number, seed)
-	}
-}
-
-func numberOfCardCheck(t *testing.T, number, seed string) {
-	check := func(card ID, err error) bool { return strconv.Itoa(int(card.Number())) != number }
-	if check(Create(number, seed)) {
-		t.Fatalf("Card's number is not created well from %s and %s", number, seed)
-	}
-}
-
-func noErrorCheck(t *testing.T, number, seed string) {
-	check := func(card ID, err error) bool { return err != nil }
-	if check(Create(number, seed)) {
-		t.Fatalf("An unexpected error was raised")
-	}
-}
-
-func errorCheck(t *testing.T, number, seed string) {
-	check := func(card ID, err error) bool { return err == nil }
-	if check(Create(number, seed)) {
-		t.Log(Create(number, seed))
-		t.Fatalf("The %s of %s is not a valid card", number, seed)
+func applyCheck(t *testing.T, number, seed string, f func(card ID, err error) bool, message string) {
+	if f(Create(number, seed)) {
+		t.Fatalf(message, number, seed)
 	}
 }
