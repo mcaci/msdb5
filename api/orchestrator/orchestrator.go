@@ -42,7 +42,7 @@ func (g *Game) Join(name, origin string) (err error) {
 		return
 	}
 	p.Join(name, origin)
-	if _, errNext := g.players.Find(isNameEmpty); errNext != nil {
+	if g.players.Count(isNameEmpty) == 0 {
 		g.nextPhase()
 		g.nextPlayer(func() uint8 { return 0 })
 	}
@@ -66,7 +66,7 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 		}
 		return winnerIndex
 	})
-	foldCount := g.players.CountFolded()
+	foldCount := g.players.Count(folded)
 	if foldCount == 4 {
 		g.nextPhase()
 	}

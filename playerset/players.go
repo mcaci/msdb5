@@ -15,24 +15,23 @@ func (playerSet *Players) Add(p player.Player) {
 }
 
 // Find func
-func (playerSet Players) Find(isInfoPresent func(p *player.Player) bool) (*player.Player, error) {
+func (playerSet Players) Find(predicate func(p *player.Player) bool) (*player.Player, error) {
 	for _, p := range playerSet {
-		if isInfoPresent(p) {
+		if predicate(p) {
 			return p, nil
 		}
 	}
 	return nil, errors.New("Player not found")
 }
 
-// CountFolded func
-func (playerSet Players) CountFolded() uint8 {
-	foldCount := uint8(0)
+// Count func
+func (playerSet Players) Count(predicate func(p *player.Player) bool) (count uint8) {
 	for _, pl := range playerSet {
-		if pl.Folded() {
-			foldCount++
+		if predicate(pl) {
+			count++
 		}
 	}
-	return foldCount
+	return
 }
 
 func (playerSet Players) String() (str string) {
