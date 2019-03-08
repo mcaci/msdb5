@@ -53,8 +53,10 @@ func (g *Game) setCompanion(c card.ID, p *player.Player) {
 	g.companion = *companion.New(c, p)
 }
 
-func (g *Game) nextPhase() {
-	g.phase++
+func (g *Game) nextPhase(predicate func() bool) {
+	if predicate() {
+		g.phase++
+	}
 }
 
 func (g *Game) nextPlayer(generateIndex func() uint8) {

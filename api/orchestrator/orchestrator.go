@@ -43,9 +43,9 @@ func (g *Game) Join(name, origin string) (err error) {
 	}
 	p.Join(name, origin)
 	if g.players.Count(isNameEmpty) == 0 {
-		g.nextPhase()
 		g.nextPlayer(func() uint8 { return 0 })
 	}
+	g.nextPhase(func() bool { return g.players.Count(isNameEmpty) == 0 })
 	return err
 }
 
@@ -66,10 +66,7 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 		}
 		return winnerIndex
 	})
-	foldCount := g.players.Count(folded)
-	if foldCount == 4 {
-		g.nextPhase()
-	}
+	g.nextPhase(func() bool { return g.players.Count(folded) == 4 })
 	return
 }
 
@@ -88,8 +85,8 @@ func (g *Game) Nominate(number, seed, origin string) (err error) {
 	p, err := g.players.Find(func(p *player.Player) bool { return p.Has(c) })
 	if err == nil {
 		g.setCompanion(c, p)
-		g.nextPhase()
 	}
+	g.nextPhase(func() bool { return err == nil })
 	return
 }
 
@@ -116,8 +113,6 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 	} else {
 		g.nextPlayer(func() uint8 { return (g.playerInTurn + 1) % 5 })
 	}
-	if verifyEndGame(g) {
-		g.nextPhase()
-	}
+	g.nextPhase(func() bool { return verifyEndGame(g) })
 	return
 }
