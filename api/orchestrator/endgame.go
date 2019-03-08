@@ -6,16 +6,14 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/display"
 )
 
-func verifyEndGame(g *Game) {
+func verifyEndGame(g *Game) bool {
 	gameHasEnded := true
 	for _, pl := range g.players {
 		if len(*pl.Hand()) > 0 {
 			gameHasEnded = false
 		}
 	}
-	if gameHasEnded {
-		g.nextPhase()
-	}
+	return gameHasEnded
 }
 
 func endGame(g *Game) ([]display.Info, []display.Info, error) {

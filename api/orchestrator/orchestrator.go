@@ -116,6 +116,8 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 	} else {
 		g.nextPlayer(func() uint8 { return (g.playerInTurn + 1) % 5 })
 	}
-	verifyEndGame(g)
+	if verifyEndGame(g) {
+		g.nextPhase()
+	}
 	return
 }
