@@ -5,7 +5,6 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/companion"
-	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
 func TestActionCreationAndAuctionUsage(t *testing.T) {
@@ -44,15 +43,13 @@ func TestCompletedGameReturningScoreInfo(t *testing.T) {
 	gameTest.Join("E", "100.1.1.5")
 	gameTest.phase = playBriscola
 	gameTest.companion = *companion.New(card.ID(9), gameTest.players[2])
-	pile := deck.Cards{}
 	for i, pl := range gameTest.players {
-		pl.Hand().Move(&pile)
+		pl.Hand().Clear()
 		pl.Hand().Add(card.ID(2*i + 5))
 		if i > 0 {
 			pl.Fold()
 		}
 	}
-	pile = nil
 	gameTest.Play("5", "Coin", "100.1.1.1")
 	gameTest.Play("7", "Coin", "100.1.1.2")
 	gameTest.Play("9", "Coin", "100.1.1.3")

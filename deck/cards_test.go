@@ -30,7 +30,8 @@ func TestRemoveCardFromSet(t *testing.T) {
 func TestMovedCardsAreAddedToDestination(t *testing.T) {
 	playedCards := Cards{2, 3, 4, 5, 6}
 	playerPile := Cards{}
-	playedCards.Move(&playerPile)
+	playerPile.Add(playedCards...)
+	playedCards.Clear()
 	if len(playerPile) == 0 {
 		t.Fatalf("Cards did not move to player pile")
 	}
@@ -39,7 +40,8 @@ func TestMovedCardsAreAddedToDestination(t *testing.T) {
 func TestMovedCardsAreNotInOriginalSet(t *testing.T) {
 	playedCards := Cards{2, 3, 4, 5, 6}
 	playerPile := Cards{}
-	playedCards.Move(&playerPile)
+	playerPile.Add(playedCards...)
+	playedCards.Clear()
 	if len(playedCards) != 0 {
 		t.Fatalf("Cards were not moved from played cards")
 	}

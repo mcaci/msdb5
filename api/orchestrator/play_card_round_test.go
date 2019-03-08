@@ -5,7 +5,6 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/companion"
-	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
 func mockGameTest() (*Game, error) {
@@ -27,9 +26,8 @@ func mockGameTest() (*Game, error) {
 }
 
 func fold4Players(gameTest *Game) {
-	pile := deck.Cards{}
 	for i, pl := range gameTest.players {
-		pl.Hand().Move(&pile)
+		pl.Hand().Clear()
 		pl.Hand().Add(card.ID(2*i + 5))
 		if i > 0 {
 			pl.Fold()

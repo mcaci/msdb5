@@ -81,7 +81,7 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 
 // Collect func
 func (player *Player) Collect(cards *deck.Cards) {
-	cards.Move(&player.pile)
+	player.pile.Add(*cards...)
 }
 
 // Count func
