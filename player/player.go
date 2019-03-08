@@ -4,11 +4,10 @@ import (
 	"strconv"
 
 	"github.com/nikiforosFreespirit/msdb5/briscola"
-	"github.com/nikiforosFreespirit/msdb5/point"
-
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/display"
+	"github.com/nikiforosFreespirit/msdb5/point"
 )
 
 // Player struct
@@ -30,7 +29,12 @@ func New() *Player {
 
 // Draw func
 func (player *Player) Draw(cards deck.Cards) {
-	player.Hand().Add(cards.Supply())
+	player.hand.Add(cards.Supply())
+}
+
+// Has func
+func (player *Player) Has(id card.ID) bool {
+	return player.hand.Has(id)
 }
 
 // Hand func
@@ -44,9 +48,9 @@ func (player *Player) Join(name, origin string) {
 	player.host = origin
 }
 
-// Name func
-func (player *Player) Name() string {
-	return player.name
+// Folded func
+func (player *Player) Folded() bool {
+	return player.fold
 }
 
 // IsRemoteHost func
@@ -54,25 +58,9 @@ func (player *Player) IsRemoteHost(origin string) bool {
 	return player.host == origin
 }
 
-// Has func
-func (player *Player) Has(id card.ID) bool {
-	return player.Hand().Has(id)
-}
-
-// Pile func
-func (player *Player) Pile() *deck.Cards {
-	return &player.pile
-}
-
-// Count func
-func (player *Player) Count() uint8 {
-	return point.Count(player.pile, briscola.Points)
-}
-
-func (player *Player) collect(cards deck.Cards) {
-	if len(cards) > 0 {
-		player.Pile().Add(cards...)
-	}
+// IsName func
+func (player *Player) IsName(name string) bool {
+	return player.name == name
 }
 
 // Fold func
@@ -80,15 +68,10 @@ func (player *Player) Fold() {
 	player.fold = true
 }
 
-// Folded func
-func (player *Player) Folded() bool {
-	return player.fold
-}
-
 // Play function
 func (player *Player) Play(number, seed string) (card.ID, error) {
 	inputCard, err := card.Create(number, seed)
-	index, err := player.Hand().Find(func(c card.ID) bool { return c == inputCard })
+	index, err := player.Hand().Find(inputCard)
 	if err == nil {
 		player.Hand().Remove(index)
 		return inputCard, nil
@@ -96,18 +79,31 @@ func (player *Player) Play(number, seed string) (card.ID, error) {
 	return 0, err
 }
 
+// Collect func
+func (player *Player) Collect(cards *deck.Cards) {
+	cards.Move(&player.pile)
+}
+
+// Count func
+func (player *Player) Count() uint8 {
+	return point.Count(player.pile, briscola.Points)
+}
+
 func (player Player) String() string {
-	name := display.NewInfo("Name", ":", player.Name(), ";")
 	host := display.NewInfo("Host", ":", player.host, ";")
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
 	pile := display.NewInfo("Pile", ":", player.pile.String(), ";")
 	fold := display.NewInfo("Folded", ":", strconv.FormatBool(player.Folded()), ";")
-	return display.All(display.Wrap("Player", name, host, hand, pile, fold)...)
+	return display.All(display.Wrap("Player", player.Name(), host, hand, pile, fold)...)
+}
+
+// Name func
+func (player *Player) Name() display.Info {
+	return display.NewInfo("Name", ":", player.name, ";")
 }
 
 // Info function
 func (player Player) Info() []display.Info {
-	name := display.NewInfo("Name", ":", player.Name(), ";")
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
-	return display.Wrap("Player", name, hand)
+	return display.Wrap("Player", player.Name(), hand)
 }

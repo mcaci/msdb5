@@ -35,13 +35,13 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 func (g *Game) Join(name, origin string) (err error) {
 	err = phaseCheck(g, joining)
 	if err == nil {
-		nextPlayerJoining := func(p *player.Player) bool { return p.Name() == "" }
+		nextPlayerJoining := func(p *player.Player) bool { return p.IsName("") }
 		p, err := g.Players().Find(nextPlayerJoining)
 		if err == nil {
 			p.Join(name, origin)
 			if _, errNext := g.Players().Find(nextPlayerJoining); errNext != nil {
 				nextPhase(g, scoreAuction)
-				nextPlayerToFirst(g)
+				nextPlayerTo(g, 0)
 			}
 		}
 	}
@@ -99,7 +99,8 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 			if err == nil {
 				roundHasEnded := verifyEndRound(g, c)
 				if roundHasEnded {
-					startNewRound(g)
+					nextPlayerIndex := endRound(g)
+					nextPlayerTo(g, nextPlayerIndex)
 				} else {
 					nextPlayer(g)
 				}

@@ -21,7 +21,7 @@ var playerSearchCriteria = func(g *Game, p *player.Player, origin string) bool {
 
 func logEndTurn(g *Game, request, origin string, err error) {
 	playerLogged, _ := g.Players().Find(func(p *player.Player) bool { return p.IsRemoteHost(origin) })
-	log.Printf("New Action by %s\n", playerLogged.Name())
+	log.Printf("New Action by %s\n", playerLogged.Name().Display())
 	log.Printf("Action is %s\n", request)
 	log.Printf("Any error raised: %v\n", err)
 	log.Printf("Game info after action: %s\n", g.String())
@@ -89,14 +89,14 @@ func nextPlayer(g *Game) {
 	g.playerInTurn = (g.playerInTurn + 1) % 5
 }
 
-func nextPlayerToFirst(g *Game) {
-	g.playerInTurn = 0
+func nextPlayerTo(g *Game, index uint8) {
+	g.playerInTurn = index
 }
 
-func startNewRound(g *Game) {
+func endRound(g *Game) uint8 {
 	playerIndex := (g.playerInTurn + briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed()) + 1) % 5
-	g.info.PlayedCards().Move(g.Players()[playerIndex].Pile())
-	g.playerInTurn = playerIndex
+	g.Players()[playerIndex].Collect(g.info.PlayedCards())
+	return playerIndex
 }
 
 func verifyEndRound(g *Game, c card.ID) bool {

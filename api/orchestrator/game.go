@@ -55,8 +55,7 @@ func (g *Game) Players() playerset.Players {
 // Info func
 func (g Game) Info() []display.Info {
 	gameInfo := g.info.Info()
-	plInTurn := display.NewInfo("PlayerInTurn", ":", g.players[g.playerInTurn].Name(), ";")
-	gameInfo = append(gameInfo, plInTurn)
+	gameInfo = append(gameInfo, g.players[g.playerInTurn].Name())
 	compCard := display.NewInfo("Companion", ":", g.companion.Card().String(), ";")
 	gameInfo = append(gameInfo, compCard)
 	return display.Wrap("Game", gameInfo...)
@@ -67,8 +66,7 @@ func (g Game) String() string {
 	players := display.NewInfo("Players", ":", g.players.String(), ";")
 	gameInfo = append(gameInfo, players)
 	if g.companion.Ref() != nil {
-		companion := display.NewInfo("PlayerInTurn", ":", g.companion.Ref().Name(), ";")
-		gameInfo = append(gameInfo, companion)
+		gameInfo = append(gameInfo, g.companion.Ref().Name())
 	}
 	gameInfo = append(gameInfo, g.info.Info()...)
 	phase := display.NewInfo("PlayerInTurn", ":", strconv.Itoa(int(g.phase)), ";")

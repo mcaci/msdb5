@@ -5,7 +5,7 @@ import "testing"
 func TestJoinPlayerName(t *testing.T) {
 	p := New()
 	p.Join("Michi", "127.0.0.1")
-	if p.Name() != "Michi" {
+	if !p.IsName("Michi") {
 		t.Fatal("Unexpected name")
 	}
 }

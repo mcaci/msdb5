@@ -26,7 +26,12 @@ func (cards *Cards) Move(destination *Cards) {
 }
 
 // Find func
-func (cards *Cards) Find(isInfoPresent func(c card.ID) bool) (int, error) {
+func (cards *Cards) Find(id card.ID) (int, error) {
+	f := func(c card.ID) bool { return c == id }
+	return cards.find(f)
+}
+
+func (cards *Cards) find(isInfoPresent func(c card.ID) bool) (int, error) {
 	for index, c := range *cards {
 		if isInfoPresent(c) {
 			return index, nil
@@ -37,7 +42,7 @@ func (cards *Cards) Find(isInfoPresent func(c card.ID) bool) (int, error) {
 
 // Has func
 func (cards Cards) Has(id card.ID) bool {
-	_, err := cards.Find(func(c card.ID) bool { return c == id })
+	_, err := cards.Find(id)
 	return err == nil
 }
 

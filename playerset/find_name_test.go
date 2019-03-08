@@ -26,8 +26,8 @@ func TestSuccessfulFindNoErr(t *testing.T) {
 }
 
 func TestSuccessfulFindDataCorresponds(t *testing.T) {
-	isInfoPresent := func(p *player.Player) bool { return p.Name() == "A" }
-	if player, _ := testPlayers.Find(isInfoPresent); "A" != player.Name() {
+	isInfoPresent := func(p *player.Player) bool { return p.IsName("A") }
+	if player, _ := testPlayers.Find(isInfoPresent); !player.IsName("A") {
 		t.Fatalf("%s and %v are expected to be the same player", "A", player)
 	}
 }
