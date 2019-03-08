@@ -24,6 +24,17 @@ func (playerSet Players) Find(isInfoPresent func(p *player.Player) bool) (*playe
 	return nil, errors.New("Player not found")
 }
 
+// CountFolded func
+func (playerSet Players) CountFolded() uint8 {
+	foldCount := uint8(0)
+	for _, pl := range playerSet {
+		if pl.Folded() {
+			foldCount++
+		}
+	}
+	return foldCount
+}
+
 func (playerSet Players) String() (str string) {
 	for _, p := range playerSet {
 		str += p.String() + " "

@@ -1,10 +1,12 @@
 package orchestrator
 
 import (
+	"errors"
 	"strconv"
 
 	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/board"
+	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/companion"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/display"
@@ -47,9 +49,23 @@ func NewAction() api.Action {
 	return NewGame()
 }
 
-// Players func
-func (g *Game) Players() playerset.Players {
-	return g.players
+func (g *Game) setCompanion(c card.ID, p *player.Player) {
+	g.companion = *companion.New(c, p)
+}
+
+func (g *Game) nextPhase() {
+	g.phase++
+}
+
+func (g *Game) nextPlayer(generateIndex func() uint8) {
+	g.playerInTurn = generateIndex()
+}
+
+func (g *Game) phaseCheck(current phase) (err error) {
+	if g.phase != current {
+		err = errors.New("Phase is not " + strconv.Itoa(int(current)))
+	}
+	return
 }
 
 // Info func

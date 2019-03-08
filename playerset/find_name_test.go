@@ -19,22 +19,19 @@ func init() {
 }
 
 func TestSuccessfulFindNoErr(t *testing.T) {
-	isInfoPresent := func(p *player.Player) bool { return p.Has(33) }
-	if _, err := testPlayers.Find(isInfoPresent); err != nil {
+	if _, err := testPlayers.Find(func(p *player.Player) bool { return p.Has(33) }); err != nil {
 		t.Fatal("Player not found with criteria p.Has(33)")
 	}
 }
 
 func TestSuccessfulFindDataCorresponds(t *testing.T) {
-	isInfoPresent := func(p *player.Player) bool { return p.IsName("A") }
-	if player, _ := testPlayers.Find(isInfoPresent); !player.IsName("A") {
+	if player, _ := testPlayers.Find(func(p *player.Player) bool { return p.IsName("A") }); !player.IsName("A") {
 		t.Fatalf("%s and %v are expected to be the same player", "A", player)
 	}
 }
 
 func TestUnsuccessfulFind(t *testing.T) {
-	isInfoPresent := func(p *player.Player) bool { return p.Has(24) }
-	if _, err := testPlayers.Find(isInfoPresent); err == nil {
+	if _, err := testPlayers.Find(func(p *player.Player) bool { return p.Has(24) }); err == nil {
 		t.Fatal(err)
 	}
 }
