@@ -15,13 +15,13 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 	var err error
 	switch data[0] {
 	case "Join":
-		err = g.Join(data[1], origin)
+		err = g.Join(joining, data[1], origin)
 	case "Auction":
-		err = g.RaiseAuction(data[1], origin)
+		err = g.RaiseAuction(scoreAuction, data[1], origin)
 	case "Companion":
-		err = g.Nominate(data[1], data[2], origin)
+		err = g.Nominate(companionChoice, data[1], data[2], origin)
 	case "Card":
-		err = g.Play(data[1], data[2], origin)
+		err = g.Play(playBriscola, data[1], data[2], origin)
 	}
 	logEndRound(g, request, origin, err)
 	infoForAllPlayers := g.Info()
@@ -33,8 +33,8 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 }
 
 // Join func
-func (g *Game) Join(name, origin string) (err error) {
-	if err = g.phaseCheck(joining); err != nil {
+func (g *Game) Join(phase phase, name, origin string) (err error) {
+	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
 	p, err := g.players.Find(isNameEmpty)
@@ -50,8 +50,8 @@ func (g *Game) Join(name, origin string) (err error) {
 }
 
 // RaiseAuction func
-func (g *Game) RaiseAuction(score, origin string) (err error) {
-	if err = g.phaseCheck(scoreAuction); err != nil {
+func (g *Game) RaiseAuction(phase phase, score, origin string) (err error) {
+	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
 	p, err := g.players.Find(func(p *player.Player) bool { return isActive(g, p, origin) })
@@ -71,8 +71,8 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 }
 
 // Nominate func
-func (g *Game) Nominate(number, seed, origin string) (err error) {
-	if err = g.phaseCheck(companionChoice); err != nil {
+func (g *Game) Nominate(phase phase, number, seed, origin string) (err error) {
+	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
 	if _, err = g.players.Find(func(p *player.Player) bool { return isActive(g, p, origin) }); err != nil {
@@ -91,8 +91,8 @@ func (g *Game) Nominate(number, seed, origin string) (err error) {
 }
 
 // Play func
-func (g *Game) Play(number, seed, origin string) (err error) {
-	if err = g.phaseCheck(playBriscola); err != nil {
+func (g *Game) Play(phase phase, number, seed, origin string) (err error) {
+	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
 	p, err := g.players.Find(func(p *player.Player) bool { return isActive(g, p, origin) })
