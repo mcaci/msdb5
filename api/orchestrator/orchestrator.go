@@ -75,7 +75,8 @@ func (g *Game) Nominate(phase phase, number, seed, origin string) (err error) {
 	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
-	if _, err = g.players.Find(func(p *player.Player) bool { return isActive(g, p, origin) }); err != nil {
+	_, err = g.players.Find(func(p *player.Player) bool { return isActive(g, p, origin) })
+	if err != nil {
 		return
 	}
 	c, err := card.Create(number, seed)
