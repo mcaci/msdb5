@@ -15,13 +15,13 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 	var err error
 	switch data[0] {
 	case "Join":
-		err = g.Join(joining, data[1], origin)
+		err = g.Join(data[1], origin)
 	case "Auction":
-		err = g.RaiseAuction(scoreAuction, data[1], origin)
+		err = g.RaiseAuction(data[1], origin)
 	case "Companion":
-		err = g.Nominate(companionChoice, data[1], data[2], origin)
+		err = g.Nominate(data[1], data[2], origin)
 	case "Card":
-		err = g.Play(playBriscola, data[1], data[2], origin)
+		err = g.Play(data[1], data[2], origin)
 	}
 	logEndRound(g, request, origin, err)
 	infoForAllPlayers := g.Info()
@@ -33,28 +33,40 @@ func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, e
 }
 
 // Join func
-func (g *Game) Join(phase phase, name, origin string) (err error) {
+func (g *Game) Join(name, origin string) (err error) {
+	find := isNameEmpty
+	nextPlayerSupplier := func() uint8 { return 0 }
+	nextPhasePredicate := func() bool { return g.players.Count(isNameEmpty) == 0 }
+	return g.join(joining, name, origin, find, nextPlayerSupplier, nextPhasePredicate)
+}
+func (g *Game) join(phase phase, name, origin string, find func(*player.Player) bool, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
 	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
-	p, err := g.players.Find(isNameEmpty)
+	p, err := g.players.Find(find)
 	if err != nil {
 		return
 	}
 	p.Join(name, origin)
-	if g.players.Count(isNameEmpty) == 0 {
-		g.nextPlayer(func() uint8 { return 0 })
+	if nextPhasePredicate() {
+		g.nextPlayer(nextPlayerSupplier)
 	}
-	g.nextPhase(func() bool { return g.players.Count(isNameEmpty) == 0 })
+	g.nextPhase(nextPhasePredicate)
 	return err
 }
 
 // RaiseAuction func
-func (g *Game) RaiseAuction(phase phase, score, origin string) (err error) {
+func (g *Game) RaiseAuction(score, origin string) (err error) {
+	find := func(p *player.Player) bool { return isActive(g, p, origin) }
+	nextPlayerSupplier := func() uint8 { return 0 }
+	nextPhasePredicate := func() bool { return g.players.Count(isNameEmpty) == 0 }
+	return g.raiseAuction(scoreAuction, score, origin, find, nextPlayerSupplier, nextPhasePredicate)
+}
+func (g *Game) raiseAuction(phase phase, score, origin string, find func(*player.Player) bool, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
 	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
-	p, err := g.players.Find(func(p *player.Player) bool { return isActive(g, p, origin) })
+	p, err := g.players.Find(find)
 	if err != nil {
 		return
 	}
@@ -71,11 +83,17 @@ func (g *Game) RaiseAuction(phase phase, score, origin string) (err error) {
 }
 
 // Nominate func
-func (g *Game) Nominate(phase phase, number, seed, origin string) (err error) {
+func (g *Game) Nominate(number, seed, origin string) (err error) {
+	find := func(p *player.Player) bool { return isActive(g, p, origin) }
+	nextPlayerSupplier := func() uint8 { return g.playerInTurn }
+	nextPhasePredicate := func() bool { return true }
+	return g.nominate(companionChoice, number, seed, origin, find, nextPlayerSupplier, nextPhasePredicate)
+}
+func (g *Game) nominate(phase phase, number, seed, origin string, find func(*player.Player) bool, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
 	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
-	_, err = g.players.Find(func(p *player.Player) bool { return isActive(g, p, origin) })
+	_, err = g.players.Find(find)
 	if err != nil {
 		return
 	}
@@ -84,19 +102,27 @@ func (g *Game) Nominate(phase phase, number, seed, origin string) (err error) {
 		return
 	}
 	p, err := g.players.Find(func(p *player.Player) bool { return p.Has(c) })
-	if err == nil {
-		g.setCompanion(c, p)
+	if err != nil {
+		return
 	}
-	g.nextPhase(func() bool { return err == nil })
+	g.setCompanion(c, p)
+	g.nextPlayer(nextPlayerSupplier)
+	g.nextPhase(nextPhasePredicate)
 	return
 }
 
 // Play func
-func (g *Game) Play(phase phase, number, seed, origin string) (err error) {
+func (g *Game) Play(number, seed, origin string) (err error) {
+	find := func(p *player.Player) bool { return isActive(g, p, origin) }
+	var nextPlayerSupplier (func() uint8)
+	nextPhasePredicate := func() bool { return verifyEndGame(g) }
+	return g.play(playBriscola, number, seed, origin, find, nextPlayerSupplier, nextPhasePredicate)
+}
+func (g *Game) play(phase phase, number, seed, origin string, find func(*player.Player) bool, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
 	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
-	p, err := g.players.Find(func(p *player.Player) bool { return isActive(g, p, origin) })
+	p, err := g.players.Find(find)
 	if err != nil {
 		return
 	}
@@ -114,6 +140,6 @@ func (g *Game) Play(phase phase, number, seed, origin string) (err error) {
 	} else {
 		g.nextPlayer(func() uint8 { return (g.playerInTurn + 1) % 5 })
 	}
-	g.nextPhase(func() bool { return verifyEndGame(g) })
+	g.nextPhase(nextPhasePredicate)
 	return
 }
