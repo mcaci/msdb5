@@ -78,7 +78,8 @@ func (g *Game) phaseCheck(current phase) (err error) {
 // Info func
 func (g Game) Info() []display.Info {
 	gameInfo := g.info.Info()
-	gameInfo = append(gameInfo, g.players[g.playerInTurn].Name())
+	plInTurn := display.Wrap("Turn of", g.players[g.playerInTurn].Name())
+	gameInfo = append(gameInfo, plInTurn...)
 	compCard := display.NewInfo("Companion", ":", g.companion.Card().String(), ";")
 	gameInfo = append(gameInfo, compCard)
 	return display.Wrap("Game", gameInfo...)
