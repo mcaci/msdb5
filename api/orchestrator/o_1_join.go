@@ -13,10 +13,10 @@ func (g *Game) Join(name, origin string) (err error) {
 	}
 	nextPlayerSupplier := func() uint8 { return 0 }
 	nextPhasePredicate := func() bool { return g.players.Count(isNameEmpty) == 0 }
-	return g.join(joining, name, origin, find, do, nextPlayerSupplier, nextPhasePredicate)
+	return g.playPhase(joining, find, do, nextPlayerSupplier, nextPhasePredicate)
 }
 
-func (g *Game) join(phase phase, name, origin string, find func(*player.Player) bool, do func(*player.Player) error, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
+func (g *Game) playPhase(phase phase, find func(*player.Player) bool, do func(*player.Player) error, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
 	if err = g.phaseCheck(phase); err != nil {
 		return
 	}

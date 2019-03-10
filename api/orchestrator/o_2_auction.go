@@ -20,10 +20,10 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 		return winnerIndex
 	}
 	nextPhasePredicate := func() bool { return g.players.Count(folded) == 4 }
-	return g.raiseAuction(scoreAuction, score, origin, find, do, nextPlayerSupplier, nextPhasePredicate)
+	return g.playPhase(scoreAuction, find, do, nextPlayerSupplier, nextPhasePredicate)
 }
 
-func (g *Game) raiseAuction(phase phase, score, origin string, find func(*player.Player) bool, do func(*player.Player) error, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
+func (g *Game) raiseAuction(phase phase, find func(*player.Player) bool, do func(*player.Player) error, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
 	if err = g.phaseCheck(phase); err != nil {
 		return
 	}

@@ -20,7 +20,7 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 			return
 		}
 		nextPlayerSupplier = func() uint8 { return winner(g) }
-		return g.playRoundEnded(playBriscola, number, seed, origin, find, do, nextPlayerSupplier, nextPhasePredicate)
+		return g.playPhase(playBriscola, find, do, nextPlayerSupplier, nextPhasePredicate)
 	}
 	do := func(p *player.Player) (err error) {
 		c, err := p.Play(number, seed)
@@ -31,5 +31,5 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 		return
 	}
 	nextPlayerSupplier = func() uint8 { return (g.playerInTurn + 1) % 5 }
-	return g.playRoundNotEnded(playBriscola, number, seed, origin, find, do, nextPlayerSupplier, nextPhasePredicate)
+	return g.playPhase(playBriscola, find, do, nextPlayerSupplier, nextPhasePredicate)
 }
