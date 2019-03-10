@@ -45,7 +45,7 @@ func TestSceondPlayerCannotPlayIfFirstPlayerPlaysNotOwnedCard(t *testing.T) {
 	gameTest.Play("0", "Coin", "100.1.1.1")
 	err := gameTest.Play("1", "Coin", "100.1.1.2")
 	if err == nil {
-		t.Fatal("Play card action not expected at beginning of game")
+		t.Fatal("Second player should be waiting for first one to play proper card")
 	}
 }
 
