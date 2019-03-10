@@ -8,28 +8,30 @@ import (
 // Nominate func
 func (g *Game) Nominate(number, seed, origin string) (err error) {
 	find := func(p *player.Player) bool { return isActive(g, p, origin) }
+	do := func(p *player.Player) (err error) {
+		c, err := card.Create(number, seed)
+		if err != nil {
+			return
+		}
+		return g.setCompanion(c)
+	}
 	nextPlayerSupplier := func() uint8 { return g.playerInTurn }
 	nextPhasePredicate := func() bool { return true }
-	return g.nominate(companionChoice, number, seed, origin, find, nextPlayerSupplier, nextPhasePredicate)
+	return g.nominate(companionChoice, number, seed, origin, find, do, nextPlayerSupplier, nextPhasePredicate)
 }
 
-func (g *Game) nominate(phase phase, number, seed, origin string, find func(*player.Player) bool, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
+func (g *Game) nominate(phase phase, number, seed, origin string, find func(*player.Player) bool, do func(*player.Player) error, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
 	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
-	_, err = g.players.Find(find)
+	p, err := g.players.Find(find)
 	if err != nil {
 		return
 	}
-	c, err := card.Create(number, seed)
+	err = do(p)
 	if err != nil {
 		return
 	}
-	p, err := g.players.Find(func(p *player.Player) bool { return p.Has(c) })
-	if err != nil {
-		return
-	}
-	g.setCompanion(c, p)
 	g.nextPlayer(nextPlayerSupplier)
 	g.nextPhase(nextPhasePredicate)
 	return
