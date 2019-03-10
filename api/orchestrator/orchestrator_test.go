@@ -9,8 +9,8 @@ import (
 
 func TestActionCreationAndAuctionUsage(t *testing.T) {
 	gameTest := NewAction()
-	gameTest.Action("Join#A", "100.1.1.1")
-	_, pInfo, _ := gameTest.Action("Auction#102", "100.1.1.1")
+	gameTest.Action("Join#A", "127.0.0.51")
+	_, pInfo, _ := gameTest.Action("Auction#102", "127.0.0.51")
 	if pInfo == nil {
 		t.Fatal("Auction action was not properly performed")
 	}
@@ -18,8 +18,8 @@ func TestActionCreationAndAuctionUsage(t *testing.T) {
 
 func TestActionCreationAndPCompanionUsage(t *testing.T) {
 	gameTest := NewAction()
-	gameTest.Action("Join#A", "100.1.1.1")
-	_, pInfo, _ := gameTest.Action("Companion#3#Cup", "100.1.1.1")
+	gameTest.Action("Join#A", "127.0.0.51")
+	_, pInfo, _ := gameTest.Action("Companion#3#Cup", "127.0.0.51")
 	if pInfo == nil {
 		t.Fatal("Companion action was not properly performed")
 	}
@@ -27,8 +27,8 @@ func TestActionCreationAndPCompanionUsage(t *testing.T) {
 
 func TestActionCreationAndPlayCardUsage(t *testing.T) {
 	gameTest := NewAction()
-	gameTest.Action("Join#A", "100.1.1.1")
-	_, pInfo, _ := gameTest.Action("Card#6#Cudgel", "100.1.1.1")
+	gameTest.Action("Join#A", "127.0.0.51")
+	_, pInfo, _ := gameTest.Action("Card#6#Cudgel", "127.0.0.51")
 	if pInfo == nil {
 		t.Fatal("Card action was not properly performed")
 	}
@@ -36,11 +36,11 @@ func TestActionCreationAndPlayCardUsage(t *testing.T) {
 
 func TestCompletedGameReturningScoreInfo(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
-	gameTest.Join("C", "100.1.1.3")
-	gameTest.Join("D", "100.1.1.4")
-	gameTest.Join("E", "100.1.1.5")
+	gameTest.players[0].Join("A", "127.0.0.51")
+	gameTest.players[1].Join("B", "127.0.0.52")
+	gameTest.players[2].Join("C", "127.0.0.53")
+	gameTest.players[3].Join("D", "127.0.0.54")
+	gameTest.players[4].Join("E", "127.0.0.55")
 	gameTest.phase = playBriscola
 	gameTest.companion = *companion.New(card.ID(9), gameTest.players[2])
 	for i, pl := range gameTest.players {
@@ -50,11 +50,11 @@ func TestCompletedGameReturningScoreInfo(t *testing.T) {
 			pl.Fold()
 		}
 	}
-	gameTest.Play("5", "Coin", "100.1.1.1")
-	gameTest.Play("7", "Coin", "100.1.1.2")
-	gameTest.Play("9", "Coin", "100.1.1.3")
-	gameTest.Play("1", "Cup", "100.1.1.4")
-	scoreInfo, _, _ := gameTest.Action("Card#3#Cup", "100.1.1.5")
+	gameTest.play("Card#5#Coin", "127.0.0.51")
+	gameTest.play("Card#7#Coin", "127.0.0.52")
+	gameTest.play("Card#9#Coin", "127.0.0.53")
+	gameTest.play("Card#1#Cup", "127.0.0.54")
+	scoreInfo, _, _ := gameTest.Action("Card#3#Cup", "127.0.0.55")
 	if scoreInfo == nil {
 		t.Log(scoreInfo)
 		t.Fatal("Expecting transition to end game and scoring")

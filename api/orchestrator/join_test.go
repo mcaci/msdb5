@@ -6,7 +6,7 @@ import (
 
 func TestPlayer1Joins(t *testing.T) {
 	gameTest := NewGame()
-	err := gameTest.Join("A", "127.0.0.1")
+	_, _, err := gameTest.join("Join#A", "127.0.0.101")
 	if err != nil {
 		t.Fatal("Single join operation was not successful")
 	}
@@ -14,7 +14,7 @@ func TestPlayer1Joins(t *testing.T) {
 
 func TestPlayer1JoinsPhaseIsJoining(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("A", "127.0.0.1")
+	gameTest.join("Join#A", "127.0.0.101")
 	if gameTest.phase != joining {
 		t.Fatal("Phase is not correct")
 	}
@@ -22,8 +22,8 @@ func TestPlayer1JoinsPhaseIsJoining(t *testing.T) {
 
 func TestPlayer2Joins(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("Michi", "127.0.0.1")
-	err := gameTest.Join("Mary", "127.0.0.2")
+	gameTest.join("Join#Michi", "127.0.0.101")
+	_, _, err := gameTest.join("Join#Mary", "127.0.0.102")
 	if err != nil {
 		t.Fatal("Double join operation was not successful for second player")
 	}
@@ -31,8 +31,8 @@ func TestPlayer2Joins(t *testing.T) {
 
 func TestPlayer2JoinsPhaseIsJoining(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("Michi", "127.0.0.1")
-	gameTest.Join("Mary", "127.0.0.2")
+	gameTest.join("Join#Michi", "127.0.0.101")
+	gameTest.join("Join#Mary", "127.0.0.102")
 	if gameTest.phase != joining {
 		t.Fatal("Phase is not correct")
 	}
@@ -40,11 +40,11 @@ func TestPlayer2JoinsPhaseIsJoining(t *testing.T) {
 
 func TestPlayer5Joins(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("Michi", "127.0.0.1")
-	gameTest.Join("Mary", "127.0.0.2")
-	gameTest.Join("A", "127.0.0.3")
-	gameTest.Join("gameTester", "127.0.0.4")
-	err := gameTest.Join("C", "127.0.0.5")
+	gameTest.join("Join#Michi", "127.0.0.101")
+	gameTest.join("Join#Mary", "127.0.0.102")
+	gameTest.join("Join#A", "127.0.0.103")
+	gameTest.join("Join#gameTester", "127.0.0.104")
+	_, _, err := gameTest.join("Join#C", "127.0.0.105")
 	if err != nil {
 		t.Fatal("All players should have joined correctly")
 	}
@@ -52,11 +52,11 @@ func TestPlayer5Joins(t *testing.T) {
 
 func TestPlayer5JoinsAndPhaseChangesToAuction(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("Michi", "127.0.0.1")
-	gameTest.Join("Mary", "127.0.0.2")
-	gameTest.Join("A", "127.0.0.3")
-	gameTest.Join("gameTester", "127.0.0.4")
-	gameTest.Join("C", "127.0.0.5")
+	gameTest.join("Join#Michi", "127.0.0.101")
+	gameTest.join("Join#Mary", "127.0.0.102")
+	gameTest.join("Join#A", "127.0.0.103")
+	gameTest.join("Join#gameTester", "127.0.0.104")
+	gameTest.join("Join#C", "127.0.0.105")
 	if gameTest.phase != scoreAuction {
 		t.Fatal("Phase is not correct")
 	}
@@ -64,11 +64,11 @@ func TestPlayer5JoinsAndPhaseChangesToAuction(t *testing.T) {
 
 func TestPlayer5JoinsAndSetPlayerInTurnToFirstJoiner(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("Michi", "127.0.0.1")
-	gameTest.Join("Mary", "127.0.0.2")
-	gameTest.Join("A", "127.0.0.3")
-	gameTest.Join("gameTester", "127.0.0.4")
-	gameTest.Join("C", "127.0.0.5")
+	gameTest.join("Join#Michi", "127.0.0.101")
+	gameTest.join("Join#Mary", "127.0.0.102")
+	gameTest.join("Join#A", "127.0.0.103")
+	gameTest.join("Join#gameTester", "127.0.0.104")
+	gameTest.join("Join#C", "127.0.0.105")
 	if gameTest.playerInTurn != 0 {
 		t.Fatal("Player in turn is not set correctly")
 	}
@@ -76,12 +76,12 @@ func TestPlayer5JoinsAndSetPlayerInTurnToFirstJoiner(t *testing.T) {
 
 func TestPlayer6CannotJoin(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("Michi", "127.0.0.1")
-	gameTest.Join("Mary", "127.0.0.2")
-	gameTest.Join("A", "127.0.0.3")
-	gameTest.Join("gameTester", "127.0.0.4")
-	gameTest.Join("C", "127.0.0.5")
-	err := gameTest.Join("Nope", "127.0.0.6")
+	gameTest.join("Join#Michi", "127.0.0.101")
+	gameTest.join("Join#Mary", "127.0.0.102")
+	gameTest.join("Join#A", "127.0.0.103")
+	gameTest.join("Join#gameTester", "127.0.0.104")
+	gameTest.join("Join#C", "127.0.0.105")
+	_, _, err := gameTest.join("Join#Nope", "127.0.0.106")
 	if err == nil {
 		t.Fatal("Player 'Nope' should not be joining as there is no sixth player")
 	}
@@ -90,7 +90,7 @@ func TestPlayer6CannotJoin(t *testing.T) {
 func TestPlayerCannotJoinIfPhaseIsNotJoining(t *testing.T) {
 	gameTest := NewGame()
 	gameTest.phase = scoreAuction
-	err := gameTest.Join("A", "127.0.0.1")
+	_, _, err := gameTest.join("Join#A", "127.0.0.101")
 	if err == nil {
 		t.Fatal("Player cannot join if phase is not joining")
 	}

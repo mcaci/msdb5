@@ -21,6 +21,7 @@ type Game struct {
 	companion    companion.Companion
 	info         board.Board
 	phase        phase
+	actionMap    map[string]func(string, string) ([]display.Info, []display.Info, error)
 }
 
 // NewGame func
@@ -28,6 +29,7 @@ func NewGame() *Game {
 	g := new(Game)
 	makePlayers(g)
 	playersDrawAllCards(&g.players)
+	initActions(g)
 	return g
 }
 
@@ -42,6 +44,14 @@ func playersDrawAllCards(players *playerset.Players) {
 	for i := 0; i < deck.DeckSize; i++ {
 		(*players)[i%5].Draw(d)
 	}
+}
+
+func initActions(g *Game) {
+	g.actionMap = make(map[string]func(string, string) ([]display.Info, []display.Info, error))
+	g.actionMap["Join"] = g.join
+	g.actionMap["Auction"] = g.raiseAuction
+	g.actionMap["Companion"] = g.nominate
+	g.actionMap["Card"] = g.play
 }
 
 // NewAction func
@@ -93,7 +103,7 @@ func (g Game) String() string {
 		gameInfo = append(gameInfo, g.companion.Ref().Name())
 	}
 	gameInfo = append(gameInfo, g.info.Info()...)
-	phase := display.NewInfo("PlayerInTurn", ":", strconv.Itoa(int(g.phase)), ";")
+	phase := display.NewInfo("Phase", ":", strconv.Itoa(int(g.phase)), ";")
 	gameInfo = append(gameInfo, phase)
 	return display.All(display.Wrap("Game", gameInfo...)...)
 }
