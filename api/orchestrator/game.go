@@ -49,8 +49,13 @@ func NewAction() api.Action {
 	return NewGame()
 }
 
-func (g *Game) setCompanion(c card.ID, p *player.Player) {
-	g.companion = *companion.New(c, p)
+func (g *Game) setCompanion(c card.ID) (err error) {
+	pl, err := g.players.Find(func(p *player.Player) bool { return p.Has(c) })
+	if err != nil {
+		return
+	}
+	g.companion = *companion.New(c, pl)
+	return
 }
 
 func (g *Game) nextPhase(predicate func() bool) {
