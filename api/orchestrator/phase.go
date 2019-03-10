@@ -16,5 +16,5 @@ func (g *Game) playPhase(phase phase, find func(*player.Player) bool, do func(*p
 	}
 	g.nextPlayer(nextPlayerSupplier)
 	g.nextPhase(nextPhasePredicate)
-	return err
+	return
 }
