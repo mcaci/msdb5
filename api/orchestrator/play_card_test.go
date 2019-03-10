@@ -6,7 +6,7 @@ import (
 
 func TestPlayerCannotPlayCardsIfPhaseIsNotPlay(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
+	gameTest.players[0].Join("A", "100.1.1.1")
 	gameTest.players[0].Hand().Add(23)
 	err := gameTest.Play("3", "Sword", "100.1.1.1")
 	if err == nil {
@@ -16,7 +16,7 @@ func TestPlayerCannotPlayCardsIfPhaseIsNotPlay(t *testing.T) {
 
 func TestPlayerPlaysOwnedCard(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
+	gameTest.players[0].Join("A", "100.1.1.1")
 	gameTest.players[0].Hand().Add(23)
 	gameTest.phase = playBriscola
 	err := gameTest.Play("3", "Sword", "100.1.1.1")
@@ -27,7 +27,7 @@ func TestPlayerPlaysOwnedCard(t *testing.T) {
 
 func TestNothingHappensIfPlayerPlaysNotOwnedCard(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
+	gameTest.players[0].Join("A", "100.1.1.1")
 	gameTest.players[0].Hand().Add(23)
 	gameTest.phase = playBriscola
 	err := gameTest.Play("0", "Coin", "100.1.1.1")
@@ -38,8 +38,8 @@ func TestNothingHappensIfPlayerPlaysNotOwnedCard(t *testing.T) {
 
 func TestSceondPlayerCannotPlayIfFirstPlayerPlaysNotOwnedCard(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
+	gameTest.players[0].Join("A", "100.1.1.1")
+	gameTest.players[1].Join("B", "100.1.1.2")
 	gameTest.players[1].Hand().Add(1)
 	gameTest.phase = playBriscola
 	gameTest.Play("0", "Coin", "100.1.1.1")
@@ -51,8 +51,8 @@ func TestSceondPlayerCannotPlayIfFirstPlayerPlaysNotOwnedCard(t *testing.T) {
 
 func TestSecondPlayerCannotPlayCardBeforeFirstPlayer(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
+	gameTest.players[0].Join("A", "100.1.1.1")
+	gameTest.players[1].Join("B", "100.1.1.2")
 	gameTest.phase = playBriscola
 	gameTest.players[0].Hand().Add(34)
 	gameTest.players[1].Hand().Add(15)
@@ -64,8 +64,8 @@ func TestSecondPlayerCannotPlayCardBeforeFirstPlayer(t *testing.T) {
 
 func TestSecondPlayerCanPlayCardAfterFirstPlayer(t *testing.T) {
 	gameTest := NewGame()
-	gameTest.Join("A", "100.1.1.1")
-	gameTest.Join("B", "100.1.1.2")
+	gameTest.players[0].Join("A", "100.1.1.1")
+	gameTest.players[1].Join("B", "100.1.1.2")
 	gameTest.phase = playBriscola
 	gameTest.players[0].Hand().Add(34)
 	gameTest.players[1].Hand().Add(15)
