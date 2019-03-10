@@ -1,6 +1,10 @@
 package orchestrator
 
-import "github.com/nikiforosFreespirit/msdb5/player"
+import (
+	"errors"
+
+	"github.com/nikiforosFreespirit/msdb5/player"
+)
 
 // Play func
 func (g *Game) Play(number, seed, origin string) (err error) {
@@ -19,7 +23,11 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 			g.players[winnerIndex].Collect(g.info.PlayedCards())
 			return
 		}
-		nextPlayerSupplier = func() uint8 { return winner(g) }
+		nextPlayerSupplier = func() uint8 {
+			winnerIndex := winner(g)
+			g.info.PlayedCards().Clear()
+			return winnerIndex
+		}
 		return g.playPhase(playBriscola, find, do, nextPlayerSupplier, nextPhasePredicate)
 	}
 	do := func(p *player.Player) (err error) {
@@ -32,4 +40,11 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 	}
 	nextPlayerSupplier = func() uint8 { return (g.playerInTurn + 1) % 5 }
 	return g.playPhase(playBriscola, find, do, nextPlayerSupplier, nextPhasePredicate)
+}
+
+func (g *Game) play(action, number, seed, origin string) (err error) {
+	if action == "Card" {
+		return g.Play(number, seed, origin)
+	}
+	return errors.New("CARD action not invoked")
 }

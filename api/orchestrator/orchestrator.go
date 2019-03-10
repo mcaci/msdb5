@@ -7,24 +7,22 @@ import (
 )
 
 // Action interface
-func (g *Game) Action(request, origin string) ([]display.Info, []display.Info, error) {
+func (g *Game) Action(request, origin string) (all []display.Info, me []display.Info, err error) {
 	data := strings.Split(string(request), "#")
-	var err error
+	playerInTurn := g.playerInTurn
 	switch data[0] {
 	case "Join":
-		err = g.Join(data[1], origin)
+		err, all, me = g.join(data[0], data[1], origin), g.Info(), g.players[playerInTurn].Info()
 	case "Auction":
-		err = g.RaiseAuction(data[1], origin)
+		err, all, me = g.raiseAuction(data[0], data[1], origin), g.Info(), g.players[playerInTurn].Info()
 	case "Companion":
-		err = g.Nominate(data[1], data[2], origin)
+		err, all, me = g.nominate(data[0], data[1], data[2], origin), g.Info(), g.players[playerInTurn].Info()
 	case "Card":
-		err = g.Play(data[1], data[2], origin)
+		err, all, me = g.play(data[0], data[1], data[2], origin), g.Info(), g.players[playerInTurn].Info()
 	}
 	logEndRound(g, request, origin, err)
-	infoForAllPlayers := g.Info()
-	infoForSinglePlayer := g.players[g.playerInTurn].Info()
 	if g.phase == end {
-		infoForAllPlayers, infoForSinglePlayer, err = endGame(g)
+		all, me, err = endGame(g)
 	}
-	return infoForAllPlayers, infoForSinglePlayer, err
+	return
 }

@@ -1,6 +1,8 @@
 package orchestrator
 
 import (
+	"errors"
+
 	"github.com/nikiforosFreespirit/msdb5/auction"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
@@ -21,4 +23,11 @@ func (g *Game) RaiseAuction(score, origin string) (err error) {
 	}
 	nextPhasePredicate := func() bool { return g.players.Count(folded) == 4 }
 	return g.playPhase(scoreAuction, find, do, nextPlayerSupplier, nextPhasePredicate)
+}
+
+func (g *Game) raiseAuction(action, score, origin string) (err error) {
+	if action == "Auction" {
+		return g.RaiseAuction(score, origin)
+	}
+	return errors.New("AUCTION action not invoked")
 }
