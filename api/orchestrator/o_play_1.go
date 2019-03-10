@@ -2,7 +2,7 @@ package orchestrator
 
 import "github.com/nikiforosFreespirit/msdb5/player"
 
-func (g *Game) playRoundNotEnded(phase phase, number, seed, origin string, find func(*player.Player) bool, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
+func (g *Game) playRoundNotEnded(phase phase, number, seed, origin string, find func(*player.Player) bool, do func(*player.Player) error, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
 	if err = g.phaseCheck(phase); err != nil {
 		return
 	}
@@ -10,11 +10,10 @@ func (g *Game) playRoundNotEnded(phase phase, number, seed, origin string, find 
 	if err != nil {
 		return
 	}
-	c, err := p.Play(number, seed)
+	err = do(p)
 	if err != nil {
 		return
 	}
-	g.info.PlayedCards().Add(c)
 	g.nextPlayer(nextPlayerSupplier)
 	g.nextPhase(nextPhasePredicate)
 	return

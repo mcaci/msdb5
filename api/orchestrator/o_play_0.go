@@ -9,8 +9,27 @@ func (g *Game) Play(number, seed, origin string) (err error) {
 	nextPhasePredicate := func() bool { return verifyEndGame(g) }
 	roundMayEnd := len(*g.info.PlayedCards()) >= 4
 	if roundMayEnd {
-		return g.playRoundEnded(playBriscola, number, seed, origin, find, nextPlayerSupplier, nextPhasePredicate)
+		do := func(p *player.Player) (err error) {
+			c, err := p.Play(number, seed)
+			if err != nil {
+				return
+			}
+			g.info.PlayedCards().Add(c)
+			winnerIndex := winner(g)
+			g.players[winnerIndex].Collect(g.info.PlayedCards())
+			return
+		}
+		nextPlayerSupplier = func() uint8 { return winner(g) }
+		return g.playRoundEnded(playBriscola, number, seed, origin, find, do, nextPlayerSupplier, nextPhasePredicate)
+	}
+	do := func(p *player.Player) (err error) {
+		c, err := p.Play(number, seed)
+		if err != nil {
+			return
+		}
+		g.info.PlayedCards().Add(c)
+		return
 	}
 	nextPlayerSupplier = func() uint8 { return (g.playerInTurn + 1) % 5 }
-	return g.playRoundNotEnded(playBriscola, number, seed, origin, find, nextPlayerSupplier, nextPhasePredicate)
+	return g.playRoundNotEnded(playBriscola, number, seed, origin, find, do, nextPlayerSupplier, nextPhasePredicate)
 }
