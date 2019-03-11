@@ -2,18 +2,16 @@ package orchestrator
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/briscola"
+	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 func (g *Game) play(request, origin string) (all []display.Info, me []display.Info, err error) {
-	_, err = cardAction(request)
-	if err != nil {
-		return
-	}
 	playerInTurn := g.playerInTurn
 	roundMayEnd := len(*g.info.PlayedCards()) >= 4
 	if roundMayEnd {
@@ -29,11 +27,14 @@ func (g *Game) play(request, origin string) (all []display.Info, me []display.In
 	return g.Info(), g.players[playerInTurn].Info(), err
 }
 
-func (g *Game) playData(request, origin string) dataPhase {
-	c, _ := cardAction(request)
+func (g *Game) playData(request, origin string) phaseData {
 	phase := playBriscola
 	find := func(p *player.Player) bool { return isExpectedPlayer(p, g, origin) }
 	do := func(p *player.Player) (err error) {
+		data := strings.Split(request, "#")
+		number := data[1]
+		seed := data[2]
+		c, err := card.Create(number, seed)
 		p.Play(c)
 		g.info.PlayedCards().Add(c)
 		return
@@ -41,14 +42,17 @@ func (g *Game) playData(request, origin string) dataPhase {
 	nextPlayerOperator := nextPlayer
 	nextPhasePredicate := g.endGameCondition
 	playerPredicate := func(p *player.Player) bool { return p.IsHandEmpty() }
-	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
+	return phaseData{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
-func (g *Game) playEndRoundData(request, origin string) dataPhase {
-	c, _ := cardAction(request)
+func (g *Game) playEndRoundData(request, origin string) phaseData {
 	phase := playBriscola
 	find := func(p *player.Player) bool { return isExpectedPlayer(p, g, origin) }
 	do := func(p *player.Player) (err error) {
+		data := strings.Split(request, "#")
+		number := data[1]
+		seed := data[2]
+		c, err := card.Create(number, seed)
 		p.Play(c)
 		g.info.PlayedCards().Add(c)
 		roundWinnerIndex := roundWinner(g)
@@ -62,7 +66,7 @@ func (g *Game) playEndRoundData(request, origin string) dataPhase {
 	}
 	nextPhasePredicate := g.endGameCondition
 	playerPredicate := func(p *player.Player) bool { return p.IsHandEmpty() }
-	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
+	return phaseData{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
 func roundWinner(g *Game) uint8 {

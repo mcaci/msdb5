@@ -15,7 +15,7 @@ func (g *Game) raiseAuction(request, origin string) (all []display.Info, me []di
 	return g.Info(), g.players[playerInTurn].Info(), g.playPhase(info)
 }
 
-func (g *Game) raiseAuctionData(request, origin string) dataPhase {
+func (g *Game) raiseAuctionData(request, origin string) phaseData {
 	data := strings.Split(request, "#")
 	phase := scoreAuction
 	find := func(p *player.Player) bool { return isExpectedPlayer(p, g, origin) }
@@ -33,7 +33,7 @@ func (g *Game) raiseAuctionData(request, origin string) dataPhase {
 	}
 	nextPhasePredicate := auctionNextPhase
 	playerPredicate := func(p *player.Player) bool { return p.Folded() }
-	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
+	return phaseData{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
 func auctionNextPhase(players playerset.Players, searchCriteria func(*player.Player) bool) bool {

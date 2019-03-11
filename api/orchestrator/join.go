@@ -14,14 +14,14 @@ func (g *Game) join(request, origin string) (all []display.Info, me []display.In
 	return g.Info(), playerInTurn.Info(), g.playPhase(info)
 }
 
-func joinData(request, origin string) dataPhase {
+func joinData(request, origin string) phaseData {
 	phase := joining
 	find := func(p *player.Player) bool { return p.IsNameEmpty() }
 	do := func(p *player.Player) error { return joinAction(p, request, origin) }
 	nextPlayerOperator := nextPlayer
 	nextPhasePredicate := joinNextPhase
 	playerPredicate := func(p *player.Player) bool { return p.IsNameEmpty() }
-	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
+	return phaseData{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
 func joinAction(p *player.Player, request, origin string) error {

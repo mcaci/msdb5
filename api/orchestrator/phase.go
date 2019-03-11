@@ -5,7 +5,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
-type dataPhase struct {
+type phaseData struct {
 	phase              phase
 	find               func(*player.Player) bool
 	do                 func(*player.Player) error
@@ -14,7 +14,7 @@ type dataPhase struct {
 	playerPredicate    func(*player.Player) bool
 }
 
-func (g *Game) playPhase(info dataPhase) (err error) {
+func (g *Game) playPhase(info phaseData) (err error) {
 	if err = g.phaseCheck(info.phase); err != nil {
 		return
 	}
