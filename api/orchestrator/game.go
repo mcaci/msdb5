@@ -79,7 +79,7 @@ func (g *Game) nextPlayer(generateIndex func(uint8) uint8) {
 }
 
 func isExpectedPlayer(p *player.Player, g *Game, origin string) bool {
-	return isSame(p, g.players[g.playerInTurn]) && isSameHost(p, origin)
+	return p.IsSame(g.players[g.playerInTurn]) && p.IsSameHost(origin)
 }
 
 func (g *Game) phaseCheck(current phase) (err error) {

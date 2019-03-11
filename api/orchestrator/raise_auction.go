@@ -32,7 +32,7 @@ func (g *Game) raiseAuctionData(request, origin string) dataPhase {
 		return winnerIndex
 	}
 	nextPhasePredicate := auctionNextPhase
-	playerPredicate := folded
+	playerPredicate := func(p *player.Player) bool { return p.Folded() }
 	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 

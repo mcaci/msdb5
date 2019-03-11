@@ -9,18 +9,18 @@ import (
 )
 
 func (g *Game) join(request, origin string) (all []display.Info, me []display.Info, err error) {
-	playerInTurn := g.playerInTurn
-	info := g.joinData(request, origin)
-	return g.Info(), g.players[playerInTurn].Info(), g.playPhase(info)
+	playerInTurn := g.players[g.playerInTurn]
+	info := joinData(request, origin)
+	return g.Info(), playerInTurn.Info(), g.playPhase(info)
 }
 
-func (g *Game) joinData(request, origin string) dataPhase {
+func joinData(request, origin string) dataPhase {
 	phase := joining
-	find := IsNameEmpty
+	find := func(p *player.Player) bool { return p.IsNameEmpty() }
 	do := func(p *player.Player) error { return joinAction(p, request, origin) }
 	nextPlayerOperator := nextPlayer
 	nextPhasePredicate := joinNextPhase
-	playerPredicate := IsNameEmpty
+	playerPredicate := func(p *player.Player) bool { return p.IsNameEmpty() }
 	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 

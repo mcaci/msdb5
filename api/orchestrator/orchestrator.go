@@ -17,7 +17,7 @@ func (g *Game) Action(request, origin string) (all []display.Info, me []display.
 }
 
 func logEndRound(g *Game, request, origin string, err error) {
-	playerLogged, _ := g.players.Find(func(p *player.Player) bool { return isSameHost(p, origin) })
+	playerLogged, _ := g.players.Find(func(p *player.Player) bool { return p.IsSameHost(origin) })
 	log.Printf("New Action by %s\n", playerLogged.Name().Display())
 	log.Printf("Action is %s\n", request)
 	log.Printf("Any error raised: %v\n", err)

@@ -40,7 +40,7 @@ func (g *Game) playData(request, origin string) dataPhase {
 	}
 	nextPlayerOperator := nextPlayer
 	nextPhasePredicate := g.endGameCondition
-	playerPredicate := IsHandEmpty
+	playerPredicate := func(p *player.Player) bool { return p.IsHandEmpty() }
 	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
@@ -61,7 +61,7 @@ func (g *Game) playEndRoundData(request, origin string) dataPhase {
 		return roundWinnerIndex
 	}
 	nextPhasePredicate := g.endGameCondition
-	playerPredicate := IsHandEmpty
+	playerPredicate := func(p *player.Player) bool { return p.IsHandEmpty() }
 	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
@@ -74,7 +74,7 @@ func (g *Game) endGameCondition(players playerset.Players, searchCriteria func(*
 }
 
 func (g *Game) endGame() ([]display.Info, []display.Info, error) {
-	caller, _ := g.players.Find(notFolded)
+	caller, _ := g.players.Find(func(p *player.Player) bool { return p.NotFolded() })
 	score1 := caller.Count() + g.companion.Ref().Count()
 	score2 := uint8(0)
 	for _, pl := range g.players {
