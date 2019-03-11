@@ -40,7 +40,7 @@ func (g *Game) playData(request, origin string) dataPhase {
 	}
 	nextPlayerOperator := nextPlayer
 	nextPhasePredicate := g.endGameCondition
-	playerPredicate := isHandEmpty
+	playerPredicate := IsHandEmpty
 	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
@@ -61,7 +61,7 @@ func (g *Game) playEndRoundData(request, origin string) dataPhase {
 		return roundWinnerIndex
 	}
 	nextPhasePredicate := g.endGameCondition
-	playerPredicate := isHandEmpty
+	playerPredicate := IsHandEmpty
 	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 

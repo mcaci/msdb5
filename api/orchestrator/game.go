@@ -78,6 +78,10 @@ func (g *Game) nextPlayer(generateIndex func(uint8) uint8) {
 	g.playerInTurn = generateIndex(g.playerInTurn)
 }
 
+func isExpectedPlayer(p *player.Player, g *Game, origin string) bool {
+	return isSame(p, g.players[g.playerInTurn]) && isSameHost(p, origin)
+}
+
 func (g *Game) phaseCheck(current phase) (err error) {
 	if g.phase != current {
 		err = errors.New("Phase is not " + strconv.Itoa(int(current)))

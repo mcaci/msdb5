@@ -16,11 +16,11 @@ func (g *Game) join(request, origin string) (all []display.Info, me []display.In
 
 func (g *Game) joinData(request, origin string) dataPhase {
 	phase := joining
-	find := isNameEmpty
+	find := IsNameEmpty
 	do := func(p *player.Player) error { return joinAction(p, request, origin) }
 	nextPlayerOperator := nextPlayer
 	nextPhasePredicate := joinNextPhase
-	playerPredicate := isNameEmpty
+	playerPredicate := IsNameEmpty
 	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 

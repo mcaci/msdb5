@@ -53,6 +53,16 @@ func (player *Player) Folded() bool {
 	return player.fold
 }
 
+// NotFolded func
+func (player *Player) NotFolded() bool {
+	return !player.fold
+}
+
+// IsSame func
+func (player *Player) IsSame(other *Player) bool {
+	return player == other
+}
+
 // IsSameHost func
 func (player *Player) IsSameHost(origin string) bool {
 	return player.host == origin
@@ -62,6 +72,12 @@ func (player *Player) IsSameHost(origin string) bool {
 func (player *Player) IsName(name string) bool {
 	return player.name == name
 }
+
+// IsNameEmpty func
+func (player *Player) IsNameEmpty() bool { return player.IsName("") }
+
+// IsHandEmpty func
+func (player *Player) IsHandEmpty() bool { return len(*player.Hand()) == 0 }
 
 // Fold func
 func (player *Player) Fold() {
