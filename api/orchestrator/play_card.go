@@ -8,22 +8,6 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
-func (g *Game) play(request, origin string) (all []display.Info, me []display.Info, err error) {
-	playerInTurn := g.playerInTurn
-	roundMayEnd := len(*g.info.PlayedCards()) >= 4
-	if roundMayEnd {
-		info := g.playEndRoundData(request, origin)
-		err = g.playPhase(info)
-	} else {
-		info := g.playData(request, origin)
-		err = g.playPhase(info)
-	}
-	if g.phase == end {
-		return g.endGame()
-	}
-	return g.Info(), g.players[playerInTurn].Info(), err
-}
-
 func (g *Game) endGameCondition(players playerset.Players, searchCriteria func(*player.Player) bool) bool {
 	return players.All(searchCriteria)
 }

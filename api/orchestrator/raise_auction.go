@@ -4,16 +4,9 @@ import (
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/auction"
-	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
-
-func (g *Game) raiseAuction(request, origin string) (all []display.Info, me []display.Info, err error) {
-	playerInTurn := g.playerInTurn
-	info := g.raiseAuctionData(request, origin)
-	return g.Info(), g.players[playerInTurn].Info(), g.playPhase(info)
-}
 
 func (g *Game) raiseAuctionData(request, origin string) phaseData {
 	data := strings.Split(request, "#")

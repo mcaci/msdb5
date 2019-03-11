@@ -50,10 +50,10 @@ func TestCompletedGameReturningScoreInfo(t *testing.T) {
 			pl.Fold()
 		}
 	}
-	gameTest.play("Card#5#Coin", "127.0.0.51")
-	gameTest.play("Card#7#Coin", "127.0.0.52")
-	gameTest.play("Card#9#Coin", "127.0.0.53")
-	gameTest.play("Card#1#Cup", "127.0.0.54")
+	gameTest.Action("Card#5#Coin", "127.0.0.51")
+	gameTest.Action("Card#7#Coin", "127.0.0.52")
+	gameTest.Action("Card#9#Coin", "127.0.0.53")
+	gameTest.Action("Card#1#Cup", "127.0.0.54")
 	scoreInfo, _, _ := gameTest.Action("Card#3#Cup", "127.0.0.55")
 	if scoreInfo == nil {
 		t.Log(scoreInfo)

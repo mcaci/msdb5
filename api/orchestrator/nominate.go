@@ -4,16 +4,9 @@ import (
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
-
-func (g *Game) nominate(request, origin string) (all []display.Info, me []display.Info, err error) {
-	playerInTurn := g.playerInTurn
-	info := g.nominateData(request, origin)
-	return g.Info(), g.players[playerInTurn].Info(), g.playPhase(info)
-}
 
 func (g *Game) nominateData(request, origin string) phaseData {
 	phase := companionChoice
