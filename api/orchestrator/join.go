@@ -9,9 +9,9 @@ import (
 )
 
 func (g *Game) join(request, origin string) (all []display.Info, me []display.Info, err error) {
-	playerInTurn := g.players[g.playerInTurn]
+	playerInTurn := g.playerInTurn
 	info := joinData(request, origin)
-	return g.Info(), playerInTurn.Info(), g.playPhase(info)
+	return g.Info(), g.players[playerInTurn].Info(), g.playPhase(info)
 }
 
 func joinData(request, origin string) phaseData {
