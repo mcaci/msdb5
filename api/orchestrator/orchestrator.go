@@ -11,7 +11,12 @@ import (
 // Action func
 func (g *Game) Action(request, origin string) (all []display.Info, me []display.Info, err error) {
 	action := strings.Split(string(request), "#")[0]
-	all, me, err = g.actionMap[action](request, origin)
+	info := g.phaseData[action](request, origin)
+	roundMayEnd := len(*g.info.PlayedCards()) >= 4
+	if roundMayEnd && g.phase == playBriscola {
+		info = g.playEndRoundData(request, origin)
+	}
+	all, me, err = g.Info(), g.players[g.playerInTurn].Info(), g.playPhase(info)
 	logEndRound(g, request, origin, err)
 	return
 }

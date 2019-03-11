@@ -21,7 +21,7 @@ type Game struct {
 	companion    companion.Companion
 	info         board.Board
 	phase        phase
-	actionMap    map[string]func(string, string) ([]display.Info, []display.Info, error)
+	phaseData    map[string]func(string, string) phaseData
 }
 
 // NewGame func
@@ -47,11 +47,11 @@ func playersDrawAllCards(players *playerset.Players) {
 }
 
 func initPlayerActions(g *Game) {
-	g.actionMap = make(map[string]func(string, string) ([]display.Info, []display.Info, error))
-	g.actionMap["Join"] = g.join
-	g.actionMap["Auction"] = g.raiseAuction
-	g.actionMap["Companion"] = g.nominate
-	g.actionMap["Card"] = g.play
+	g.phaseData = make(map[string]func(string, string) phaseData)
+	g.phaseData["Join"] = joinData
+	g.phaseData["Auction"] = g.raiseAuctionData
+	g.phaseData["Companion"] = g.nominateData
+	g.phaseData["Card"] = g.playData
 }
 
 // NewAction func
