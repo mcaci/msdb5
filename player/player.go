@@ -53,8 +53,8 @@ func (player *Player) Folded() bool {
 	return player.fold
 }
 
-// IsRemoteHost func
-func (player *Player) IsRemoteHost(origin string) bool {
+// IsSameHost func
+func (player *Player) IsSameHost(origin string) bool {
 	return player.host == origin
 }
 
