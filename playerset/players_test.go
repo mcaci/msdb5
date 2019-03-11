@@ -41,3 +41,9 @@ func TestCount(t *testing.T) {
 		t.Fatal("Count should be 2")
 	}
 }
+
+func TestAll(t *testing.T) {
+	if !testPlayers.All(func(p *player.Player) bool { return p.IsSameHost("") }) {
+		t.Fatal("All hosts should not be set")
+	}
+}
