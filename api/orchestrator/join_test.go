@@ -38,12 +38,17 @@ func TestPlayer2JoinsPhaseIsJoining(t *testing.T) {
 	}
 }
 
-func TestPlayer5Joins(t *testing.T) {
+func MockJoinGameTest() *Game {
 	gameTest := NewGame()
 	gameTest.join("Join#Michi", "127.0.0.101")
 	gameTest.join("Join#Mary", "127.0.0.102")
 	gameTest.join("Join#A", "127.0.0.103")
 	gameTest.join("Join#gameTester", "127.0.0.104")
+	return gameTest
+}
+
+func TestPlayer5Joins(t *testing.T) {
+	gameTest := MockJoinGameTest()
 	_, _, err := gameTest.join("Join#C", "127.0.0.105")
 	if err != nil {
 		t.Fatal("All players should have joined correctly")
@@ -51,11 +56,7 @@ func TestPlayer5Joins(t *testing.T) {
 }
 
 func TestPlayer5JoinsAndPhaseChangesToAuction(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.join("Join#Michi", "127.0.0.101")
-	gameTest.join("Join#Mary", "127.0.0.102")
-	gameTest.join("Join#A", "127.0.0.103")
-	gameTest.join("Join#gameTester", "127.0.0.104")
+	gameTest := MockJoinGameTest()
 	gameTest.join("Join#C", "127.0.0.105")
 	if gameTest.phase != scoreAuction {
 		t.Fatal("Phase is not correct")
@@ -63,11 +64,7 @@ func TestPlayer5JoinsAndPhaseChangesToAuction(t *testing.T) {
 }
 
 func TestPlayer5JoinsAndSetPlayerInTurnToFirstJoiner(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.join("Join#Michi", "127.0.0.101")
-	gameTest.join("Join#Mary", "127.0.0.102")
-	gameTest.join("Join#A", "127.0.0.103")
-	gameTest.join("Join#gameTester", "127.0.0.104")
+	gameTest := MockJoinGameTest()
 	gameTest.join("Join#C", "127.0.0.105")
 	if gameTest.playerInTurn != 0 {
 		t.Fatal("Player in turn is not set correctly")
@@ -75,11 +72,7 @@ func TestPlayer5JoinsAndSetPlayerInTurnToFirstJoiner(t *testing.T) {
 }
 
 func TestPlayer6CannotJoin(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.join("Join#Michi", "127.0.0.101")
-	gameTest.join("Join#Mary", "127.0.0.102")
-	gameTest.join("Join#A", "127.0.0.103")
-	gameTest.join("Join#gameTester", "127.0.0.104")
+	gameTest := MockJoinGameTest()
 	gameTest.join("Join#C", "127.0.0.105")
 	_, _, err := gameTest.join("Join#Nope", "127.0.0.106")
 	if err == nil {
