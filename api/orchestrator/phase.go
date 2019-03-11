@@ -6,7 +6,7 @@ type dataPhase struct {
 	phase              phase
 	find               func(*player.Player) bool
 	do                 func(*player.Player) error
-	nextPlayerSupplier func(uint8) uint8
+	nextPlayerOperator func(uint8) uint8
 	nextPhasePredicate func() bool
 }
 
@@ -22,7 +22,7 @@ func (g *Game) playPhase(info dataPhase) (err error) {
 	if err != nil {
 		return
 	}
-	g.nextPlayer(info.nextPlayerSupplier)
+	g.nextPlayer(info.nextPlayerOperator)
 	g.nextPhase(info.nextPhasePredicate)
 	return
 }

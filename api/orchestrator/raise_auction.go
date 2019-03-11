@@ -23,7 +23,7 @@ func (g *Game) raiseAuctionData(request, origin string) dataPhase {
 		auction.CheckAndUpdate(score, p.Folded, p.Fold, g.info.AuctionScore, g.info.SetAuctionScore)
 		return nil
 	}
-	nextPlayerSupplier := func(playerInTurn uint8) uint8 {
+	nextPlayerOperator := func(playerInTurn uint8) uint8 {
 		winnerIndex := nextPlayer(playerInTurn)
 		for g.players[winnerIndex].Folded() {
 			winnerIndex = nextPlayer(winnerIndex)
@@ -31,5 +31,5 @@ func (g *Game) raiseAuctionData(request, origin string) dataPhase {
 		return winnerIndex
 	}
 	nextPhasePredicate := func() bool { return g.players.Count(folded) == 4 }
-	return dataPhase{phase, find, do, nextPlayerSupplier, nextPhasePredicate}
+	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate}
 }
