@@ -69,14 +69,12 @@ func (player *Player) Fold() {
 }
 
 // Play function
-func (player *Player) Play(number, seed string) (card.ID, error) {
-	inputCard, err := card.Create(number, seed)
-	index, err := player.Hand().Find(inputCard)
+func (player *Player) Play(card card.ID) (err error) {
+	index, err := player.Hand().Find(card)
 	if err == nil {
 		player.Hand().Remove(index)
-		return inputCard, nil
 	}
-	return 0, err
+	return
 }
 
 // Collect func

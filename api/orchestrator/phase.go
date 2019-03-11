@@ -2,19 +2,27 @@ package orchestrator
 
 import "github.com/nikiforosFreespirit/msdb5/player"
 
-func (g *Game) playPhase(phase phase, find func(*player.Player) bool, do func(*player.Player) error, nextPlayerSupplier func() uint8, nextPhasePredicate func() bool) (err error) {
-	if err = g.phaseCheck(phase); err != nil {
+type dataPhase struct {
+	phase              phase
+	find               func(*player.Player) bool
+	do                 func(*player.Player) error
+	nextPlayerSupplier func() uint8
+	nextPhasePredicate func() bool
+}
+
+func (g *Game) playPhase(info dataPhase) (err error) {
+	if err = g.phaseCheck(info.phase); err != nil {
 		return
 	}
-	p, err := g.players.Find(find)
+	p, err := g.players.Find(info.find)
 	if err != nil {
 		return
 	}
-	err = do(p)
+	err = info.do(p)
 	if err != nil {
 		return
 	}
-	g.nextPlayer(nextPlayerSupplier)
-	g.nextPhase(nextPhasePredicate)
+	g.nextPlayer(info.nextPlayerSupplier)
+	g.nextPhase(info.nextPhasePredicate)
 	return
 }

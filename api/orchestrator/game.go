@@ -29,7 +29,7 @@ func NewGame() *Game {
 	g := new(Game)
 	makePlayers(g)
 	playersDrawAllCards(&g.players)
-	initActions(g)
+	initPlayerActions(g)
 	return g
 }
 
@@ -46,7 +46,7 @@ func playersDrawAllCards(players *playerset.Players) {
 	}
 }
 
-func initActions(g *Game) {
+func initPlayerActions(g *Game) {
 	g.actionMap = make(map[string]func(string, string) ([]display.Info, []display.Info, error))
 	g.actionMap["Join"] = g.join
 	g.actionMap["Auction"] = g.raiseAuction
