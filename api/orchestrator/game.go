@@ -68,8 +68,8 @@ func (g *Game) setCompanion(c card.ID) (err error) {
 	return
 }
 
-func (g *Game) nextPhase(predicate func() bool) {
-	if predicate() {
+func (g *Game) nextPhase(predicate func(playerset.Players, func(*player.Player) bool) bool, playerPredicate func(*player.Player) bool) {
+	if predicate(g.players, playerPredicate) {
 		g.phase++
 	}
 }

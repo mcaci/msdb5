@@ -6,6 +6,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/auction"
 	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
+	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 func (g *Game) raiseAuction(request, origin string) (all []display.Info, me []display.Info, err error) {
@@ -30,6 +31,11 @@ func (g *Game) raiseAuctionData(request, origin string) dataPhase {
 		}
 		return winnerIndex
 	}
-	nextPhasePredicate := func() bool { return g.players.Count(folded) == 4 }
-	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate}
+	nextPhasePredicate := auctionNextPhase
+	playerPredicate := folded
+	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
+}
+
+func auctionNextPhase(players playerset.Players, searchCriteria func(*player.Player) bool) bool {
+	return players.Count(searchCriteria) == 4
 }

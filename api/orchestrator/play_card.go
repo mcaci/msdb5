@@ -39,8 +39,9 @@ func (g *Game) playData(request, origin string) dataPhase {
 		return
 	}
 	nextPlayerOperator := nextPlayer
-	nextPhasePredicate := func() bool { return g.endGameCondition(g.players, isHandEmpty) }
-	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate}
+	nextPhasePredicate := g.endGameCondition
+	playerPredicate := isHandEmpty
+	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
 func (g *Game) playEndRoundData(request, origin string) dataPhase {
@@ -59,8 +60,9 @@ func (g *Game) playEndRoundData(request, origin string) dataPhase {
 		g.info.PlayedCards().Clear()
 		return roundWinnerIndex
 	}
-	nextPhasePredicate := func() bool { return g.endGameCondition(g.players, isHandEmpty) }
-	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate}
+	nextPhasePredicate := g.endGameCondition
+	playerPredicate := isHandEmpty
+	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
 func roundWinner(g *Game) uint8 {

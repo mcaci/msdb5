@@ -22,8 +22,8 @@ func (g *Game) nominateData(request, origin string) dataPhase {
 	find := func(p *player.Player) bool { return isExpectedPlayer(p, g, origin) }
 	do := func(p *player.Player) error { return g.setCompanion(c) }
 	nextPlayerOperator := func(playerInTurn uint8) uint8 { return playerInTurn }
-	nextPhasePredicate := func() bool { return nominateNextPhase(nil, nil) }
-	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate}
+	nextPhasePredicate := nominateNextPhase
+	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, nil}
 }
 
 func nominateNextPhase(players playerset.Players, searchCriteria func(*player.Player) bool) bool {

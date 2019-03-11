@@ -19,8 +19,9 @@ func (g *Game) joinData(request, origin string) dataPhase {
 	find := isNameEmpty
 	do := func(p *player.Player) error { return joinAction(p, request, origin) }
 	nextPlayerOperator := nextPlayer
-	nextPhasePredicate := func() bool { return joinNextPhase(g.players, isNameEmpty) }
-	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate}
+	nextPhasePredicate := joinNextPhase
+	playerPredicate := isNameEmpty
+	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
 }
 
 func joinAction(p *player.Player, request, origin string) error {

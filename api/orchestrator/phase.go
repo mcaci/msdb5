@@ -1,13 +1,17 @@
 package orchestrator
 
-import "github.com/nikiforosFreespirit/msdb5/player"
+import (
+	"github.com/nikiforosFreespirit/msdb5/player"
+	"github.com/nikiforosFreespirit/msdb5/playerset"
+)
 
 type dataPhase struct {
 	phase              phase
 	find               func(*player.Player) bool
 	do                 func(*player.Player) error
 	nextPlayerOperator func(uint8) uint8
-	nextPhasePredicate func() bool
+	nextPhasePredicate func(playerset.Players, func(*player.Player) bool) bool
+	playerPredicate    func(*player.Player) bool
 }
 
 func (g *Game) playPhase(info dataPhase) (err error) {
@@ -23,6 +27,6 @@ func (g *Game) playPhase(info dataPhase) (err error) {
 		return
 	}
 	g.nextPlayer(info.nextPlayerOperator)
-	g.nextPhase(info.nextPhasePredicate)
+	g.nextPhase(info.nextPhasePredicate, info.playerPredicate)
 	return
 }
