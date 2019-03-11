@@ -31,8 +31,6 @@ func joinAction(p *player.Player, request, origin string) error {
 	return nil
 }
 
-func nextPlayer(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }
-
 func joinNextPhase(players playerset.Players, searchCriteria func(*player.Player) bool) bool {
 	return players.Count(searchCriteria) == 0
 }

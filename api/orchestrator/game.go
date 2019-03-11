@@ -74,6 +74,8 @@ func (g *Game) nextPhase(predicate func(playerset.Players, func(*player.Player) 
 	}
 }
 
+func nextPlayer(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }
+
 func (g *Game) nextPlayer(generateIndex func(uint8) uint8) {
 	g.playerInTurn = generateIndex(g.playerInTurn)
 }
