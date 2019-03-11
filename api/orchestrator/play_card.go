@@ -6,6 +6,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
+	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 func (g *Game) play(request, origin string) (all []display.Info, me []display.Info, err error) {
@@ -31,21 +32,21 @@ func (g *Game) play(request, origin string) (all []display.Info, me []display.In
 func (g *Game) playData(request, origin string) dataPhase {
 	c, _ := cardAction(request)
 	phase := playBriscola
-	find := func(p *player.Player) bool { return isActive(g, p, origin) }
+	find := func(p *player.Player) bool { return isExpectedPlayer(p, g, origin) }
 	do := func(p *player.Player) (err error) {
 		p.Play(c)
 		g.info.PlayedCards().Add(c)
 		return
 	}
 	nextPlayerOperator := nextPlayer
-	nextPhasePredicate := g.verifyEndGame
+	nextPhasePredicate := func() bool { return g.endGameCondition(g.players, isHandEmpty) }
 	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate}
 }
 
 func (g *Game) playEndRoundData(request, origin string) dataPhase {
 	c, _ := cardAction(request)
 	phase := playBriscola
-	find := func(p *player.Player) bool { return isActive(g, p, origin) }
+	find := func(p *player.Player) bool { return isExpectedPlayer(p, g, origin) }
 	do := func(p *player.Player) (err error) {
 		p.Play(c)
 		g.info.PlayedCards().Add(c)
@@ -58,7 +59,7 @@ func (g *Game) playEndRoundData(request, origin string) dataPhase {
 		g.info.PlayedCards().Clear()
 		return roundWinnerIndex
 	}
-	nextPhasePredicate := g.verifyEndGame
+	nextPhasePredicate := func() bool { return g.endGameCondition(g.players, isHandEmpty) }
 	return dataPhase{phase, find, do, nextPlayerOperator, nextPhasePredicate}
 }
 
@@ -66,14 +67,8 @@ func roundWinner(g *Game) uint8 {
 	return (g.playerInTurn + briscola.IndexOfWinningCard(*g.info.PlayedCards(), g.companion.Card().Seed()) + 1) % 5
 }
 
-func (g *Game) verifyEndGame() bool {
-	gameHasEnded := true
-	for _, pl := range g.players {
-		if len(*pl.Hand()) > 0 {
-			gameHasEnded = false
-		}
-	}
-	return gameHasEnded
+func (g *Game) endGameCondition(players playerset.Players, searchCriteria func(*player.Player) bool) bool {
+	return players.All(searchCriteria)
 }
 
 func (g *Game) endGame() ([]display.Info, []display.Info, error) {

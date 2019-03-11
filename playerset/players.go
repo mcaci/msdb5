@@ -26,12 +26,22 @@ func (playerSet Players) Find(predicate func(p *player.Player) bool) (*player.Pl
 
 // Count func
 func (playerSet Players) Count(predicate func(p *player.Player) bool) (count uint8) {
-	for _, pl := range playerSet {
-		if predicate(pl) {
+	for _, p := range playerSet {
+		if predicate(p) {
 			count++
 		}
 	}
 	return
+}
+
+// All func
+func (playerSet Players) All(predicate func(p *player.Player) bool) bool {
+	for _, p := range playerSet {
+		if !predicate(p) {
+			return false
+		}
+	}
+	return true
 }
 
 func (playerSet Players) String() (str string) {

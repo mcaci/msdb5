@@ -17,7 +17,7 @@ func (g *Game) raiseAuction(request, origin string) (all []display.Info, me []di
 func (g *Game) raiseAuctionData(request, origin string) dataPhase {
 	data := strings.Split(request, "#")
 	phase := scoreAuction
-	find := func(p *player.Player) bool { return isActive(g, p, origin) }
+	find := func(p *player.Player) bool { return isExpectedPlayer(p, g, origin) }
 	do := func(p *player.Player) error {
 		score := data[1]
 		auction.CheckAndUpdate(score, p.Folded, p.Fold, g.info.AuctionScore, g.info.SetAuctionScore)
