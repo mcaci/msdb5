@@ -6,7 +6,7 @@ type dataPhase struct {
 	phase              phase
 	find               func(*player.Player) bool
 	do                 func(*player.Player) error
-	nextPlayerSupplier func() uint8
+	nextPlayerSupplier func(uint8) uint8
 	nextPhasePredicate func() bool
 }
 

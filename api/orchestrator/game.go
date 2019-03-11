@@ -74,8 +74,8 @@ func (g *Game) nextPhase(predicate func() bool) {
 	}
 }
 
-func (g *Game) nextPlayer(generateIndex func() uint8) {
-	g.playerInTurn = generateIndex()
+func (g *Game) nextPlayer(generateIndex func(uint8) uint8) {
+	g.playerInTurn = generateIndex(g.playerInTurn)
 }
 
 func (g *Game) phaseCheck(current phase) (err error) {

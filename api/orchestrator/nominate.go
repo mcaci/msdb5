@@ -19,10 +19,8 @@ func (g *Game) nominateData(request, origin string) dataPhase {
 	c, _ := cardAction(request)
 	phase := companionChoice
 	find := func(p *player.Player) bool { return isActive(g, p, origin) }
-	do := func(p *player.Player) (err error) {
-		return g.setCompanion(c)
-	}
-	nextPlayerSupplier := func() uint8 { return g.playerInTurn }
+	do := func(p *player.Player) error { return g.setCompanion(c) }
+	nextPlayerSupplier := func(playerInTurn uint8) uint8 { return playerInTurn }
 	nextPhasePredicate := func() bool { return true }
 	return dataPhase{phase, find, do, nextPlayerSupplier, nextPhasePredicate}
 }

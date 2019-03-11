@@ -30,23 +30,22 @@ func (g *Game) play(request, origin string) (all []display.Info, me []display.In
 
 func (g *Game) playData(request, origin string) dataPhase {
 	c, _ := cardAction(request)
+	phase := playBriscola
 	find := func(p *player.Player) bool { return isActive(g, p, origin) }
-	var nextPlayerSupplier (func() uint8)
-	nextPhasePredicate := g.verifyEndGame
 	do := func(p *player.Player) (err error) {
 		p.Play(c)
 		g.info.PlayedCards().Add(c)
 		return
 	}
-	nextPlayerSupplier = func() uint8 { return (g.playerInTurn + 1) % 5 }
-	return dataPhase{playBriscola, find, do, nextPlayerSupplier, nextPhasePredicate}
+	nextPlayerSupplier := nextPlayer
+	nextPhasePredicate := g.verifyEndGame
+	return dataPhase{phase, find, do, nextPlayerSupplier, nextPhasePredicate}
 }
 
 func (g *Game) playEndRoundData(request, origin string) dataPhase {
 	c, _ := cardAction(request)
+	phase := playBriscola
 	find := func(p *player.Player) bool { return isActive(g, p, origin) }
-	var nextPlayerSupplier (func() uint8)
-	nextPhasePredicate := g.verifyEndGame
 	do := func(p *player.Player) (err error) {
 		p.Play(c)
 		g.info.PlayedCards().Add(c)
@@ -54,12 +53,13 @@ func (g *Game) playEndRoundData(request, origin string) dataPhase {
 		g.players[roundWinnerIndex].Collect(g.info.PlayedCards())
 		return
 	}
-	nextPlayerSupplier = func() uint8 {
+	nextPlayerSupplier := func(uint8) uint8 {
 		roundWinnerIndex := roundWinner(g)
 		g.info.PlayedCards().Clear()
 		return roundWinnerIndex
 	}
-	return dataPhase{playBriscola, find, do, nextPlayerSupplier, nextPhasePredicate}
+	nextPhasePredicate := g.verifyEndGame
+	return dataPhase{phase, find, do, nextPlayerSupplier, nextPhasePredicate}
 }
 
 func roundWinner(g *Game) uint8 {
