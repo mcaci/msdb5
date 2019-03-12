@@ -24,6 +24,14 @@ func (cards *Cards) Clear() {
 	*cards = Cards{}
 }
 
+// Sum func
+func (cards *Cards) Sum(point func(card.ID) uint8) (sum uint8) {
+	for _, c := range *cards {
+		sum += point(c)
+	}
+	return
+}
+
 // Find func
 func (cards *Cards) Find(id card.ID) (int, error) {
 	f := func(c card.ID) bool { return c == id }
