@@ -3,6 +3,7 @@ package player
 import (
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 )
 
@@ -27,7 +28,7 @@ func TestPlayerCountPoints(t *testing.T) {
 	cards := deck.Cards{1, 2, 3, 4, 5}
 	p.Collect(&cards)
 
-	if score := p.Count(); score != 21 {
-		t.Fatalf("Player should have 21 points but has %d", score)
+	if score := p.Count(func(card.ID) uint8 { return 1 }); score != 5 {
+		t.Fatalf("Player should have 5 points but has %d", score)
 	}
 }

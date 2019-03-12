@@ -1,27 +1,24 @@
 package orchestrator
 
 import (
-	"strconv"
-
 	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
+	"github.com/nikiforosFreespirit/msdb5/team"
 )
 
 func (g *Game) endGameCondition(players playerset.Players, searchCriteria func(*player.Player) bool) bool {
 	return players.All(searchCriteria)
 }
 
-func (g *Game) endGame() ([]display.Info, []display.Info, error) {
+func (g *Game) end() ([]display.Info, []display.Info, error) {
 	caller, _ := g.players.Find(func(p *player.Player) bool { return p.NotFolded() })
-	score1 := caller.Count() + g.companion.Ref().Count()
-	score2 := uint8(0)
+	team1, team2 := new(team.BriscolaTeam), new(team.BriscolaTeam)
+	team1.Add(caller, g.companion.Ref())
 	for _, pl := range g.players {
 		if pl != caller && pl != g.companion.Ref() {
-			score2 += pl.Count()
+			team2.Add(pl)
 		}
 	}
-	score1info := display.NewInfo("Callers", ":", strconv.Itoa(int(score1)), ";")
-	score2info := display.NewInfo("Others", ":", strconv.Itoa(int(score2)), ";")
-	return display.Wrap("Final Score", score1info, score2info), nil, nil
+	return display.Wrap("Final Score", team1.Info("Callers"), team2.Info("Others")), nil, nil
 }

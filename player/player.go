@@ -3,7 +3,6 @@ package player
 import (
 	"strconv"
 
-	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/display"
@@ -96,8 +95,8 @@ func (player *Player) Collect(cards *deck.Cards) {
 }
 
 // Count func
-func (player *Player) Count() uint8 {
-	return player.pile.Sum(briscola.Points)
+func (player *Player) Count(scorer func(card.ID) uint8) uint8 {
+	return player.pile.Sum(scorer)
 }
 
 // Name func

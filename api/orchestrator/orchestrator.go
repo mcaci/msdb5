@@ -18,6 +18,9 @@ func (g *Game) Action(request, origin string) (all []display.Info, me []display.
 	}
 	all, me, err = g.Info(), g.players[g.playerInTurn].Info(), g.playPhase(info)
 	logEndRound(g, request, origin, err)
+	if g.phase == end {
+		all, me, err = g.end()
+	}
 	return
 }
 
