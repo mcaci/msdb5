@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/nikiforosFreespirit/msdb5/briscola"
-	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
@@ -21,13 +20,13 @@ func (t *BriscolaTeam) Add(players ...player.ScoreCounter) {
 
 // Info func
 func (t BriscolaTeam) Info(header string) display.Info {
-	points := int(t.score(briscola.Points))
+	points := int(t.score())
 	return display.NewInfo(header, ":", strconv.Itoa(points), ";")
 }
 
-func (t BriscolaTeam) score(pointFunction func(card.ID) uint8) (score uint8) {
+func (t BriscolaTeam) score() (total uint8) {
 	for _, player := range t.players {
-		score += player.Count(pointFunction)
+		total += player.Count(briscola.Points)
 	}
 	return
 }

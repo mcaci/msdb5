@@ -68,27 +68,25 @@ func (g *Game) setCompanion(c card.ID) (err error) {
 	return
 }
 
-func (g *Game) nextPhase(predicate func(playerset.Players, func(*player.Player) bool) bool, playerPredicate func(*player.Player) bool) {
-	if predicate(g.players, playerPredicate) {
-		g.phase++
-	}
-}
-
 func nextPlayer(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }
-
-func (g *Game) nextPlayer(generateIndex func(uint8) uint8) {
-	g.playerInTurn = generateIndex(g.playerInTurn)
-}
 
 func isExpectedPlayer(p *player.Player, g *Game, origin string) bool {
 	return p.IsSame(g.players[g.playerInTurn]) && p.IsSameHost(origin)
 }
 
+func (g *Game) nextPhase(predicate func(playerset.Players, func(*player.Player) bool) bool, playerPredicate func(*player.Player) bool) {
+	if predicate(g.players, playerPredicate) {
+		g.phase++
+	}
+}
 func (g *Game) phaseCheck(current phase) (err error) {
 	if g.phase != current {
 		err = errors.New("Phase is not " + strconv.Itoa(int(current)))
 	}
 	return
+}
+func (g *Game) nextPlayer(generateIndex func(uint8) uint8) {
+	g.playerInTurn = generateIndex(g.playerInTurn)
 }
 
 // Info func

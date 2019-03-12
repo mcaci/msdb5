@@ -5,6 +5,16 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
+type phase uint8
+
+const (
+	joining phase = iota
+	scoreAuction
+	companionChoice
+	playBriscola
+	end
+)
+
 type phaseData struct {
 	phase              phase
 	find               func(*player.Player) bool
