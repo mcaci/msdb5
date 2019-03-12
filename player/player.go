@@ -7,13 +7,11 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/display"
-	"github.com/nikiforosFreespirit/msdb5/point"
 )
 
 // Player struct
 type Player struct {
-	name         string
-	host         string
+	info         info
 	hand         deck.Cards
 	pile         deck.Cards
 	auctionScore uint8
@@ -44,8 +42,7 @@ func (player *Player) Hand() *deck.Cards {
 
 // Join func
 func (player *Player) Join(name, origin string) {
-	player.name = name
-	player.host = origin
+	player.info = info{name, origin}
 }
 
 // Folded func
@@ -65,12 +62,12 @@ func (player *Player) IsSame(other *Player) bool {
 
 // IsSameHost func
 func (player *Player) IsSameHost(origin string) bool {
-	return player.host == origin
+	return player.info.IsSameHost(origin)
 }
 
 // IsName func
 func (player *Player) IsName(name string) bool {
-	return player.name == name
+	return player.info.IsName(name)
 }
 
 // IsNameEmpty func
@@ -100,24 +97,26 @@ func (player *Player) Collect(cards *deck.Cards) {
 
 // Count func
 func (player *Player) Count() uint8 {
-	return point.Count(player.pile, briscola.Points)
-}
-
-func (player Player) String() string {
-	host := display.NewInfo("Host", ":", player.host, ";")
-	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
-	pile := display.NewInfo("Pile", ":", player.pile.String(), ";")
-	fold := display.NewInfo("Folded", ":", strconv.FormatBool(player.Folded()), ";")
-	return display.All(display.Wrap("Player", player.Name(), host, hand, pile, fold)...)
+	return player.pile.Sum(briscola.Points)
 }
 
 // Name func
 func (player *Player) Name() display.Info {
-	return display.NewInfo("Name", ":", player.name, ";")
+	return display.NewInfo("Name", ":", player.info.name, ";")
 }
 
 // Info function
 func (player Player) Info() []display.Info {
+	info := player.info.Info()
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
-	return display.Wrap("Player", player.Name(), hand)
+	info = append(info, hand)
+	return display.Wrap("Player", info...)
+}
+
+func (player Player) String() string {
+	info := display.NewInfo("Hand", ":", player.info.String(), ";")
+	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
+	pile := display.NewInfo("Pile", ":", player.pile.String(), ";")
+	fold := display.NewInfo("Folded", ":", strconv.FormatBool(player.Folded()), ";")
+	return display.All(display.Wrap("Player", info, hand, pile, fold)...)
 }
