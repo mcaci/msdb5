@@ -10,7 +10,7 @@ import (
 
 // Player struct
 type Player struct {
-	info         info
+	name, host   string
 	hand         deck.Cards
 	pile         deck.Cards
 	auctionScore uint8
@@ -41,7 +41,8 @@ func (player *Player) Hand() *deck.Cards {
 
 // Join func
 func (player *Player) Join(name, origin string) {
-	player.info = info{name, origin}
+	player.name = name
+	player.host = origin
 }
 
 // Folded func
@@ -61,12 +62,12 @@ func (player *Player) IsSame(other *Player) bool {
 
 // IsSameHost func
 func (player *Player) IsSameHost(origin string) bool {
-	return player.info.IsSameHost(origin)
+	return player.host == origin
 }
 
 // IsName func
 func (player *Player) IsName(name string) bool {
-	return player.info.IsName(name)
+	return player.name == name
 }
 
 // IsNameEmpty func
@@ -101,21 +102,19 @@ func (player *Player) Count(scorer func(card.ID) uint8) uint8 {
 
 // Name func
 func (player *Player) Name() display.Info {
-	return display.NewInfo("Name", ":", player.info.name, ";")
+	return display.NewInfo("Name", ":", player.name, ";")
 }
 
 // Info function
 func (player Player) Info() []display.Info {
-	info := player.info.Info()
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
-	info = append(info, hand)
-	return display.Wrap("Player", info...)
+	return display.Wrap("Player", player.Name(), hand)
 }
 
 func (player Player) String() string {
-	info := display.NewInfo("Hand", ":", player.info.String(), ";")
+	host := display.NewInfo("Host", ":", player.host, ";")
 	hand := display.NewInfo("Hand", ":", player.hand.String(), ";")
 	pile := display.NewInfo("Pile", ":", player.pile.String(), ";")
 	fold := display.NewInfo("Folded", ":", strconv.FormatBool(player.Folded()), ";")
-	return display.All(display.Wrap("Player", info, hand, pile, fold)...)
+	return display.All(display.Wrap("Player", player.Name(), host, hand, pile, fold)...)
 }
