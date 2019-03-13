@@ -10,7 +10,7 @@ func TestActionCreationAndAuctionUsage(t *testing.T) {
 	gameTest := NewAction()
 	gameTest.Action("Join#A", "127.0.0.51")
 	_, pInfo, _ := gameTest.Action("Auction#102", "127.0.0.51")
-	if pInfo == nil {
+	if pInfo == "" {
 		t.Fatal("Auction action was not properly performed")
 	}
 }
@@ -19,7 +19,7 @@ func TestActionCreationAndPCompanionUsage(t *testing.T) {
 	gameTest := NewAction()
 	gameTest.Action("Join#A", "127.0.0.51")
 	_, pInfo, _ := gameTest.Action("Companion#3#Cup", "127.0.0.51")
-	if pInfo == nil {
+	if pInfo == "" {
 		t.Fatal("Companion action was not properly performed")
 	}
 }
@@ -28,7 +28,7 @@ func TestActionCreationAndPlayCardUsage(t *testing.T) {
 	gameTest := NewAction()
 	gameTest.Action("Join#A", "127.0.0.51")
 	_, pInfo, _ := gameTest.Action("Card#6#Cudgel", "127.0.0.51")
-	if pInfo == nil {
+	if pInfo == "" {
 		t.Fatal("Card action was not properly performed")
 	}
 }
@@ -57,7 +57,7 @@ func TestCompletedGameReturningScoreInfo(t *testing.T) {
 	gameTest.Action("Card#9#Coin", "127.0.0.53")
 	gameTest.Action("Card#1#Cup", "127.0.0.54")
 	scoreInfo, _, _ := gameTest.Action("Card#3#Cup", "127.0.0.55")
-	if scoreInfo == nil {
+	if scoreInfo == "" {
 		t.Fatal("Expecting transition to end game and scoring")
 	}
 }

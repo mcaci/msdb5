@@ -59,10 +59,3 @@ func (cards *Cards) Supply() card.ID {
 	cards.Remove(0)
 	return card
 }
-
-func (cards Cards) String() (str string) {
-	for _, card := range cards {
-		str += card.String() + " "
-	}
-	return
-}

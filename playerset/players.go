@@ -43,10 +43,3 @@ func (playerSet Players) All(predicate func(p *player.Player) bool) bool {
 	}
 	return true
 }
-
-func (playerSet Players) String() (str string) {
-	for _, p := range playerSet {
-		str += p.String() + " "
-	}
-	return
-}

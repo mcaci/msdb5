@@ -43,25 +43,28 @@ func (player *Player) Join(name, origin string) {
 }
 
 // Folded func
-func (player *Player) Folded() bool { return player.fold }
+func (player Player) Folded() bool { return player.fold }
 
 // NotFolded func
-func (player *Player) NotFolded() bool { return !player.fold }
+func (player Player) NotFolded() bool { return !player.fold }
 
 // IsSame func
 func (player *Player) IsSame(other *Player) bool { return player == other }
 
 // IsSameHost func
-func (player *Player) IsSameHost(origin string) bool { return player.host == origin }
+func (player Player) IsSameHost(origin string) bool { return player.host == origin }
+
+// Name func
+func (player Player) Name() string { return player.name }
 
 // IsName func
-func (player *Player) IsName(name string) bool { return player.name == name }
+func (player Player) IsName(name string) bool { return player.name == name }
 
 // IsNameEmpty func
-func (player *Player) IsNameEmpty() bool { return player.IsName("") }
+func (player Player) IsNameEmpty() bool { return player.IsName("") }
 
 // IsHandEmpty func
-func (player *Player) IsHandEmpty() bool { return len(*player.Hand()) == 0 }
+func (player Player) IsHandEmpty() bool { return len(*player.Hand()) == 0 }
 
 // Fold func
 func (player *Player) Fold() { player.fold = true }
@@ -81,7 +84,7 @@ func (player *Player) Collect(cards *deck.Cards) {
 }
 
 // Count func
-func (player *Player) Count(scorer func(card.ID) uint8) uint8 {
+func (player Player) Count(scorer func(card.ID) uint8) uint8 {
 	return player.pile.Sum(scorer)
 }
 

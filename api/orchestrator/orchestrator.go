@@ -1,13 +1,13 @@
 package orchestrator
 
 import (
+	"fmt"
 	"log"
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/api/action"
 	"github.com/nikiforosFreespirit/msdb5/api/game"
-	"github.com/nikiforosFreespirit/msdb5/display"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 	"github.com/nikiforosFreespirit/msdb5/team"
@@ -26,7 +26,7 @@ func NewAction() api.Action {
 }
 
 // Action func
-func (o *Orchestrator) Action(request, origin string) (all []display.Info, me []display.Info, err error) {
+func (o *Orchestrator) Action(request, origin string) (all, me string, err error) {
 	data := strings.Split(request, "#")
 	var actionInfo action.Data
 	switch data[0] {
@@ -39,15 +39,15 @@ func (o *Orchestrator) Action(request, origin string) (all []display.Info, me []
 	case "Card":
 		actionInfo = action.PlayData(o.game, request, origin)
 	}
-	all, me, err = o.game.Info(), o.game.PlayerInTurn().Info(), playPhase(o.game, actionInfo)
-	logEndRound(o.game, request, origin, err)
+	all, me, err = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("Player: %+v", o.game.PlayerInTurn()), playPhase(o.game, actionInfo)
+	logEndRound(*o.game, request, origin, err)
 	if o.game.CurrentPhase() == game.End {
 		all, me, err = endGame(o.game.Players(), o.game.Companion())
 	}
 	return
 }
 
-func endGame(players playerset.Players, companion player.ScoreCounter) ([]display.Info, []display.Info, error) {
+func endGame(players playerset.Players, companion player.ScoreCounter) (string, string, error) {
 	caller, _ := players.Find(func(p *player.Player) bool { return p.NotFolded() })
 	team1, team2 := new(team.BriscolaTeam), new(team.BriscolaTeam)
 	team1.Add(caller, companion)
@@ -56,13 +56,13 @@ func endGame(players playerset.Players, companion player.ScoreCounter) ([]displa
 			team2.Add(pl)
 		}
 	}
-	return display.Wrap("Final Score", team1.Info("Callers"), team2.Info("Others")), nil, nil
+	return fmt.Sprintf("Callers: %+v; Others: %+v", team1, team2), "", nil
 }
 
-func logEndRound(g *game.Game, request, origin string, err error) {
+func logEndRound(g game.Game, request, origin string, err error) {
 	playerLogged, _ := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(origin) })
-	log.Printf("New Action by %s\n", playerLogged.Name().Display())
+	log.Printf("New Action by %s\n", playerLogged.Name())
 	log.Printf("Action is %s\n", request)
 	log.Printf("Any error raised: %v\n", err)
-	log.Printf("Game info after action: %s\n", g.String())
+	log.Printf("Game info after action: %+v\n", g)
 }
