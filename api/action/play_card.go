@@ -38,8 +38,8 @@ func (pcs PlayCardStruct) Do(p *player.Player) error {
 	c, err := card.Create(number, seed)
 	p.Play(c)
 	pcs.board.PlayedCards().Add(c)
-	roundMayEnd := len(*pcs.board.PlayedCards()) >= 4
-	if roundMayEnd {
+	roundHasEnded := len(*pcs.board.PlayedCards()) == 5
+	if roundHasEnded {
 		roundWinner := briscola.IndexOfWinningCard(*pcs.board.PlayedCards(), pcs.briscolaSeed)
 		roundWinnerIndex := (pcs.playerInTurnIndex + roundWinner + 1) % 5
 		pcs.players[roundWinnerIndex].Collect(pcs.board.PlayedCards())
@@ -48,8 +48,8 @@ func (pcs PlayCardStruct) Do(p *player.Player) error {
 }
 func (pcs PlayCardStruct) NextPlayer(playerInTurn uint8) uint8 {
 	next := nextPlayerInTurn(playerInTurn)
-	roundMayEnd := len(*pcs.board.PlayedCards()) >= 4
-	if roundMayEnd {
+	roundHasEnded := len(*pcs.board.PlayedCards()) == 5
+	if roundHasEnded {
 		roundWinner := briscola.IndexOfWinningCard(*pcs.board.PlayedCards(), pcs.briscolaSeed)
 		next = (pcs.playerInTurnIndex + roundWinner + 1) % 5
 		pcs.board.PlayedCards().Clear()
