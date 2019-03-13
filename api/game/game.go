@@ -40,49 +40,31 @@ func playersDrawAllCards(players *playerset.Players) {
 }
 
 // PlayerInTurnIndex func
-func (g *Game) PlayerInTurnIndex() uint8 {
-	return g.playerInTurn
-}
+func (g *Game) PlayerInTurnIndex() uint8 { return g.playerInTurn }
 
 // PlayerInTurn func
-func (g *Game) PlayerInTurn() *player.Player {
-	return g.players[g.playerInTurn]
-}
+func (g *Game) PlayerInTurn() *player.Player { return g.players[g.playerInTurn] }
 
 // Companion func
-func (g *Game) Companion() *player.Player {
-	return g.companion.Ref()
-}
+func (g *Game) Companion() *player.Player { return g.companion.Ref() }
 
 // Players func
-func (g *Game) Players() playerset.Players {
-	return g.players
-}
+func (g *Game) Players() playerset.Players { return g.players }
 
 // SetCompanion func
-func (g *Game) SetCompanion(c card.ID, pl *player.Player) {
-	g.companion = *companion.New(c, pl)
-}
+func (g *Game) SetCompanion(c card.ID, pl *player.Player) { g.companion = *companion.New(c, pl) }
 
 // Board func
-func (g *Game) Board() *board.Board {
-	return &g.board
-}
+func (g *Game) Board() *board.Board { return &g.board }
 
 // BriscolaSeed func
-func (g *Game) BriscolaSeed() card.Seed {
-	return g.companion.Card().Seed()
-}
+func (g *Game) BriscolaSeed() card.Seed { return g.companion.Card().Seed() }
 
 // CurrentPhase func
-func (g *Game) CurrentPhase() Phase {
-	return g.phase
-}
+func (g *Game) CurrentPhase() Phase { return g.phase }
 
 // IncrementPhase func
-func (g *Game) IncrementPhase() {
-	g.phase++
-}
+func (g *Game) IncrementPhase() { g.phase++ }
 
 // UpdatePlayerInTurn func
 func (g *Game) UpdatePlayerInTurn(generateIndex func(uint8) uint8) {

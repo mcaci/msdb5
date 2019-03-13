@@ -12,7 +12,7 @@ import (
 // NominateData func
 func NominateData(g *game.Game, request, origin string) Data {
 	phase := game.CompanionChoice
-	find := func(p *player.Player) bool { return isExpectedPlayer(p, g.PlayerInTurn(), origin) }
+	find := func(p *player.Player) bool { return p.IsExpectedPlayer(g.PlayerInTurn(), origin) }
 	do := func(p *player.Player) error {
 		data := strings.Split(request, "#")
 		number := data[1]
@@ -33,6 +33,6 @@ func NominateData(g *game.Game, request, origin string) Data {
 	return Data{phase, find, do, nextPlayerOperator, nextPhasePredicate, nil}
 }
 
-func nominateNextPhase(players playerset.Players, searchCriteria func(*player.Player) bool) bool {
+func nominateNextPhase(playerset.Players, func(*player.Player) bool) bool {
 	return true
 }

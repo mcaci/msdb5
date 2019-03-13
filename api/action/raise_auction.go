@@ -11,18 +11,18 @@ import (
 
 // RaiseAuctionData func
 func RaiseAuctionData(g *game.Game, request, origin string) Data {
-	data := strings.Split(request, "#")
 	phase := game.ScoreAuction
-	find := func(p *player.Player) bool { return isExpectedPlayer(p, g.PlayerInTurn(), origin) }
+	find := func(p *player.Player) bool { return p.IsExpectedPlayer(g.PlayerInTurn(), origin) }
 	do := func(p *player.Player) error {
+		data := strings.Split(request, "#")
 		score := data[1]
 		auction.CheckAndUpdate(score, p.Folded, p.Fold, g.Board().AuctionScore, g.Board().SetAuctionScore)
 		return nil
 	}
 	nextPlayerOperator := func(playerInTurn uint8) uint8 {
-		winnerIndex := nextPlayer(playerInTurn)
+		winnerIndex := nextPlayerInTurn(playerInTurn)
 		for g.Players()[winnerIndex].Folded() {
-			winnerIndex = nextPlayer(winnerIndex)
+			winnerIndex = nextPlayerInTurn(winnerIndex)
 		}
 		return winnerIndex
 	}

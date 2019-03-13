@@ -18,7 +18,7 @@ func Join(g *game.Game, request, origin string) Data {
 		p.Join(name, origin)
 		return nil
 	}
-	nextPlayerOperator := nextPlayer
+	nextPlayerOperator := nextPlayerInTurn
 	nextPhasePredicate := joinNextPhase
 	playerPredicate := func(p *player.Player) bool { return p.IsNameEmpty() }
 	return Data{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
@@ -27,3 +27,5 @@ func Join(g *game.Game, request, origin string) Data {
 func joinNextPhase(players playerset.Players, searchCriteria func(*player.Player) bool) bool {
 	return players.Count(searchCriteria) == 0
 }
+
+func nextPlayerInTurn(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }

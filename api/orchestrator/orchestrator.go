@@ -37,10 +37,6 @@ func (o *Orchestrator) Action(request, origin string) (all []display.Info, me []
 	case "Companion":
 		actionInfo = action.NominateData(o.game, request, origin)
 	case "Card":
-		roundMayEnd := len(*o.game.Board().PlayedCards()) >= 4
-		if roundMayEnd && o.game.CurrentPhase() == game.PlayBriscola {
-			actionInfo = action.PlayEndRoundData(o.game, request, origin)
-		}
 		actionInfo = action.PlayData(o.game, request, origin)
 	}
 	all, me, err = o.game.Info(), o.game.PlayerInTurn().Info(), playPhase(o.game, actionInfo)
