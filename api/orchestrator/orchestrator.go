@@ -64,9 +64,11 @@ func endGame(players playerset.Players, companion player.ScoreCounter) (string, 
 }
 
 func logEndRound(g game.Game, request, origin string, err error) {
-	playerLogged, _ := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(origin) })
-	log.Printf("New Action by %s\n", playerLogged.Name())
+	playerLogged, err := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(origin) })
+	if err == nil {
+		log.Printf("New Action by %s\n", playerLogged.Name())
+	}
 	log.Printf("Action is %s\n", request)
-	log.Printf("Any error raised: %v\n", err)
+	log.Printf("Any error raised: %+v\n", err)
 	log.Printf("Game info after action: %+v\n", g)
 }
