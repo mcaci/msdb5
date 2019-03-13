@@ -14,7 +14,7 @@ type Game struct {
 	playerInTurn uint8
 	players      playerset.Players
 	companion    companion.Companion
-	info         board.Board
+	board        board.Board
 	phase        Phase
 }
 
@@ -66,7 +66,7 @@ func (g *Game) SetCompanion(c card.ID, pl *player.Player) {
 
 // Board func
 func (g *Game) Board() *board.Board {
-	return &g.info
+	return &g.board
 }
 
 // BriscolaSeed func

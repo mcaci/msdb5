@@ -17,19 +17,19 @@ func TestPlayer1Has8Cards(t *testing.T) {
 }
 
 func TestBoardHasASetOfPlayedCards(t *testing.T) {
-	if gameTest := NewGame(); gameTest.info.PlayedCards() == nil {
+	if gameTest := NewGame(); gameTest.board.PlayedCards() == nil {
 		t.Fatal("The board has no set of played cards")
 	}
 }
 
 func TestBoardsEmptySetOfPlayedCardsContainsNoCards(t *testing.T) {
-	if gameTest := NewGame(); len(*gameTest.info.PlayedCards()) > 0 {
+	if gameTest := NewGame(); len(*gameTest.board.PlayedCards()) > 0 {
 		t.Fatal("The deck should be empty at this point")
 	}
 }
 
 func TestBoardAuctionScoreAtCreationIs0(t *testing.T) {
-	if gameTest := NewGame(); gameTest.info.AuctionScore() != 0 {
-		t.Fatalf("Auction score for a new board should be 0 but is %d", gameTest.info.AuctionScore())
+	if gameTest := NewGame(); gameTest.board.AuctionScore() != 0 {
+		t.Fatalf("Auction score for a new board should be 0 but is %d", gameTest.board.AuctionScore())
 	}
 }
