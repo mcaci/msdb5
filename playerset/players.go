@@ -2,6 +2,7 @@ package playerset
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
@@ -42,4 +43,12 @@ func (playerSet Players) All(predicate func(p *player.Player) bool) bool {
 		}
 	}
 	return true
+}
+
+func (playerSet Players) String() (str string) {
+	for _, p := range playerSet {
+		str += fmt.Sprintf("%+v ;", *p)
+	}
+	return
+
 }
