@@ -25,25 +25,25 @@ func NewAction() api.Action {
 	return o
 }
 
-var phaseActionMap map[string]func(*game.Game, string, string) action.Data
-
-func init() {
-	phaseActionMap = make(map[string]func(*game.Game, string, string) action.Data)
-	phaseActionMap["Join"] = action.Join
-	phaseActionMap["Auction"] = action.RaiseAuctionData
-	phaseActionMap["Companion"] = action.NominateData
-	phaseActionMap["Card"] = action.PlayData
-}
-
 // Action func
 func (o *Orchestrator) Action(request, origin string) (all []display.Info, me []display.Info, err error) {
-	inputAction := strings.Split(string(request), "#")[0]
-	info := phaseActionMap[inputAction](o.game, request, origin)
-	roundMayEnd := len(*o.game.Board().PlayedCards()) >= 4
-	if roundMayEnd && o.game.CurrentPhase() == game.PlayBriscola {
-		info = action.PlayEndRoundData(o.game, request, origin)
+	data := strings.Split(request, "#")
+	var actionInfo action.Data
+	switch data[0] {
+	case "Join":
+		actionInfo = action.Join(o.game, request, origin)
+	case "Auction":
+		actionInfo = action.RaiseAuctionData(o.game, request, origin)
+	case "Companion":
+		actionInfo = action.NominateData(o.game, request, origin)
+	case "Card":
+		roundMayEnd := len(*o.game.Board().PlayedCards()) >= 4
+		if roundMayEnd && o.game.CurrentPhase() == game.PlayBriscola {
+			actionInfo = action.PlayEndRoundData(o.game, request, origin)
+		}
+		actionInfo = action.PlayData(o.game, request, origin)
 	}
-	all, me, err = o.game.Info(), o.game.PlayerInTurn().Info(), playPhase(o.game, info)
+	all, me, err = o.game.Info(), o.game.PlayerInTurn().Info(), playPhase(o.game, actionInfo)
 	logEndRound(o.game, request, origin, err)
 	if o.game.CurrentPhase() == game.End {
 		all, me, err = endGame(o.game.Players(), o.game.Companion())
