@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/card"
-	"github.com/nikiforosFreespirit/msdb5/companion"
 )
 
 func TestActionCreationAndAuctionUsage(t *testing.T) {
@@ -35,15 +34,18 @@ func TestActionCreationAndPlayCardUsage(t *testing.T) {
 }
 
 func TestCompletedGameReturningScoreInfo(t *testing.T) {
-	gameTest := NewGame()
-	gameTest.players[0].Join("A", "127.0.0.51")
-	gameTest.players[1].Join("B", "127.0.0.52")
-	gameTest.players[2].Join("C", "127.0.0.53")
-	gameTest.players[3].Join("D", "127.0.0.54")
-	gameTest.players[4].Join("E", "127.0.0.55")
-	gameTest.phase = playBriscola
-	gameTest.companion = *companion.New(card.ID(9), gameTest.players[2])
-	for i, pl := range gameTest.players {
+	gameTest := NewAction()
+	gameTest.Action("Join#A", "127.0.0.51")
+	gameTest.Action("Join#B", "127.0.0.52")
+	gameTest.Action("Join#C", "127.0.0.53")
+	gameTest.Action("Join#D", "127.0.0.54")
+	gameTest.Action("Join#E", "127.0.0.55")
+	o := gameTest.(*Orchestrator)
+	o.game.IncrementPhase()
+	o.game.IncrementPhase()
+	o.game.IncrementPhase()
+	o.game.SetCompanion(card.ID(9), o.game.Players()[2])
+	for i, pl := range o.game.Players() {
 		pl.Hand().Clear()
 		pl.Hand().Add(card.ID(2*i + 5))
 		if i > 0 {
@@ -56,7 +58,6 @@ func TestCompletedGameReturningScoreInfo(t *testing.T) {
 	gameTest.Action("Card#1#Cup", "127.0.0.54")
 	scoreInfo, _, _ := gameTest.Action("Card#3#Cup", "127.0.0.55")
 	if scoreInfo == nil {
-		t.Log(scoreInfo)
 		t.Fatal("Expecting transition to end game and scoring")
 	}
 }
