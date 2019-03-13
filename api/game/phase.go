@@ -5,8 +5,8 @@ type Phase uint8
 
 const (
 	Joining Phase = iota
-	ScoreAuction
-	CompanionChoice
-	PlayBriscola
+	InsideAuction
+	ChosingCompanion
+	PlayingCards
 	End
 )

@@ -28,18 +28,22 @@ func NewAction() api.Action {
 // Action func
 func (o *Orchestrator) Action(request, origin string) (all, me string, err error) {
 	data := strings.Split(request, "#")
-	var actionInfo action.Data
+	var actionExec action.Action
 	switch data[0] {
 	case "Join":
-		actionInfo = action.Join(o.game, request, origin)
+		actionExec = action.NewJoin(request, origin)
 	case "Auction":
-		actionInfo = action.RaiseAuctionData(o.game, request, origin)
+		actionExec = action.NewAuction(request, origin,
+			o.game.PlayerInTurn(), o.game.Board(), o.game.Players())
 	case "Companion":
-		actionInfo = action.NominateData(o.game, request, origin)
+		actionExec = action.NewCompanion(request, origin,
+			o.game.PlayerInTurn(), o.game.Players(), o.game.SetCompanion)
 	case "Card":
-		actionInfo = action.PlayData(o.game, request, origin)
+		actionExec = action.NewPlay(request, origin, o.game.PlayerInTurnIndex(),
+			o.game.PlayerInTurn(), o.game.Players(),
+			o.game.Board(), o.game.BriscolaSeed())
 	}
-	all, me, err = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("Player: %+v", o.game.PlayerInTurn()), playPhase(o.game, actionInfo)
+	all, me, err = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("Player: %+v", o.game.PlayerInTurn()), playPhase(o.game, actionExec)
 	logEndRound(*o.game, request, origin, err)
 	if o.game.CurrentPhase() == game.End {
 		all, me, err = endGame(o.game.Players(), o.game.Companion())

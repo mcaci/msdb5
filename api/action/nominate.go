@@ -9,30 +9,39 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
-// NominateData func
-func NominateData(g *game.Game, request, origin string) Data {
-	phase := game.CompanionChoice
-	find := func(p *player.Player) bool { return p.IsExpectedPlayer(g.PlayerInTurn(), origin) }
-	do := func(p *player.Player) error {
-		data := strings.Split(request, "#")
-		number := data[1]
-		seed := data[2]
-		c, err := card.Create(number, seed)
-		if err != nil {
-			return err
-		}
-		pl, err := g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
-		if err != nil {
-			return err
-		}
-		g.SetCompanion(c, pl)
-		return nil
-	}
-	nextPlayerOperator := func(playerInTurn uint8) uint8 { return playerInTurn }
-	nextPhasePredicate := nominateNextPhase
-	return Data{phase, find, do, nextPlayerOperator, nextPhasePredicate, nil}
+type CompanionStruct struct {
+	request, origin string
+	playerInTurn    *player.Player
+	players         playerset.Players
+	set             func(card.ID, *player.Player)
 }
 
-func nominateNextPhase(playerset.Players, func(*player.Player) bool) bool {
+func NewCompanion(request, origin string, playerInTurn *player.Player,
+	players playerset.Players, set func(card.ID, *player.Player)) Action {
+	return &CompanionStruct{request, origin, playerInTurn, players, set}
+}
+
+func (cs CompanionStruct) Phase() game.Phase { return game.ChosingCompanion }
+func (cs CompanionStruct) Find(p *player.Player) bool {
+	return p.IsExpectedPlayer(cs.playerInTurn, cs.origin)
+}
+func (cs CompanionStruct) Do(p *player.Player) error {
+	data := strings.Split(cs.request, "#")
+	number := data[1]
+	seed := data[2]
+	c, err := card.Create(number, seed)
+	if err != nil {
+		return err
+	}
+	pl, err := cs.players.Find(func(p *player.Player) bool { return p.Has(c) })
+	if err != nil {
+		return err
+	}
+	cs.set(c, pl)
+	return nil
+}
+func (cs CompanionStruct) NextPlayer(playerInTurn uint8) uint8 { return playerInTurn }
+func (cs CompanionStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) bool {
 	return true
 }
+func (cs CompanionStruct) NextPhasePlayerInfo(p *player.Player) bool { return true }

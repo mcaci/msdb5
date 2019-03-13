@@ -5,32 +5,41 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/api/game"
 	"github.com/nikiforosFreespirit/msdb5/auction"
+	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
-// RaiseAuctionData func
-func RaiseAuctionData(g *game.Game, request, origin string) Data {
-	phase := game.ScoreAuction
-	find := func(p *player.Player) bool { return p.IsExpectedPlayer(g.PlayerInTurn(), origin) }
-	do := func(p *player.Player) error {
-		data := strings.Split(request, "#")
-		score := data[1]
-		auction.CheckAndUpdate(score, p.Folded, p.Fold, g.Board().AuctionScore, g.Board().SetAuctionScore)
-		return nil
-	}
-	nextPlayerOperator := func(playerInTurn uint8) uint8 {
-		winnerIndex := nextPlayerInTurn(playerInTurn)
-		for g.Players()[winnerIndex].Folded() {
-			winnerIndex = nextPlayerInTurn(winnerIndex)
-		}
-		return winnerIndex
-	}
-	nextPhasePredicate := auctionNextPhase
-	playerPredicate := func(p *player.Player) bool { return p.Folded() }
-	return Data{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
+type AuctionStruct struct {
+	request, origin string
+	playerInTurn    *player.Player
+	board           *board.Board
+	players         playerset.Players
 }
 
-func auctionNextPhase(players playerset.Players, searchCriteria func(*player.Player) bool) bool {
-	return players.Count(searchCriteria) == 4
+func NewAuction(request, origin string, playerInTurn *player.Player,
+	board *board.Board, players playerset.Players) Action {
+	return &AuctionStruct{request, origin,
+		playerInTurn, board, players}
 }
+func (as AuctionStruct) Phase() game.Phase { return game.InsideAuction }
+func (as AuctionStruct) Find(p *player.Player) bool {
+	return p.IsExpectedPlayer(as.playerInTurn, as.origin)
+}
+func (as AuctionStruct) Do(p *player.Player) error {
+	data := strings.Split(as.request, "#")
+	score := data[1]
+	auction.CheckAndUpdate(score, p.Folded, p.Fold, as.board.AuctionScore, as.board.SetAuctionScore)
+	return nil
+}
+func (as AuctionStruct) NextPlayer(playerInTurn uint8) uint8 {
+	winnerIndex := nextPlayerInTurn(playerInTurn)
+	for as.players[winnerIndex].Folded() {
+		winnerIndex = nextPlayerInTurn(winnerIndex)
+	}
+	return winnerIndex
+}
+func (as AuctionStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) bool {
+	return players.Count(predicate.NextPhasePlayerInfo) == 4
+}
+func (as AuctionStruct) NextPhasePlayerInfo(p *player.Player) bool { return p.Folded() }

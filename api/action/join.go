@@ -8,24 +8,24 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
-// Join func
-func Join(g *game.Game, request, origin string) Data {
-	phase := game.Joining
-	find := func(p *player.Player) bool { return p.IsNameEmpty() }
-	do := func(p *player.Player) error {
-		data := strings.Split(request, "#")
-		name := data[1]
-		p.Join(name, origin)
-		return nil
-	}
-	nextPlayerOperator := nextPlayerInTurn
-	nextPhasePredicate := joinNextPhase
-	playerPredicate := func(p *player.Player) bool { return p.IsNameEmpty() }
-	return Data{phase, find, do, nextPlayerOperator, nextPhasePredicate, playerPredicate}
+type JoinStruct struct {
+	request, origin string
 }
 
-func joinNextPhase(players playerset.Players, searchCriteria func(*player.Player) bool) bool {
-	return players.Count(searchCriteria) == 0
+func NewJoin(request, origin string) Action {
+	return &JoinStruct{request, origin}
 }
 
-func nextPlayerInTurn(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }
+func (js JoinStruct) Phase() game.Phase          { return game.Joining }
+func (js JoinStruct) Find(p *player.Player) bool { return p.IsNameEmpty() }
+func (js JoinStruct) Do(p *player.Player) error {
+	data := strings.Split(js.request, "#")
+	name := data[1]
+	p.Join(name, js.origin)
+	return nil
+}
+func (js JoinStruct) NextPlayer(playerInTurn uint8) uint8 { return nextPlayerInTurn(playerInTurn) }
+func (js JoinStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) bool {
+	return players.Count(predicate.NextPhasePlayerInfo) == 0
+}
+func (js JoinStruct) NextPhasePlayerInfo(p *player.Player) bool { return p.IsNameEmpty() }
