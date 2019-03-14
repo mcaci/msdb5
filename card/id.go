@@ -16,5 +16,5 @@ func (id ID) Seed() Seed {
 }
 
 func (id ID) String() string {
-	return fmt.Sprintf("%d of %s", id.Number(), id.Seed())
+	return fmt.Sprintf("(%d of %s)", id.Number(), id.Seed())
 }

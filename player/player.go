@@ -1,6 +1,8 @@
 package player
 
 import (
+	"fmt"
+
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 )
@@ -91,4 +93,8 @@ func (player Player) Count(scorer func(card.ID) uint8) uint8 {
 // IsExpectedPlayer func
 func (player *Player) IsExpectedPlayer(other *Player, origin string) bool {
 	return player.IsSame(other) && player.IsSameHost(origin)
+}
+
+func (player Player) String() string {
+	return fmt.Sprintf("Player(%s: %+v) ", player.name, player.hand)
 }

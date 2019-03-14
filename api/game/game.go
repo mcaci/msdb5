@@ -1,6 +1,8 @@
 package game
 
 import (
+	"fmt"
+
 	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/companion"
@@ -69,4 +71,14 @@ func (g *Game) IncrementPhase() { g.phase++ }
 // UpdatePlayerInTurn func
 func (g *Game) UpdatePlayerInTurn(generateIndex func(uint8) uint8) {
 	g.playerInTurn = generateIndex(g.playerInTurn)
+}
+
+func (g Game) String() (str string) {
+	return fmt.Sprintf("%d, %s, %v, %v, %d",
+		g.playerInTurn,
+		g.players,
+		g.companion,
+		g.board,
+		g.phase)
+
 }
