@@ -13,14 +13,14 @@ import (
 type AuctionStruct struct {
 	request, origin string
 	playerInTurn    *player.Player
-	board           *board.Board
 	players         playerset.Players
+	board           *board.Board
 }
 
 func NewAuction(request, origin string, playerInTurn *player.Player,
-	board *board.Board, players playerset.Players) Action {
+	players playerset.Players, board *board.Board) Action {
 	return &AuctionStruct{request, origin,
-		playerInTurn, board, players}
+		playerInTurn, players, board}
 }
 func (as AuctionStruct) Phase() game.Phase { return game.InsideAuction }
 func (as AuctionStruct) Find(p *player.Player) bool {

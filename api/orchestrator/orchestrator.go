@@ -34,7 +34,7 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 		actionExec = action.NewJoin(request, origin)
 	case "Auction":
 		actionExec = action.NewAuction(request, origin,
-			o.game.PlayerInTurn(), o.game.Board(), o.game.Players())
+			o.game.PlayerInTurn(), o.game.Players(), o.game.Board())
 	case "Companion":
 		actionExec = action.NewCompanion(request, origin,
 			o.game.PlayerInTurn(), o.game.Players(), o.game.SetCompanion)
