@@ -28,22 +28,23 @@ func NewAction() api.Action {
 // Action func
 func (o *Orchestrator) Action(request, origin string) (all, me string, err error) {
 	data := strings.Split(request, "#")
+	currentPlayer := o.game.PlayerInTurn()
 	var actionExec action.Action
 	switch data[0] {
 	case "Join":
 		actionExec = action.NewJoin(request, origin)
 	case "Auction":
-		actionExec = action.NewAuction(request, origin,
-			o.game.PlayerInTurn(), o.game.Players(), o.game.Board())
+		actionExec = action.NewAuction(request, origin, currentPlayer,
+			o.game.Players(), o.game.Board())
 	case "Companion":
-		actionExec = action.NewCompanion(request, origin,
-			o.game.PlayerInTurn(), o.game.Players(), o.game.SetCompanion)
+		actionExec = action.NewCompanion(request, origin, currentPlayer,
+			o.game.Players(), o.game.SetCompanion)
 	case "Card":
 		actionExec = action.NewPlay(request, origin, o.game.PlayerInTurnIndex(),
-			o.game.PlayerInTurn(), o.game.Players(),
-			o.game.Board(), o.game.BriscolaSeed())
+			currentPlayer, o.game.Players(), o.game.Board(), o.game.BriscolaSeed())
 	}
-	all, me, err = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("Player: %+v", o.game.PlayerInTurn()), playPhase(o.game, actionExec)
+	err = playPhase(o.game, actionExec)
+	all, me = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("%+v", currentPlayer)
 	logEndRound(*o.game, request, origin, err)
 	if o.game.CurrentPhase() == game.End {
 		all, me, err = endGame(o.game.Players(), o.game.Companion())
@@ -70,5 +71,5 @@ func logEndRound(g game.Game, request, origin string, err error) {
 	}
 	log.Printf("Action is %s\n", request)
 	log.Printf("Any error raised: %+v\n", err)
-	log.Printf("Game info after action: %+v\n", g)
+	log.Printf("Game info after action: %+v\n", g.Log())
 }
