@@ -74,11 +74,10 @@ func (g *Game) UpdatePlayerInTurn(generateIndex func(uint8) uint8) {
 }
 
 func (g Game) String() (str string) {
-	return fmt.Sprintf("%d, %s, %v, %v, %d",
-		g.playerInTurn,
-		g.players,
-		g.companion,
-		g.board,
-		g.phase)
+	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Board Info: %+v, Phase: %d)",
+		g.PlayerInTurn().Name(), g.companion.Card(), g.board, g.phase)
+}
 
+func (g Game) Log() (str string) {
+	return g.String() + fmt.Sprintf("(Players in Game: %+v)", g.players)
 }

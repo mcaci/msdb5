@@ -1,6 +1,8 @@
 package board
 
 import (
+	"fmt"
+
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 )
@@ -35,4 +37,9 @@ func (b *Board) PlayedCards() *deck.Cards {
 func (b *Board) PlayedCardIs(card card.ID) bool {
 	b.PlayedCards().Add(card)
 	return len(*b.PlayedCards()) >= 5
+}
+
+func (b Board) String() string {
+	return fmt.Sprintf("(PlayedCards: %+v, Auction score: %d)",
+		b.playedCards, b.auctionScore)
 }

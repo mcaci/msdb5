@@ -47,7 +47,7 @@ func (playerSet Players) All(predicate func(p *player.Player) bool) bool {
 
 func (playerSet Players) String() (str string) {
 	for _, p := range playerSet {
-		str += fmt.Sprintf("%+v ;", *p)
+		str += fmt.Sprintf("- %+v -", *p)
 	}
 	return
 
