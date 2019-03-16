@@ -23,7 +23,7 @@ type NextPlayerSelector interface {
 }
 
 type NextPhaseChanger interface {
-	NextPhase(playerset.Players, PlayerPredicate) bool
+	NextPhase(playerset.Players, PlayerPredicate) game.Phase
 }
 
 type PlayerPredicate interface {

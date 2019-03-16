@@ -41,9 +41,7 @@ func TestCompletedGameReturningScoreInfo(t *testing.T) {
 	gameTest.Action("Join#D", "127.0.0.54")
 	gameTest.Action("Join#E", "127.0.0.55")
 	o := gameTest.(*Orchestrator)
-	o.game.NextPhase()
-	o.game.NextPhase()
-	o.game.NextPhase()
+	o.game.NextPhase(3)
 	o.game.SetCompanion(card.ID(9), o.game.Players()[2])
 	for i, pl := range o.game.Players() {
 		pl.Hand().Clear()

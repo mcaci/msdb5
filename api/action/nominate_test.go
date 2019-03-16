@@ -42,7 +42,7 @@ func TestNominateNextPlayerOf4is4(t *testing.T) {
 
 func TestNominateNextPhaseWithPlayersWithEmptyNameIsTrue(t *testing.T) {
 	testPlayers := playerset.Players{player.New()}
-	if testObject := NewCompanion("", "", nil, nil, nil); !testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewCompanion("", "", nil, nil, nil); 3 != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should always be true")
 	}
 }

@@ -39,7 +39,10 @@ func (as AuctionStruct) NextPlayer(playerInTurn uint8) uint8 {
 	}
 	return winnerIndex
 }
-func (as AuctionStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) bool {
-	return players.Count(predicate.NextPhasePlayerInfo) == 4
+func (as AuctionStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) game.Phase {
+	if players.Count(predicate.NextPhasePlayerInfo) == 4 {
+		return game.ChosingCompanion
+	}
+	return game.InsideAuction
 }
 func (as AuctionStruct) NextPhasePlayerInfo(p *player.Player) bool { return p.Folded() }

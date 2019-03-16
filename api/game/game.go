@@ -69,7 +69,7 @@ func (g *Game) BriscolaSeed() card.Seed { return g.companion.Card().Seed() }
 func (g *Game) CurrentPhase() Phase { return g.phase }
 
 // NextPhase func
-func (g *Game) NextPhase() { g.phase++ }
+func (g *Game) NextPhase(phase Phase) { g.phase = phase }
 
 // NextPlayer func
 func (g *Game) NextPlayer(generateIndex func(uint8) uint8) {

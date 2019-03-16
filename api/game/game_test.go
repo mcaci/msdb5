@@ -50,7 +50,7 @@ func TestBoardAuctionScoreAtCreationIs0(t *testing.T) {
 
 func TestNextPhase(t *testing.T) {
 	gameTest := NewGame(false)
-	gameTest.NextPhase()
+	gameTest.NextPhase(1)
 	if gameTest.CurrentPhase() != 1 {
 		t.Fatal("Current phase should be 1")
 	}

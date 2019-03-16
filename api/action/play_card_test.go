@@ -49,7 +49,7 @@ func TestPlayNextPlayerOfAnyIs3WithRoundEnded(t *testing.T) {
 
 func TestPlayNextPhaseIsFalse(t *testing.T) {
 	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); !testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); 4 != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should step to end phase")
 	}
 }
@@ -58,7 +58,7 @@ func TestPlayNextPhaseIsTrue(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testPlayers := playerset.Players{player.New(), testPlayer, player.New(), player.New(), player.New()}
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); 4 == testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should still be in play phase")
 	}
 }

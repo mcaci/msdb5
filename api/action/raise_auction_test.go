@@ -45,7 +45,7 @@ func TestAuctionNextPlayerOf1is3WithPlayer2Folded(t *testing.T) {
 
 func TestAuctionNextPhaseIsFalse(t *testing.T) {
 	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
-	if testObject := NewAuction("", "", nil, testPlayers, nil); testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewAuction("", "", nil, testPlayers, nil); 2 == testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should still be in auction phase")
 	}
 }
@@ -54,7 +54,7 @@ func TestAuctionNextPhaseIsTrue(t *testing.T) {
 	testFoldedPlayer := player.New()
 	testFoldedPlayer.Fold()
 	testPlayers := playerset.Players{testFoldedPlayer, testFoldedPlayer, testFoldedPlayer, player.New(), testFoldedPlayer}
-	if testObject := NewAuction("", "", nil, testPlayers, nil); !testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewAuction("", "", nil, testPlayers, nil); 2 != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should still be in auction phase")
 	}
 }

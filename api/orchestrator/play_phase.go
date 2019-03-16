@@ -21,9 +21,7 @@ func playPhase(g *game.Game, info action.Action) (err error) {
 		return
 	}
 	g.NextPlayer(info.NextPlayer)
-	if info.NextPhase(g.Players(), info) {
-		g.NextPhase()
-	}
+	g.NextPhase(info.NextPhase(g.Players(), info))
 	return
 }
 

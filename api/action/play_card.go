@@ -57,8 +57,11 @@ func (pcs PlayCardStruct) NextPlayer(playerInTurn uint8) uint8 {
 	}
 	return next
 }
-func (pcs PlayCardStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) bool {
-	return players.All(predicate.NextPhasePlayerInfo)
+func (pcs PlayCardStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) game.Phase {
+	if players.All(predicate.NextPhasePlayerInfo) {
+		return game.End
+	}
+	return game.PlayingCards
 }
 func (pcs PlayCardStruct) NextPhasePlayerInfo(p *player.Player) bool { return p.IsHandEmpty() }
 

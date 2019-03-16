@@ -24,8 +24,11 @@ func (js JoinStruct) Do(p *player.Player) error {
 	return nil
 }
 func (js JoinStruct) NextPlayer(playerInTurn uint8) uint8 { return playersRoundRobin(playerInTurn) }
-func (js JoinStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) bool {
-	return players.Count(predicate.NextPhasePlayerInfo) == 0
+func (js JoinStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) game.Phase {
+	if players.Count(predicate.NextPhasePlayerInfo) == 0 {
+		return game.InsideAuction
+	}
+	return game.Joining
 }
 func (js JoinStruct) NextPhasePlayerInfo(p *player.Player) bool { return isPlayerEmpty(p) }
 
