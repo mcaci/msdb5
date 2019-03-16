@@ -25,6 +25,16 @@ func (playerSet Players) Find(predicate func(p *player.Player) bool) (*player.Pl
 	return nil, errors.New("Player not found")
 }
 
+// FindIndex func
+func (playerSet Players) FindIndex(predicate func(p *player.Player) bool) (int, error) {
+	for i, p := range playerSet {
+		if predicate(p) {
+			return i, nil
+		}
+	}
+	return -1, errors.New("Player not found")
+}
+
 // Count func
 func (playerSet Players) Count(predicate func(p *player.Player) bool) (count uint8) {
 	for _, p := range playerSet {

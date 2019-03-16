@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/card"
@@ -41,9 +42,6 @@ func playersDrawAllCards(players *playerset.Players) {
 	}
 }
 
-// PlayerInTurnIndex func
-func (g *Game) PlayerInTurnIndex() uint8 { return g.playerInTurn }
-
 // PlayerInTurn func
 func (g *Game) PlayerInTurn() *player.Player { return g.players[g.playerInTurn] }
 
@@ -65,11 +63,11 @@ func (g *Game) BriscolaSeed() card.Seed { return g.companion.Card().Seed() }
 // CurrentPhase func
 func (g *Game) CurrentPhase() Phase { return g.phase }
 
-// IncrementPhase func
-func (g *Game) IncrementPhase() { g.phase++ }
+// NextPhase func
+func (g *Game) NextPhase() { g.phase++ }
 
-// UpdatePlayerInTurn func
-func (g *Game) UpdatePlayerInTurn(generateIndex func(uint8) uint8) {
+// NextPlayer func
+func (g *Game) NextPlayer(generateIndex func(uint8) uint8) {
 	g.playerInTurn = generateIndex(g.playerInTurn)
 }
 
@@ -78,6 +76,12 @@ func (g Game) String() (str string) {
 		g.PlayerInTurn().Name(), g.companion.Card(), g.board, g.phase)
 }
 
-func (g Game) Log() (str string) {
-	return g.String() + fmt.Sprintf("(Players in Game: %+v)", g.players)
+func (g Game) Log(request, origin string, err error) {
+	playerLogged, err := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(origin) })
+	if err == nil {
+		log.Printf("New Action by %s\n", playerLogged.Name())
+	}
+	log.Printf("Action is %s\n", request)
+	log.Printf("Any error raised: %+v\n", err)
+	log.Printf("Game info after action: %+v\n", g)
 }

@@ -13,7 +13,7 @@ import (
 func TestPlayDoNoErr(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
-	testObject := NewPlay("Play#1#Coin", "127.0.0.4", 0,
+	testObject := NewPlay("Play#1#Coin", "127.0.0.4",
 		testPlayer, playerset.Players{testPlayer}, board.New(), card.Coin)
 	err := testObject.Do(testPlayer)
 	if err != nil {
@@ -27,7 +27,7 @@ func TestPlayDoNoErrInRoundEnd(t *testing.T) {
 	testPlayedCards := deck.Cards{2, 3, 4, 6}
 	testBoard := board.New()
 	testBoard.PlayedCards().Add(testPlayedCards...)
-	testObject := NewPlay("Play#1#Coin", "127.0.0.4", 0, testPlayer,
+	testObject := NewPlay("Play#1#Coin", "127.0.0.4", testPlayer,
 		playerset.Players{testPlayer, testPlayer, testPlayer, testPlayer, testPlayer},
 		testBoard, card.Coin)
 	err := testObject.Do(testPlayer)

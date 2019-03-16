@@ -13,19 +13,17 @@ import (
 )
 
 type PlayCardStruct struct {
-	request, origin   string
-	playerInTurnIndex uint8
-	playerInTurn      *player.Player
-	players           playerset.Players
-	board             *board.Board
-	briscolaSeed      card.Seed
+	request, origin string
+	playerInTurn    *player.Player
+	players         playerset.Players
+	board           *board.Board
+	briscolaSeed    card.Seed
 }
 
-func NewPlay(request, origin string, playerInTurnIndex uint8,
-	playerInTurn *player.Player, players playerset.Players,
-	board *board.Board, briscolaSeed card.Seed) Action {
-	return &PlayCardStruct{request, origin, playerInTurnIndex,
-		playerInTurn, players, board, briscolaSeed}
+func NewPlay(request, origin string, playerInTurn *player.Player,
+	players playerset.Players, board *board.Board, briscolaSeed card.Seed) Action {
+	return &PlayCardStruct{request, origin, playerInTurn,
+		players, board, briscolaSeed}
 }
 
 func (pcs PlayCardStruct) Phase() game.Phase { return game.PlayingCards }
@@ -44,7 +42,8 @@ func (pcs PlayCardStruct) Do(p *player.Player) error {
 	pcs.board.PlayedCards().Add(c)
 	roundHasEnded := len(*pcs.board.PlayedCards()) == 5
 	if roundHasEnded {
-		next := roundWinnerIndex(pcs.playerInTurnIndex, *pcs.board.PlayedCards(), pcs.briscolaSeed)
+		index, _ := pcs.players.FindIndex(func(pl *player.Player) bool { return pl == p })
+		next := roundWinnerIndex(uint8(index), *pcs.board.PlayedCards(), pcs.briscolaSeed)
 		pcs.players[next].Collect(pcs.board.PlayedCards())
 	}
 	return err

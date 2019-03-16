@@ -6,7 +6,6 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/api/action"
 	"github.com/nikiforosFreespirit/msdb5/api/game"
-	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 func playPhase(g *game.Game, info action.Action) (err error) {
@@ -21,8 +20,10 @@ func playPhase(g *game.Game, info action.Action) (err error) {
 	if err != nil {
 		return
 	}
-	nextPlayer(g, info.NextPlayer)
-	nextPhase(g, info.NextPhase, info)
+	g.NextPlayer(info.NextPlayer)
+	if info.NextPhase(g.Players(), info) {
+		g.NextPhase()
+	}
 	return
 }
 
@@ -31,14 +32,4 @@ func phaseCheck(gamePhase, current game.Phase) (err error) {
 		err = errors.New("Phase is not " + strconv.Itoa(int(current)))
 	}
 	return
-}
-
-func nextPhase(g *game.Game, predicate func(playerset.Players, action.PlayerPredicate) bool, playerPredicate action.PlayerPredicate) {
-	if predicate(g.Players(), playerPredicate) {
-		g.IncrementPhase()
-	}
-}
-
-func nextPlayer(g *game.Game, generateIndex func(uint8) uint8) {
-	g.UpdatePlayerInTurn(generateIndex)
 }
