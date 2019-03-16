@@ -19,14 +19,14 @@ type Game struct {
 	companion    companion.Companion
 	board        board.Board
 	phase        Phase
+	side         deck.Cards
 }
 
 // NewGame func
-func NewGame(side bool) *Game {
-	// side deck not used yet
+func NewGame(withSide bool) *Game {
 	g := new(Game)
 	makePlayers(g)
-	playersDrawAllCards(&g.players)
+	playersDrawAllCards(&g.players, withSide)
 	return g
 }
 
@@ -36,9 +36,13 @@ func makePlayers(g *Game) {
 	}
 }
 
-func playersDrawAllCards(players *playerset.Players) {
+func playersDrawAllCards(players *playerset.Players, withSide bool) {
 	d := deck.Deck()
-	for i := 0; i < deck.DeckSize; i++ {
+	count := deck.DeckSize
+	if withSide {
+		count -= 5
+	}
+	for i := 0; i < count; i++ {
 		(*players)[i%5].Draw(d)
 	}
 }
