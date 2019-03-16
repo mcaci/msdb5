@@ -36,10 +36,10 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 		actionExec = action.NewAuction(request, origin, currentPlayer,
 			o.game.Players(), o.game.Board())
 	case "Companion":
-		actionExec = action.NewCompanion(request, origin, currentPlayer,
+		actionExec = action.NewCompanionWithSide(request, origin, currentPlayer,
 			o.game.Players(), o.game.SetCompanion)
 	case "Card":
-		actionExec = action.NewPlay(request, origin, currentPlayer,
+		actionExec = action.NewPlayWithSide(request, origin, currentPlayer,
 			o.game.Players(), o.game.Board(), o.game.BriscolaSeed())
 	}
 	err = playPhase(o.game, actionExec)
