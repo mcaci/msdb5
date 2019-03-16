@@ -61,7 +61,7 @@ func endGame(players playerset.Players, companion player.ScoreCounter) (string, 
 			team2.Add(pl)
 		}
 	}
-	return fmt.Sprintf("Callers: %+v; Others: %+v", team1, team2), "", nil
+	return fmt.Sprintf("Callers: %+v; Others: %+v", team1.Score(), team2.Score()), "", nil
 }
 
 func logEndRound(g game.Game, request, origin string, err error) {
