@@ -1,4 +1,4 @@
-package orchestrator
+package sidedeck
 
 import (
 	"fmt"
@@ -20,7 +20,7 @@ type Orchestrator struct {
 // NewAction func
 func NewAction() api.Action {
 	o := new(Orchestrator)
-	o.game = game.NewGame(false)
+	o.game = game.NewGame(true)
 	return o
 }
 

@@ -1,4 +1,4 @@
-package orchestrator
+package sidedeck
 
 import (
 	"testing"

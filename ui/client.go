@@ -30,7 +30,7 @@ func (c *client) read() {
 		// execute action
 		command := string(msg)
 		origin := c.socket.RemoteAddr().String()
-		infoForAll, infoForPlayer, err := run(c.room.msdb5board, command, origin)
+		infoForAll, infoForPlayer, err := run(c.room.msdb5game, command, origin)
 		// Simpler board info sent to everyone
 		send(command, c.room.forward)
 		if err == nil {
