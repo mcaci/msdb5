@@ -2,7 +2,6 @@ package orchestrator
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/api"
@@ -40,12 +39,12 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 		actionExec = action.NewCompanion(request, origin, currentPlayer,
 			o.game.Players(), o.game.SetCompanion)
 	case "Card":
-		actionExec = action.NewPlay(request, origin, o.game.PlayerInTurnIndex(),
-			currentPlayer, o.game.Players(), o.game.Board(), o.game.BriscolaSeed())
+		actionExec = action.NewPlay(request, origin, currentPlayer,
+			o.game.Players(), o.game.Board(), o.game.BriscolaSeed())
 	}
 	err = playPhase(o.game, actionExec)
 	all, me = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("%+v", currentPlayer)
-	logEndRound(*o.game, request, origin, err)
+	o.game.Log(request, origin, err)
 	if o.game.CurrentPhase() == game.End {
 		all, me, err = endGame(o.game.Players(), o.game.Companion())
 	}
@@ -62,14 +61,4 @@ func endGame(players playerset.Players, companion player.ScoreCounter) (string, 
 		}
 	}
 	return fmt.Sprintf("Callers: %+v; Others: %+v", team1.Score(), team2.Score()), "", nil
-}
-
-func logEndRound(g game.Game, request, origin string, err error) {
-	playerLogged, err := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(origin) })
-	if err == nil {
-		log.Printf("New Action by %s\n", playerLogged.Name())
-	}
-	log.Printf("Action is %s\n", request)
-	log.Printf("Any error raised: %+v\n", err)
-	log.Printf("Game info after action: %+v\n", g.Log())
 }

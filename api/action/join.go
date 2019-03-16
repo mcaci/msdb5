@@ -17,15 +17,16 @@ func NewJoin(request, origin string) Action {
 }
 
 func (js JoinStruct) Phase() game.Phase          { return game.Joining }
-func (js JoinStruct) Find(p *player.Player) bool { return p.IsNameEmpty() }
+func (js JoinStruct) Find(p *player.Player) bool { return isPlayerEmpty(p) }
 func (js JoinStruct) Do(p *player.Player) error {
-	data := strings.Split(js.request, "#")
-	name := data[1]
+	name := strings.Split(js.request, "#")[1]
 	p.Join(name, js.origin)
 	return nil
 }
-func (js JoinStruct) NextPlayer(playerInTurn uint8) uint8 { return nextPlayerInTurn(playerInTurn) }
+func (js JoinStruct) NextPlayer(playerInTurn uint8) uint8 { return playersRoundRobin(playerInTurn) }
 func (js JoinStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) bool {
 	return players.Count(predicate.NextPhasePlayerInfo) == 0
 }
-func (js JoinStruct) NextPhasePlayerInfo(p *player.Player) bool { return p.IsNameEmpty() }
+func (js JoinStruct) NextPhasePlayerInfo(p *player.Player) bool { return isPlayerEmpty(p) }
+
+var isPlayerEmpty = func(p *player.Player) bool { return p.IsNameEmpty() }

@@ -33,9 +33,9 @@ func (as AuctionStruct) Do(p *player.Player) error {
 	return nil
 }
 func (as AuctionStruct) NextPlayer(playerInTurn uint8) uint8 {
-	winnerIndex := nextPlayerInTurn(playerInTurn)
-	for as.players[winnerIndex].Folded() {
-		winnerIndex = nextPlayerInTurn(winnerIndex)
+	winnerIndex := playersRoundRobin(playerInTurn)
+	for as.NextPhasePlayerInfo(as.players[winnerIndex]) {
+		winnerIndex = playersRoundRobin(winnerIndex)
 	}
 	return winnerIndex
 }
