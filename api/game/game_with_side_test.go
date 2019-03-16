@@ -29,7 +29,7 @@ func TestPlayer4Has7Cards(t *testing.T) {
 }
 
 func TestSideDeckHas5CardsWhenPresent(t *testing.T) {
-	if gameTest := NewGame(true); len(gameTest.side) != 5 {
-		t.Fatalf("Side deck has %d cards", len(gameTest.side))
+	if gameTest := NewGame(true); len(*gameTest.board.SideDeck()) != 5 {
+		t.Fatalf("Side deck has %d cards", len(*gameTest.board.SideDeck()))
 	}
 }

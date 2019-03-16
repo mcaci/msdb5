@@ -9,6 +9,7 @@ import (
 
 // Board struct
 type Board struct {
+	side         deck.Cards
 	playedCards  deck.Cards
 	auctionScore uint8
 }
@@ -37,6 +38,11 @@ func (b *Board) PlayedCards() *deck.Cards {
 func (b *Board) PlayedCardIs(card card.ID) bool {
 	b.PlayedCards().Add(card)
 	return len(*b.PlayedCards()) >= 5
+}
+
+// SideDeck func
+func (b *Board) SideDeck() *deck.Cards {
+	return &b.side
 }
 
 func (b Board) String() string {

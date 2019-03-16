@@ -19,14 +19,13 @@ type Game struct {
 	companion    companion.Companion
 	board        board.Board
 	phase        Phase
-	side         deck.Cards
 }
 
 // NewGame func
 func NewGame(withSide bool) *Game {
 	g := new(Game)
 	makePlayers(g)
-	playersDrawAllCards(&g.players, withSide)
+	distributeCards(&g.players, g.board.SideDeck(), withSide)
 	return g
 }
 
@@ -36,14 +35,15 @@ func makePlayers(g *Game) {
 	}
 }
 
-func playersDrawAllCards(players *playerset.Players, withSide bool) {
+func distributeCards(players *playerset.Players, side *deck.Cards, withSide bool) {
 	d := deck.Deck()
-	count := deck.DeckSize
-	if withSide {
-		count -= 5
-	}
-	for i := 0; i < count; i++ {
-		(*players)[i%5].Draw(d)
+	for i := 0; i < deck.DeckSize; i++ {
+		if withSide && i >= deck.DeckSize-5 {
+			side.Add(d.Supply())
+		} else {
+			(*players)[i%5].Draw(d)
+
+		}
 	}
 }
 

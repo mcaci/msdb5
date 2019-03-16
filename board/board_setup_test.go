@@ -29,3 +29,9 @@ func TestBoardSetAuctionScoreTo70(t *testing.T) {
 		t.Fatalf("Auction score for a new board should be 71 but is %d", b.AuctionScore())
 	}
 }
+
+func TestBoardSideDeckIsEmptyAtCreation(t *testing.T) {
+	if b := New(); len(b.side) != 0 {
+		t.Fatal("Size of side deck should be 0")
+	}
+}
