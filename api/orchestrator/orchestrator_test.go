@@ -7,7 +7,7 @@ import (
 )
 
 func TestActionCreationAndAuctionUsage(t *testing.T) {
-	gameTest := NewAction()
+	gameTest := NewAction(false)
 	gameTest.Action("Join#A", "127.0.0.51")
 	_, pInfo, _ := gameTest.Action("Auction#102", "127.0.0.51")
 	if pInfo == "" {
@@ -16,7 +16,7 @@ func TestActionCreationAndAuctionUsage(t *testing.T) {
 }
 
 func TestActionCreationAndPCompanionUsage(t *testing.T) {
-	gameTest := NewAction()
+	gameTest := NewAction(false)
 	gameTest.Action("Join#A", "127.0.0.51")
 	_, pInfo, _ := gameTest.Action("Companion#3#Cup", "127.0.0.51")
 	if pInfo == "" {
@@ -25,7 +25,7 @@ func TestActionCreationAndPCompanionUsage(t *testing.T) {
 }
 
 func TestActionCreationAndPlayCardUsage(t *testing.T) {
-	gameTest := NewAction()
+	gameTest := NewAction(false)
 	gameTest.Action("Join#A", "127.0.0.51")
 	_, pInfo, _ := gameTest.Action("Card#6#Cudgel", "127.0.0.51")
 	if pInfo == "" {
@@ -34,7 +34,7 @@ func TestActionCreationAndPlayCardUsage(t *testing.T) {
 }
 
 func TestCompletedGameReturningScoreInfo(t *testing.T) {
-	gameTest := NewAction()
+	gameTest := NewAction(false)
 	gameTest.Action("Join#A", "127.0.0.51")
 	gameTest.Action("Join#B", "127.0.0.52")
 	gameTest.Action("Join#C", "127.0.0.53")

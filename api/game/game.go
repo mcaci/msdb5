@@ -21,7 +21,8 @@ type Game struct {
 }
 
 // NewGame func
-func NewGame() *Game {
+func NewGame(side bool) *Game {
+	// side deck not used yet
 	g := new(Game)
 	makePlayers(g)
 	playersDrawAllCards(&g.players)

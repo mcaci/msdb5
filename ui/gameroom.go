@@ -25,13 +25,13 @@ type Room struct {
 }
 
 // NewRoom makes a new room.
-func NewRoom() *Room {
+func NewRoom(side bool) *Room {
 	return &Room{
 		forward:    make(chan []byte),
 		join:       make(chan *client),
 		leave:      make(chan *client),
 		clients:    make(map[*client]bool),
-		msdb5board: orchestrator.NewAction(),
+		msdb5board: orchestrator.NewAction(side),
 	}
 }
 

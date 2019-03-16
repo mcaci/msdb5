@@ -19,9 +19,9 @@ type Orchestrator struct {
 }
 
 // NewAction func
-func NewAction() api.Action {
+func NewAction(side bool) api.Action {
 	o := new(Orchestrator)
-	o.game = game.NewGame()
+	o.game = game.NewGame(side)
 	return o
 }
 

@@ -10,9 +10,10 @@ import (
 
 func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
+	var side = flag.Bool("side", false, "Whether to use side deck or not.")
 	flag.Parse() // parse the flags
 
-	r := ui.NewRoom()
+	r := ui.NewRoom(*side)
 	http.Handle("/", ui.NewTemplateHandler())
 	http.Handle("/room", r)
 
