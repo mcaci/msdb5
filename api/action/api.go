@@ -39,4 +39,4 @@ type Action interface {
 	PlayerPredicate
 }
 
-func nextPlayerInTurn(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }
+var playersRoundRobin = func(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }

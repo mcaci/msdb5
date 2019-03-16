@@ -7,6 +7,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
@@ -36,22 +37,23 @@ func (pcs PlayCardStruct) Do(p *player.Player) error {
 	number := data[1]
 	seed := data[2]
 	c, err := card.Create(number, seed)
-	p.Play(c)
+	err = p.Play(c)
+	if err != nil {
+		return err
+	}
 	pcs.board.PlayedCards().Add(c)
 	roundHasEnded := len(*pcs.board.PlayedCards()) == 5
 	if roundHasEnded {
-		roundWinner := briscola.IndexOfWinningCard(*pcs.board.PlayedCards(), pcs.briscolaSeed)
-		roundWinnerIndex := (pcs.playerInTurnIndex + roundWinner + 1) % 5
-		pcs.players[roundWinnerIndex].Collect(pcs.board.PlayedCards())
+		next := roundWinnerIndex(pcs.playerInTurnIndex, *pcs.board.PlayedCards(), pcs.briscolaSeed)
+		pcs.players[next].Collect(pcs.board.PlayedCards())
 	}
 	return err
 }
 func (pcs PlayCardStruct) NextPlayer(playerInTurn uint8) uint8 {
-	next := nextPlayerInTurn(playerInTurn)
+	next := playersRoundRobin(playerInTurn)
 	roundHasEnded := len(*pcs.board.PlayedCards()) == 5
 	if roundHasEnded {
-		roundWinner := briscola.IndexOfWinningCard(*pcs.board.PlayedCards(), pcs.briscolaSeed)
-		next = (pcs.playerInTurnIndex + roundWinner + 1) % 5
+		next = roundWinnerIndex(playerInTurn, *pcs.board.PlayedCards(), pcs.briscolaSeed)
 		pcs.board.PlayedCards().Clear()
 	}
 	return next
@@ -60,3 +62,8 @@ func (pcs PlayCardStruct) NextPhase(players playerset.Players, predicate PlayerP
 	return players.All(predicate.NextPhasePlayerInfo)
 }
 func (pcs PlayCardStruct) NextPhasePlayerInfo(p *player.Player) bool { return p.IsHandEmpty() }
+
+var roundWinnerIndex = func(playerInTurn uint8, cardsPlayed deck.Cards, seed card.Seed) uint8 {
+	winningCardIndex := briscola.IndexOfWinningCard(cardsPlayed, seed)
+	return playersRoundRobin(playerInTurn + winningCardIndex)
+}
