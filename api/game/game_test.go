@@ -24,6 +24,12 @@ func TestPlayer1Has8Cards(t *testing.T) {
 	}
 }
 
+func TestSideDeckHasNoCardsWhenAbsent(t *testing.T) {
+	if gameTest := NewGame(false); len(gameTest.side) != 0 {
+		t.Fatalf("Side deck has %d cards", len(gameTest.side))
+	}
+}
+
 func TestBoardHasASetOfPlayedCards(t *testing.T) {
 	if gameTest := NewGame(false); gameTest.board.PlayedCards() == nil {
 		t.Fatal("The board has no set of played cards")
@@ -68,7 +74,7 @@ func TestSetCompanionAndPlayerReference(t *testing.T) {
 
 func TestNextPlayer(t *testing.T) {
 	testGame := NewGame(false)
-	testGame.NextPlayer(func (uint8) uint8 {return 3})
+	testGame.NextPlayer(func(uint8) uint8 { return 3 })
 	if testGame.playerInTurn != 3 {
 		t.Fatal("current player index should be 3")
 	}
