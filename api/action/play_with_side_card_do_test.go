@@ -35,3 +35,20 @@ func TestPlayWithSideDoNoErrInRoundEnd(t *testing.T) {
 		t.Fatalf("Unexpected error from Play phase: %v", err)
 	}
 }
+
+func TestPlayWithSideDoNoErrInGameEnd(t *testing.T) {
+	testPlayer := player.New()
+	testPlayer.Hand().Add(1)
+	testPlayedCards := deck.Cards{2, 3, 4, 6}
+	testBoard := board.New()
+	testBoard.PlayedCards().Add(testPlayedCards...)
+	testSideDeck := deck.Cards{13, 23, 11, 21, 30}
+	testBoard.SideDeck().Add(testSideDeck...)
+	testObject := NewPlayWithSide("Play#1#Coin", "127.0.0.4", testPlayer,
+		playerset.Players{testPlayer, testPlayer, testPlayer, testPlayer, testPlayer},
+		testBoard, card.Coin)
+	testObject.Do(testPlayer)
+	if len(*testBoard.SideDeck()) != 0 {
+		t.Fatal("At the end of the game side deck should be empty")
+	}
+}
