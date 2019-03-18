@@ -43,6 +43,10 @@ func (pcs PlayWithSideCardStruct) Do(p *player.Player) error {
 		index, _ := pcs.players.FindIndex(func(pl *player.Player) bool { return pl == p })
 		next := roundWinnerIndex(uint8(index), *pcs.board.PlayedCards(), pcs.briscolaSeed)
 		pcs.players[next].Collect(pcs.board.PlayedCards())
+		if pcs.NextPhase(pcs.players, pcs) == game.End {
+			pcs.players[next].Collect(pcs.board.SideDeck())
+			pcs.board.SideDeck().Clear()
+		}
 	}
 	return err
 }

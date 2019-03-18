@@ -36,7 +36,7 @@ func TestPlayWithSideDoNoErrInRoundEnd(t *testing.T) {
 	}
 }
 
-func TestPlayWithSideDoNoErrInGameEnd(t *testing.T) {
+func TestPlayWithSideInGameEndSideDeckIsEmpty(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testPlayedCards := deck.Cards{2, 3, 4, 6}
@@ -45,10 +45,29 @@ func TestPlayWithSideDoNoErrInGameEnd(t *testing.T) {
 	testSideDeck := deck.Cards{13, 23, 11, 21, 30}
 	testBoard.SideDeck().Add(testSideDeck...)
 	testObject := NewPlayWithSide("Play#1#Coin", "127.0.0.4", testPlayer,
-		playerset.Players{testPlayer, testPlayer, testPlayer, testPlayer, testPlayer},
+		playerset.Players{testPlayer, player.New(), player.New(), player.New(), player.New()},
 		testBoard, card.Coin)
 	testObject.Do(testPlayer)
 	if len(*testBoard.SideDeck()) != 0 {
+		t.Log(testBoard)
+		t.Fatal("At the end of the game side deck should be empty")
+	}
+}
+
+func TestPlayWithSideInGameEndRoundWinningPlayerTakesSideDeck(t *testing.T) {
+	testPlayer := player.New()
+	testPlayer.Hand().Add(1)
+	testPlayedCards := deck.Cards{2, 3, 4, 6}
+	testBoard := board.New()
+	testBoard.PlayedCards().Add(testPlayedCards...)
+	testSideDeck := deck.Cards{13, 23, 11, 21, 30}
+	testBoard.SideDeck().Add(testSideDeck...)
+	testObject := NewPlayWithSide("Play#1#Coin", "127.0.0.4", testPlayer,
+		playerset.Players{testPlayer, player.New(), player.New(), player.New(), player.New()},
+		testBoard, card.Coin)
+	testObject.Do(testPlayer)
+	if testPlayer.Count(func(card.ID) uint8 { return 1 }) != 10 {
+		t.Log(testBoard)
 		t.Fatal("At the end of the game side deck should be empty")
 	}
 }
