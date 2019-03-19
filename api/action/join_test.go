@@ -1,6 +1,7 @@
 package action
 
 import (
+	"github.com/nikiforosFreespirit/msdb5/api/game"
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/player"
@@ -8,7 +9,7 @@ import (
 )
 
 func TestJoinPhase(t *testing.T) {
-	if testObject := NewJoin("", ""); testObject.Phase() != 0 {
+	if testObject := NewJoin("", ""); testObject.Phase() != game.Joining {
 		t.Fatalf("Unexpected phase")
 	}
 }
@@ -44,7 +45,7 @@ func TestJoinNextPhaseWithPlayersWithEmptyNameIsTrue(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Join("A", "")
 	testPlayers := playerset.Players{testPlayer}
-	if testObject := NewJoin("", ""); 1 != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewJoin("", ""); game.InsideAuction != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Unexpected play next phase")
 	}
 }
@@ -52,7 +53,7 @@ func TestJoinNextPhaseWithPlayersWithEmptyNameIsTrue(t *testing.T) {
 func TestJoinNextPhaseWithPlayersWithNonEmptyNameIsFalse(t *testing.T) {
 	testPlayer := player.New()
 	testPlayers := playerset.Players{testPlayer}
-	if testObject := NewJoin("", ""); 1 == testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewJoin("", ""); game.InsideAuction == testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Unexpected play next phase")
 	}
 }

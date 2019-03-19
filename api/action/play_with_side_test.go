@@ -3,6 +3,7 @@ package action
 import (
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/api/game"
 	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
@@ -11,7 +12,7 @@ import (
 )
 
 func TestPlayWithSidePhase(t *testing.T) {
-	if testObject := NewPlayWithSide("", "", nil, nil, nil, card.Coin); testObject.Phase() != 3 {
+	if testObject := NewPlayWithSide("", "", nil, nil, nil, card.Coin); testObject.Phase() != game.PlayingCards {
 		t.Fatalf("Unexpected phase")
 	}
 }
@@ -49,7 +50,7 @@ func TestPlayWithSideNextPlayerOfAnyIs3WithRoundEnded(t *testing.T) {
 
 func TestPlayWithSideNextPhaseIsFalse(t *testing.T) {
 	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
-	if testObject := NewPlayWithSide("", "", nil, nil, nil, card.Coin); 4 != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPlayWithSide("", "", nil, nil, nil, card.Coin); game.End != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should step to end phase")
 	}
 }
@@ -58,7 +59,7 @@ func TestPlayWithSideNextPhaseIsTrue(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testPlayers := playerset.Players{player.New(), testPlayer, player.New(), player.New(), player.New()}
-	if testObject := NewPlayWithSide("", "", nil, nil, nil, card.Coin); 4 == testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPlayWithSide("", "", nil, nil, nil, card.Coin); game.End == testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should still be in play phase")
 	}
 }

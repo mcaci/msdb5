@@ -3,12 +3,13 @@ package action
 import (
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/api/game"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 func TestNominatePhase(t *testing.T) {
-	if testObject := NewCompanion("", "", nil, nil, nil); testObject.Phase() != 2 {
+	if testObject := NewCompanion("", "", nil, nil, nil); testObject.Phase() != game.ChosingCompanion {
 		t.Fatalf("Unexpected phase")
 	}
 }
@@ -42,7 +43,7 @@ func TestNominateNextPlayerOf4is4(t *testing.T) {
 
 func TestNominateNextPhaseWithPlayersWithEmptyNameIsTrue(t *testing.T) {
 	testPlayers := playerset.Players{player.New()}
-	if testObject := NewCompanion("", "", nil, nil, nil); 3 != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewCompanion("", "", nil, nil, nil); game.PlayingCards != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should always be true")
 	}
 }

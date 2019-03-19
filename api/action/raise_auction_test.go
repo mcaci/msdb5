@@ -1,6 +1,7 @@
 package action
 
 import (
+	"github.com/nikiforosFreespirit/msdb5/api/game"
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/player"
@@ -8,7 +9,7 @@ import (
 )
 
 func TestAuctionPhase(t *testing.T) {
-	if testObject := NewAuction("", "", nil, nil, nil); testObject.Phase() != 1 {
+	if testObject := NewAuction("", "", nil, nil, nil); testObject.Phase() != game.InsideAuction {
 		t.Fatalf("Unexpected phase")
 	}
 }
@@ -45,7 +46,7 @@ func TestAuctionNextPlayerOf1is3WithPlayer2Folded(t *testing.T) {
 
 func TestAuctionNextPhaseIsFalse(t *testing.T) {
 	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
-	if testObject := NewAuction("", "", nil, testPlayers, nil); 2 == testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewAuction("", "", nil, testPlayers, nil); game.ChosingCompanion == testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should still be in auction phase")
 	}
 }
@@ -54,7 +55,7 @@ func TestAuctionNextPhaseIsTrue(t *testing.T) {
 	testFoldedPlayer := player.New()
 	testFoldedPlayer.Fold()
 	testPlayers := playerset.Players{testFoldedPlayer, testFoldedPlayer, testFoldedPlayer, player.New(), testFoldedPlayer}
-	if testObject := NewAuction("", "", nil, testPlayers, nil); 2 != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewAuction("", "", nil, testPlayers, nil); game.ChosingCompanion != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should still be in auction phase")
 	}
 }
