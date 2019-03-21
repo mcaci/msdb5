@@ -4,7 +4,6 @@ import (
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/api/game"
-	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/briscola"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
@@ -16,14 +15,14 @@ type PlayCardStruct struct {
 	request, origin string
 	playerInTurn    *player.Player
 	players         playerset.Players
-	board           *board.Board
+	playedCards     *deck.Cards
 	briscolaSeed    card.Seed
 }
 
 func NewPlay(request, origin string, playerInTurn *player.Player,
-	players playerset.Players, board *board.Board, briscolaSeed card.Seed) Action {
+	players playerset.Players, playedCards *deck.Cards, briscolaSeed card.Seed) Action {
 	return &PlayCardStruct{request, origin, playerInTurn,
-		players, board, briscolaSeed}
+		players, playedCards, briscolaSeed}
 }
 
 func (pcs PlayCardStruct) Phase() game.Phase { return game.PlayingCards }
@@ -39,21 +38,21 @@ func (pcs PlayCardStruct) Do(p *player.Player) error {
 	if err != nil {
 		return err
 	}
-	pcs.board.PlayedCards().Add(c)
-	roundHasEnded := len(*pcs.board.PlayedCards()) == 5
+	pcs.playedCards.Add(c)
+	roundHasEnded := len(*pcs.playedCards) == 5
 	if roundHasEnded {
 		index, _ := pcs.players.FindIndex(func(pl *player.Player) bool { return pl == p })
-		next := roundWinnerIndex(uint8(index), *pcs.board.PlayedCards(), pcs.briscolaSeed)
-		pcs.players[next].Collect(pcs.board.PlayedCards())
+		next := roundWinnerIndex(uint8(index), *pcs.playedCards, pcs.briscolaSeed)
+		pcs.players[next].Collect(pcs.playedCards)
 	}
 	return err
 }
 func (pcs PlayCardStruct) NextPlayer(playerInTurn uint8) uint8 {
 	next := playersRoundRobin(playerInTurn)
-	roundHasEnded := len(*pcs.board.PlayedCards()) == 5
+	roundHasEnded := len(*pcs.playedCards) == 5
 	if roundHasEnded {
-		next = roundWinnerIndex(playerInTurn, *pcs.board.PlayedCards(), pcs.briscolaSeed)
-		pcs.board.PlayedCards().Clear()
+		next = roundWinnerIndex(playerInTurn, *pcs.playedCards, pcs.briscolaSeed)
+		pcs.playedCards.Clear()
 	}
 	return next
 }

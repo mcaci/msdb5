@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/api/game"
-	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/player"
@@ -32,7 +31,7 @@ func TestPlayDoesNotFindPlayerNotInTurn(t *testing.T) {
 }
 
 func TestPlayNextPlayerOf2is3WithRoundNotEnded(t *testing.T) {
-	testObject := NewPlay("", "", nil, nil, board.New(), card.Coin)
+	testObject := NewPlay("", "", nil, nil, &deck.Cards{}, card.Coin)
 	if nextPlayer := testObject.NextPlayer(2); nextPlayer != 3 {
 		t.Fatalf("Next player should be 3, but is %d", nextPlayer)
 	}
@@ -40,9 +39,7 @@ func TestPlayNextPlayerOf2is3WithRoundNotEnded(t *testing.T) {
 
 func TestPlayNextPlayerOfAnyIs3WithRoundEnded(t *testing.T) {
 	testPlayedCards := deck.Cards{2, 3, 4, 1, 6}
-	testBoard := board.New()
-	testBoard.PlayedCards().Add(testPlayedCards...)
-	testObject := NewPlay("", "", nil, nil, testBoard, card.Coin)
+	testObject := NewPlay("", "", nil, nil, &testPlayedCards, card.Coin)
 	if nextPlayer := testObject.NextPlayer(0); nextPlayer != 4 {
 		t.Fatalf("Next player should be 4, but is %d", nextPlayer)
 	}

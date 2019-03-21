@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/api/game"
-	"github.com/nikiforosFreespirit/msdb5/board"
 	"github.com/nikiforosFreespirit/msdb5/card"
+	"github.com/nikiforosFreespirit/msdb5/deck"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
@@ -14,14 +14,15 @@ type PlayWithSideCardStruct struct {
 	request, origin string
 	playerInTurn    *player.Player
 	players         playerset.Players
-	board           *board.Board
+	playedCards     *deck.Cards
+	sideDeck        *deck.Cards
 	briscolaSeed    card.Seed
 }
 
 func NewPlayWithSide(request, origin string, playerInTurn *player.Player,
-	players playerset.Players, board *board.Board, briscolaSeed card.Seed) Action {
+	players playerset.Players, playedCards *deck.Cards, sideDeck *deck.Cards, briscolaSeed card.Seed) Action {
 	return &PlayWithSideCardStruct{request, origin, playerInTurn,
-		players, board, briscolaSeed}
+		players, playedCards, sideDeck, briscolaSeed}
 }
 
 func (pcs PlayWithSideCardStruct) Phase() game.Phase { return game.PlayingCards }
@@ -37,25 +38,25 @@ func (pcs PlayWithSideCardStruct) Do(p *player.Player) error {
 	if err != nil {
 		return err
 	}
-	pcs.board.PlayedCards().Add(c)
-	roundHasEnded := len(*pcs.board.PlayedCards()) == 5
+	pcs.playedCards.Add(c)
+	roundHasEnded := len(*pcs.playedCards) == 5
 	if roundHasEnded {
 		index, _ := pcs.players.FindIndex(func(pl *player.Player) bool { return pl == p })
-		next := roundWinnerIndex(uint8(index), *pcs.board.PlayedCards(), pcs.briscolaSeed)
-		pcs.players[next].Collect(pcs.board.PlayedCards())
+		next := roundWinnerIndex(uint8(index), *pcs.playedCards, pcs.briscolaSeed)
+		pcs.players[next].Collect(pcs.playedCards)
 		if pcs.NextPhase(pcs.players, pcs) == game.End {
-			pcs.players[next].Collect(pcs.board.SideDeck())
-			pcs.board.SideDeck().Clear()
+			pcs.players[next].Collect(pcs.sideDeck)
+			pcs.sideDeck.Clear()
 		}
 	}
 	return err
 }
 func (pcs PlayWithSideCardStruct) NextPlayer(playerInTurn uint8) uint8 {
 	next := playersRoundRobin(playerInTurn)
-	roundHasEnded := len(*pcs.board.PlayedCards()) == 5
+	roundHasEnded := len(*pcs.playedCards) == 5
 	if roundHasEnded {
-		next = roundWinnerIndex(playerInTurn, *pcs.board.PlayedCards(), pcs.briscolaSeed)
-		pcs.board.PlayedCards().Clear()
+		next = roundWinnerIndex(playerInTurn, *pcs.playedCards, pcs.briscolaSeed)
+		pcs.playedCards.Clear()
 	}
 	return next
 }
