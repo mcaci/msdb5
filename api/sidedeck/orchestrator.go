@@ -42,7 +42,7 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 			o.game.Players(), o.game.SetCompanion)
 	case "Card":
 		actionExec = action.NewPlayWithSide(request, origin, currentPlayer,
-			o.game.Players(), o.game.Board(), o.game.BriscolaSeed())
+			o.game.Players(), o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
 	}
 	err = playPhase(o.game, actionExec)
 	all, me = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("%+v", currentPlayer)

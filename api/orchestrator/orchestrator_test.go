@@ -3,6 +3,8 @@ package orchestrator
 import (
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/api/game"
+
 	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
@@ -41,7 +43,6 @@ func TestCompletedGameReturningScoreInfo(t *testing.T) {
 	gameTest.Action("Join#D", "127.0.0.54")
 	gameTest.Action("Join#E", "127.0.0.55")
 	o := gameTest.(*Orchestrator)
-	o.game.NextPhase(3)
 	o.game.SetCompanion(card.ID(9), o.game.Players()[2])
 	for i, pl := range o.game.Players() {
 		pl.Hand().Clear()
@@ -50,6 +51,7 @@ func TestCompletedGameReturningScoreInfo(t *testing.T) {
 			pl.Fold()
 		}
 	}
+	o.game.NextPhase(game.PlayingCards)
 	gameTest.Action("Card#5#Coin", "127.0.0.51")
 	gameTest.Action("Card#7#Coin", "127.0.0.52")
 	gameTest.Action("Card#9#Coin", "127.0.0.53")
