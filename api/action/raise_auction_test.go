@@ -1,15 +1,16 @@
 package action
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/api/game"
 	"testing"
+
+	"github.com/nikiforosFreespirit/msdb5/api/game"
 
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 func TestAuctionPhase(t *testing.T) {
-	if testObject := NewAuction("", "", nil, nil, nil); testObject.Phase() != game.InsideAuction {
+	if testObject := NewAuction("", "", nil, nil, nil, 0); testObject.Phase() != game.InsideAuction {
 		t.Fatalf("Unexpected phase")
 	}
 }
@@ -17,21 +18,21 @@ func TestAuctionPhase(t *testing.T) {
 func TestAuctionFindsPlayerInTurn(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Join("A", "127.0.0.3")
-	if testObject := NewAuction("", "127.0.0.3", testPlayer, nil, nil); !testObject.Find(testPlayer) {
+	if testObject := NewAuction("", "127.0.0.3", testPlayer, nil, nil, 0); !testObject.Find(testPlayer) {
 		t.Fatalf("Unexpected player")
 	}
 }
 
 func TestAuctionDoesNotFindPlayerNotInTurn(t *testing.T) {
 	testPlayer := player.New()
-	if testObject := NewAuction("", "", nil, nil, nil); testObject.Find(testPlayer) {
+	if testObject := NewAuction("", "", nil, nil, nil, 0); testObject.Find(testPlayer) {
 		t.Fatalf("Unexpected player")
 	}
 }
 
 func TestAuctionNextPlayerOf3is4(t *testing.T) {
 	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
-	if testObject := NewAuction("", "", nil, testPlayers, nil); testObject.NextPlayer(3) != 4 {
+	if testObject := NewAuction("", "", nil, testPlayers, nil, 0); testObject.NextPlayer(3) != 4 {
 		t.Fatalf("Next player should be 4")
 	}
 }
@@ -40,13 +41,13 @@ func TestAuctionNextPlayerOf1is3WithPlayer2Folded(t *testing.T) {
 	testFoldedPlayer := player.New()
 	testFoldedPlayer.Fold()
 	testPlayers := playerset.Players{player.New(), player.New(), testFoldedPlayer, player.New(), player.New()}
-	if testObject := NewAuction("", "", nil, testPlayers, nil); testObject.NextPlayer(1) != 3 {
+	if testObject := NewAuction("", "", nil, testPlayers, nil, 0); testObject.NextPlayer(1) != 3 {
 	}
 }
 
 func TestAuctionNextPhaseIsFalse(t *testing.T) {
 	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
-	if testObject := NewAuction("", "", nil, testPlayers, nil); game.ChosingCompanion == testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewAuction("", "", nil, testPlayers, nil, game.ChosingCompanion); game.ChosingCompanion == testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should still be in auction phase")
 	}
 }
@@ -55,13 +56,29 @@ func TestAuctionNextPhaseIsTrue(t *testing.T) {
 	testFoldedPlayer := player.New()
 	testFoldedPlayer.Fold()
 	testPlayers := playerset.Players{testFoldedPlayer, testFoldedPlayer, testFoldedPlayer, player.New(), testFoldedPlayer}
-	if testObject := NewAuction("", "", nil, testPlayers, nil); game.ChosingCompanion != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewAuction("", "", nil, testPlayers, nil, game.ChosingCompanion); game.ChosingCompanion != testObject.NextPhase(testPlayers, testObject) {
+		t.Fatalf("Should still be in auction phase")
+	}
+}
+
+func TestAuctionWithSideNextPhaseIsFalse(t *testing.T) {
+	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
+	if testObject := NewAuction("", "", nil, testPlayers, nil, game.ExchangingCards); game.ExchangingCards == testObject.NextPhase(testPlayers, testObject) {
+		t.Fatalf("Should still be in auction phase")
+	}
+}
+
+func TestAuctionWithSideNextPhaseIsTrue(t *testing.T) {
+	testFoldedPlayer := player.New()
+	testFoldedPlayer.Fold()
+	testPlayers := playerset.Players{testFoldedPlayer, testFoldedPlayer, testFoldedPlayer, player.New(), testFoldedPlayer}
+	if testObject := NewAuction("", "", nil, testPlayers, nil, game.ExchangingCards); game.ExchangingCards != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should still be in auction phase")
 	}
 }
 
 func TestAuctionNextPhaseWithPlayersWithNonFoldedNameIsFalse(t *testing.T) {
-	if testObject := NewAuction("", "", nil, nil, nil); testObject.NextPhasePlayerInfo(player.New()) {
+	if testObject := NewAuction("", "", nil, nil, nil, 0); testObject.NextPhasePlayerInfo(player.New()) {
 		t.Fatalf("Should be false with non folded player")
 	}
 }
@@ -69,7 +86,7 @@ func TestAuctionNextPhaseWithPlayersWithNonFoldedNameIsFalse(t *testing.T) {
 func TestAuctionNextPhaseWithFoldedPlayerIsTrue(t *testing.T) {
 	testFoldedPlayer := player.New()
 	testFoldedPlayer.Fold()
-	if testObject := NewAuction("", "", nil, nil, nil); !testObject.NextPhasePlayerInfo(testFoldedPlayer) {
+	if testObject := NewAuction("", "", nil, nil, nil, 0); !testObject.NextPhasePlayerInfo(testFoldedPlayer) {
 		t.Fatalf("Should be true with folded player")
 	}
 }
