@@ -11,7 +11,7 @@ import (
 )
 
 func TestPlayPhase(t *testing.T) {
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); testObject.Phase() != game.PlayingCards {
+	if testObject := NewPlay("", "", nil, nil, nil, nil, card.Coin); testObject.Phase() != game.PlayingCards {
 		t.Fatalf("Unexpected phase")
 	}
 }
@@ -19,19 +19,19 @@ func TestPlayPhase(t *testing.T) {
 func TestPlayFindsPlayerInTurn(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Join("A", "127.0.0.4")
-	if testObject := NewPlay("", "127.0.0.4", testPlayer, nil, nil, card.Coin); !testObject.Find(testPlayer) {
+	if testObject := NewPlay("", "127.0.0.4", testPlayer, nil, nil, nil, card.Coin); !testObject.Find(testPlayer) {
 		t.Fatalf("Unexpected player")
 	}
 }
 
 func TestPlayDoesNotFindPlayerNotInTurn(t *testing.T) {
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); testObject.Find(player.New()) {
+	if testObject := NewPlay("", "", nil, nil, nil, nil, card.Coin); testObject.Find(player.New()) {
 		t.Fatalf("Unexpected player")
 	}
 }
 
 func TestPlayNextPlayerOf2is3WithRoundNotEnded(t *testing.T) {
-	testObject := NewPlay("", "", nil, nil, &deck.Cards{}, card.Coin)
+	testObject := NewPlay("", "", nil, nil, &deck.Cards{}, nil, card.Coin)
 	if nextPlayer := testObject.NextPlayer(2); nextPlayer != 3 {
 		t.Fatalf("Next player should be 3, but is %d", nextPlayer)
 	}
@@ -39,7 +39,7 @@ func TestPlayNextPlayerOf2is3WithRoundNotEnded(t *testing.T) {
 
 func TestPlayNextPlayerOfAnyIs3WithRoundEnded(t *testing.T) {
 	testPlayedCards := deck.Cards{2, 3, 4, 1, 6}
-	testObject := NewPlay("", "", nil, nil, &testPlayedCards, card.Coin)
+	testObject := NewPlay("", "", nil, nil, &testPlayedCards, nil, card.Coin)
 	if nextPlayer := testObject.NextPlayer(0); nextPlayer != 4 {
 		t.Fatalf("Next player should be 4, but is %d", nextPlayer)
 	}
@@ -47,7 +47,7 @@ func TestPlayNextPlayerOfAnyIs3WithRoundEnded(t *testing.T) {
 
 func TestPlayNextPhaseIsFalse(t *testing.T) {
 	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); game.End != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPlay("", "", nil, nil, nil, nil, card.Coin); game.End != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should step to end phase")
 	}
 }
@@ -56,13 +56,13 @@ func TestPlayNextPhaseIsTrue(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testPlayers := playerset.Players{player.New(), testPlayer, player.New(), player.New(), player.New()}
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); game.End == testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPlay("", "", nil, nil, nil, nil, card.Coin); game.End == testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should still be in play phase")
 	}
 }
 
 func TestPlayNextPhaseWithPlayersWithNonFoldedNameIsTrue(t *testing.T) {
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); !testObject.NextPhasePlayerInfo(player.New()) {
+	if testObject := NewPlay("", "", nil, nil, nil, nil, card.Coin); !testObject.NextPhasePlayerInfo(player.New()) {
 		t.Fatalf("Should be true with empty handed player")
 	}
 }
@@ -70,7 +70,7 @@ func TestPlayNextPhaseWithPlayersWithNonFoldedNameIsTrue(t *testing.T) {
 func TestPlayNextPhaseWithFoldedPlayerIsFalse(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); testObject.NextPhasePlayerInfo(testPlayer) {
+	if testObject := NewPlay("", "", nil, nil, nil, nil, card.Coin); testObject.NextPhasePlayerInfo(testPlayer) {
 		t.Fatalf("Should be false with non empty handed player")
 	}
 }

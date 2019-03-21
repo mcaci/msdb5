@@ -16,13 +16,14 @@ type PlayCardStruct struct {
 	playerInTurn    *player.Player
 	players         playerset.Players
 	playedCards     *deck.Cards
+	sideDeck        *deck.Cards
 	briscolaSeed    card.Seed
 }
 
 func NewPlay(request, origin string, playerInTurn *player.Player,
-	players playerset.Players, playedCards *deck.Cards, briscolaSeed card.Seed) Action {
+	players playerset.Players, playedCards *deck.Cards, sideDeck *deck.Cards, briscolaSeed card.Seed) Action {
 	return &PlayCardStruct{request, origin, playerInTurn,
-		players, playedCards, briscolaSeed}
+		players, playedCards, sideDeck, briscolaSeed}
 }
 
 func (pcs PlayCardStruct) Phase() game.Phase { return game.PlayingCards }
@@ -44,6 +45,10 @@ func (pcs PlayCardStruct) Do(p *player.Player) error {
 		index, _ := pcs.players.FindIndex(func(pl *player.Player) bool { return pl == p })
 		next := roundWinnerIndex(uint8(index), *pcs.playedCards, pcs.briscolaSeed)
 		pcs.players[next].Collect(pcs.playedCards)
+		if len(*pcs.sideDeck) > 0 && pcs.NextPhase(pcs.players, pcs) == game.End {
+			pcs.players[next].Collect(pcs.sideDeck)
+			pcs.sideDeck.Clear()
+		}
 	}
 	return err
 }
