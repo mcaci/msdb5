@@ -33,14 +33,14 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	case "Join":
 		actionExec = action.NewJoin(request, origin)
 	case "Auction":
-		actionExec = action.NewAuction(request, origin, currentPlayer,
-			o.game.Players(), o.game.Board())
+		actionExec = action.NewAuction(request, origin, currentPlayer, o.game.Players(),
+			o.game.Board(), game.ChosingCompanion)
 	case "Companion":
-		actionExec = action.NewCompanion(request, origin, currentPlayer,
-			o.game.Players(), o.game.SetCompanion)
+		actionExec = action.NewCompanion(request, origin, currentPlayer,o.game.Players(),
+			o.game.SetCompanion)
 	case "Card":
-		actionExec = action.NewPlay(request, origin, currentPlayer,
-			o.game.Players(), o.game.Board().PlayedCards(), o.game.BriscolaSeed())
+		actionExec = action.NewPlay(request, origin, currentPlayer,o.game.Players(),
+			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
 	}
 	err = playPhase(o.game, actionExec)
 	all, me = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("%+v", currentPlayer)
