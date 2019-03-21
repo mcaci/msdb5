@@ -33,8 +33,10 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	case "Join":
 		actionExec = action.NewJoin(request, origin)
 	case "Auction":
-		actionExec = action.NewAuction(request, origin, currentPlayer,
+		actionExec = action.NewAuctionWithSide(request, origin, currentPlayer,
 			o.game.Players(), o.game.Board())
+	case "Exchange":
+		actionExec = action.NewExchangeCards(request, origin, currentPlayer, o.game.Board().SideDeck())
 	case "Companion":
 		actionExec = action.NewCompanionWithSide(request, origin, currentPlayer,
 			o.game.Players(), o.game.SetCompanion)
