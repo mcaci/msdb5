@@ -35,72 +35,22 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 		return "", "", err
 	}
 	// find step
-	var finder action.Finder
-	switch data[0] {
-	case "Join":
-		finder = action.NewJoinFinder(request, origin)
-	default:
-		finder = action.NewPlayerFinder(origin, o.game.PlayerInTurn())
-	}
+	finder := NewFinder(data[0], request, origin, currentPlayer)
 	p, err := findStep(finder, o.game.Players())
 	if err != nil {
 		return "", "", err
 	}
 	// do step
-	var actionExec action.Executer
-	switch data[0] {
-	case "Join":
-		actionExec = action.NewJoin(request, origin)
-	case "Auction":
-		actionExec = action.NewAuction(request, origin, o.game.Players(), o.game.Board())
-	case "Exchange":
-		actionExec = action.NewExchangeCards(request, origin, o.game.Board().SideDeck())
-	case "Companion":
-		actionExec = action.NewCompanion(request, origin, o.game.Players(),
-			o.game.SetCompanion)
-	case "Card":
-		actionExec = action.NewPlay(request, origin, o.game.Players(),
-			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
-	}
+	actionExec := NewExecuter(data[0], request, origin, o)
 	err = playStep(actionExec, p)
 	if err != nil {
 		return "", "", err
 	}
-
-	// next player
-	var nextPlayer action.NextPlayerSelector
-	switch data[0] {
-	case "Join":
-		nextPlayer = action.NewPlayerSelector()
-	case "Auction":
-		nextPlayer = action.NewAuction(request, origin, o.game.Players(), o.game.Board())
-	case "Exchange":
-		nextPlayer = action.NewExchangeCards(request, origin, o.game.Board().SideDeck())
-	case "Companion":
-		nextPlayer = action.NewCompanion(request, origin, o.game.Players(),
-			o.game.SetCompanion)
-	case "Card":
-		nextPlayer = action.NewPlay(request, origin, o.game.Players(),
-			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
-	}
+	// next player step
+	nextPlayer := NewSelector(data[0], request, origin, o)
 	nextPlayerStep(nextPlayer, o.game)
-
 	// next phase
-	var nextPhase action.NextPhaseChanger
-	switch data[0] {
-	case "Join":
-		nextPhase = action.NewPhaseChanger(o.game.Players())
-	case "Auction":
-		nextPhase = action.NewAuction(request, origin, o.game.Players(), o.game.Board())
-	case "Exchange":
-		nextPhase = action.NewExchangeCards(request, origin, o.game.Board().SideDeck())
-	case "Companion":
-		nextPhase = action.NewCompanion(request, origin, o.game.Players(),
-			o.game.SetCompanion)
-	case "Card":
-		nextPhase = action.NewPlay(request, origin, o.game.Players(),
-			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
-	}
+	nextPhase := NewChanger(data[0], request, origin, o)
 	nextPhaseStep(nextPhase, o.game)
 
 	all, me = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("%+v", currentPlayer)

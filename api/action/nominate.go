@@ -20,6 +20,10 @@ func NewCompanion(request, origin string,
 	return &CompanionStruct{request, origin, players, set}
 }
 
+func NewSelfPlayerSelector() NextPlayerSelector {
+	return &CompanionStruct{"", "", nil, nil}
+}
+
 func (cs CompanionStruct) Do(p *player.Player) error {
 	data := strings.Split(cs.request, "#")
 	number := data[1]

@@ -2,7 +2,6 @@ package action
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/api/game"
-	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 type InputAction string
@@ -21,14 +20,5 @@ func (ia InputAction) Phase() game.Phase {
 		return game.PlayingCards
 	default:
 		return game.End
-	}
-}
-
-func (ia InputAction) Find(p *player.Player) bool {
-	switch ia {
-	case "Join":
-		return p.IsNameEmpty()
-	default:
-		return true
 	}
 }
