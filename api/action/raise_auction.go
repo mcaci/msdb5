@@ -27,13 +27,14 @@ func (as AuctionStruct) Do(p *player.Player) error {
 }
 func (as AuctionStruct) NextPlayer(playerInTurn uint8) uint8 {
 	winnerIndex := playersRoundRobin(playerInTurn)
-	for as.NextPhasePlayerInfo(as.players[winnerIndex]) {
+	for as.players[winnerIndex].Folded() {
 		winnerIndex = playersRoundRobin(winnerIndex)
 	}
 	return winnerIndex
 }
-func (as AuctionStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) game.Phase {
-	if players.Count(predicate.NextPhasePlayerInfo) == 4 {
+func (as AuctionStruct) NextPhase() game.Phase {
+	var isFolded = func(p *player.Player) bool { return p.Folded() }
+	if as.players.Count(isFolded) == 4 {
 		if len(*as.board.SideDeck()) > 0 {
 			return game.ExchangingCards
 		}
@@ -41,4 +42,3 @@ func (as AuctionStruct) NextPhase(players playerset.Players, predicate PlayerPre
 	}
 	return game.InsideAuction
 }
-func (as AuctionStruct) NextPhasePlayerInfo(p *player.Player) bool { return p.Folded() }

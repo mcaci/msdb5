@@ -3,7 +3,6 @@ package action
 import (
 	"github.com/nikiforosFreespirit/msdb5/api/game"
 	"github.com/nikiforosFreespirit/msdb5/player"
-	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 type PhaseSupplier interface {
@@ -23,18 +22,13 @@ type NextPlayerSelector interface {
 }
 
 type NextPhaseChanger interface {
-	NextPhase(playerset.Players, PlayerPredicate) game.Phase
-}
-
-type PlayerPredicate interface {
-	NextPhasePlayerInfo(*player.Player) bool
+	NextPhase() game.Phase
 }
 
 type Action interface {
 	Executer
 	NextPlayerSelector
 	NextPhaseChanger
-	PlayerPredicate
 }
 
 var playersRoundRobin = func(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }

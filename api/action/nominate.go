@@ -36,7 +36,4 @@ func (cs CompanionStruct) Do(p *player.Player) error {
 	return nil
 }
 func (cs CompanionStruct) NextPlayer(playerInTurn uint8) uint8 { return playerInTurn }
-func (cs CompanionStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) game.Phase {
-	return game.PlayingCards
-}
-func (cs CompanionStruct) NextPhasePlayerInfo(p *player.Player) bool { return true }
+func (cs CompanionStruct) NextPhase() game.Phase               { return game.PlayingCards }

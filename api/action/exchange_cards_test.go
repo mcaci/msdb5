@@ -4,8 +4,6 @@ import (
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/api/game"
-	"github.com/nikiforosFreespirit/msdb5/player"
-	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 func TestExchangeCardsNextPlayerOf2is2(t *testing.T) {
@@ -21,21 +19,13 @@ func TestExchangeCardsNextPlayerOf4is4(t *testing.T) {
 }
 
 func TestExchangeCardsNextPhaseWhenInputIs0(t *testing.T) {
-	testPlayers := playerset.Players{player.New()}
-	if testObject := NewExchangeCards("#0", "", nil); game.ChosingCompanion != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewExchangeCards("#0", "", nil); game.ChosingCompanion != testObject.NextPhase() {
 		t.Fatalf("Should change phase when 0 is in the request")
 	}
 }
 
 func TestExchangeCardsNextPhaseWhenInputIsNot0(t *testing.T) {
-	testPlayers := playerset.Players{player.New()}
-	if testObject := NewExchangeCards("#1", "", nil); game.ExchangingCards != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewExchangeCards("#1", "", nil); game.ExchangingCards != testObject.NextPhase() {
 		t.Fatalf("Should not change phase when 1 is in the request")
-	}
-}
-
-func TestExchangeCardsNextPhaseWithPlayersWithNonEmptyNameIsFalse(t *testing.T) {
-	if testObject := NewExchangeCards("", "", nil); !testObject.NextPhasePlayerInfo(player.New()) {
-		t.Fatalf("Should always be true")
 	}
 }

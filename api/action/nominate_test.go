@@ -4,8 +4,6 @@ import (
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/api/game"
-	"github.com/nikiforosFreespirit/msdb5/player"
-	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
 func TestNominateNextPlayerOf2is2(t *testing.T) {
@@ -21,14 +19,7 @@ func TestNominateNextPlayerOf4is4(t *testing.T) {
 }
 
 func TestNominateNextPhaseWithPlayersWithEmptyNameIsTrue(t *testing.T) {
-	testPlayers := playerset.Players{player.New()}
-	if testObject := NewCompanion("", "", nil, nil); game.PlayingCards != testObject.NextPhase(testPlayers, testObject) {
-		t.Fatalf("Should always be true")
-	}
-}
-
-func TestNominateNextPhaseWithPlayersWithNonEmptyNameIsFalse(t *testing.T) {
-	if testObject := NewCompanion("", "", nil, nil); !testObject.NextPhasePlayerInfo(player.New()) {
+	if testObject := NewCompanion("", "", nil, nil); game.PlayingCards != testObject.NextPhase() {
 		t.Fatalf("Should always be true")
 	}
 }

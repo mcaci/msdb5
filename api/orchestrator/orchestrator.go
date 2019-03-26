@@ -29,12 +29,14 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	data := strings.Split(request, "#")
 	currentPlayer := o.game.PlayerInTurn()
 	inputAction := action.InputAction(data[0])
+	// phase step
 	err = phaseStep(inputAction, o.game.CurrentPhase())
 	if err != nil {
 		return "", "", err
 	}
+	// find step
 	var finder action.Finder
-	switch inputAction {
+	switch data[0] {
 	case "Join":
 		finder = action.NewJoinFinder(request, origin)
 	default:
@@ -44,7 +46,8 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	if err != nil {
 		return "", "", err
 	}
-	var actionExec action.Action
+	// do step
+	var actionExec action.Executer
 	switch data[0] {
 	case "Join":
 		actionExec = action.NewJoin(request, origin)
@@ -63,8 +66,43 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	if err != nil {
 		return "", "", err
 	}
-	nextPlayerStep(actionExec, o.game)
-	nextPhaseStep(actionExec, actionExec, o.game)
+
+	// next player
+	var nextPlayer action.NextPlayerSelector
+	switch data[0] {
+	case "Join":
+		nextPlayer = action.NewPlayerSelector()
+	case "Auction":
+		nextPlayer = action.NewAuction(request, origin, o.game.Players(), o.game.Board())
+	case "Exchange":
+		nextPlayer = action.NewExchangeCards(request, origin, o.game.Board().SideDeck())
+	case "Companion":
+		nextPlayer = action.NewCompanion(request, origin, o.game.Players(),
+			o.game.SetCompanion)
+	case "Card":
+		nextPlayer = action.NewPlay(request, origin, o.game.Players(),
+			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
+	}
+	nextPlayerStep(nextPlayer, o.game)
+
+	// next phase
+	var nextPhase action.NextPhaseChanger
+	switch data[0] {
+	case "Join":
+		nextPhase = action.NewPhaseChanger(o.game.Players())
+	case "Auction":
+		nextPhase = action.NewAuction(request, origin, o.game.Players(), o.game.Board())
+	case "Exchange":
+		nextPhase = action.NewExchangeCards(request, origin, o.game.Board().SideDeck())
+	case "Companion":
+		nextPhase = action.NewCompanion(request, origin, o.game.Players(),
+			o.game.SetCompanion)
+	case "Card":
+		nextPhase = action.NewPlay(request, origin, o.game.Players(),
+			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
+	}
+	nextPhaseStep(nextPhase, o.game)
+
 	all, me = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("%+v", currentPlayer)
 	o.game.Log(request, origin, err)
 	if o.game.CurrentPhase() == game.End {
@@ -88,8 +126,8 @@ func playStep(executer action.Executer, p *player.Player) error {
 func nextPlayerStep(next action.NextPlayerSelector, g *game.Game) {
 	g.NextPlayer(next.NextPlayer)
 }
-func nextPhaseStep(nextSel action.NextPhaseChanger, nextPred action.PlayerPredicate, g *game.Game) {
-	g.NextPhase(nextSel.NextPhase(g.Players(), nextPred))
+func nextPhaseStep(nextSel action.NextPhaseChanger, g *game.Game) {
+	g.NextPhase(nextSel.NextPhase())
 }
 
 func endGame(players playerset.Players, companion player.ScoreCounter) (string, string, error) {

@@ -10,13 +10,13 @@ import (
 )
 
 func TestJoinNextPlayerOf0is1(t *testing.T) {
-	if testObject := NewJoin("", ""); testObject.NextPlayer(0) != 1 {
+	if testObject := NewPlayerSelector(); testObject.NextPlayer(0) != 1 {
 		t.Fatalf("Next player should be 1")
 	}
 }
 
 func TestJoinNextPlayerOf4is0(t *testing.T) {
-	if testObject := NewJoin("", ""); testObject.NextPlayer(4) != 0 {
+	if testObject := NewPlayerSelector(); testObject.NextPlayer(4) != 0 {
 		t.Fatalf("Next player should be 1")
 	}
 }
@@ -25,7 +25,7 @@ func TestJoinNextPhaseWithPlayersWithEmptyNameIsTrue(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Join("A", "")
 	testPlayers := playerset.Players{testPlayer}
-	if testObject := NewJoin("", ""); game.InsideAuction != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPhaseChanger(testPlayers); game.InsideAuction != testObject.NextPhase() {
 		t.Fatalf("Unexpected play next phase")
 	}
 }
@@ -33,7 +33,7 @@ func TestJoinNextPhaseWithPlayersWithEmptyNameIsTrue(t *testing.T) {
 func TestJoinNextPhaseWithPlayersWithNonEmptyNameIsFalse(t *testing.T) {
 	testPlayer := player.New()
 	testPlayers := playerset.Players{testPlayer}
-	if testObject := NewJoin("", ""); game.InsideAuction == testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPhaseChanger(testPlayers); game.InsideAuction == testObject.NextPhase() {
 		t.Fatalf("Unexpected play next phase")
 	}
 }

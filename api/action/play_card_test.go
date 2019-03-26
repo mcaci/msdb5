@@ -26,8 +26,7 @@ func TestPlayNextPlayerOfAnyIs3WithRoundEnded(t *testing.T) {
 }
 
 func TestPlayNextPhaseIsFalse(t *testing.T) {
-	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); game.End != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); game.End != testObject.NextPhase() {
 		t.Fatalf("Should step to end phase")
 	}
 }
@@ -36,21 +35,7 @@ func TestPlayNextPhaseIsTrue(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testPlayers := playerset.Players{player.New(), testPlayer, player.New(), player.New(), player.New()}
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); game.End == testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewPlay("", "", testPlayers, nil, nil, card.Coin); game.End == testObject.NextPhase() {
 		t.Fatalf("Should still be in play phase")
-	}
-}
-
-func TestPlayNextPhaseWithPlayersWithNonFoldedNameIsTrue(t *testing.T) {
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); !testObject.NextPhasePlayerInfo(player.New()) {
-		t.Fatalf("Should be true with empty handed player")
-	}
-}
-
-func TestPlayNextPhaseWithFoldedPlayerIsFalse(t *testing.T) {
-	testPlayer := player.New()
-	testPlayer.Hand().Add(1)
-	if testObject := NewPlay("", "", nil, nil, nil, card.Coin); testObject.NextPhasePlayerInfo(testPlayer) {
-		t.Fatalf("Should be false with non empty handed player")
 	}
 }

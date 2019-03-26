@@ -27,7 +27,7 @@ func (ia InputAction) Phase() game.Phase {
 func (ia InputAction) Find(p *player.Player) bool {
 	switch ia {
 	case "Join":
-		return isPlayerEmpty(p)
+		return p.IsNameEmpty()
 	default:
 		return true
 	}
