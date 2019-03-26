@@ -12,21 +12,18 @@ import (
 
 type AuctionStruct struct {
 	request, origin string
-	playerInTurn    *player.Player
 	players         playerset.Players
 	board           *board.Board
 	nextPhase       game.Phase
+	Finder
 }
 
 func NewAuction(request, origin string, playerInTurn *player.Player,
 	players playerset.Players, board *board.Board, nextPhase game.Phase) Action {
 	return &AuctionStruct{request, origin,
-		playerInTurn, players, board, nextPhase}
+		players, board, nextPhase, NewPlayerFinder(origin, playerInTurn)}
 }
 func (as AuctionStruct) Phase() game.Phase { return game.InsideAuction }
-func (as AuctionStruct) Find(p *player.Player) bool {
-	return p.IsExpectedPlayer(as.playerInTurn, as.origin)
-}
 func (as AuctionStruct) Do(p *player.Player) error {
 	data := strings.Split(as.request, "#")
 	score := data[1]

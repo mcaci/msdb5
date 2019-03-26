@@ -13,23 +13,20 @@ import (
 
 type PlayCardStruct struct {
 	request, origin string
-	playerInTurn    *player.Player
 	players         playerset.Players
 	playedCards     *deck.Cards
 	sideDeck        *deck.Cards
 	briscolaSeed    card.Seed
+	Finder
 }
 
 func NewPlay(request, origin string, playerInTurn *player.Player,
 	players playerset.Players, playedCards *deck.Cards, sideDeck *deck.Cards, briscolaSeed card.Seed) Action {
-	return &PlayCardStruct{request, origin, playerInTurn,
-		players, playedCards, sideDeck, briscolaSeed}
+	return &PlayCardStruct{request, origin, players,
+		playedCards, sideDeck, briscolaSeed, NewPlayerFinder(origin, playerInTurn)}
 }
 
 func (pcs PlayCardStruct) Phase() game.Phase { return game.PlayingCards }
-func (pcs PlayCardStruct) Find(p *player.Player) bool {
-	return p.IsExpectedPlayer(pcs.playerInTurn, pcs.origin)
-}
 func (pcs PlayCardStruct) Do(p *player.Player) error {
 	data := strings.Split(pcs.request, "#")
 	number := data[1]

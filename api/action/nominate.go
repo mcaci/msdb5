@@ -11,20 +11,17 @@ import (
 
 type CompanionStruct struct {
 	request, origin string
-	playerInTurn    *player.Player
 	players         playerset.Players
 	set             func(card.ID, *player.Player)
+	Finder
 }
 
 func NewCompanion(request, origin string, playerInTurn *player.Player,
 	players playerset.Players, set func(card.ID, *player.Player)) Action {
-	return &CompanionStruct{request, origin, playerInTurn, players, set}
+	return &CompanionStruct{request, origin, players, set, NewPlayerFinder(origin, playerInTurn)}
 }
 
 func (cs CompanionStruct) Phase() game.Phase { return game.ChosingCompanion }
-func (cs CompanionStruct) Find(p *player.Player) bool {
-	return p.IsExpectedPlayer(cs.playerInTurn, cs.origin)
-}
 func (cs CompanionStruct) Do(p *player.Player) error {
 	data := strings.Split(cs.request, "#")
 	number := data[1]

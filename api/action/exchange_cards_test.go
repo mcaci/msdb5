@@ -14,14 +14,6 @@ func TestExchangeCardsPhase(t *testing.T) {
 	}
 }
 
-func TestExchangeCardsFindsPlayerInTurn(t *testing.T) {
-	testPlayer := player.New()
-	testPlayer.Join("A", "127.0.0.3")
-	if testObject := NewExchangeCards("", "127.0.0.3", testPlayer, nil); !testObject.Find(testPlayer) {
-		t.Fatalf("Unexpected player")
-	}
-}
-
 func TestExchangeCardsNextPlayerOf2is2(t *testing.T) {
 	if testObject := NewExchangeCards("", "", nil, nil); testObject.NextPlayer(2) != 2 {
 		t.Fatalf("Next player should be 2")

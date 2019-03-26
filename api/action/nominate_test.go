@@ -14,14 +14,6 @@ func TestNominatePhase(t *testing.T) {
 	}
 }
 
-func TestNominateFindsPlayerInTurn(t *testing.T) {
-	testPlayer := player.New()
-	testPlayer.Join("A", "127.0.0.3")
-	if testObject := NewCompanion("", "127.0.0.3", testPlayer, nil, nil); !testObject.Find(testPlayer) {
-		t.Fatalf("Unexpected player")
-	}
-}
-
 func TestNominateDoesNotFindPlayerNotInTurn(t *testing.T) {
 	testPlayer := player.New()
 	if testObject := NewCompanion("", "", nil, nil, nil); testObject.Find(testPlayer) {

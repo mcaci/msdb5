@@ -15,17 +15,15 @@ import (
 
 type ExchangeCardsStruct struct {
 	request, origin string
-	playerInTurn    *player.Player
 	sideDeck        *deck.Cards
+	Finder
 }
 
 func NewExchangeCards(request, origin string, playerInTurn *player.Player, sideDeck *deck.Cards) Action {
-	return &ExchangeCardsStruct{request, origin, playerInTurn, sideDeck}
+	return &ExchangeCardsStruct{request, origin, sideDeck, NewPlayerFinder(origin, playerInTurn)}
 }
 func (ecs ExchangeCardsStruct) Phase() game.Phase { return game.ExchangingCards }
-func (ecs ExchangeCardsStruct) Find(p *player.Player) bool {
-	return p.IsExpectedPlayer(ecs.playerInTurn, ecs.origin)
-}
+
 func (ecs ExchangeCardsStruct) Do(p *player.Player) error {
 	data := strings.Split(ecs.request, "#")
 	number := data[1]

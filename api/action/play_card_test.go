@@ -16,20 +16,6 @@ func TestPlayPhase(t *testing.T) {
 	}
 }
 
-func TestPlayFindsPlayerInTurn(t *testing.T) {
-	testPlayer := player.New()
-	testPlayer.Join("A", "127.0.0.4")
-	if testObject := NewPlay("", "127.0.0.4", testPlayer, nil, nil, nil, card.Coin); !testObject.Find(testPlayer) {
-		t.Fatalf("Unexpected player")
-	}
-}
-
-func TestPlayDoesNotFindPlayerNotInTurn(t *testing.T) {
-	if testObject := NewPlay("", "", nil, nil, nil, nil, card.Coin); testObject.Find(player.New()) {
-		t.Fatalf("Unexpected player")
-	}
-}
-
 func TestPlayNextPlayerOf2is3WithRoundNotEnded(t *testing.T) {
 	testObject := NewPlay("", "", nil, nil, &deck.Cards{}, nil, card.Coin)
 	if nextPlayer := testObject.NextPlayer(2); nextPlayer != 3 {
