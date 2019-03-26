@@ -14,15 +14,11 @@ type AuctionStruct struct {
 	request, origin string
 	players         playerset.Players
 	board           *board.Board
-	Finder
 }
 
-func NewAuction(request, origin string, playerInTurn *player.Player,
-	players playerset.Players, board *board.Board) Action {
-	return &AuctionStruct{request, origin,
-		players, board, NewPlayerFinder(origin, playerInTurn)}
+func NewAuction(request, origin string, players playerset.Players, board *board.Board) Action {
+	return &AuctionStruct{request, origin, players, board}
 }
-func (as AuctionStruct) Phase() game.Phase { return game.InsideAuction }
 func (as AuctionStruct) Do(p *player.Player) error {
 	data := strings.Split(as.request, "#")
 	score := data[1]
@@ -43,6 +39,6 @@ func (as AuctionStruct) NextPhase(players playerset.Players, predicate PlayerPre
 		}
 		return game.ChosingCompanion
 	}
-	return as.Phase()
+	return game.InsideAuction
 }
 func (as AuctionStruct) NextPhasePlayerInfo(p *player.Player) bool { return p.Folded() }

@@ -16,13 +16,11 @@ import (
 type ExchangeCardsStruct struct {
 	request, origin string
 	sideDeck        *deck.Cards
-	Finder
 }
 
-func NewExchangeCards(request, origin string, playerInTurn *player.Player, sideDeck *deck.Cards) Action {
-	return &ExchangeCardsStruct{request, origin, sideDeck, NewPlayerFinder(origin, playerInTurn)}
+func NewExchangeCards(request, origin string, sideDeck *deck.Cards) Action {
+	return &ExchangeCardsStruct{request, origin, sideDeck}
 }
-func (ecs ExchangeCardsStruct) Phase() game.Phase { return game.ExchangingCards }
 
 func (ecs ExchangeCardsStruct) Do(p *player.Player) error {
 	data := strings.Split(ecs.request, "#")

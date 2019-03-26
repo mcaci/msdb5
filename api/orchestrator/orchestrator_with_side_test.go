@@ -28,8 +28,9 @@ func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
 	gameTest.Action("Card#7#Coin", "127.0.0.52")
 	gameTest.Action("Card#9#Coin", "127.0.0.53")
 	gameTest.Action("Card#1#Cup", "127.0.0.54")
-	scoreInfo, _, _ := gameTest.Action("Card#3#Cup", "127.0.0.55")
+	scoreInfo, _, err := gameTest.Action("Card#3#Cup", "127.0.0.55")
 	if scoreInfo == "" {
+		t.Log(err)
 		t.Fatal("Expecting transition to end game and scoring")
 	}
 }

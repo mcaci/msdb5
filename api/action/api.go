@@ -31,8 +31,6 @@ type PlayerPredicate interface {
 }
 
 type Action interface {
-	PhaseSupplier
-	Finder
 	Executer
 	NextPlayerSelector
 	NextPhaseChanger

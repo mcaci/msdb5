@@ -8,40 +8,34 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
 
-func TestExchangeCardsPhase(t *testing.T) {
-	if testObject := NewExchangeCards("", "", nil, nil); testObject.Phase() != game.ExchangingCards {
-		t.Fatalf("Unexpected phase")
-	}
-}
-
 func TestExchangeCardsNextPlayerOf2is2(t *testing.T) {
-	if testObject := NewExchangeCards("", "", nil, nil); testObject.NextPlayer(2) != 2 {
+	if testObject := NewExchangeCards("", "", nil); testObject.NextPlayer(2) != 2 {
 		t.Fatalf("Next player should be 2")
 	}
 }
 
 func TestExchangeCardsNextPlayerOf4is4(t *testing.T) {
-	if testObject := NewExchangeCards("", "", nil, nil); testObject.NextPlayer(4) != 4 {
+	if testObject := NewExchangeCards("", "", nil); testObject.NextPlayer(4) != 4 {
 		t.Fatalf("Next player should be 1")
 	}
 }
 
 func TestExchangeCardsNextPhaseWhenInputIs0(t *testing.T) {
 	testPlayers := playerset.Players{player.New()}
-	if testObject := NewExchangeCards("#0", "", nil, nil); game.ChosingCompanion != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewExchangeCards("#0", "", nil); game.ChosingCompanion != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should change phase when 0 is in the request")
 	}
 }
 
 func TestExchangeCardsNextPhaseWhenInputIsNot0(t *testing.T) {
 	testPlayers := playerset.Players{player.New()}
-	if testObject := NewExchangeCards("#1", "", nil, nil); game.ExchangingCards != testObject.NextPhase(testPlayers, testObject) {
+	if testObject := NewExchangeCards("#1", "", nil); game.ExchangingCards != testObject.NextPhase(testPlayers, testObject) {
 		t.Fatalf("Should not change phase when 1 is in the request")
 	}
 }
 
 func TestExchangeCardsNextPhaseWithPlayersWithNonEmptyNameIsFalse(t *testing.T) {
-	if testObject := NewExchangeCards("", "", nil, nil); !testObject.NextPhasePlayerInfo(player.New()) {
+	if testObject := NewExchangeCards("", "", nil); !testObject.NextPhasePlayerInfo(player.New()) {
 		t.Fatalf("Should always be true")
 	}
 }

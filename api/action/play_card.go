@@ -17,16 +17,14 @@ type PlayCardStruct struct {
 	playedCards     *deck.Cards
 	sideDeck        *deck.Cards
 	briscolaSeed    card.Seed
-	Finder
 }
 
-func NewPlay(request, origin string, playerInTurn *player.Player,
-	players playerset.Players, playedCards *deck.Cards, sideDeck *deck.Cards, briscolaSeed card.Seed) Action {
+func NewPlay(request, origin string, players playerset.Players, 
+	playedCards *deck.Cards, sideDeck *deck.Cards, briscolaSeed card.Seed) Action {
 	return &PlayCardStruct{request, origin, players,
-		playedCards, sideDeck, briscolaSeed, NewPlayerFinder(origin, playerInTurn)}
+		playedCards, sideDeck, briscolaSeed}
 }
 
-func (pcs PlayCardStruct) Phase() game.Phase { return game.PlayingCards }
 func (pcs PlayCardStruct) Do(p *player.Player) error {
 	data := strings.Split(pcs.request, "#")
 	number := data[1]

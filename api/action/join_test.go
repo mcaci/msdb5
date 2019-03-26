@@ -1,33 +1,13 @@
 package action
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/api/game"
 	"testing"
+
+	"github.com/nikiforosFreespirit/msdb5/api/game"
 
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
 )
-
-func TestJoinPhase(t *testing.T) {
-	if testObject := NewJoin("", ""); testObject.Phase() != game.Joining {
-		t.Fatalf("Unexpected phase")
-	}
-}
-
-func TestJoinFindsPlayerWithEmptyName(t *testing.T) {
-	testPlayer := player.New()
-	if testObject := NewJoin("", ""); !testObject.Find(testPlayer) {
-		t.Fatalf("Unexpected player")
-	}
-}
-
-func TestJoinDoesNotFindPlayerWithEmptyName(t *testing.T) {
-	testPlayer := player.New()
-	testPlayer.Join("A", "")
-	if testObject := NewJoin("", ""); testObject.Find(testPlayer) {
-		t.Fatalf("Unexpected player")
-	}
-}
 
 func TestJoinNextPlayerOf0is1(t *testing.T) {
 	if testObject := NewJoin("", ""); testObject.NextPlayer(0) != 1 {

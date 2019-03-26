@@ -15,8 +15,10 @@ type JoinStruct struct {
 func NewJoin(request, origin string) Action {
 	return &JoinStruct{request, origin}
 }
+func NewJoinFinder(request, origin string) Finder {
+	return &JoinStruct{request, origin}
+}
 
-func (js JoinStruct) Phase() game.Phase          { return game.Joining }
 func (js JoinStruct) Find(p *player.Player) bool { return isPlayerEmpty(p) }
 func (js JoinStruct) Do(p *player.Player) error {
 	name := strings.Split(js.request, "#")[1]

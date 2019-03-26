@@ -13,15 +13,13 @@ type CompanionStruct struct {
 	request, origin string
 	players         playerset.Players
 	set             func(card.ID, *player.Player)
-	Finder
 }
 
-func NewCompanion(request, origin string, playerInTurn *player.Player,
+func NewCompanion(request, origin string,
 	players playerset.Players, set func(card.ID, *player.Player)) Action {
-	return &CompanionStruct{request, origin, players, set, NewPlayerFinder(origin, playerInTurn)}
+	return &CompanionStruct{request, origin, players, set}
 }
 
-func (cs CompanionStruct) Phase() game.Phase { return game.ChosingCompanion }
 func (cs CompanionStruct) Do(p *player.Player) error {
 	data := strings.Split(cs.request, "#")
 	number := data[1]
