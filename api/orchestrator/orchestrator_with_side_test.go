@@ -4,12 +4,11 @@ import (
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/api/game"
-
 	"github.com/nikiforosFreespirit/msdb5/card"
 )
 
-func TestCompletedGameReturningScoreInfo(t *testing.T) {
-	gameTest := NewAction(false)
+func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
+	gameTest := NewAction(true)
 	gameTest.Action("Join#A", "127.0.0.51")
 	gameTest.Action("Join#B", "127.0.0.52")
 	gameTest.Action("Join#C", "127.0.0.53")

@@ -7,7 +7,6 @@ import (
 	"github.com/gorilla/websocket"
 	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/api/orchestrator"
-	"github.com/nikiforosFreespirit/msdb5/api/sidedeck"
 )
 
 // Room struct
@@ -27,18 +26,12 @@ type Room struct {
 
 // NewRoom makes a new room.
 func NewRoom(side bool) *Room {
-	var action api.Action
-	if side {
-		action = sidedeck.NewAction()
-	} else {
-		action = orchestrator.NewAction()
-	}
 	return &Room{
 		forward:   make(chan []byte),
 		join:      make(chan *client),
 		leave:     make(chan *client),
 		clients:   make(map[*client]bool),
-		msdb5game: action,
+		msdb5game: orchestrator.NewAction(side),
 	}
 }
 

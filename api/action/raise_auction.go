@@ -14,14 +14,13 @@ type AuctionStruct struct {
 	request, origin string
 	players         playerset.Players
 	board           *board.Board
-	nextPhase       game.Phase
 	Finder
 }
 
 func NewAuction(request, origin string, playerInTurn *player.Player,
-	players playerset.Players, board *board.Board, nextPhase game.Phase) Action {
+	players playerset.Players, board *board.Board) Action {
 	return &AuctionStruct{request, origin,
-		players, board, nextPhase, NewPlayerFinder(origin, playerInTurn)}
+		players, board, NewPlayerFinder(origin, playerInTurn)}
 }
 func (as AuctionStruct) Phase() game.Phase { return game.InsideAuction }
 func (as AuctionStruct) Do(p *player.Player) error {
@@ -39,7 +38,10 @@ func (as AuctionStruct) NextPlayer(playerInTurn uint8) uint8 {
 }
 func (as AuctionStruct) NextPhase(players playerset.Players, predicate PlayerPredicate) game.Phase {
 	if players.Count(predicate.NextPhasePlayerInfo) == 4 {
-		return as.nextPhase
+		if len(*as.board.SideDeck()) > 0 {
+			return game.ExchangingCards
+		}
+		return game.ChosingCompanion
 	}
 	return as.Phase()
 }

@@ -1,7 +1,9 @@
 package orchestrator
 
 import (
+	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/api"
@@ -18,9 +20,9 @@ type Orchestrator struct {
 }
 
 // NewAction func
-func NewAction() api.Action {
+func NewAction(side bool) api.Action {
 	o := new(Orchestrator)
-	o.game = game.NewGame(false)
+	o.game = game.NewGame(side)
 	return o
 }
 
@@ -34,21 +36,55 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 		actionExec = action.NewJoin(request, origin)
 	case "Auction":
 		actionExec = action.NewAuction(request, origin, currentPlayer, o.game.Players(),
-			o.game.Board(), game.ChosingCompanion)
+			o.game.Board())
+	case "Exchange":
+		actionExec = action.NewExchangeCards(request, origin, currentPlayer, o.game.Board().SideDeck())
 	case "Companion":
-		actionExec = action.NewCompanion(request, origin, currentPlayer,o.game.Players(),
+		actionExec = action.NewCompanion(request, origin, currentPlayer, o.game.Players(),
 			o.game.SetCompanion)
 	case "Card":
-		actionExec = action.NewPlay(request, origin, currentPlayer,o.game.Players(),
+		actionExec = action.NewPlay(request, origin, currentPlayer, o.game.Players(),
 			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
 	}
-	err = playPhase(o.game, actionExec)
+	err = phaseStep(actionExec, o.game.CurrentPhase())
+	if err != nil {
+		return "", "", err
+	}
+	p, err := findStep(actionExec, o.game.Players())
+	if err != nil {
+		return "", "", err
+	}
+	err = playStep(actionExec, p)
+	if err != nil {
+		return "", "", err
+	}
+	nextPlayerStep(actionExec, o.game)
+	nextPhaseStep(actionExec, actionExec, o.game)
 	all, me = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("%+v", currentPlayer)
-	o.game.Log(request, origin, err)
+	// o.game.Log(request, origin, err)
 	if o.game.CurrentPhase() == game.End {
 		all, me, err = endGame(o.game.Players(), o.game.Companion())
 	}
 	return
+}
+
+func phaseStep(current action.PhaseSupplier, gamePhase game.Phase) (err error) {
+	if gamePhase != current.Phase() {
+		err = errors.New("Phase is not " + strconv.Itoa(int(current.Phase())))
+	}
+	return
+}
+func findStep(finder action.Finder, players playerset.Players) (*player.Player, error) {
+	return players.Find(finder.Find)
+}
+func playStep(executer action.Executer, p *player.Player) error {
+	return executer.Do(p)
+}
+func nextPlayerStep(next action.NextPlayerSelector, g *game.Game) {
+	g.NextPlayer(next.NextPlayer)
+}
+func nextPhaseStep(nextSel action.NextPhaseChanger, nextPred action.PlayerPredicate, g *game.Game) {
+	g.NextPhase(nextSel.NextPhase(g.Players(), nextPred))
 }
 
 func endGame(players playerset.Players, companion player.ScoreCounter) (string, string, error) {
