@@ -5,15 +5,16 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/nikiforosFreespirit/msdb5/ui"
+	"github.com/nikiforosFreespirit/msdb5/frw"
 )
 
 func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
+	var side = flag.Bool("side", false, "Whether to use side deck or not.")
 	flag.Parse() // parse the flags
 
-	r := ui.NewRoom()
-	http.Handle("/", ui.NewTemplateHandler())
+	r := frw.NewRoom(*side)
+	http.Handle("/", frw.NewTemplateHandler())
 	http.Handle("/room", r)
 
 	// get the room going
