@@ -1,6 +1,7 @@
 package auction
 
 import (
+	"strconv"
 	"testing"
 )
 
@@ -10,6 +11,9 @@ type auctionTest struct {
 
 func (testObject *auctionTest) set(value uint8) {
 	testObject.auction = value
+}
+func (testObject *auctionTest) get() uint8 {
+	return testObject.auction
 }
 
 const initialValue = 0
@@ -58,6 +62,19 @@ func Test2PlayersRaisingAuction(t *testing.T) {
 	Update(initialValue, value1, testObject.set)
 	Update(value1, value2, testObject.set)
 	testPlayerScore(t, testObject.auction, value2)
+}
+
+func TestCheckAndUpdate_OK(t *testing.T) {
+	const value = 80
+	testObject := auctionTest{initialValue}
+	CheckAndUpdate(strconv.Itoa(value), func() bool { return false }, func() {}, testObject.get, testObject.set)
+	testPlayerScore(t, testObject.auction, value)
+}
+
+func TestCheckAndUpdate_Fold(t *testing.T) {
+	testObject := auctionTest{initialValue}
+	CheckAndUpdate("ciao", func() bool { return false }, func() {}, testObject.get, testObject.set)
+	testPlayerScore(t, testObject.auction, initialValue)
 }
 
 func testPlayerScore(t *testing.T, actualScore, expectedScore uint8) {

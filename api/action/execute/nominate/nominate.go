@@ -1,9 +1,9 @@
-package action
+package nominate
 
 import (
 	"strings"
 
-	"github.com/nikiforosFreespirit/msdb5/api/game"
+	"github.com/nikiforosFreespirit/msdb5/api/action"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
@@ -15,13 +15,9 @@ type CompanionStruct struct {
 	set             func(card.ID, *player.Player)
 }
 
-func NewCompanion(request, origin string,
-	players playerset.Players, set func(card.ID, *player.Player)) Action {
+func NewCompanion(request, origin string, players playerset.Players,
+	set func(card.ID, *player.Player)) action.Executer {
 	return &CompanionStruct{request, origin, players, set}
-}
-
-func NewSelfPlayerSelector() NextPlayerSelector {
-	return &CompanionStruct{"", "", nil, nil}
 }
 
 func (cs CompanionStruct) Do(p *player.Player) error {
@@ -39,5 +35,3 @@ func (cs CompanionStruct) Do(p *player.Player) error {
 	cs.set(c, pl)
 	return nil
 }
-func (cs CompanionStruct) NextPlayer(playerInTurn uint8) uint8 { return playerInTurn }
-func (cs CompanionStruct) NextPhase() game.Phase               { return game.PlayingCards }

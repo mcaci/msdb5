@@ -6,6 +6,9 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/api"
 	"github.com/nikiforosFreespirit/msdb5/api/action"
+	"github.com/nikiforosFreespirit/msdb5/api/action/nextphase"
+	"github.com/nikiforosFreespirit/msdb5/api/action/nextplayer"
+	"github.com/nikiforosFreespirit/msdb5/api/action/phasesupplier"
 	"github.com/nikiforosFreespirit/msdb5/api/game"
 	"github.com/nikiforosFreespirit/msdb5/player"
 	"github.com/nikiforosFreespirit/msdb5/playerset"
@@ -28,7 +31,7 @@ func NewAction(side bool) api.Action {
 func (o *Orchestrator) Action(request, origin string) (all, me string, err error) {
 	data := strings.Split(request, "#")
 	currentPlayer := o.game.PlayerInTurn()
-	inputAction := action.InputAction(data[0])
+	inputAction := phasesupplier.InputAction(data[0])
 	// phase step
 	err = phaseStep(inputAction, o.game.CurrentPhase())
 	if err != nil {
@@ -47,10 +50,10 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 		return "", "", err
 	}
 	// next player step
-	nextPlayer := NewSelector(data[0], request, origin, o)
+	nextPlayer := nextplayer.NewPlayerChanger(inputAction.Phase(), o.game.Players(), o.game.Board().PlayedCards(), o.game.BriscolaSeed())
 	nextPlayerStep(nextPlayer, o.game)
 	// next phase
-	nextPhase := NewChanger(data[0], request, origin, o)
+	nextPhase := nextphase.NewChanger(inputAction.Phase(), o.game.Players(), len(*o.game.Board().SideDeck()) > 0, request)
 	nextPhaseStep(nextPhase, o.game)
 
 	all, me = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("%+v", currentPlayer)

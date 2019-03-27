@@ -24,11 +24,3 @@ type NextPlayerSelector interface {
 type NextPhaseChanger interface {
 	NextPhase() game.Phase
 }
-
-type Action interface {
-	Executer
-	NextPlayerSelector
-	NextPhaseChanger
-}
-
-var playersRoundRobin = func(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }

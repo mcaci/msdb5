@@ -1,4 +1,4 @@
-package action
+package phasesupplier
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/api/game"

@@ -1,13 +1,12 @@
-package action
+package exchange
 
 import (
 	"errors"
-	"strconv"
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/deck"
 
-	"github.com/nikiforosFreespirit/msdb5/api/game"
+	"github.com/nikiforosFreespirit/msdb5/api/action"
 	"github.com/nikiforosFreespirit/msdb5/card"
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
@@ -17,7 +16,7 @@ type ExchangeCardsStruct struct {
 	sideDeck        *deck.Cards
 }
 
-func NewExchangeCards(request, origin string, sideDeck *deck.Cards) Action {
+func NewExchangeCards(request, origin string, sideDeck *deck.Cards) action.Executer {
 	return &ExchangeCardsStruct{request, origin, sideDeck}
 }
 
@@ -44,13 +43,4 @@ func (ecs ExchangeCardsStruct) Do(p *player.Player) error {
 	ecs.sideDeck.Add(c)
 	p.Hand().Remove(index)
 	return nil
-}
-func (ecs ExchangeCardsStruct) NextPlayer(playerInTurn uint8) uint8 { return playerInTurn }
-func (ecs ExchangeCardsStruct) NextPhase() game.Phase {
-	data := strings.Split(ecs.request, "#")
-	number, err := strconv.Atoi(data[1])
-	if number == 0 || err != nil {
-		return game.ChosingCompanion
-	}
-	return game.ExchangingCards
 }

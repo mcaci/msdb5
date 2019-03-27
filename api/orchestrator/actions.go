@@ -2,15 +2,22 @@ package orchestrator
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/api/action"
+	"github.com/nikiforosFreespirit/msdb5/api/action/execute/auction"
+	"github.com/nikiforosFreespirit/msdb5/api/action/execute/exchange"
+	"github.com/nikiforosFreespirit/msdb5/api/action/execute/join"
+	"github.com/nikiforosFreespirit/msdb5/api/action/execute/nominate"
+	"github.com/nikiforosFreespirit/msdb5/api/action/execute/play"
+	"github.com/nikiforosFreespirit/msdb5/api/action/find"
+
 	"github.com/nikiforosFreespirit/msdb5/player"
 )
 
 func NewFinder(requestname, request, origin string, currentPlayer *player.Player) (finder action.Finder) {
 	switch requestname {
 	case "Join":
-		finder = action.NewJoinFinder(request, origin)
+		finder = find.NewJoinFinder()
 	default:
-		finder = action.NewPlayerFinder(origin, currentPlayer)
+		finder = find.NewPlayerFinder(origin, currentPlayer)
 	}
 	return
 }
@@ -18,48 +25,15 @@ func NewFinder(requestname, request, origin string, currentPlayer *player.Player
 func NewExecuter(requestname, request, origin string, o *Orchestrator) (executer action.Executer) {
 	switch requestname {
 	case "Join":
-		executer = action.NewJoin(request, origin)
+		executer = join.NewJoin(request, origin)
 	case "Auction":
-		executer = action.NewAuction(request, origin, o.game.Players(), o.game.Board())
+		executer = auction.NewAuction(request, origin, o.game.Board())
 	case "Exchange":
-		executer = action.NewExchangeCards(request, origin, o.game.Board().SideDeck())
+		executer = exchange.NewExchangeCards(request, origin, o.game.Board().SideDeck())
 	case "Companion":
-		executer = action.NewCompanion(request, origin, o.game.Players(), o.game.SetCompanion)
+		executer = nominate.NewCompanion(request, origin, o.game.Players(), o.game.SetCompanion)
 	case "Card":
-		executer = action.NewPlay(request, origin, o.game.Players(),
-			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
-	}
-	return
-}
-
-func NewSelector(requestname, request, origin string, o *Orchestrator) (selector action.NextPlayerSelector) {
-	switch requestname {
-	case "Join":
-		selector = action.NewPlayerSelector()
-	case "Auction":
-		selector = action.NewAuction(request, origin, o.game.Players(), o.game.Board())
-	case "Exchange", "Companion":
-		selector = action.NewSelfPlayerSelector()
-	case "Card":
-		selector = action.NewPlay(request, origin, o.game.Players(),
-			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
-	}
-	return
-}
-
-func NewChanger(requestname, request, origin string, o *Orchestrator) (selector action.NextPhaseChanger) {
-	switch requestname {
-	case "Join":
-		selector = action.NewPhaseChanger(o.game.Players())
-	case "Auction":
-		selector = action.NewAuction(request, origin, o.game.Players(), o.game.Board())
-	case "Exchange":
-		selector = action.NewExchangeCards(request, origin, o.game.Board().SideDeck())
-	case "Companion":
-		selector = action.NewCompanion(request, origin, o.game.Players(),
-			o.game.SetCompanion)
-	case "Card":
-		selector = action.NewPlay(request, origin, o.game.Players(),
+		executer = play.NewPlay(request, origin, o.game.Players(),
 			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
 	}
 	return
