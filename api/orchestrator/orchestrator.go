@@ -53,10 +53,28 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	nextPlayer := nextplayer.NewPlayerChanger(inputAction.Phase(), o.game.Players(), o.game.Board().PlayedCards(), o.game.BriscolaSeed())
 	nextPlayerStep(nextPlayer, o.game)
 	// next phase
-	nextPhase := nextphase.NewChanger(inputAction.Phase(), o.game.Players(), len(*o.game.Board().SideDeck()) > 0, request)
+	isSideDeckUsed := len(*o.game.Board().SideDeck()) > 0
+	nextPhase := nextphase.NewChanger(inputAction.Phase(), o.game.Players(), isSideDeckUsed, request)
 	nextPhaseStep(nextPhase, o.game)
 
-	all, me = fmt.Sprintf("Game: %+v", *o.game), fmt.Sprintf("%+v", currentPlayer)
+	all = fmt.Sprintf("Game: %+v", *o.game)
+	if o.game.CurrentPhase() == game.InsideAuction && isSideDeckUsed {
+		if o.game.Board().AuctionScore() >= 90 {
+			all += fmt.Sprintf("First card: %+v", (*o.game.Board().SideDeck())[0])
+		}
+		if o.game.Board().AuctionScore() >= 100 {
+			all += fmt.Sprintf("Second card: %+v", (*o.game.Board().SideDeck())[1])
+		}
+		if o.game.Board().AuctionScore() >= 110 {
+			all += fmt.Sprintf("Third card: %+v", (*o.game.Board().SideDeck())[2])
+		}
+		if o.game.Board().AuctionScore() >= 120 {
+			all += fmt.Sprintf("Fourth card: %+v", (*o.game.Board().SideDeck())[3])
+			all += fmt.Sprintf("Fifth card: %+v", (*o.game.Board().SideDeck())[4])
+		}
+	}
+	me = fmt.Sprintf("%+v", currentPlayer)
+
 	o.game.Log(request, origin, err)
 	if o.game.CurrentPhase() == game.End {
 		all, me, err = endGame(o.game.Players(), o.game.Companion())
@@ -94,3 +112,4 @@ func endGame(players playerset.Players, companion player.ScoreCounter) (string, 
 	}
 	return fmt.Sprintf("Callers: %+v; Others: %+v", team1.Score(), team2.Score()), "", nil
 }
+
