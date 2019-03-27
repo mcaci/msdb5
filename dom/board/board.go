@@ -46,6 +46,6 @@ func (b *Board) SideDeck() *deck.Cards {
 }
 
 func (b Board) String() string {
-	return fmt.Sprintf("(Played cards: %+v, Side deck: %+v, Auction score: %d)",
-		b.playedCards, b.side, b.auctionScore)
+	return fmt.Sprintf("(Played cards: %+v, Auction score: %d)",
+		b.playedCards, b.auctionScore)
 }

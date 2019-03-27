@@ -1,7 +1,12 @@
 package orchestrator
 
 import (
+	"fmt"
+
+	"github.com/nikiforosFreespirit/msdb5/dom/deck"
+
 	"github.com/nikiforosFreespirit/msdb5/app/action"
+	"github.com/nikiforosFreespirit/msdb5/app/action/clean"
 	"github.com/nikiforosFreespirit/msdb5/app/action/execute/auction"
 	"github.com/nikiforosFreespirit/msdb5/app/action/execute/exchange"
 	"github.com/nikiforosFreespirit/msdb5/app/action/execute/join"
@@ -10,6 +15,8 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/action/find"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 func NewFinder(requestname, request, origin string, currentPlayer *player.Player) (finder action.Finder) {
@@ -37,4 +44,24 @@ func NewExecuter(requestname, request, origin string, o *Orchestrator) (executer
 			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
 	}
 	return
+}
+
+func NewCleaner(requestname string, playedCards *deck.Cards) (cleaner action.Cleaner) {
+	switch requestname {
+	case "Join":
+		cleaner = clean.NewCleaner(playedCards)
+	}
+	return
+}
+
+func endGame(players playerset.Players, companion player.ScoreCounter) (string, string, error) {
+	caller, _ := players.Find(func(p *player.Player) bool { return p.NotFolded() })
+	team1, team2 := new(team.BriscolaTeam), new(team.BriscolaTeam)
+	team1.Add(caller, companion)
+	for _, pl := range players {
+		if pl != caller && pl != companion {
+			team2.Add(pl)
+		}
+	}
+	return fmt.Sprintf("Callers: %+v; Others: %+v", team1.Score(), team2.Score()), "", nil
 }

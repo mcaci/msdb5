@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/nikiforosFreespirit/msdb5/app/action/clean"
+
 	"github.com/nikiforosFreespirit/msdb5/app"
 	"github.com/nikiforosFreespirit/msdb5/app/action"
 	"github.com/nikiforosFreespirit/msdb5/app/action/nextphase"
@@ -12,7 +14,6 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/game"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
-	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 // Orchestrator struct
@@ -31,60 +32,54 @@ func NewAction(side bool) app.Action {
 func (o *Orchestrator) Action(request, origin string) (all, me string, err error) {
 	data := strings.Split(request, "#")
 	currentPlayer := o.game.PlayerInTurn()
-	inputAction := phasesupplier.InputAction(data[0])
+	currentPhase := o.game.CurrentPhase()
+	inputAction := phasesupplier.InputAction(data[0]).Phase()
 	// phase step
-	err = phaseStep(inputAction, o.game.CurrentPhase())
+	err = phaseStep(inputAction, currentPhase)
 	if err != nil {
-		return "", "", err
+		return
 	}
 	// find step
 	finder := NewFinder(data[0], request, origin, currentPlayer)
 	p, err := findStep(finder, o.game.Players())
 	if err != nil {
-		return "", "", err
+		return
 	}
 	// do step
 	actionExec := NewExecuter(data[0], request, origin, o)
 	err = playStep(actionExec, p)
 	if err != nil {
-		return "", "", err
+		return
 	}
+
 	// next player step
-	nextPlayer := nextplayer.NewPlayerChanger(inputAction.Phase(), o.game.Players(), o.game.Board().PlayedCards(), o.game.BriscolaSeed())
+	nextPlayer := nextplayer.NewPlayerChanger(inputAction, o.game.Players(), o.game.Board().PlayedCards(), o.game.BriscolaSeed())
 	nextPlayerStep(nextPlayer, o.game)
 	// next phase
 	isSideDeckUsed := len(*o.game.Board().SideDeck()) > 0
-	nextPhase := nextphase.NewChanger(inputAction.Phase(), o.game.Players(), isSideDeckUsed, request)
+	nextPhase := nextphase.NewChanger(inputAction, o.game.Players(), isSideDeckUsed, request)
 	nextPhaseStep(nextPhase, o.game)
 
-	all = fmt.Sprintf("Game: %+v", *o.game)
-	if o.game.CurrentPhase() == game.InsideAuction && isSideDeckUsed {
-		if o.game.Board().AuctionScore() >= 90 {
-			all += fmt.Sprintf("First card: %+v", (*o.game.Board().SideDeck())[0])
-		}
-		if o.game.Board().AuctionScore() >= 100 {
-			all += fmt.Sprintf("Second card: %+v", (*o.game.Board().SideDeck())[1])
-		}
-		if o.game.Board().AuctionScore() >= 110 {
-			all += fmt.Sprintf("Third card: %+v", (*o.game.Board().SideDeck())[2])
-		}
-		if o.game.Board().AuctionScore() >= 120 {
-			all += fmt.Sprintf("Fourth card: %+v", (*o.game.Board().SideDeck())[3])
-			all += fmt.Sprintf("Fifth card: %+v", (*o.game.Board().SideDeck())[4])
-		}
-	}
-	me = fmt.Sprintf("%+v", currentPlayer)
-
+	all = infoForAll(currentPhase, *o.game)
+	me = infoForMe(*currentPlayer, currentPhase, *o.game)
 	o.game.Log(request, origin, err)
-	if o.game.CurrentPhase() == game.End {
+
+	// clean phase
+	cleaner := clean.NewCleaner(o.game.Board().PlayedCards())
+	if cleaner != nil && len(*o.game.Board().PlayedCards()) >= 5 {
+		cleaner.Clean()
+	}
+
+	phaseAtEndTurn := o.game.CurrentPhase()
+	if phaseAtEndTurn == game.End {
 		all, me, err = endGame(o.game.Players(), o.game.Companion())
 	}
 	return
 }
 
-func phaseStep(current action.PhaseSupplier, gamePhase game.Phase) (err error) {
-	if gamePhase != current.Phase() {
-		err = fmt.Errorf("Phase is not %d but %d", gamePhase, current.Phase())
+func phaseStep(input, current game.Phase) (err error) {
+	if input != current {
+		err = fmt.Errorf("Phase is not %d but %d", input, current)
 	}
 	return
 }
@@ -99,16 +94,4 @@ func nextPlayerStep(next action.NextPlayerSelector, g *game.Game) {
 }
 func nextPhaseStep(nextSel action.NextPhaseChanger, g *game.Game) {
 	g.NextPhase(nextSel.NextPhase())
-}
-
-func endGame(players playerset.Players, companion player.ScoreCounter) (string, string, error) {
-	caller, _ := players.Find(func(p *player.Player) bool { return p.NotFolded() })
-	team1, team2 := new(team.BriscolaTeam), new(team.BriscolaTeam)
-	team1.Add(caller, companion)
-	for _, pl := range players {
-		if pl != caller && pl != companion {
-			team2.Add(pl)
-		}
-	}
-	return fmt.Sprintf("Callers: %+v; Others: %+v", team1.Score(), team2.Score()), "", nil
 }

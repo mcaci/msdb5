@@ -42,7 +42,6 @@ func (nps NextPlayerStruct) NextPhasePlay(playerInTurn uint8) uint8 {
 	if roundHasEnded {
 		winningCardIndex := briscola.IndexOfWinningCard(*nps.playedCards, nps.briscolaSeed)
 		next = playersRoundRobin(playerInTurn + winningCardIndex)
-		nps.playedCards.Clear()
 	}
 	return next
 }

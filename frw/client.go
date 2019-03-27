@@ -29,15 +29,17 @@ func (c *client) read() {
 		}
 		// execute action
 		command := string(msg)
+		send("----^ NEW MOVE ^----", c.room.forward)
 		origin := c.socket.RemoteAddr().String()
 		infoForAll, infoForPlayer, err := run(c.room.msdb5game, command, origin)
-		// Simpler board info sent to everyone
-		send(command, c.room.forward)
 		if err == nil {
+			log.Println(command)
+			// Simpler board info sent to everyone
 			send(infoForAll, c.room.forward)
 			// Player info sent to myself only
 			send(infoForPlayer, c.send)
 		} else {
+			log.Println(err)
 			send(err.Error(), c.send)
 		}
 	}

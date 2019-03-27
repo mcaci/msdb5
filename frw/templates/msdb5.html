@@ -23,15 +23,15 @@
     <form id="play"> 
       <p>
         <label>Card number and seed</label>
-        <input type="number" name="number" id="number" min="1" max="10">
+        <input type="number" name="number" id="number" min="0" max="10">
         <select name="seed" id="seed">
           <option value="Coin">Coin</option>
           <option value="Cup">Cup</option>
           <option value="Sword">Sword</option>
           <option value="Cudgel">Cudgel</option>
         </select>
-        <input type="radio" name="action" value="Companion"> Choose companion card
         <input type="radio" name="action" value="Exchange"> Change card with side deck
+        <input type="radio" name="action" value="Companion"> Choose companion card
         <input type="radio" name="action" value="Card" checked="checked"> Play card
       </p>
       <input type="submit" value="Play" /> 

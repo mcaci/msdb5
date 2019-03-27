@@ -24,3 +24,7 @@ type NextPlayerSelector interface {
 type NextPhaseChanger interface {
 	NextPhase() game.Phase
 }
+
+type Cleaner interface {
+	Clean()
+}
