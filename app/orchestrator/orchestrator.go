@@ -1,0 +1,114 @@
+package orchestrator
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/nikiforosFreespirit/msdb5/app"
+	"github.com/nikiforosFreespirit/msdb5/app/action"
+	"github.com/nikiforosFreespirit/msdb5/app/action/nextphase"
+	"github.com/nikiforosFreespirit/msdb5/app/action/nextplayer"
+	"github.com/nikiforosFreespirit/msdb5/app/action/phasesupplier"
+	"github.com/nikiforosFreespirit/msdb5/app/game"
+	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
+)
+
+// Orchestrator struct
+type Orchestrator struct {
+	game *game.Game
+}
+
+// NewAction func
+func NewAction(side bool) app.Action {
+	o := new(Orchestrator)
+	o.game = game.NewGame(side)
+	return o
+}
+
+// Action func
+func (o *Orchestrator) Action(request, origin string) (all, me string, err error) {
+	data := strings.Split(request, "#")
+	currentPlayer := o.game.PlayerInTurn()
+	inputAction := phasesupplier.InputAction(data[0])
+	// phase step
+	err = phaseStep(inputAction, o.game.CurrentPhase())
+	if err != nil {
+		return "", "", err
+	}
+	// find step
+	finder := NewFinder(data[0], request, origin, currentPlayer)
+	p, err := findStep(finder, o.game.Players())
+	if err != nil {
+		return "", "", err
+	}
+	// do step
+	actionExec := NewExecuter(data[0], request, origin, o)
+	err = playStep(actionExec, p)
+	if err != nil {
+		return "", "", err
+	}
+	// next player step
+	nextPlayer := nextplayer.NewPlayerChanger(inputAction.Phase(), o.game.Players(), o.game.Board().PlayedCards(), o.game.BriscolaSeed())
+	nextPlayerStep(nextPlayer, o.game)
+	// next phase
+	isSideDeckUsed := len(*o.game.Board().SideDeck()) > 0
+	nextPhase := nextphase.NewChanger(inputAction.Phase(), o.game.Players(), isSideDeckUsed, request)
+	nextPhaseStep(nextPhase, o.game)
+
+	all = fmt.Sprintf("Game: %+v", *o.game)
+	if o.game.CurrentPhase() == game.InsideAuction && isSideDeckUsed {
+		if o.game.Board().AuctionScore() >= 90 {
+			all += fmt.Sprintf("First card: %+v", (*o.game.Board().SideDeck())[0])
+		}
+		if o.game.Board().AuctionScore() >= 100 {
+			all += fmt.Sprintf("Second card: %+v", (*o.game.Board().SideDeck())[1])
+		}
+		if o.game.Board().AuctionScore() >= 110 {
+			all += fmt.Sprintf("Third card: %+v", (*o.game.Board().SideDeck())[2])
+		}
+		if o.game.Board().AuctionScore() >= 120 {
+			all += fmt.Sprintf("Fourth card: %+v", (*o.game.Board().SideDeck())[3])
+			all += fmt.Sprintf("Fifth card: %+v", (*o.game.Board().SideDeck())[4])
+		}
+	}
+	me = fmt.Sprintf("%+v", currentPlayer)
+
+	o.game.Log(request, origin, err)
+	if o.game.CurrentPhase() == game.End {
+		all, me, err = endGame(o.game.Players(), o.game.Companion())
+	}
+	return
+}
+
+func phaseStep(current action.PhaseSupplier, gamePhase game.Phase) (err error) {
+	if gamePhase != current.Phase() {
+		err = fmt.Errorf("Phase is not %d but %d", gamePhase, current.Phase())
+	}
+	return
+}
+func findStep(finder action.Finder, players playerset.Players) (*player.Player, error) {
+	return players.Find(finder.Find)
+}
+func playStep(executer action.Executer, p *player.Player) error {
+	return executer.Do(p)
+}
+func nextPlayerStep(next action.NextPlayerSelector, g *game.Game) {
+	g.NextPlayer(next.NextPlayer)
+}
+func nextPhaseStep(nextSel action.NextPhaseChanger, g *game.Game) {
+	g.NextPhase(nextSel.NextPhase())
+}
+
+func endGame(players playerset.Players, companion player.ScoreCounter) (string, string, error) {
+	caller, _ := players.Find(func(p *player.Player) bool { return p.NotFolded() })
+	team1, team2 := new(team.BriscolaTeam), new(team.BriscolaTeam)
+	team1.Add(caller, companion)
+	for _, pl := range players {
+		if pl != caller && pl != companion {
+			team2.Add(pl)
+		}
+	}
+	return fmt.Sprintf("Callers: %+v; Others: %+v", team1.Score(), team2.Score()), "", nil
+}
