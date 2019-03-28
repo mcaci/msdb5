@@ -48,7 +48,7 @@ func NewExecuter(requestname, request, origin string, o *Orchestrator) (executer
 
 func NewCleaner(requestname string, playedCards *deck.Cards) (cleaner action.Cleaner) {
 	switch requestname {
-	case "Join":
+	case "Card":
 		cleaner = clean.NewCleaner(playedCards)
 	}
 	return
