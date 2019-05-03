@@ -51,6 +51,7 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	if err != nil {
 		return
 	}
+	toFile(actionExec, p, o.game)
 
 	// next player step
 	nextPlayer := nextplayer.NewPlayerChanger(inputAction, o.game.Players(), o.game.Board().PlayedCards(), o.game.BriscolaSeed())
