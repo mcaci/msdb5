@@ -3,6 +3,7 @@ package board
 import (
 	"fmt"
 
+	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 )
@@ -11,7 +12,7 @@ import (
 type Board struct {
 	side         deck.Cards
 	playedCards  deck.Cards
-	auctionScore uint8
+	auctionScore auction.Score
 }
 
 // New func
@@ -20,12 +21,12 @@ func New() *Board {
 }
 
 // SetAuctionScore func
-func (b *Board) SetAuctionScore(score uint8) {
+func (b *Board) SetAuctionScore(score auction.Score) {
 	b.auctionScore = score
 }
 
 // AuctionScore func
-func (b *Board) AuctionScore() uint8 {
+func (b *Board) AuctionScore() auction.Score {
 	return b.auctionScore
 }
 

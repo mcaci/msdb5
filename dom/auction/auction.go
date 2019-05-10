@@ -4,8 +4,11 @@ import (
 	"strconv"
 )
 
+// Score is the auction value
+type Score uint8
+
 // Update func
-func Update(prevScore, currentScore uint8, set func(uint8)) {
+func Update(prevScore, currentScore Score, set func(Score)) {
 	const minScore = 61
 	const maxScore = 120
 	actualScore := currentScore
@@ -20,14 +23,14 @@ func Update(prevScore, currentScore uint8, set func(uint8)) {
 }
 
 // CheckAndUpdate func
-func CheckAndUpdate(score string, folded func() bool, fold func(), get func() uint8, set func(uint8)) {
+func CheckAndUpdate(score string, folded func() bool, fold func(), get func() Score, set func(Score)) {
 	if !folded() {
 		prevScore := get()
 		currentScore, err := strconv.Atoi(score)
-		if err != nil || uint8(currentScore) <= prevScore {
+		if err != nil || Score(currentScore) <= prevScore {
 			fold()
 		} else {
-			Update(prevScore, uint8(currentScore), set)
+			Update(prevScore, Score(currentScore), set)
 		}
 	}
 }

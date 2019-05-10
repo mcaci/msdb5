@@ -6,13 +6,13 @@ import (
 )
 
 type auctionTest struct {
-	auction uint8
+	auction Score
 }
 
-func (testObject *auctionTest) set(value uint8) {
+func (testObject *auctionTest) set(value Score) {
 	testObject.auction = value
 }
-func (testObject *auctionTest) get() uint8 {
+func (testObject *auctionTest) get() Score {
 	return testObject.auction
 }
 
@@ -77,7 +77,7 @@ func TestCheckAndUpdate_Fold(t *testing.T) {
 	testPlayerScore(t, testObject.auction, initialValue)
 }
 
-func testPlayerScore(t *testing.T, actualScore, expectedScore uint8) {
+func testPlayerScore(t *testing.T, actualScore, expectedScore Score) {
 	if actualScore != expectedScore {
 		t.Fatalf("Auction score should be set at %d but is %d", expectedScore, actualScore)
 	}
