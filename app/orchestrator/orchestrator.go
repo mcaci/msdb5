@@ -4,10 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nikiforosFreespirit/msdb5/app/action/clean"
-
 	"github.com/nikiforosFreespirit/msdb5/app"
 	"github.com/nikiforosFreespirit/msdb5/app/action"
+	"github.com/nikiforosFreespirit/msdb5/app/action/clean"
 	"github.com/nikiforosFreespirit/msdb5/app/action/nextphase"
 	"github.com/nikiforosFreespirit/msdb5/app/action/nextplayer"
 	"github.com/nikiforosFreespirit/msdb5/app/action/phasesupplier"
@@ -51,6 +50,8 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	if err != nil {
 		return
 	}
+
+	// log action to file
 	toFile(actionExec, p, o.game)
 
 	// next player step
