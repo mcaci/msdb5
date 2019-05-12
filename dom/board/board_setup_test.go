@@ -17,7 +17,7 @@ func TestBoardsEmptySetOfPlayedCardsContainsNoCards(t *testing.T) {
 }
 
 func TestBoardAuctionScoreAtCreationIs0(t *testing.T) {
-	if b := New(); b.AuctionScore() != 0 {
+	if b := New(); *b.AuctionScore() != 0 {
 		t.Fatalf("Auction score for a new board should be 0 but is %d", b.AuctionScore())
 	}
 }
@@ -25,7 +25,7 @@ func TestBoardAuctionScoreAtCreationIs0(t *testing.T) {
 func TestBoardSetAuctionScoreTo70(t *testing.T) {
 	b := New()
 	b.SetAuctionScore(71)
-	if b.AuctionScore() != 71 {
+	if *b.AuctionScore() != 71 {
 		t.Fatalf("Auction score for a new board should be 71 but is %d", b.AuctionScore())
 	}
 }

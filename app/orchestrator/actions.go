@@ -34,7 +34,7 @@ func NewExecuter(requestname, request, origin string, o *Orchestrator) (executer
 	case "Join":
 		executer = join.NewJoin(request, origin)
 	case "Auction":
-		executer = auction.NewAuction(request, origin, o.game.Board())
+		executer = auction.NewAuction(request, origin, o.game.Board().AuctionScore())
 	case "Exchange":
 		executer = exchange.NewExchangeCards(request, origin, o.game.Board().SideDeck())
 	case "Companion":

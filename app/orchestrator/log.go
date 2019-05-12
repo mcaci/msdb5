@@ -32,20 +32,22 @@ func toFile(actionExec action.Executer, p *player.Player, g *game.Game) {
 func infoForAll(currentPhase game.Phase, gameInfo game.Game) string {
 	all := fmt.Sprintf("Game: %+v", gameInfo)
 	board := gameInfo.Board()
-	isSideDeckUsed := len(*board.SideDeck()) > 0
+	sideDeck := *board.SideDeck()
+	isSideDeckUsed := len(sideDeck) > 0
 	if currentPhase == game.InsideAuction && isSideDeckUsed {
-		if board.AuctionScore() >= 90 {
-			all += fmt.Sprintf("First card: %+v", (*board.SideDeck())[0])
+		score := *board.AuctionScore()
+		if score >= 90 {
+			all += fmt.Sprintf("First card: %+v", sideDeck[0])
 		}
-		if board.AuctionScore() >= 100 {
-			all += fmt.Sprintf("Second card: %+v", (*board.SideDeck())[1])
+		if score >= 100 {
+			all += fmt.Sprintf("Second card: %+v", sideDeck[1])
 		}
-		if board.AuctionScore() >= 110 {
-			all += fmt.Sprintf("Third card: %+v", (*board.SideDeck())[2])
+		if score >= 110 {
+			all += fmt.Sprintf("Third card: %+v", sideDeck[2])
 		}
-		if board.AuctionScore() >= 120 {
-			all += fmt.Sprintf("Fourth card: %+v", (*board.SideDeck())[3])
-			all += fmt.Sprintf("Fifth card: %+v", (*board.SideDeck())[4])
+		if score >= 120 {
+			all += fmt.Sprintf("Fourth card: %+v", sideDeck[3])
+			all += fmt.Sprintf("Fifth card: %+v", sideDeck[4])
 		}
 	}
 	return all

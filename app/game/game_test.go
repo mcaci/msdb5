@@ -43,7 +43,7 @@ func TestBoardsEmptySetOfPlayedCardsContainsNoCards(t *testing.T) {
 }
 
 func TestBoardAuctionScoreAtCreationIs0(t *testing.T) {
-	if gameTest := NewGame(false); gameTest.Board().AuctionScore() != 0 {
+	if gameTest := NewGame(false); *gameTest.Board().AuctionScore() != 0 {
 		t.Fatalf("Auction score for a new board should be 0 but is %d", gameTest.board.AuctionScore())
 	}
 }

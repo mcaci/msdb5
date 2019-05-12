@@ -3,12 +3,13 @@ package auction
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/board"
+	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
 func TestAuctionDoNoErr(t *testing.T) {
-	testObject := NewAuction("Auction#80", "127.0.0.3", board.New())
+	score := auction.Score(0)
+	testObject := NewAuction("Auction#80", "127.0.0.3", &score)
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	err := testObject.Do(testPlayer)

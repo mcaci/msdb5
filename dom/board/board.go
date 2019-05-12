@@ -26,8 +26,8 @@ func (b *Board) SetAuctionScore(score auction.Score) {
 }
 
 // AuctionScore func
-func (b *Board) AuctionScore() auction.Score {
-	return b.auctionScore
+func (b *Board) AuctionScore() *auction.Score {
+	return &b.auctionScore
 }
 
 // PlayedCards func

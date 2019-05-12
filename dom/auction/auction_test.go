@@ -1,20 +1,8 @@
 package auction
 
 import (
-	"strconv"
 	"testing"
 )
-
-type auctionTest struct {
-	auction Score
-}
-
-func (testObject *auctionTest) set(value Score) {
-	testObject.auction = value
-}
-func (testObject *auctionTest) get() Score {
-	return testObject.auction
-}
 
 var initialValue Score
 var minValue Score = 61
@@ -22,59 +10,46 @@ var maxValue Score = 120
 
 func TestRaiseAuctionScoreFirstAssignmentShouldBeSuperiorThan61ElseEither61(t *testing.T) {
 	const currentValue = 1
-	testObject := auctionTest{initialValue}
-	initialValue.Update(currentValue, testObject.set)
-	testPlayerScore(t, testObject.auction, minValue)
+	initialValue.Update(currentValue)
+	testPlayerScore(t, initialValue, minValue)
 }
 
 func TestInvalidRaiseAuctionScoreFirstAssignmentShouldBeAlways61(t *testing.T) {
 	const currentValue = 0
-	testObject := auctionTest{initialValue}
-	initialValue.Update(currentValue, testObject.set)
-	testPlayerScore(t, testObject.auction, minValue)
+	initialValue.Update(currentValue)
+	testPlayerScore(t, initialValue, minValue)
 }
 
 func TestRaiseAuctionTo65(t *testing.T) {
 	const currentValue = 65
-	testObject := auctionTest{initialValue}
-	initialValue.Update(currentValue, testObject.set)
-	testPlayerScore(t, testObject.auction, currentValue)
+	initialValue.Update(currentValue)
+	testPlayerScore(t, initialValue, currentValue)
 }
 func TestRaiseAuctionTo135ShouldStopAt120(t *testing.T) {
 	const currentValue = 135
-	testObject := auctionTest{initialValue}
-	initialValue.Update(currentValue, testObject.set)
-	testPlayerScore(t, testObject.auction, maxValue)
+	initialValue.Update(currentValue)
+	testPlayerScore(t, initialValue, maxValue)
 }
 
 func TestPlayerRaisingAuctionAfterAnotherWithLowerScore(t *testing.T) {
 	value1 := Score(94)
-	testObject := auctionTest{value1}
 	const value2 = 90
-	value1.Update(value2, testObject.set)
-	testPlayerScore(t, testObject.auction, value1)
-}
-
-func Test2PlayersRaisingAuction(t *testing.T) {
-	value1 := Score(65)
-	const value2 = 80
-	testObject := auctionTest{initialValue}
-	initialValue.Update(value1, testObject.set)
-	value1.Update(value2, testObject.set)
-	testPlayerScore(t, testObject.auction, value2)
+	value1.Update(value2)
+	testPlayerScore(t, value1, value1)
 }
 
 func TestCheckAndUpdate_OK(t *testing.T) {
-	const value = 80
-	testObject := auctionTest{0}
-	CheckAndUpdate(strconv.Itoa(value), func() bool { return false }, func() {}, testObject.get, testObject.set)
-	testPlayerScore(t, testObject.auction, value)
+	value := Score(80)
+	if !value.CheckWith(Score(100)) {
+		t.Fatal("Unexpected check return value")
+	}
 }
 
 func TestCheckAndUpdate_Fold(t *testing.T) {
-	testObject := auctionTest{initialValue}
-	CheckAndUpdate("ciao", func() bool { return false }, func() {}, testObject.get, testObject.set)
-	testPlayerScore(t, testObject.auction, initialValue)
+	value := Score(80)
+	if value.CheckWith(Score(61)) {
+		t.Fatal("Unexpected check return value")
+	}
 }
 
 func testPlayerScore(t *testing.T, actualScore, expectedScore Score) {
