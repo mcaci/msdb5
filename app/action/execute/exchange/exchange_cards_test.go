@@ -3,7 +3,7 @@ package exchange
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/board"
+	"github.com/nikiforosFreespirit/msdb5/app/game"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
@@ -12,7 +12,7 @@ func TestExchangeDoNoErr(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testPlayedCards := deck.Cards{2, 3, 4, 6, 7}
-	testBoard := board.New()
+	testBoard := game.NewBoard()
 	testBoard.SideDeck().Add(testPlayedCards...)
 	testObject := NewExchangeCards("Exchange#1#Coin", "127.0.0.2", testBoard.SideDeck())
 	err := testObject.Do(testPlayer)
@@ -25,7 +25,7 @@ func TestExchangeOneCardPicksFirst(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testPlayedCards := deck.Cards{2, 3, 4, 6, 7}
-	testBoard := board.New()
+	testBoard := game.NewBoard()
 	testBoard.SideDeck().Add(testPlayedCards...)
 	testObject := NewExchangeCards("Exchange#1#Coin", "127.0.0.2", testBoard.SideDeck())
 	testObject.Do(testPlayer)
@@ -38,7 +38,7 @@ func TestExchangeOneCardAndSideDeckSizeDoesNotChange(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testPlayedCards := deck.Cards{2, 3, 4, 6, 7}
-	testBoard := board.New()
+	testBoard := game.NewBoard()
 	testBoard.SideDeck().Add(testPlayedCards...)
 	testObject := NewExchangeCards("Exchange#1#Coin", "127.0.0.2", testBoard.SideDeck())
 	testObject.Do(testPlayer)
@@ -52,7 +52,7 @@ func TestExchangeOneCardAndHandSizeDoesNotChange(t *testing.T) {
 	testPlayer.Hand().Add(1)
 	handLengthBefore := len(*testPlayer.Hand())
 	testPlayedCards := deck.Cards{2, 3, 4, 6, 7}
-	testBoard := board.New()
+	testBoard := game.NewBoard()
 	testBoard.SideDeck().Add(testPlayedCards...)
 	testObject := NewExchangeCards("Exchange#1#Coin", "127.0.0.2", testBoard.SideDeck())
 	testObject.Do(testPlayer)
@@ -65,7 +65,7 @@ func TestExchangeEndPhaseDoesNothingAndReturnsNoErr(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testPlayedCards := deck.Cards{2, 3, 4, 6, 7}
-	testBoard := board.New()
+	testBoard := game.NewBoard()
 	testBoard.SideDeck().Add(testPlayedCards...)
 	testObject := NewExchangeCards("Exchange#0", "127.0.0.2", testBoard.SideDeck())
 	err := testObject.Do(testPlayer)

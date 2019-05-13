@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/board"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/companion"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
@@ -17,7 +16,7 @@ type Game struct {
 	playerInTurn uint8
 	players      playerset.Players
 	companion    companion.Companion
-	board        board.Board
+	board        Board
 	phase        Phase
 }
 
@@ -60,7 +59,7 @@ func (g *Game) Players() playerset.Players { return g.players }
 func (g *Game) SetCompanion(c card.ID, pl *player.Player) { g.companion = *companion.New(c, pl) }
 
 // Board func
-func (g *Game) Board() *board.Board { return &g.board }
+func (g *Game) Board() *Board { return &g.board }
 
 // BriscolaSeed func
 func (g *Game) BriscolaSeed() card.Seed { return g.companion.Card().Seed() }

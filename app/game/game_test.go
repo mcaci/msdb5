@@ -30,24 +30,6 @@ func TestSideDeckHasNoCardsWhenAbsent(t *testing.T) {
 	}
 }
 
-func TestBoardHasASetOfPlayedCards(t *testing.T) {
-	if gameTest := NewGame(false); gameTest.board.PlayedCards() == nil {
-		t.Fatal("The board has no set of played cards")
-	}
-}
-
-func TestBoardsEmptySetOfPlayedCardsContainsNoCards(t *testing.T) {
-	if gameTest := NewGame(false); len(*gameTest.board.PlayedCards()) > 0 {
-		t.Fatal("The deck should be empty at this point")
-	}
-}
-
-func TestBoardAuctionScoreAtCreationIs0(t *testing.T) {
-	if gameTest := NewGame(false); *gameTest.Board().AuctionScore() != 0 {
-		t.Fatalf("Auction score for a new board should be 0 but is %d", gameTest.board.AuctionScore())
-	}
-}
-
 func TestNextPhase(t *testing.T) {
 	gameTest := NewGame(false)
 	gameTest.NextPhase(1)
