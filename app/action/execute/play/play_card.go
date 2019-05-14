@@ -8,18 +8,18 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 type PlayCardStruct struct {
 	request, origin string
-	players         playerset.Players
+	players         team.Players
 	playedCards     *deck.Cards
 	sideDeck        *deck.Cards
 	briscolaSeed    card.Seed
 }
 
-func NewPlay(request, origin string, players playerset.Players,
+func NewPlay(request, origin string, players team.Players,
 	playedCards *deck.Cards, sideDeck *deck.Cards, briscolaSeed card.Seed) action.Executer {
 	return &PlayCardStruct{request, origin, players,
 		playedCards, sideDeck, briscolaSeed}
@@ -39,7 +39,7 @@ func (pcs PlayCardStruct) Do(p *player.Player) error {
 	pcs.playedCards.Add(c)
 	roundHasEnded := len(*pcs.playedCards) == 5
 	if roundHasEnded {
-		playerInTurn, _ := pcs.players.FindIndex(func(pl *player.Player) bool { return pl == p })
+		playerInTurn, _, _ := pcs.players.Find(func(pl *player.Player) bool { return pl == p })
 		winningCardIndex := briscola.IndexOfWinningCard(*pcs.playedCards, pcs.briscolaSeed)
 		next := playersRoundRobin(uint8(playerInTurn) + winningCardIndex)
 		pcs.players[next].Collect(pcs.playedCards)

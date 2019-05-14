@@ -7,17 +7,17 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/action"
 	"github.com/nikiforosFreespirit/msdb5/app/game"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 type NextPhaseStruct struct {
 	current  game.Phase
-	players  playerset.Players
+	players  team.Players
 	sideDeck bool
 	request  string
 }
 
-func NewChanger(current game.Phase, players playerset.Players, sideDeck bool,
+func NewChanger(current game.Phase, players team.Players, sideDeck bool,
 	request string) action.NextPhaseChanger {
 	return &NextPhaseStruct{current, players, sideDeck, request}
 }

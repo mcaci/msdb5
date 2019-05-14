@@ -6,17 +6,17 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
-	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 type NextPlayerStruct struct {
 	current      game.Phase
-	players      playerset.Players
+	players      team.Players
 	playedCards  *deck.Cards
 	briscolaSeed card.Seed
 }
 
-func NewPlayerChanger(current game.Phase, players playerset.Players,
+func NewPlayerChanger(current game.Phase, players team.Players,
 	playedCards *deck.Cards, briscolaSeed card.Seed) action.NextPlayerSelector {
 	return &NextPlayerStruct{current, players, playedCards, briscolaSeed}
 }

@@ -5,14 +5,14 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 func TestNominateDoNoErr(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
 	testObject := NewCompanion("Companion#1#Coin", "127.0.0.2",
-		playerset.Players{testPlayer}, func(card.ID, *player.Player) {
+		team.Players{testPlayer}, func(card.ID, *player.Player) {
 			return
 		})
 	err := testObject.Do(testPlayer)
@@ -24,7 +24,7 @@ func TestNominateDoNoErr(t *testing.T) {
 func TestNominateDoErr_PlayerWithCardNotFound(t *testing.T) {
 	testPlayer := player.New()
 	testObject := NewCompanion("Companion#1#Coin", "127.0.0.2",
-		playerset.Players{}, func(card.ID, *player.Player) {
+		team.Players{}, func(card.ID, *player.Player) {
 			return
 		})
 	err := testObject.Do(testPlayer)
@@ -36,7 +36,7 @@ func TestNominateDoErr_PlayerWithCardNotFound(t *testing.T) {
 func TestNominateDoErr_CardNotExistent(t *testing.T) {
 	testPlayer := player.New()
 	testObject := NewCompanion("Companion#1#Coins", "127.0.0.2",
-		playerset.Players{testPlayer}, func(card.ID, *player.Player) {
+		team.Players{testPlayer}, func(card.ID, *player.Player) {
 			return
 		})
 	err := testObject.Do(testPlayer)

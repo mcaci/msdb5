@@ -6,18 +6,16 @@ import (
 )
 
 // BriscolaTeam struct
-type BriscolaTeam struct {
-	players []player.ScoreCounter
-}
+type BriscolaTeam []player.Scorer
 
 // Add func
-func (t *BriscolaTeam) Add(players ...player.ScoreCounter) {
-	t.players = append(t.players, players...)
+func (team *BriscolaTeam) Add(players ...player.Scorer) {
+	*team = append(*team, players...)
 }
 
 // Score func
-func (t BriscolaTeam) Score() (total uint8) {
-	for _, player := range t.players {
+func (team BriscolaTeam) Score() (total uint8) {
+	for _, player := range team {
 		total += player.Count(briscola.Points)
 	}
 	return

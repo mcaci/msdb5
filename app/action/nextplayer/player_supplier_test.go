@@ -8,10 +8,10 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
-func testObject(phase game.Phase, players playerset.Players, playedCards *deck.Cards) action.NextPlayerSelector {
+func testObject(phase game.Phase, players team.Players, playedCards *deck.Cards) action.NextPlayerSelector {
 	return NewPlayerChanger(phase, players, playedCards, card.Coin)
 }
 
@@ -30,7 +30,7 @@ func TestExchangeCardsNextPlayerOf4is0_JoiningEndEdgeCase(t *testing.T) {
 }
 
 func TestExchangeCardsNextPlayerOf1is2_InsideAuction(t *testing.T) {
-	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
+	testPlayers := team.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
 	testIndex := testObject(game.InsideAuction, testPlayers, nil).NextPlayer(1)
 	if testIndex != 2 {
 		t.Fatalf("Next player should be 2")
@@ -40,7 +40,7 @@ func TestExchangeCardsNextPlayerOf1is2_InsideAuction(t *testing.T) {
 func TestExchangeCardsNextPlayerOf1is3_InsideAuctionWithFolded(t *testing.T) {
 	testFoldedPlayer := player.New()
 	testFoldedPlayer.Fold()
-	testPlayers := playerset.Players{player.New(), player.New(), testFoldedPlayer, player.New(), player.New()}
+	testPlayers := team.Players{player.New(), player.New(), testFoldedPlayer, player.New(), player.New()}
 	testIndex := testObject(game.InsideAuction, testPlayers, nil).NextPlayer(1)
 	if testIndex != 3 {
 		t.Fatalf("Next player should be 3")

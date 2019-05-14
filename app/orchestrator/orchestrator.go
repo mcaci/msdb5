@@ -12,7 +12,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/action/phasesupplier"
 	"github.com/nikiforosFreespirit/msdb5/app/game"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 // Orchestrator struct
@@ -85,8 +85,9 @@ func phaseStep(input, current game.Phase) (err error) {
 	}
 	return
 }
-func findStep(finder action.Finder, players playerset.Players) (*player.Player, error) {
-	return players.Find(finder.Find)
+func findStep(finder action.Finder, players team.Players) (*player.Player, error) {
+	_, p, err := players.Find(finder.Find)
+	return p, err
 }
 func playStep(executer action.Executer, p *player.Player) error {
 	return executer.Do(p)

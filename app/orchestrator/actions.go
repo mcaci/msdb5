@@ -3,8 +3,6 @@ package orchestrator
 import (
 	"fmt"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
-
 	"github.com/nikiforosFreespirit/msdb5/app/action"
 	"github.com/nikiforosFreespirit/msdb5/app/action/clean"
 	"github.com/nikiforosFreespirit/msdb5/app/action/execute/auction"
@@ -14,8 +12,8 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/action/execute/play"
 	"github.com/nikiforosFreespirit/msdb5/app/action/find"
 
+	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
@@ -54,8 +52,8 @@ func NewCleaner(requestname string, playedCards *deck.Cards) (cleaner action.Cle
 	return
 }
 
-func endGame(players playerset.Players, companion player.ScoreCounter) (string, string, error) {
-	caller, _ := players.Find(func(p *player.Player) bool { return p.NotFolded() })
+func endGame(players team.Players, companion player.Scorer) (string, string, error) {
+	_, caller, _ := players.Find(func(p *player.Player) bool { return p.NotFolded() })
 	team1, team2 := new(team.BriscolaTeam), new(team.BriscolaTeam)
 	team1.Add(caller, companion)
 	for _, pl := range players {

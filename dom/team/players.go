@@ -1,4 +1,4 @@
-package playerset
+package team
 
 import (
 	"errors"
@@ -16,23 +16,13 @@ func (playerSet *Players) Add(p player.Player) {
 }
 
 // Find func
-func (playerSet Players) Find(predicate func(p *player.Player) bool) (*player.Player, error) {
-	for _, p := range playerSet {
-		if predicate(p) {
-			return p, nil
-		}
-	}
-	return nil, errors.New("Player not found")
-}
-
-// FindIndex func
-func (playerSet Players) FindIndex(predicate func(p *player.Player) bool) (int, error) {
+func (playerSet Players) Find(predicate func(p *player.Player) bool) (int, *player.Player, error) {
 	for i, p := range playerSet {
 		if predicate(p) {
-			return i, nil
+			return i, p, nil
 		}
 	}
-	return -1, errors.New("Player not found")
+	return -1, nil, errors.New("Player not found")
 }
 
 // Count func

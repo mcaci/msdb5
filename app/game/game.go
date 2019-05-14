@@ -8,13 +8,13 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/companion"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 // Game struct
 type Game struct {
 	playerInTurn uint8
-	players      playerset.Players
+	players      team.Players
 	companion    companion.Companion
 	board        Board
 	phase        Phase
@@ -34,7 +34,7 @@ func makePlayers(g *Game) {
 	}
 }
 
-func distributeCards(players *playerset.Players, side *deck.Cards, withSide bool) {
+func distributeCards(players *team.Players, side *deck.Cards, withSide bool) {
 	d := deck.Deck()
 	for i := 0; i < deck.DeckSize; i++ {
 		if withSide && i >= deck.DeckSize-5 {
@@ -53,7 +53,7 @@ func (g *Game) PlayerInTurn() *player.Player { return g.players[g.playerInTurn] 
 func (g *Game) Companion() *player.Player { return g.companion.Ref() }
 
 // Players func
-func (g *Game) Players() playerset.Players { return g.players }
+func (g *Game) Players() team.Players { return g.players }
 
 // SetCompanion func
 func (g *Game) SetCompanion(c card.ID, pl *player.Player) { g.companion = *companion.New(c, pl) }
@@ -81,7 +81,7 @@ func (g Game) String() (str string) {
 }
 
 func (g Game) Log(request, origin string, err error) {
-	playerLogged, err := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(origin) })
+	_, playerLogged, err := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(origin) })
 	if err == nil {
 		log.Printf("New Action by %s\n", playerLogged.Name())
 	}

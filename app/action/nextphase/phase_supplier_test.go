@@ -6,15 +6,15 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/action"
 	"github.com/nikiforosFreespirit/msdb5/app/game"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/playerset"
+	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
-func testObject(phase game.Phase, players playerset.Players, sideDeck bool, request string) action.NextPhaseChanger {
+func testObject(phase game.Phase, players team.Players, sideDeck bool, request string) action.NextPhaseChanger {
 	return NewChanger(phase, players, sideDeck, request)
 }
 
 func TestJoiningStaysInJoiningIfConditionNotMet(t *testing.T) {
-	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
+	testPlayers := team.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
 	testPhase := testObject(game.Joining, testPlayers, true, "").NextPhase()
 	testExpected := game.Joining
 	if testExpected != testPhase {
@@ -25,7 +25,7 @@ func TestJoiningStaysInJoiningIfConditionNotMet(t *testing.T) {
 func TestJoiningGoesToAuctionIfConditionMet(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Join("A", "any")
-	testPlayers := playerset.Players{testPlayer, testPlayer, testPlayer, testPlayer, testPlayer}
+	testPlayers := team.Players{testPlayer, testPlayer, testPlayer, testPlayer, testPlayer}
 	testPhase := testObject(game.Joining, testPlayers, true, "").NextPhase()
 	testExpected := game.InsideAuction
 	if testExpected != testPhase {
@@ -35,7 +35,7 @@ func TestJoiningGoesToAuctionIfConditionMet(t *testing.T) {
 
 func TestInsideAuctionStaysIfConditionNotMet(t *testing.T) {
 	testPlayer := player.New()
-	testPlayers := playerset.Players{testPlayer, testPlayer, testPlayer, testPlayer, testPlayer}
+	testPlayers := team.Players{testPlayer, testPlayer, testPlayer, testPlayer, testPlayer}
 	testPhase := testObject(game.InsideAuction, testPlayers, true, "").NextPhase()
 	testExpected := game.InsideAuction
 	if testExpected != testPhase {
@@ -46,7 +46,7 @@ func TestInsideAuctionStaysIfConditionNotMet(t *testing.T) {
 func TestAuctionGoesToCompanionIfConditionMet(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Fold()
-	testPlayers := playerset.Players{player.New(), testPlayer, testPlayer, testPlayer, testPlayer}
+	testPlayers := team.Players{player.New(), testPlayer, testPlayer, testPlayer, testPlayer}
 	testPhase := testObject(game.InsideAuction, testPlayers, false, "").NextPhase()
 	testExpected := game.ChosingCompanion
 	if testExpected != testPhase {
@@ -57,7 +57,7 @@ func TestAuctionGoesToCompanionIfConditionMet(t *testing.T) {
 func TestAuctionGoesToExchangeIfConditionMet(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Fold()
-	testPlayers := playerset.Players{player.New(), testPlayer, testPlayer, testPlayer, testPlayer}
+	testPlayers := team.Players{player.New(), testPlayer, testPlayer, testPlayer, testPlayer}
 	testPhase := testObject(game.InsideAuction, testPlayers, true, "").NextPhase()
 	testExpected := game.ExchangingCards
 	if testExpected != testPhase {
@@ -92,7 +92,7 @@ func TestCompanionImmediatelyGoesToPlay(t *testing.T) {
 func TestPlayCardStaysIfConditionNotMet(t *testing.T) {
 	testPlayer := player.New()
 	testPlayer.Hand().Add(1)
-	testPlayers := playerset.Players{testPlayer, player.New(), player.New(), player.New(), player.New()}
+	testPlayers := team.Players{testPlayer, player.New(), player.New(), player.New(), player.New()}
 	testPhase := testObject(game.PlayingCards, testPlayers, true, "").NextPhase()
 	testExpected := game.PlayingCards
 	if testExpected != testPhase {
@@ -101,7 +101,7 @@ func TestPlayCardStaysIfConditionNotMet(t *testing.T) {
 }
 
 func TestPlayCardGoesToEndIfConditionMet(t *testing.T) {
-	testPlayers := playerset.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
+	testPlayers := team.Players{player.New(), player.New(), player.New(), player.New(), player.New()}
 	testPhase := testObject(game.PlayingCards, testPlayers, true, "").NextPhase()
 	testExpected := game.End
 	if testExpected != testPhase {
