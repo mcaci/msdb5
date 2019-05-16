@@ -23,31 +23,50 @@ func NewChanger(current game.Phase, players team.Players, sideDeck bool,
 }
 
 func (nps NextPhaseStruct) NextPhase() game.Phase {
+	current, nextPhase := nps.current, nps.current+1
+	var predicateToNextPhase func() bool
 	switch nps.current {
 	case game.Joining:
-		return nps.NextPhaseJoin()
-	case game.InsideAuction:
-		if nps.sideDeck {
-			return nps.NextPhaseAuctionWithSide()
+		predicateToNextPhase = func() bool {
+			var isPlayerEmpty = func(p *player.Player) bool { return p.IsNameEmpty() }
+			return nps.players.Count(isPlayerEmpty) == 0
 		}
-		return nps.NextPhaseAuctionNoSide()
+	case game.InsideAuction:
+		predicateToNextPhase = func() bool {
+			var isFolded = func(p *player.Player) bool { return p.Folded() }
+			return nps.players.Count(isFolded) == 4
+		}
+		if !nps.sideDeck {
+			nextPhase = nps.current + 2
+		}
 	case game.ExchangingCards:
-		return nps.NextPhaseExchange()
+		predicateToNextPhase = func() bool {
+			data := strings.Split(nps.request, "#")
+			if len(data) > 1 {
+				number, err := strconv.Atoi(data[1])
+				return number == 0 || err != nil
+			}
+			return false
+		}
 	case game.ChosingCompanion:
-		return game.PlayingCards
+		nextPhase = game.PlayingCards
+		predicateToNextPhase = func() bool { return true }
 	case game.PlayingCards:
-		return nps.NextPhasePlay()
+		predicateToNextPhase = func() bool {
+			var isHandEmpty = func(p *player.Player) bool { return p.IsHandEmpty() }
+			return nps.players.All(isHandEmpty)
+		}
 	default:
 		return game.End
 	}
+	return nextPhaseNext(current, nextPhase, predicateToNextPhase)
 }
 
-func (nps NextPhaseStruct) NextPhaseJoin() game.Phase {
-	var isPlayerEmpty = func(p *player.Player) bool { return p.IsNameEmpty() }
-	if nps.players.Count(isPlayerEmpty) == 0 {
-		return game.InsideAuction
+func nextPhaseNext(self, next game.Phase, canStepToNext func() bool) game.Phase {
+	if canStepToNext() {
+		return next
 	}
-	return game.Joining
+	return self
 }
 
 func (nps NextPhaseStruct) NextPhasePlay() game.Phase {
@@ -56,31 +75,4 @@ func (nps NextPhaseStruct) NextPhasePlay() game.Phase {
 		return game.End
 	}
 	return game.PlayingCards
-}
-
-func (nps NextPhaseStruct) nextPhase(phase game.Phase) game.Phase {
-	var isFolded = func(p *player.Player) bool { return p.Folded() }
-	if nps.players.Count(isFolded) == 4 {
-		return phase
-	}
-	return game.InsideAuction
-}
-
-func (nps NextPhaseStruct) NextPhaseAuctionNoSide() game.Phase {
-	return nps.nextPhase(game.ChosingCompanion)
-}
-
-func (nps NextPhaseStruct) NextPhaseAuctionWithSide() game.Phase {
-	return nps.nextPhase(game.ExchangingCards)
-}
-
-func (nps NextPhaseStruct) NextPhaseExchange() game.Phase {
-	data := strings.Split(nps.request, "#")
-	if len(data) > 1 {
-		number, err := strconv.Atoi(data[1])
-		if number == 0 || err != nil {
-			return game.ChosingCompanion
-		}
-	}
-	return game.ExchangingCards
 }
