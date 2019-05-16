@@ -74,7 +74,8 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 
 	phaseAtEndTurn := o.game.CurrentPhase()
 	if phaseAtEndTurn == game.End {
-		all, me, err = endGame(o.game.Players(), o.game.Companion())
+		scoreTeam1, scoreTeam2 := team.Score(p, o.game.Companion(), o.game.Scorers()...)
+		all, me, err = fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2), "", nil
 	}
 	return
 }

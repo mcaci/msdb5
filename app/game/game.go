@@ -55,6 +55,15 @@ func (g *Game) Companion() *player.Player { return g.companion.Ref() }
 // Players func
 func (g *Game) Players() team.Players { return g.players }
 
+// Scorers func
+func (g *Game) Scorers() []player.Scorer {
+	scorers := make([]player.Scorer, 0)
+	for _, p := range g.players {
+		scorers = append(scorers, p)
+	}
+	return scorers
+}
+
 // SetCompanion func
 func (g *Game) SetCompanion(c card.ID, pl *player.Player) { g.companion = *companion.New(c, pl) }
 

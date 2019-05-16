@@ -1,8 +1,6 @@
 package orchestrator
 
 import (
-	"fmt"
-
 	"github.com/nikiforosFreespirit/msdb5/app/action"
 	"github.com/nikiforosFreespirit/msdb5/app/action/clean"
 	"github.com/nikiforosFreespirit/msdb5/app/action/execute/auction"
@@ -14,7 +12,6 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 func NewFinder(requestname, request, origin string, currentPlayer *player.Player) (finder action.Finder) {
@@ -50,16 +47,4 @@ func NewCleaner(requestname string, playedCards *deck.Cards) (cleaner action.Cle
 		cleaner = clean.NewCleaner(playedCards)
 	}
 	return
-}
-
-func endGame(players team.Players, companion player.Scorer) (string, string, error) {
-	_, caller, _ := players.Find(func(p *player.Player) bool { return p.NotFolded() })
-	team1, team2 := new(team.BriscolaTeam), new(team.BriscolaTeam)
-	team1.Add(caller, companion)
-	for _, pl := range players {
-		if pl != caller && pl != companion {
-			team2.Add(pl)
-		}
-	}
-	return fmt.Sprintf("Callers: %+v; Others: %+v", team1.Score(), team2.Score()), "", nil
 }
