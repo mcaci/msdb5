@@ -31,7 +31,8 @@ func TestSuccessfulFindIndex(t *testing.T) {
 }
 
 func TestSuccessfulFindDataCorresponds(t *testing.T) {
-	if _, player, _ := testPlayers.Find(func(p *player.Player) bool { return p.IsName("A") }); !player.IsName("A") {
+	isPlayerACheck := func(p *player.Player) bool { return p.Name() == "A" }
+	if _, player, _ := testPlayers.Find(isPlayerACheck); !isPlayerACheck(player) {
 		t.Fatalf("%s and %v are expected to be the same player", "A", player)
 	}
 }
