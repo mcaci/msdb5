@@ -24,7 +24,7 @@ func NewChanger(current game.Phase, players team.Players, sideDeck bool,
 
 func (nps NextPhaseStruct) NextPhase() game.Phase {
 	current, nextPhase := nps.current, nps.current+1
-	var predicateToNextPhase func() bool
+	predicateToNextPhase := func() bool { return true }
 	switch nps.current {
 	case game.Joining:
 		predicateToNextPhase = func() bool {
@@ -50,29 +50,16 @@ func (nps NextPhaseStruct) NextPhase() game.Phase {
 		}
 	case game.ChosingCompanion:
 		nextPhase = game.PlayingCards
-		predicateToNextPhase = func() bool { return true }
 	case game.PlayingCards:
 		predicateToNextPhase = func() bool {
 			var isHandEmpty = func(p *player.Player) bool { return p.IsHandEmpty() }
 			return nps.players.All(isHandEmpty)
 		}
 	default:
-		return game.End
+		nextPhase = game.End
 	}
-	return nextPhaseNext(current, nextPhase, predicateToNextPhase)
-}
-
-func nextPhaseNext(self, next game.Phase, canStepToNext func() bool) game.Phase {
-	if canStepToNext() {
-		return next
+	if predicateToNextPhase() {
+		return nextPhase
 	}
-	return self
-}
-
-func (nps NextPhaseStruct) NextPhasePlay() game.Phase {
-	var isHandEmpty = func(p *player.Player) bool { return p.IsHandEmpty() }
-	if nps.players.All(isHandEmpty) {
-		return game.End
-	}
-	return game.PlayingCards
+	return current
 }
