@@ -28,13 +28,19 @@ func (nps NextPhaseStruct) NextPhase() game.Phase {
 	switch nps.current {
 	case game.Joining:
 		predicateToNextPhase = func() bool {
-			var isPlayerEmpty = func(p *player.Player) bool { return p.IsNameEmpty() }
-			return nps.players.Count(isPlayerEmpty) == 0
+			a := make([]player.EmptyNameChecker, 0)
+			for _, p := range nps.players {
+				a = append(a, p)
+			}
+			return team.CountEmptyNames(a...) == 0
 		}
 	case game.InsideAuction:
 		predicateToNextPhase = func() bool {
-			var isFolded = func(p *player.Player) bool { return p.Folded() }
-			return nps.players.Count(isFolded) == 4
+			a := make([]player.FoldedChecker, 0)
+			for _, p := range nps.players {
+				a = append(a, p)
+			}
+			return team.CountFolded(a...) == 4
 		}
 		if !nps.sideDeck {
 			nextPhase = nps.current + 2
@@ -52,8 +58,11 @@ func (nps NextPhaseStruct) NextPhase() game.Phase {
 		nextPhase = game.PlayingCards
 	case game.PlayingCards:
 		predicateToNextPhase = func() bool {
-			var isHandEmpty = func(p *player.Player) bool { return p.IsHandEmpty() }
-			return nps.players.All(isHandEmpty)
+			a := make([]player.EmptyHandChecker, 0)
+			for _, p := range nps.players {
+				a = append(a, p)
+			}
+			return team.CountEmptyHands(a...) == 5
 		}
 	default:
 		nextPhase = game.End

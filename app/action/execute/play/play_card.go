@@ -43,8 +43,11 @@ func (pcs PlayCardStruct) Do(p *player.Player) error {
 		winningCardIndex := briscola.IndexOfWinningCard(*pcs.playedCards, pcs.briscolaSeed)
 		next := playersRoundRobin(uint8(playerInTurn) + winningCardIndex)
 		pcs.players[next].Collect(pcs.playedCards)
-		var isHandEmpty = func(p *player.Player) bool { return p.IsHandEmpty() }
-		if pcs.players.All(isHandEmpty) && len(*pcs.sideDeck) > 0 {
+		a := make([]player.EmptyHandChecker, 0)
+		for _, p := range pcs.players {
+			a = append(a, p)
+		}
+		if team.CountEmptyHands(a...) == 5 && len(*pcs.sideDeck) > 0 {
 			pcs.players[next].Collect(pcs.sideDeck)
 			pcs.sideDeck.Clear()
 		}

@@ -42,15 +42,3 @@ func TestUnsuccessfulFind(t *testing.T) {
 		t.Fatal(err)
 	}
 }
-
-func TestCount(t *testing.T) {
-	if 2 != testPlayers.Count(func(p *player.Player) bool { return true }) {
-		t.Fatal("Count should be 2")
-	}
-}
-
-func TestAll(t *testing.T) {
-	if !testPlayers.All(func(p *player.Player) bool { return p.IsSameHost("") }) {
-		t.Fatal("All hosts should not be set")
-	}
-}

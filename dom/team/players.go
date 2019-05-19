@@ -25,26 +25,6 @@ func (playerSet Players) Find(predicate func(p *player.Player) bool) (int, *play
 	return -1, nil, errors.New("Player not found")
 }
 
-// Count func
-func (playerSet Players) Count(predicate func(p *player.Player) bool) (count uint8) {
-	for _, p := range playerSet {
-		if predicate(p) {
-			count++
-		}
-	}
-	return
-}
-
-// All func
-func (playerSet Players) All(predicate func(p *player.Player) bool) bool {
-	for _, p := range playerSet {
-		if !predicate(p) {
-			return false
-		}
-	}
-	return true
-}
-
 func (playerSet Players) String() (str string) {
 	for _, p := range playerSet {
 		str += fmt.Sprintf("- %+v -", *p)
