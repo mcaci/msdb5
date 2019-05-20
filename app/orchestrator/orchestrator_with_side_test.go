@@ -3,7 +3,7 @@ package orchestrator
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/app/game"
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 )
 
@@ -23,7 +23,7 @@ func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
 			pl.Fold()
 		}
 	}
-	o.game.NextPhase(game.PlayingCards)
+	o.game.NextPhase(phase.PlayingCards)
 	gameTest.Action("Card#5#Coin", "127.0.0.51")
 	gameTest.Action("Card#7#Coin", "127.0.0.52")
 	gameTest.Action("Card#9#Coin", "127.0.0.53")

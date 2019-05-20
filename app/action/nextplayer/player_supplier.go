@@ -2,7 +2,7 @@ package nextplayer
 
 import (
 	"github.com/nikiforosFreespirit/msdb5/app/action"
-	"github.com/nikiforosFreespirit/msdb5/app/game"
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
@@ -10,13 +10,13 @@ import (
 )
 
 type NextPlayerStruct struct {
-	current      game.Phase
+	current      phase.ID
 	players      team.Players
 	playedCards  *deck.Cards
 	briscolaSeed card.Seed
 }
 
-func NewPlayerChanger(current game.Phase, players team.Players,
+func NewPlayerChanger(current phase.ID, players team.Players,
 	playedCards *deck.Cards, briscolaSeed card.Seed) action.NextPlayerSelector {
 	return &NextPlayerStruct{current, players, playedCards, briscolaSeed}
 }
@@ -25,11 +25,11 @@ var playersRoundRobin = func(playerInTurn uint8) uint8 { return (playerInTurn + 
 
 func (nps NextPlayerStruct) NextPlayer(playerInTurn uint8) uint8 {
 	switch nps.current {
-	case game.Joining:
+	case phase.Joining:
 		return playersRoundRobin(playerInTurn)
-	case game.InsideAuction:
+	case phase.InsideAuction:
 		return nps.NextPlayerAuction(playerInTurn)
-	case game.PlayingCards:
+	case phase.PlayingCards:
 		return nps.NextPhasePlay(playerInTurn)
 	default:
 		return playerInTurn

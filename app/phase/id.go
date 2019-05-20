@@ -1,10 +1,10 @@
-package game
+package phase
 
-// Phase type
-type Phase uint8
+// ID type
+type ID uint8
 
 const (
-	Joining Phase = iota
+	Joining ID = iota
 	InsideAuction
 	ExchangingCards
 	ChosingCompanion

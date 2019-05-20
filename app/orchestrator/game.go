@@ -1,9 +1,10 @@
-package game
+package orchestrator
 
 import (
 	"fmt"
 	"log"
 
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/companion"
@@ -20,7 +21,7 @@ type Game struct {
 	side         deck.Cards
 	playedCards  deck.Cards
 	auctionScore auction.Score
-	phase        Phase
+	phase        phase.ID
 }
 
 // NewGame func
@@ -65,10 +66,10 @@ func (g *Game) SetCompanion(c card.ID, pl *player.Player) { g.companion = *compa
 func (g *Game) BriscolaSeed() card.Seed { return g.companion.Card().Seed() }
 
 // CurrentPhase func
-func (g *Game) CurrentPhase() Phase { return g.phase }
+func (g *Game) CurrentPhase() phase.ID { return g.phase }
 
 // NextPhase func
-func (g *Game) NextPhase(phase Phase) { g.phase = phase }
+func (g *Game) NextPhase(phase phase.ID) { g.phase = phase }
 
 // NextPlayer func
 func (g *Game) NextPlayer(generateIndex func(uint8) uint8) {
@@ -91,7 +92,7 @@ func (g *Game) SideDeck() *deck.Cards {
 }
 
 func (g Game) String() (str string) {
-	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, Phase: %d)",
+	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, ID: %d)",
 		g.PlayerInTurn().Name(), g.companion.Card(), g.PlayedCards(), g.AuctionScore(), g.phase)
 }
 

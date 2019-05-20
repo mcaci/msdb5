@@ -10,10 +10,10 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/action"
 	"github.com/nikiforosFreespirit/msdb5/app/action/execute/nominate"
 	"github.com/nikiforosFreespirit/msdb5/app/action/execute/play"
-	"github.com/nikiforosFreespirit/msdb5/app/game"
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
 )
 
-func toFile(actionExec action.Executer, p *player.Player, g *game.Game) {
+func toFile(actionExec action.Executer, p *player.Player, g *Game) {
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Println(err)
@@ -29,11 +29,11 @@ func toFile(actionExec action.Executer, p *player.Player, g *game.Game) {
 	}
 }
 
-func infoForAll(currentPhase game.Phase, gameInfo game.Game) string {
+func infoForAll(currentPhase phase.ID, gameInfo Game) string {
 	all := fmt.Sprintf("Game: %+v", gameInfo)
 	sideDeck := gameInfo.SideDeck()
 	isSideDeckUsed := len((*sideDeck)) > 0
-	if currentPhase == game.InsideAuction && isSideDeckUsed {
+	if currentPhase == phase.InsideAuction && isSideDeckUsed {
 		score := gameInfo.AuctionScore()
 		if *score >= 90 {
 			all += fmt.Sprintf("First card: %+v", (*sideDeck)[0])
@@ -52,9 +52,9 @@ func infoForAll(currentPhase game.Phase, gameInfo game.Game) string {
 	return all
 }
 
-func infoForMe(currentPlayer player.Player, currentPhase game.Phase, gameInfo game.Game) string {
+func infoForMe(currentPlayer player.Player, currentPhase phase.ID, gameInfo Game) string {
 	me := fmt.Sprintf("%+v", currentPlayer)
-	if currentPhase == game.ExchangingCards {
+	if currentPhase == phase.ExchangingCards {
 		me += fmt.Sprintf("Side deck: %+v", gameInfo.SideDeck())
 	}
 	return me

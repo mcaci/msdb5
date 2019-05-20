@@ -1,4 +1,4 @@
-package game
+package orchestrator
 
 import (
 	"testing"

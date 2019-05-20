@@ -1,12 +1,12 @@
 package action
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/app/game"
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
 type PhaseSupplier interface {
-	Phase() game.Phase
+	ID() phase.ID
 }
 
 type Finder interface {
@@ -22,7 +22,7 @@ type NextPlayerSelector interface {
 }
 
 type NextPhaseChanger interface {
-	NextPhase() game.Phase
+	NextPhase() phase.ID
 }
 
 type Cleaner interface {

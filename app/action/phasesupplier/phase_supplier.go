@@ -1,24 +1,24 @@
 package phasesupplier
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/app/game"
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
 )
 
 type InputAction string
 
-func (ia InputAction) Phase() game.Phase {
+func (ia InputAction) ID() phase.ID {
 	switch ia {
 	case "Join":
-		return game.Joining
+		return phase.Joining
 	case "Auction":
-		return game.InsideAuction
+		return phase.InsideAuction
 	case "Exchange":
-		return game.ExchangingCards
+		return phase.ExchangingCards
 	case "Companion":
-		return game.ChosingCompanion
+		return phase.ChosingCompanion
 	case "Card":
-		return game.PlayingCards
+		return phase.PlayingCards
 	default:
-		return game.End
+		return phase.End
 	}
 }

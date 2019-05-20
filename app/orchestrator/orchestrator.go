@@ -9,20 +9,20 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/action/nextphase"
 	"github.com/nikiforosFreespirit/msdb5/app/action/nextplayer"
 	"github.com/nikiforosFreespirit/msdb5/app/action/phasesupplier"
-	"github.com/nikiforosFreespirit/msdb5/app/game"
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 // Orchestrator struct
 type Orchestrator struct {
-	game *game.Game
+	game *Game
 }
 
 // NewAction func
 func NewAction(side bool) app.Action {
 	o := new(Orchestrator)
-	o.game = game.NewGame(side)
+	o.game = NewGame(side)
 	return o
 }
 
@@ -32,9 +32,9 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	currentPlayer := o.game.PlayerInTurn()
 	// phase step
 	currentPhase := o.game.CurrentPhase()
-	inputPhase := phasesupplier.InputAction(data[0]).Phase()
+	inputPhase := phasesupplier.InputAction(data[0]).ID()
 	if currentPhase != inputPhase {
-		return "", "", fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase)
+		return "", "", fmt.Errorf("ID is not %d but %d", inputPhase, currentPhase)
 	}
 	// find step
 	finder := NewFinder(data[0], request, origin, currentPlayer)
@@ -73,7 +73,7 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 
 	// process end game
 	phaseAtEndTurn := o.game.CurrentPhase()
-	if phaseAtEndTurn == game.End {
+	if phaseAtEndTurn == phase.End {
 		scorers := make([]player.Scorer, 0)
 		for _, p := range o.game.Players() {
 			scorers = append(scorers, p)
