@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/companion"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
@@ -16,7 +17,9 @@ type Game struct {
 	playerInTurn uint8
 	players      team.Players
 	companion    companion.Companion
-	board        Board
+	side         deck.Cards
+	playedCards  deck.Cards
+	auctionScore auction.Score
 	phase        Phase
 }
 
@@ -24,7 +27,7 @@ type Game struct {
 func NewGame(withSide bool) *Game {
 	g := new(Game)
 	makePlayers(g)
-	distributeCards(&g.players, g.board.SideDeck(), withSide)
+	distributeCards(&g.players, &g.side, withSide)
 	return g
 }
 
@@ -55,20 +58,8 @@ func (g *Game) Companion() *player.Player { return g.companion.Ref() }
 // Players func
 func (g *Game) Players() team.Players { return g.players }
 
-// Scorers func
-func (g *Game) Scorers() []player.Scorer {
-	scorers := make([]player.Scorer, 0)
-	for _, p := range g.players {
-		scorers = append(scorers, p)
-	}
-	return scorers
-}
-
 // SetCompanion func
 func (g *Game) SetCompanion(c card.ID, pl *player.Player) { g.companion = *companion.New(c, pl) }
-
-// Board func
-func (g *Game) Board() *Board { return &g.board }
 
 // BriscolaSeed func
 func (g *Game) BriscolaSeed() card.Seed { return g.companion.Card().Seed() }
@@ -84,9 +75,24 @@ func (g *Game) NextPlayer(generateIndex func(uint8) uint8) {
 	g.playerInTurn = generateIndex(g.playerInTurn)
 }
 
+// AuctionScore func
+func (g *Game) AuctionScore() *auction.Score {
+	return &g.auctionScore
+}
+
+// PlayedCards func
+func (g *Game) PlayedCards() *deck.Cards {
+	return &g.playedCards
+}
+
+// SideDeck func
+func (g *Game) SideDeck() *deck.Cards {
+	return &g.side
+}
+
 func (g Game) String() (str string) {
-	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Board Info: %+v, Phase: %d)",
-		g.PlayerInTurn().Name(), g.companion.Card(), g.board, g.phase)
+	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, Phase: %d)",
+		g.PlayerInTurn().Name(), g.companion.Card(), g.PlayedCards(), g.AuctionScore(), g.phase)
 }
 
 func (g Game) Log(request, origin string, err error) {

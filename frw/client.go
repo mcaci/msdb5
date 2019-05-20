@@ -34,7 +34,7 @@ func (c *client) read() {
 		infoForAll, infoForPlayer, err := run(c.room.msdb5game, command, origin)
 		if err == nil {
 			log.Println(command)
-			// Simpler board info sent to everyone
+			// Simpler game info sent to everyone
 			send(infoForAll, c.room.forward)
 			// Player info sent to myself only
 			send(infoForPlayer, c.send)

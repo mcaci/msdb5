@@ -20,7 +20,7 @@ type Room struct {
 	leave chan *client
 	// clients holds all current clients in this room.
 	clients map[*client]bool
-	// game board
+	// msdb5 game instance
 	msdb5game app.Action
 }
 

@@ -47,7 +47,8 @@ func (pcs PlayCardStruct) Do(p *player.Player) error {
 		for _, p := range pcs.players {
 			a = append(a, p)
 		}
-		if team.CountEmptyHands(a...) == 5 && len(*pcs.sideDeck) > 0 {
+		if team.Count(pcs.players, func(p *player.Player) bool { return p.IsHandEmpty() }) == 5 &&
+			len(*pcs.sideDeck) > 0 {
 			pcs.players[next].Collect(pcs.sideDeck)
 			pcs.sideDeck.Clear()
 		}

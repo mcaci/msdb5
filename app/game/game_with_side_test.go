@@ -6,13 +6,13 @@ import (
 
 func TestGameWithSideHas5Player(t *testing.T) {
 	if gameTest := NewGame(true); gameTest.Players() == nil {
-		t.Fatal("The board has no Player")
+		t.Fatal("There are no Player")
 	}
 }
 
 func TestGameWithSideHasNoPlayerInTurnAtStart(t *testing.T) {
 	if gameTest := NewGame(true); gameTest.PlayerInTurn() == nil {
-		t.Fatal("The board has no Player in turn")
+		t.Fatal("There are no Player in turn")
 	}
 }
 
@@ -29,7 +29,7 @@ func TestPlayer4Has7Cards(t *testing.T) {
 }
 
 func TestSideDeckHas5CardsWhenPresent(t *testing.T) {
-	if gameTest := NewGame(true); len(*gameTest.board.SideDeck()) != 5 {
-		t.Fatalf("Side deck has %d cards", len(*gameTest.board.SideDeck()))
+	if gameTest := NewGame(true); len(*gameTest.SideDeck()) != 5 {
+		t.Fatalf("Side deck has %d cards", len(*gameTest.SideDeck()))
 	}
 }

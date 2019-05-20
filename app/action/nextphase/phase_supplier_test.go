@@ -18,7 +18,7 @@ func TestJoiningStaysInJoiningIfConditionNotMet(t *testing.T) {
 	testPhase := testObject(game.Joining, testPlayers, true, "").NextPhase()
 	testExpected := game.Joining
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }
 
@@ -29,7 +29,7 @@ func TestJoiningGoesToAuctionIfConditionMet(t *testing.T) {
 	testPhase := testObject(game.Joining, testPlayers, true, "").NextPhase()
 	testExpected := game.InsideAuction
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }
 
@@ -39,7 +39,7 @@ func TestInsideAuctionStaysIfConditionNotMet(t *testing.T) {
 	testPhase := testObject(game.InsideAuction, testPlayers, true, "").NextPhase()
 	testExpected := game.InsideAuction
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }
 
@@ -50,7 +50,7 @@ func TestAuctionGoesToCompanionIfConditionMet(t *testing.T) {
 	testPhase := testObject(game.InsideAuction, testPlayers, false, "").NextPhase()
 	testExpected := game.ChosingCompanion
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }
 
@@ -61,7 +61,7 @@ func TestAuctionGoesToExchangeIfConditionMet(t *testing.T) {
 	testPhase := testObject(game.InsideAuction, testPlayers, true, "").NextPhase()
 	testExpected := game.ExchangingCards
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }
 
@@ -69,7 +69,7 @@ func TestExchangingCardsStaysIfConditionNotMet(t *testing.T) {
 	testPhase := testObject(game.ExchangingCards, nil, true, "").NextPhase()
 	testExpected := game.ExchangingCards
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }
 
@@ -77,7 +77,7 @@ func TestExchangingCardsGoesToCompanionIfConditionMet(t *testing.T) {
 	testPhase := testObject(game.ExchangingCards, nil, true, "Companion#0").NextPhase()
 	testExpected := game.ChosingCompanion
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }
 
@@ -85,7 +85,7 @@ func TestCompanionImmediatelyGoesToPlay(t *testing.T) {
 	testPhase := testObject(game.ChosingCompanion, nil, true, "").NextPhase()
 	testExpected := game.PlayingCards
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }
 
@@ -96,7 +96,7 @@ func TestPlayCardStaysIfConditionNotMet(t *testing.T) {
 	testPhase := testObject(game.PlayingCards, testPlayers, true, "").NextPhase()
 	testExpected := game.PlayingCards
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }
 
@@ -105,6 +105,6 @@ func TestPlayCardGoesToEndIfConditionMet(t *testing.T) {
 	testPhase := testObject(game.PlayingCards, testPlayers, true, "").NextPhase()
 	testExpected := game.End
 	if testExpected != testPhase {
-		t.Fatalf("Should be in phase %d", testExpected)
+		t.Fatalf("Should be in phase %d but is in phase %d", testExpected, testPhase)
 	}
 }

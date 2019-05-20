@@ -29,14 +29,14 @@ func NewExecuter(requestname, request, origin string, o *Orchestrator) (executer
 	case "Join":
 		executer = join.NewJoin(request, origin)
 	case "Auction":
-		executer = auction.NewAuction(request, origin, o.game.Board().AuctionScore())
+		executer = auction.NewAuction(request, origin, o.game.AuctionScore())
 	case "Exchange":
-		executer = exchange.NewExchangeCards(request, origin, o.game.Board().SideDeck())
+		executer = exchange.NewExchangeCards(request, origin, o.game.SideDeck())
 	case "Companion":
 		executer = nominate.NewCompanion(request, origin, o.game.Players(), o.game.SetCompanion)
 	case "Card":
 		executer = play.NewPlay(request, origin, o.game.Players(),
-			o.game.Board().PlayedCards(), o.game.Board().SideDeck(), o.game.BriscolaSeed())
+			o.game.PlayedCards(), o.game.SideDeck(), o.game.BriscolaSeed())
 	}
 	return
 }

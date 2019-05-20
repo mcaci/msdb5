@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/app"
-	"github.com/nikiforosFreespirit/msdb5/app/action"
 	"github.com/nikiforosFreespirit/msdb5/app/action/clean"
 	"github.com/nikiforosFreespirit/msdb5/app/action/nextphase"
 	"github.com/nikiforosFreespirit/msdb5/app/action/nextplayer"
@@ -31,23 +30,21 @@ func NewAction(side bool) app.Action {
 func (o *Orchestrator) Action(request, origin string) (all, me string, err error) {
 	data := strings.Split(request, "#")
 	currentPlayer := o.game.PlayerInTurn()
-	currentPhase := o.game.CurrentPhase()
-	inputAction := phasesupplier.InputAction(data[0]).Phase()
 	// phase step
-	err = phaseStep(inputAction, currentPhase)
-	if err != nil {
-		return
+	currentPhase := o.game.CurrentPhase()
+	inputPhase := phasesupplier.InputAction(data[0]).Phase()
+	if currentPhase != inputPhase {
+		return "", "", fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase)
 	}
 	// find step
 	finder := NewFinder(data[0], request, origin, currentPlayer)
-	p, err := findStep(finder, o.game.Players())
+	_, p, err := o.game.Players().Find(finder.Find)
 	if err != nil {
 		return
 	}
 	// do step
 	actionExec := NewExecuter(data[0], request, origin, o)
-	err = playStep(actionExec, p)
-	if err != nil {
+	if err = actionExec.Do(p); err != nil {
 		return
 	}
 
@@ -55,47 +52,34 @@ func (o *Orchestrator) Action(request, origin string) (all, me string, err error
 	toFile(actionExec, p, o.game)
 
 	// next player step
-	nextPlayer := nextplayer.NewPlayerChanger(inputAction, o.game.Players(), o.game.Board().PlayedCards(), o.game.BriscolaSeed())
-	nextPlayerStep(nextPlayer, o.game)
-	// next phase
-	isSideDeckUsed := len(*o.game.Board().SideDeck()) > 0
-	nextPhase := nextphase.NewChanger(inputAction, o.game.Players(), isSideDeckUsed, request)
-	nextPhaseStep(nextPhase, o.game)
+	nextPlayer := nextplayer.NewPlayerChanger(currentPhase, o.game.Players(), o.game.PlayedCards(), o.game.BriscolaSeed())
+	o.game.NextPlayer(nextPlayer.NextPlayer)
 
+	// next phase
+	isSideDeckUsed := len(*o.game.SideDeck()) > 0
+	nextPhase := nextphase.NewChanger(currentPhase, o.game.Players(), isSideDeckUsed, request)
+	o.game.NextPhase(nextPhase.NextPhase())
+
+	// log action to players
 	all = infoForAll(currentPhase, *o.game)
 	me = infoForMe(*currentPlayer, currentPhase, *o.game)
 	o.game.Log(request, origin, err)
 
 	// clean phase
-	cleaner := clean.NewCleaner(o.game.Board().PlayedCards())
-	if cleaner != nil && len(*o.game.Board().PlayedCards()) >= 5 {
+	cleaner := clean.NewCleaner(o.game.PlayedCards())
+	if cleaner != nil && len(*o.game.PlayedCards()) >= 5 {
 		cleaner.Clean()
 	}
 
+	// process end game
 	phaseAtEndTurn := o.game.CurrentPhase()
 	if phaseAtEndTurn == game.End {
-		scoreTeam1, scoreTeam2 := team.Score(p, o.game.Companion(), o.game.Scorers()...)
+		scorers := make([]player.Scorer, 0)
+		for _, p := range o.game.Players() {
+			scorers = append(scorers, p)
+		}
+		scoreTeam1, scoreTeam2 := team.Score(p, o.game.Companion(), scorers...)
 		all, me, err = fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2), "", nil
 	}
 	return
-}
-
-func phaseStep(input, current game.Phase) (err error) {
-	if input != current {
-		err = fmt.Errorf("Phase is not %d but %d", input, current)
-	}
-	return
-}
-func findStep(finder action.Finder, players team.Players) (*player.Player, error) {
-	_, p, err := players.Find(finder.Find)
-	return p, err
-}
-func playStep(executer action.Executer, p *player.Player) error {
-	return executer.Do(p)
-}
-func nextPlayerStep(next action.NextPlayerSelector, g *game.Game) {
-	g.NextPlayer(next.NextPlayer)
-}
-func nextPhaseStep(nextSel action.NextPhaseChanger, g *game.Game) {
-	g.NextPhase(nextSel.NextPhase())
 }

@@ -7,14 +7,14 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
-func TestBoardHas5Player(t *testing.T) {
+func TestGameHas5Player(t *testing.T) {
 	if gameTest := NewGame(false); gameTest.Players() == nil {
-		t.Fatal("The board has no Player")
+		t.Fatal("There are no Player")
 	}
 }
 func TestGameHasNoPlayerInTurnAtStart(t *testing.T) {
 	if gameTest := NewGame(false); gameTest.PlayerInTurn() == nil {
-		t.Fatal("The board has no Player in turn")
+		t.Fatal("There are no Player in turn")
 	}
 }
 
@@ -25,8 +25,20 @@ func TestPlayer1Has8Cards(t *testing.T) {
 }
 
 func TestSideDeckHasNoCardsWhenAbsent(t *testing.T) {
-	if gameTest := NewGame(false); len(*gameTest.board.SideDeck()) != 0 {
-		t.Fatalf("Side deck has %d cards", len(*gameTest.board.SideDeck()))
+	if gameTest := NewGame(false); len(*gameTest.SideDeck()) != 0 {
+		t.Fatalf("Side deck has %d cards", len(*gameTest.SideDeck()))
+	}
+}
+
+func TestPlayedCardsAreNotPresentAtCreation(t *testing.T) {
+	if gameTest := NewGame(false); len(*gameTest.PlayedCards()) != 0 {
+		t.Fatalf("Side deck has %d cards", len(*gameTest.PlayedCards()))
+	}
+}
+
+func TestAuctionScoreIsZeroAtCreation(t *testing.T) {
+	if gameTest := NewGame(false); *gameTest.AuctionScore() != 0 {
+		t.Fatalf("Side deck has %d cards", *gameTest.AuctionScore())
 	}
 }
 

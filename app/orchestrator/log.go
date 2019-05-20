@@ -22,32 +22,31 @@ func toFile(actionExec action.Executer, p *player.Player, g *game.Game) {
 	logger := log.New(f, "", log.LstdFlags)
 	switch actionExec.(type) {
 	case *nominate.CompanionStruct:
-		logger.Printf("%s, %s, %d\n", p.Name(), g.Companion().Name(), g.Board().AuctionScore())
+		logger.Printf("%s, %s, %d\n", p.Name(), g.Companion().Name(), g.AuctionScore())
 	case *play.PlayCardStruct:
-		idx := len(*g.Board().PlayedCards()) - 1
-		logger.Printf("%s, %d\n", p.Name(), (*g.Board().PlayedCards())[idx])
+		idx := len(*g.PlayedCards()) - 1
+		logger.Printf("%s, %d\n", p.Name(), (*g.PlayedCards())[idx])
 	}
 }
 
 func infoForAll(currentPhase game.Phase, gameInfo game.Game) string {
 	all := fmt.Sprintf("Game: %+v", gameInfo)
-	board := gameInfo.Board()
-	sideDeck := *board.SideDeck()
-	isSideDeckUsed := len(sideDeck) > 0
+	sideDeck := gameInfo.SideDeck()
+	isSideDeckUsed := len((*sideDeck)) > 0
 	if currentPhase == game.InsideAuction && isSideDeckUsed {
-		score := *board.AuctionScore()
-		if score >= 90 {
-			all += fmt.Sprintf("First card: %+v", sideDeck[0])
+		score := gameInfo.AuctionScore()
+		if *score >= 90 {
+			all += fmt.Sprintf("First card: %+v", (*sideDeck)[0])
 		}
-		if score >= 100 {
-			all += fmt.Sprintf("Second card: %+v", sideDeck[1])
+		if *score >= 100 {
+			all += fmt.Sprintf("Second card: %+v", (*sideDeck)[1])
 		}
-		if score >= 110 {
-			all += fmt.Sprintf("Third card: %+v", sideDeck[2])
+		if *score >= 110 {
+			all += fmt.Sprintf("Third card: %+v", (*sideDeck)[2])
 		}
-		if score >= 120 {
-			all += fmt.Sprintf("Fourth card: %+v", sideDeck[3])
-			all += fmt.Sprintf("Fifth card: %+v", sideDeck[4])
+		if *score >= 120 {
+			all += fmt.Sprintf("Fourth card: %+v", (*sideDeck)[3])
+			all += fmt.Sprintf("Fifth card: %+v", (*sideDeck)[4])
 		}
 	}
 	return all
@@ -56,7 +55,7 @@ func infoForAll(currentPhase game.Phase, gameInfo game.Game) string {
 func infoForMe(currentPlayer player.Player, currentPhase game.Phase, gameInfo game.Game) string {
 	me := fmt.Sprintf("%+v", currentPlayer)
 	if currentPhase == game.ExchangingCards {
-		me += fmt.Sprintf("Side deck: %+v", gameInfo.Board().SideDeck())
+		me += fmt.Sprintf("Side deck: %+v", gameInfo.SideDeck())
 	}
 	return me
 }
