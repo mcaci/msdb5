@@ -1,8 +1,7 @@
-package orchestrator
+package game
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/app"
 
@@ -13,32 +12,23 @@ import (
 
 // Process func
 func (g *Game) Process(request, origin string) *app.Info {
-	data := strings.Split(request, "#")
-	requestname := data[0]
-
 	// phase step
 	currentPhase := g.CurrentPhase()
-	inputPhase := phase.ToID(requestname)
+	inputPhase := phase.ToID(request)
 	if currentPhase != inputPhase {
 		return app.NewInfo("", "", fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase))
 	}
 
 	// find step
 	playerInTurn := g.PlayerInTurn()
-	var expectedPlayerFinder func(p *player.Player) bool
-	switch requestname {
-	case "Join":
-		expectedPlayerFinder = func(p *player.Player) bool { return p.IsNameEmpty() }
-	default:
-		expectedPlayerFinder = func(p *player.Player) bool { return p.IsExpectedPlayer(playerInTurn, origin) }
-	}
-	_, actingPlayer, err := g.Players().Find(expectedPlayerFinder)
+	findPredicate := find(g, request, origin)
+	_, actingPlayer, err := g.Players().Find(findPredicate)
 	if err != nil {
 		return app.NewInfo("", "", err)
 	}
 
 	// do step
-	if err := Play(g, actingPlayer, requestname, request, origin); err != nil {
+	if err := play(g, actingPlayer, request, origin); err != nil {
 		return app.NewInfo("", "", err)
 	}
 
@@ -46,10 +36,10 @@ func (g *Game) Process(request, origin string) *app.Info {
 	toFile(currentPhase, playerInTurn, g)
 
 	// next player step
-	g.playerInTurn = NextPlayer(g, currentPhase, g.playerInTurn)
+	g.playerInTurn = nextPlayer(g, currentPhase, g.playerInTurn)
 
 	// next phase
-	g.phase = NextPhase(g, request)
+	g.phase = nextPhase(g, request)
 
 	// log action to players
 	info := app.NewInfo(infoForAll(currentPhase, *g), infoForMe(*playerInTurn, currentPhase, *g), err)

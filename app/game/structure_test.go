@@ -1,4 +1,4 @@
-package orchestrator
+package game
 
 import (
 	"testing"
@@ -62,8 +62,30 @@ func TestSetCompanionAndPlayerReference(t *testing.T) {
 
 func TestNextPlayer(t *testing.T) {
 	testGame := NewGame(false)
-	testGame.playerInTurn = NextPlayer(testGame, phase.Joining, 2)
+	testGame.playerInTurn = nextPlayer(testGame, phase.Joining, 2)
 	if testGame.playerInTurn != 3 {
 		t.Fatal("current player index should be 3")
+	}
+}
+
+func TestNextPlayerInsideAuction(t *testing.T) {
+	testGame := NewGame(false)
+	for i, player := range testGame.Players() {
+		if i == 0 {
+			continue
+		}
+		player.Fold()
+	}
+	testGame.playerInTurn = nextPlayer(testGame, phase.InsideAuction, 2)
+	if testGame.playerInTurn != 0 {
+		t.Fatal("current player index should be 0")
+	}
+}
+
+func TestNextPlayerWhenExchangingCards(t *testing.T) {
+	testGame := NewGame(false)
+	testGame.playerInTurn = nextPlayer(testGame, phase.ExchangingCards, 2)
+	if testGame.playerInTurn != 2 {
+		t.Fatal("current player index should be 0")
 	}
 }
