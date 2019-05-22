@@ -7,23 +7,20 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 
-	"github.com/nikiforosFreespirit/msdb5/app/action"
-	"github.com/nikiforosFreespirit/msdb5/app/action/execute/nominate"
-	"github.com/nikiforosFreespirit/msdb5/app/action/execute/play"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 )
 
-func toFile(actionExec action.Executer, p *player.Player, g *Game) {
+func toFile(current phase.ID, p *player.Player, g *Game) {
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Println(err)
 	}
 	defer f.Close()
 	logger := log.New(f, "", log.LstdFlags)
-	switch actionExec.(type) {
-	case *nominate.CompanionStruct:
+	switch current {
+	case phase.ChosingCompanion:
 		logger.Printf("%s, %s, %d\n", p.Name(), g.Companion().Name(), g.AuctionScore())
-	case *play.PlayCardStruct:
+	case phase.PlayingCards:
 		idx := len(*g.PlayedCards()) - 1
 		logger.Printf("%s, %d\n", p.Name(), (*g.PlayedCards())[idx])
 	}

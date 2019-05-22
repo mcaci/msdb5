@@ -3,6 +3,8 @@ package orchestrator
 import (
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
+
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
@@ -42,14 +44,6 @@ func TestAuctionScoreIsZeroAtCreation(t *testing.T) {
 	}
 }
 
-func TestNextPhase(t *testing.T) {
-	gameTest := NewGame(false)
-	gameTest.NextPhase(1)
-	if gameTest.CurrentPhase() != 1 {
-		t.Fatal("Current phase should be 1")
-	}
-}
-
 func TestSetCompanionAndBriscolaSeed(t *testing.T) {
 	testGame := NewGame(false)
 	testGame.SetCompanion(1, player.New())
@@ -68,7 +62,7 @@ func TestSetCompanionAndPlayerReference(t *testing.T) {
 
 func TestNextPlayer(t *testing.T) {
 	testGame := NewGame(false)
-	testGame.NextPlayer(func(uint8) uint8 { return 3 })
+	testGame.playerInTurn = NextPlayer(testGame, phase.Joining, 2)
 	if testGame.playerInTurn != 3 {
 		t.Fatal("current player index should be 3")
 	}

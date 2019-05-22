@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/nikiforosFreespirit/msdb5/app"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
@@ -22,6 +23,11 @@ type Game struct {
 	playedCards  deck.Cards
 	auctionScore auction.Score
 	phase        phase.ID
+}
+
+// NewAction func
+func NewAction(withSide bool) app.Action {
+	return NewGame(withSide)
 }
 
 // NewGame func
@@ -68,14 +74,6 @@ func (g *Game) BriscolaSeed() card.Seed { return g.companion.Card().Seed() }
 // CurrentPhase func
 func (g *Game) CurrentPhase() phase.ID { return g.phase }
 
-// NextPhase func
-func (g *Game) NextPhase(phase phase.ID) { g.phase = phase }
-
-// NextPlayer func
-func (g *Game) NextPlayer(generateIndex func(uint8) uint8) {
-	g.playerInTurn = generateIndex(g.playerInTurn)
-}
-
 // AuctionScore func
 func (g *Game) AuctionScore() *auction.Score {
 	return &g.auctionScore
@@ -96,6 +94,7 @@ func (g Game) String() (str string) {
 		g.PlayerInTurn().Name(), g.companion.Card(), g.PlayedCards(), g.AuctionScore(), g.phase)
 }
 
+// Log func
 func (g Game) Log(request, origin string, err error) {
 	_, playerLogged, err := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(origin) })
 	if err == nil {

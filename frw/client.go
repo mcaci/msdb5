@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/gorilla/websocket"
-	"github.com/nikiforosFreespirit/msdb5/app"
 )
 
 // client represents a single chatting user.
@@ -31,16 +30,16 @@ func (c *client) read() {
 		command := string(msg)
 		send("----^ NEW MOVE ^----", c.room.forward)
 		origin := c.socket.RemoteAddr().String()
-		infoForAll, infoForPlayer, err := run(c.room.msdb5game, command, origin)
-		if err == nil {
+		info := c.room.msdb5game.Process(command, origin)
+		if info.Err() == nil {
 			log.Println(command)
 			// Simpler game info sent to everyone
-			send(infoForAll, c.room.forward)
+			send(info.ForAll(), c.room.forward)
 			// Player info sent to myself only
-			send(infoForPlayer, c.send)
+			send(info.ForMe(), c.send)
 		} else {
-			log.Println(err)
-			send(err.Error(), c.send)
+			log.Println(info.Err())
+			send(info.Err().Error(), c.send)
 		}
 	}
 }
@@ -54,10 +53,6 @@ func (c *client) write() {
 			log.Println("Write to UI error:", err)
 		}
 	}
-}
-
-func run(room app.Action, command, origin string) (string, string, error) {
-	return room.Action(command, origin)
 }
 
 func send(message string, to chan []byte) {
