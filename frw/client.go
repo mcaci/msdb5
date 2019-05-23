@@ -34,9 +34,9 @@ func (c *client) read() {
 		if info.Err() == nil {
 			log.Println(command)
 			// Simpler game info sent to everyone
-			send(info.ForAll(), c.room.forward)
+			send(info.ToAll(), c.room.forward)
 			// Player info sent to myself only
-			send(info.ForMe(), c.send)
+			send(info.ToMe(), c.send)
 		} else {
 			log.Println(info.Err())
 			send(info.Err().Error(), c.send)

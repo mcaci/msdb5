@@ -10,7 +10,6 @@ import (
 )
 
 func nextPhase(g *Game, request string) phase.ID {
-	isSideDeckUsed := len(*g.SideDeck()) > 0
 	current, nextPhase := g.phase, g.phase+1
 	predicateToNextPhase := func() bool { return true }
 	switch current {
@@ -22,7 +21,7 @@ func nextPhase(g *Game, request string) phase.ID {
 		predicateToNextPhase = func() bool {
 			return team.Count(g.players, func(p *player.Player) bool { return p.Folded() }) == 4
 		}
-		if !isSideDeckUsed {
+		if !g.IsSideUsed() {
 			nextPhase = current + 2
 		}
 	case phase.ExchangingCards:

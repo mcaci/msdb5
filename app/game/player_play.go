@@ -65,7 +65,7 @@ func play(g *Game, p *player.Player, request, origin string) error {
 		if err != nil {
 			return err
 		}
-		g.SetCompanion(c, pl)
+		g.setCompanion(c, pl)
 		return nil
 	case "Card":
 		number := strings.Split(request, "#")[1]
@@ -79,18 +79,18 @@ func play(g *Game, p *player.Player, request, origin string) error {
 		roundHasEnded := len(g.playedCards) == 5
 		if roundHasEnded {
 			playerInTurn, _, _ := g.players.Find(func(pl *player.Player) bool { return pl == p })
-			winningCardIndex := briscola.IndexOfWinningCard(g.playedCards, g.BriscolaSeed())
+			winningCardIndex := briscola.IndexOfWinningCard(g.playedCards, g.briscola())
 			var playersRoundRobin = func(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }
 			next := playersRoundRobin(uint8(playerInTurn) + winningCardIndex)
-			g.players[next].Collect(g.PlayedCards())
+			g.players[next].Collect(&g.playedCards)
 			a := make([]player.EmptyHandChecker, 0)
 			for _, p := range g.players {
 				a = append(a, p)
 			}
 			if team.Count(g.players, func(p *player.Player) bool { return p.IsHandEmpty() }) == 5 &&
 				len(g.side) > 0 {
-				g.players[next].Collect(g.SideDeck())
-				g.SideDeck().Clear()
+				g.players[next].Collect(&g.side)
+				g.side.Clear()
 			}
 		}
 		return err

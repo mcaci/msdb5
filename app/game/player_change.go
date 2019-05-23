@@ -15,10 +15,13 @@ func nextPlayer(g *Game, current phase.ID, playerInTurn uint8) uint8 {
 		for g.players[nextPlayer].Folded() {
 			nextPlayer = playersRoundRobin(nextPlayer)
 		}
+		if nextPlayer == playerInTurn {
+			g.caller = g.playersRef()[playerInTurn]
+		}
 	case phase.PlayingCards:
 		roundHasEnded := len(g.playedCards) == 5
 		if roundHasEnded {
-			winningCardIndex := briscola.IndexOfWinningCard(g.playedCards, g.BriscolaSeed())
+			winningCardIndex := briscola.IndexOfWinningCard(g.playedCards, g.briscola())
 			nextPlayer = playersRoundRobin(playerInTurn + winningCardIndex)
 		}
 	default:

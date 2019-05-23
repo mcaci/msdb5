@@ -3,63 +3,63 @@ package game
 import (
 	"fmt"
 
-	"github.com/nikiforosFreespirit/msdb5/app"
-
+	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
 // Process func
-func (g *Game) Process(request, origin string) *app.Info {
+func (g *Game) Process(request, origin string) *Info {
 	// phase step
-	currentPhase := g.CurrentPhase()
-	inputPhase := phase.ToID(request)
+	currentPhase := g.phase
+	inputPhase, err := phase.ToID(request)
+	if err != nil {
+		return NewErrorInfo(err)
+	}
 	if currentPhase != inputPhase {
-		return app.NewInfo("", "", fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase))
+		return NewErrorInfo(fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase))
 	}
 
 	// find step
-	playerInTurn := g.PlayerInTurn()
 	findPredicate := find(g, request, origin)
-	_, actingPlayer, err := g.Players().Find(findPredicate)
+	_, actingPlayer, err := g.playersRef().Find(findPredicate)
 	if err != nil {
-		return app.NewInfo("", "", err)
+		return NewErrorInfo(err)
 	}
 
 	// do step
 	if err := play(g, actingPlayer, request, origin); err != nil {
-		return app.NewInfo("", "", err)
+		return NewErrorInfo(err)
 	}
 
 	// log action to file
-	toFile(currentPhase, playerInTurn, g)
-
-	// next player step
-	g.playerInTurn = nextPlayer(g, currentPhase, g.playerInTurn)
+	gamelog.Write(g)
 
 	// next phase
 	g.phase = nextPhase(g, request)
 
 	// log action to players
-	info := app.NewInfo(infoForAll(currentPhase, *g), infoForMe(*playerInTurn, currentPhase, *g), err)
-	g.Log(request, origin, err)
+	info := NewInfo(gamelog.ToAll(g), gamelog.ToMe(g), err)
+	gamelog.ToConsole(g, request, err)
+
+	// next player step
+	g.playerInTurn = nextPlayer(g, currentPhase, g.playerInTurn)
 
 	// clean phase
-	if len(*g.PlayedCards()) >= 5 {
+	if g.cardsOnTheBoard() >= 5 {
 		g.playedCards.Clear()
 	}
 
 	// process end game
-	phaseAtEndTurn := g.CurrentPhase()
+	phaseAtEndTurn := g.phase
 	if phaseAtEndTurn == phase.End {
 		scorers := make([]player.Scorer, 0)
-		for _, p := range g.Players() {
+		for _, p := range g.playersRef() {
 			scorers = append(scorers, p)
 		}
-		// TODO: acting player is not the caller
-		scoreTeam1, scoreTeam2 := team.Score(actingPlayer, g.Companion(), scorers...)
-		info = app.NewInfo(fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2), "", nil)
+		scoreTeam1, scoreTeam2 := team.Score(g.caller, g.companion.Ref(), scorers...)
+		info = NewInfo(fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2), "", nil)
 	}
 
 	return info

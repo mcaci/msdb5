@@ -5,9 +5,13 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/nikiforosFreespirit/msdb5/app"
 	"github.com/nikiforosFreespirit/msdb5/app/game"
 )
+
+// Action interface
+type Action interface {
+	Process(request, origin string) *game.Info
+}
 
 // Room struct
 type Room struct {
@@ -21,7 +25,7 @@ type Room struct {
 	// clients holds all current clients in this room.
 	clients map[*client]bool
 	// msdb5 game instance
-	msdb5game app.Action
+	msdb5game Action
 }
 
 // NewRoom makes a new room.
@@ -31,7 +35,7 @@ func NewRoom(side bool) *Room {
 		join:      make(chan *client),
 		leave:     make(chan *client),
 		clients:   make(map[*client]bool),
-		msdb5game: game.NewAction(side),
+		msdb5game: game.NewGame(side),
 	}
 }
 

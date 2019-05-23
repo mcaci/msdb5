@@ -1,6 +1,9 @@
 package phase
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // ID type
 type ID uint8
@@ -15,20 +18,23 @@ const (
 )
 
 // ToID func
-func ToID(request string) ID {
+func ToID(request string) (ID, error) {
 	phase := strings.Split(request, "#")[0]
+	var id ID
+	var err error
 	switch phase {
 	case "Join":
-		return Joining
+		id = Joining
 	case "Auction":
-		return InsideAuction
+		id = InsideAuction
 	case "Exchange":
-		return ExchangingCards
+		id = ExchangingCards
 	case "Companion":
-		return ChosingCompanion
+		id = ChosingCompanion
 	case "Card":
-		return PlayingCards
+		id = PlayingCards
 	default:
-		return End
+		err = fmt.Errorf("Request %s not valid", phase)
 	}
+	return id, err
 }

@@ -1,9 +1,4 @@
-package app
-
-// Action interface
-type Action interface {
-	Process(request, origin string) *Info
-}
+package game
 
 type Info struct {
 	forAll, forMe string
@@ -14,11 +9,15 @@ func NewInfo(forAll, forMe string, err error) *Info {
 	return &Info{forAll, forMe, err}
 }
 
-func (info *Info) ForAll() string {
+func NewErrorInfo(err error) *Info {
+	return NewInfo("", "", err)
+}
+
+func (info *Info) ToAll() string {
 	return info.forAll
 }
 
-func (info *Info) ForMe() string {
+func (info *Info) ToMe() string {
 	return info.forMe
 }
 

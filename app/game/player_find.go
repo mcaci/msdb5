@@ -9,7 +9,7 @@ import (
 type playerPredicate func(p *player.Player) bool
 
 func find(g *Game, request, origin string) playerPredicate {
-	playerInTurn := g.PlayerInTurn()
+	playerInTurn := g.CurrentPlayer()
 	var expectedPlayerFinder playerPredicate
 	action := strings.Split(request, "#")[0]
 	switch action {
