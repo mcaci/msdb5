@@ -78,10 +78,10 @@ func play(g *Game, p *player.Player, request, origin string) error {
 		g.playedCards.Add(c)
 		roundHasEnded := len(g.playedCards) == 5
 		if roundHasEnded {
-			playerInTurn, _, _ := g.players.Find(func(pl *player.Player) bool { return pl == p })
+			playerIndex, _, _ := g.players.Find(func(pl *player.Player) bool { return pl == p })
 			winningCardIndex := briscola.IndexOfWinningCard(g.playedCards, g.briscola())
-			var playersRoundRobin = func(playerInTurn uint8) uint8 { return (playerInTurn + 1) % 5 }
-			next := playersRoundRobin(uint8(playerInTurn) + winningCardIndex)
+			var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
+			next := playersRoundRobin(uint8(playerIndex) + winningCardIndex)
 			g.players[next].Collect(&g.playedCards)
 			a := make([]player.EmptyHandChecker, 0)
 			for _, p := range g.players {

@@ -3,8 +3,6 @@ package game
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
-
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
@@ -14,9 +12,10 @@ func TestGameHas5Player(t *testing.T) {
 		t.Fatal("There are no Player")
 	}
 }
-func TestGameHasNoPlayerInTurnAtStart(t *testing.T) {
+
+func TestGameSetsFirstPlayerAsCurrent(t *testing.T) {
 	if gameTest := NewGame(false); gameTest.CurrentPlayer() == nil {
-		t.Fatal("There are no Player in turn")
+		t.Fatal("Current player should be the first player")
 	}
 }
 
@@ -57,35 +56,5 @@ func TestSetCompanionAndPlayerReference(t *testing.T) {
 	testGame.setCompanion(1, player.New())
 	if testGame.companion.Ref() == nil {
 		t.Fatal("Companion to be set")
-	}
-}
-
-func TestNextPlayer(t *testing.T) {
-	testGame := NewGame(false)
-	testGame.playerInTurn = nextPlayer(testGame, phase.Joining, 2)
-	if testGame.playerInTurn != 3 {
-		t.Fatal("current player index should be 3")
-	}
-}
-
-func TestNextPlayerInsideAuction(t *testing.T) {
-	testGame := NewGame(false)
-	for i, player := range testGame.playersRef() {
-		if i == 0 {
-			continue
-		}
-		player.Fold()
-	}
-	testGame.playerInTurn = nextPlayer(testGame, phase.InsideAuction, 2)
-	if testGame.playerInTurn != 0 {
-		t.Fatal("current player index should be 0")
-	}
-}
-
-func TestNextPlayerWhenExchangingCards(t *testing.T) {
-	testGame := NewGame(false)
-	testGame.playerInTurn = nextPlayer(testGame, phase.ExchangingCards, 2)
-	if testGame.playerInTurn != 2 {
-		t.Fatal("current player index should be 0")
 	}
 }

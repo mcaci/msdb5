@@ -14,6 +14,7 @@ type informer interface {
 	CurrentPlayer() *player.Player
 	IsSideUsed() bool
 	LastCardPlayed() card.ID
+	LastPlayer() *player.Player
 	Phase() phase.ID
 	SideDeck() deck.Cards
 }

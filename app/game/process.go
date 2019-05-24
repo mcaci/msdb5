@@ -15,21 +15,25 @@ func (g *Game) Process(request, origin string) *Info {
 	currentPhase := g.phase
 	inputPhase, err := phase.ToID(request)
 	if err != nil {
+		gamelog.ToConsole(g, request, err)
 		return NewErrorInfo(err)
 	}
 	if currentPhase != inputPhase {
+		gamelog.ToConsole(g, request, err)
 		return NewErrorInfo(fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase))
 	}
 
 	// find step
 	findPredicate := find(g, request, origin)
-	_, actingPlayer, err := g.playersRef().Find(findPredicate)
+	actingPlayerIndex, actingPlayer, err := g.playersRef().Find(findPredicate)
 	if err != nil {
+		gamelog.ToConsole(g, request, err)
 		return NewErrorInfo(err)
 	}
 
 	// do step
 	if err := play(g, actingPlayer, request, origin); err != nil {
+		gamelog.ToConsole(g, request, err)
 		return NewErrorInfo(err)
 	}
 
@@ -39,12 +43,12 @@ func (g *Game) Process(request, origin string) *Info {
 	// next phase
 	g.phase = nextPhase(g, request)
 
+	// next player step
+	nextPlayer(g, currentPhase, actingPlayerIndex)
+
 	// log action to players
 	info := NewInfo(gamelog.ToAll(g), gamelog.ToMe(g), err)
 	gamelog.ToConsole(g, request, err)
-
-	// next player step
-	g.playerInTurn = nextPlayer(g, currentPhase, g.playerInTurn)
 
 	// clean phase
 	if g.cardsOnTheBoard() >= 5 {
