@@ -8,7 +8,7 @@ import (
 
 // ToMe func
 func ToMe(gameInfo informer) string {
-	me := fmt.Sprintf("%+v", gameInfo.CurrentPlayer())
+	me := fmt.Sprintf("%+v", gameInfo.LastPlayer())
 	if gameInfo.Phase() == phase.ExchangingCards {
 		me += fmt.Sprintf("Side deck: %+v", gameInfo.SideDeck())
 	}
