@@ -7,7 +7,6 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/companion"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
@@ -18,7 +17,8 @@ type Game struct {
 	lastPlaying  list.List
 	players      team.Players
 	caller       *player.Player
-	companion    companion.Companion
+	companion    *player.Player
+	briscolaCard card.ID
 	side         deck.Cards
 	playedCards  deck.Cards
 	auctionScore auction.Score
@@ -59,7 +59,7 @@ func trackActing(lastPlaying *list.List, actingPlayer *player.Player) {
 }
 
 func (g *Game) AuctionScore() auction.Score   { return g.auctionScore }
-func (g *Game) Companion() *player.Player     { return g.companion.Ref() }
+func (g *Game) Companion() *player.Player     { return g.companion }
 func (g *Game) LastCardPlayed() card.ID       { return g.playedCards[len(g.playedCards)-1] }
 func (g *Game) Phase() phase.ID               { return g.phase }
 func (g *Game) SideDeck() deck.Cards          { return g.side }
@@ -68,12 +68,10 @@ func (g *Game) LastPlayer() *player.Player    { return g.lastPlaying.Back().Valu
 func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }
 
 func (g *Game) playersRef() team.Players { return g.players }
-func (g *Game) briscola() card.Seed      { return g.companion.Card().Seed() }
+func (g *Game) briscola() card.Seed      { return g.briscolaCard.Seed() }
 func (g *Game) cardsOnTheBoard() int     { return len(g.playedCards) }
-
-func (g *Game) setCompanion(c card.ID, pl *player.Player) { g.companion = *companion.New(c, pl) }
 
 func (g Game) String() (str string) {
 	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, Phase: %d)",
-		g.CurrentPlayer().Name(), g.companion.Card(), g.playedCards, g.auctionScore, g.phase)
+		g.CurrentPlayer().Name(), g.briscolaCard, g.playedCards, g.auctionScore, g.phase)
 }

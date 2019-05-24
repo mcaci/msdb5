@@ -55,9 +55,10 @@ func play(g *Game, p *player.Player, request, origin string) error {
 		if err != nil {
 			return err
 		}
+		g.briscolaCard = c
 		_, pl, err := g.players.Find(func(p *player.Player) bool { return p.Has(c) })
 		if err == nil {
-			g.setCompanion(c, pl)
+			g.companion = pl
 		}
 		return nil
 	case "Card":

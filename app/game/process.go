@@ -62,7 +62,7 @@ func (g *Game) Process(request, origin string) *Info {
 		for _, p := range g.playersRef() {
 			scorers = append(scorers, p)
 		}
-		scoreTeam1, scoreTeam2 := team.Score(g.caller, g.companion.Ref(), scorers...)
+		scoreTeam1, scoreTeam2 := team.Score(g.caller, g.companion, scorers...)
 		info = NewInfo(fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2), "", nil)
 	}
 

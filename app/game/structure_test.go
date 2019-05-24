@@ -2,9 +2,6 @@ package game
 
 import (
 	"testing"
-
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
 func TestGameHas5Player(t *testing.T) {
@@ -40,21 +37,5 @@ func TestPlayedCardsAreNotPresentAtCreation(t *testing.T) {
 func TestAuctionScoreIsZeroAtCreation(t *testing.T) {
 	if gameTest := NewGame(false); gameTest.auctionScore != 0 {
 		t.Fatalf("Side deck has %d cards", gameTest.auctionScore)
-	}
-}
-
-func TestSetCompanionAndBriscolaSeed(t *testing.T) {
-	testGame := NewGame(false)
-	testGame.setCompanion(1, player.New())
-	if testGame.briscola() != card.Coin {
-		t.Fatal("Expecting coin as briscola")
-	}
-}
-
-func TestSetCompanionAndPlayerReference(t *testing.T) {
-	testGame := NewGame(false)
-	testGame.setCompanion(1, player.New())
-	if testGame.companion.Ref() == nil {
-		t.Fatal("Companion to be set")
 	}
 }
