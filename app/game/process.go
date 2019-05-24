@@ -24,8 +24,8 @@ func (g *Game) Process(request, origin string) *Info {
 	}
 
 	// find step
-	findPredicate := find(g, request, origin)
-	actingPlayerIndex, actingPlayer, err := g.playersRef().Find(findPredicate)
+	criteria := findCriteria(g, request, origin)
+	actingPlayerIndex, actingPlayer, err := g.players.Find(criteria)
 	if err != nil {
 		gamelog.ToConsole(g, request, err)
 		return NewErrorInfo(err)
@@ -59,7 +59,7 @@ func (g *Game) Process(request, origin string) *Info {
 	phaseAtEndTurn := g.phase
 	if phaseAtEndTurn == phase.End {
 		scorers := make([]player.Scorer, 0)
-		for _, p := range g.playersRef() {
+		for _, p := range g.players {
 			scorers = append(scorers, p)
 		}
 		scoreTeam1, scoreTeam2 := team.Score(g.caller, g.companion, scorers...)

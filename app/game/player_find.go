@@ -8,7 +8,7 @@ import (
 
 type playerPredicate func(p *player.Player) bool
 
-func find(g *Game, request, origin string) playerPredicate {
+func findCriteria(g *Game, request, origin string) playerPredicate {
 	var expectedPlayerFinder playerPredicate
 	action := strings.Split(request, "#")[0]
 	switch action {

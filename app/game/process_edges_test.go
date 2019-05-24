@@ -45,11 +45,44 @@ func TestExchangeCardThatDoesntExistReturnsError(t *testing.T) {
 	}
 }
 
+func TestPlayCardThatDoesntExistReturnsError(t *testing.T) {
+	cards := deck.Cards{1, 2}
+	gameTest := NewGame(true)
+	gameTest.players[0].Join("A", "127.0.0.55")
+	gameTest.players[0].Hand().Clear()
+	gameTest.players[0].Hand().Add(cards...)
+	gameTest.phase = phase.PlayingCards
+	info := gameTest.Process("Card#31#Cup", "127.0.0.55")
+	if info.Err() == nil {
+		t.Fatal("Expecting error when playing a card doesn't exist")
+	}
+}
+
 func TestCompanionCardThatDoesntExistReturnsError(t *testing.T) {
 	gameTest := NewGame(false)
 	gameTest.players[0].Join("A", "127.0.0.55")
 	gameTest.phase = phase.ChoosingCompanion
 	info := gameTest.Process("Companion#31#Cup", "127.0.0.55")
+	if info.Err() == nil {
+		t.Fatal("Expecting error when playing a card doesn't exist")
+	}
+}
+
+func TestInexistentPhaseReturnsError(t *testing.T) {
+	gameTest := NewGame(false)
+	gameTest.players[0].Join("A", "127.0.0.55")
+	gameTest.phase = phase.PlayingCards
+	info := gameTest.Process("Rumba", "127.0.0.55")
+	if info.Err() == nil {
+		t.Fatal("Expecting error when playing a card doesn't exist")
+	}
+}
+
+func TestUnexpectedPhaseReturnsError(t *testing.T) {
+	gameTest := NewGame(false)
+	gameTest.players[0].Join("A", "127.0.0.55")
+	gameTest.phase = phase.PlayingCards
+	info := gameTest.Process("Companion", "127.0.0.55")
 	if info.Err() == nil {
 		t.Fatal("Expecting error when playing a card doesn't exist")
 	}

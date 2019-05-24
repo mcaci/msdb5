@@ -67,9 +67,8 @@ func (g *Game) IsSideUsed() bool              { return len(g.side) > 0 }
 func (g *Game) LastPlayer() *player.Player    { return g.lastPlaying.Back().Value.(*player.Player) }
 func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }
 
-func (g *Game) playersRef() team.Players { return g.players }
-func (g *Game) briscola() card.Seed      { return g.briscolaCard.Seed() }
-func (g *Game) cardsOnTheBoard() int     { return len(g.playedCards) }
+func (g *Game) briscola() card.Seed  { return g.briscolaCard.Seed() }
+func (g *Game) cardsOnTheBoard() int { return len(g.playedCards) }
 
 func (g Game) String() (str string) {
 	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, Phase: %d)",

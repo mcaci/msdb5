@@ -10,7 +10,7 @@ func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
 	gameTest := NewGame(true)
 	gameTest.side.Clear()
 	gameTest.side.Add(card.ID(31))
-	for i, pl := range gameTest.playersRef() {
+	for i, pl := range gameTest.players {
 		pl.Hand().Clear()
 		pl.Hand().Add(card.ID(2*i + 5))
 		if i > 1 {

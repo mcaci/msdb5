@@ -5,7 +5,7 @@ import (
 )
 
 func TestGameHas5Player(t *testing.T) {
-	if gameTest := NewGame(false); gameTest.playersRef() == nil {
+	if gameTest := NewGame(false); gameTest.players == nil {
 		t.Fatal("There are no Player")
 	}
 }

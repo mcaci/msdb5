@@ -17,7 +17,7 @@ func nextPlayer(g *Game, current phase.ID, index int) {
 			nextPlayer = playersRoundRobin(nextPlayer)
 		}
 		if nextPlayer == playerIndex {
-			g.caller = g.playersRef()[playerIndex]
+			g.caller = g.players[playerIndex]
 		}
 	case phase.PlayingCards:
 		roundHasEnded := len(g.playedCards) == 5
