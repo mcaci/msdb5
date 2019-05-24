@@ -10,7 +10,7 @@ func nextPlayer(g *Game, current phase.ID, index int) {
 	playerIndex := uint8(index)
 	nextPlayer := playersRoundRobin(playerIndex)
 	switch current {
-	case phase.ChosingCompanion, phase.ExchangingCards:
+	case phase.ChoosingCompanion, phase.ExchangingCards:
 		nextPlayer = playerIndex
 	case phase.InsideAuction:
 		for g.players[nextPlayer].Folded() {

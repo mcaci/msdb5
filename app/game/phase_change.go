@@ -1,7 +1,6 @@
 package game
 
 import (
-	"strconv"
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
@@ -27,20 +26,14 @@ func nextPhase(g *Game, request string) phase.ID {
 	case phase.ExchangingCards:
 		predicateToNextPhase = func() bool {
 			data := strings.Split(request, "#")
-			if len(data) > 1 {
-				number, err := strconv.Atoi(data[1])
-				return number == 0 || err != nil
-			}
-			return false
+			return len(data) > 1 && data[1] == "0"
 		}
-	case phase.ChosingCompanion:
+	case phase.ChoosingCompanion:
 		nextPhase = phase.PlayingCards
 	case phase.PlayingCards:
 		predicateToNextPhase = func() bool {
 			return team.Count(g.players, func(p *player.Player) bool { return p.IsHandEmpty() }) == 5
 		}
-	default:
-		nextPhase = phase.End
 	}
 	if predicateToNextPhase() {
 		return nextPhase

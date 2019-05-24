@@ -6,7 +6,7 @@ import (
 
 func TestCreateSet(t *testing.T) {
 	cards := Cards{15}
-	if !cards.Has(15) {
+	if _, err := cards.Find(15); err != nil {
 		t.Fatalf("There should be the 5 of Cup card in the set")
 	}
 }
@@ -14,7 +14,7 @@ func TestCreateSet(t *testing.T) {
 func TestAddCardToSet(t *testing.T) {
 	cards := Cards{}
 	cards.Add(33)
-	if !cards.Has(33) {
+	if _, err := cards.Find(33); err != nil {
 		t.Fatal("There should be the 3 of Cudgel card in the set")
 	}
 }
@@ -22,7 +22,7 @@ func TestAddCardToSet(t *testing.T) {
 func TestRemoveCardFromSet(t *testing.T) {
 	cards := Cards{15}
 	cards.Remove(0)
-	if cards.Has(15) {
+	if _, err := cards.Find(15); err == nil {
 		t.Fatalf("Cards should be empty")
 	}
 }

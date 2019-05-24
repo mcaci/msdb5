@@ -29,7 +29,8 @@ func (player *Player) Draw(cards deck.Cards) {
 
 // Has func
 func (player *Player) Has(id card.ID) bool {
-	return player.hand.Has(id)
+	_, err := player.hand.Find(id)
+	return err == nil
 }
 
 // Hand func

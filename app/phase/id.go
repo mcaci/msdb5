@@ -12,7 +12,7 @@ const (
 	Joining ID = iota
 	InsideAuction
 	ExchangingCards
-	ChosingCompanion
+	ChoosingCompanion
 	PlayingCards
 	End
 )
@@ -30,7 +30,7 @@ func ToID(request string) (ID, error) {
 	case "Exchange":
 		id = ExchangingCards
 	case "Companion":
-		id = ChosingCompanion
+		id = ChoosingCompanion
 	case "Card":
 		id = PlayingCards
 	default:

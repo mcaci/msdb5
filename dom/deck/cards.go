@@ -34,23 +34,12 @@ func (cards *Cards) Sum(point func(card.ID) uint8) (sum uint8) {
 
 // Find func
 func (cards *Cards) Find(id card.ID) (int, error) {
-	f := func(c card.ID) bool { return c == id }
-	return cards.find(f)
-}
-
-func (cards *Cards) find(isInfoPresent func(c card.ID) bool) (int, error) {
 	for index, c := range *cards {
-		if isInfoPresent(c) {
+		if c == id {
 			return index, nil
 		}
 	}
 	return -1, errors.New("Card not found")
-}
-
-// Has func
-func (cards Cards) Has(id card.ID) bool {
-	_, err := cards.Find(id)
-	return err == nil
 }
 
 // Supply func

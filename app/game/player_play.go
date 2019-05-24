@@ -21,12 +21,9 @@ func play(g *Game, p *player.Player, request, origin string) error {
 		p.Join(name, origin)
 		return nil
 	case "Auction":
-		if p.Folded() {
-			return nil
-		}
 		score := strings.Split(request, "#")[1]
 		currentScore, err := strconv.Atoi(score)
-		if err == nil && g.auctionScore.CheckWith(auction.Score(currentScore)) {
+		if err == nil && g.auctionScore.CheckWith(auction.Score(currentScore)) && !p.Folded() {
 			g.auctionScore.Update(auction.Score(currentScore))
 		} else {
 			p.Fold()
@@ -42,12 +39,9 @@ func play(g *Game, p *player.Player, request, origin string) error {
 		if err != nil {
 			return err
 		}
-		if !p.Has(c) {
-			return errors.New("card is not in players hand")
-		}
 		index, err := p.Hand().Find(c)
 		if err != nil {
-			return err
+			return errors.New("Card is not in players hand")
 		}
 		p.Hand().Add(g.side[0])
 		g.side.Remove(0)
@@ -62,10 +56,9 @@ func play(g *Game, p *player.Player, request, origin string) error {
 			return err
 		}
 		_, pl, err := g.players.Find(func(p *player.Player) bool { return p.Has(c) })
-		if err != nil {
-			return err
+		if err == nil {
+			g.setCompanion(c, pl)
 		}
-		g.setCompanion(c, pl)
 		return nil
 	case "Card":
 		number := strings.Split(request, "#")[1]

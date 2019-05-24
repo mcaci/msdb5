@@ -16,7 +16,7 @@ func Write(gameInfo informer) {
 	defer f.Close()
 	logger := log.New(f, "", log.LstdFlags)
 	switch gameInfo.Phase() {
-	case phase.ChosingCompanion:
+	case phase.ChoosingCompanion:
 		logger.Printf("%s, %s, %d\n", gameInfo.CurrentPlayer().Name(), gameInfo.Companion().Name(), gameInfo.AuctionScore())
 	case phase.PlayingCards:
 		logger.Printf("%s, %d\n", gameInfo.CurrentPlayer().Name(), gameInfo.LastCardPlayed())
