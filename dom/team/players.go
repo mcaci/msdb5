@@ -1,7 +1,6 @@
 package team
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
@@ -22,7 +21,7 @@ func (playerSet Players) Find(predicate func(p *player.Player) bool) (int, *play
 			return i, p, nil
 		}
 	}
-	return -1, nil, errors.New("Player not found")
+	return -1, nil, fmt.Errorf("Player not found")
 }
 
 func (playerSet Players) String() (str string) {
