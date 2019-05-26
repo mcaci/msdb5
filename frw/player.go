@@ -6,18 +6,18 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// client represents a single chatting user.
-type client struct {
-	// socket is the web socket for this client.
+// player represents a player connected to the game.
+type player struct {
+	// socket is the web socket for this player.
 	socket *websocket.Conn
 	// send is a channel on which messages are sent.
 	send chan []byte
-	// room is the room this client is chatting in.
-	room *Room
+	// room is the room this player is playing in.
+	room *GameRoom
 }
 
 // Reads commands from UI
-func (c *client) read() {
+func (c *player) read() {
 	defer c.socket.Close()
 	for {
 		// read player input
@@ -28,9 +28,9 @@ func (c *client) read() {
 		}
 		// execute action
 		command := string(msg)
-		send("----^ NEW MOVE ^----", c.room.forward)
 		origin := c.socket.RemoteAddr().String()
 		info := c.room.msdb5game.Process(command, origin)
+		send("----^ NEW MOVE ^----", c.room.forward)
 		if info.Err() == nil {
 			log.Println(command)
 			// Simpler game info sent to everyone
@@ -45,7 +45,7 @@ func (c *client) read() {
 }
 
 // Writes messages to UI
-func (c *client) write() {
+func (c *player) write() {
 	defer c.socket.Close()
 	for msg := range c.send {
 		err := c.socket.WriteMessage(websocket.TextMessage, msg)
