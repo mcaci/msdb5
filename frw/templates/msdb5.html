@@ -86,7 +86,8 @@
             // alert("Connection has been closed."); 
           } 
           socket.onmessage = function(e) { 
-            var messages = $("#messages"); 
+            var messages = $("#messages");
+            messages.empty();
             messages.prepend($("<li>").text(e.data)); 
           } 
         } 

@@ -10,7 +10,7 @@ import (
 
 // Action interface
 type Action interface {
-	Process(request, origin string) *game.Info
+	Process(request, origin string) []*game.Info
 }
 
 // GameRoom struct
@@ -83,4 +83,22 @@ func (r *GameRoom) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	defer func() { r.leave <- player }()
 	go player.write()
 	player.read()
+}
+
+func (r *GameRoom) send(destination, message string) {
+	for pl := range r.players {
+		if pl.socket.RemoteAddr().String() != destination {
+			continue
+		}
+		pl.send <- []byte(message)
+		break
+	}
+	// func send(message string, to chan []byte) {
+
+	// Simpler game info sent to everyone
+	// send(info.Msg(), c.room.forward)
+	// Player info sent to myself only
+	// send(info.ToMe(), c.send)
+
+	// to <- []byte(message)
 }

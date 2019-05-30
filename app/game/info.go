@@ -1,24 +1,25 @@
 package game
 
 type Info struct {
-	forAll, forMe string
-	err           error
+	destination string
+	message     string
+	err         error
 }
 
-func NewInfo(forAll, forMe string, err error) *Info {
-	return &Info{forAll, forMe, err}
+func NewInfo(destination, message string, err error) *Info {
+	return &Info{destination, message, err}
 }
 
-func NewErrorInfo(err error) *Info {
-	return NewInfo("", "", err)
+func NewErrorInfo(err error) []*Info {
+	return []*Info{&Info{"", "", err}}
 }
 
-func (info *Info) ToAll() string {
-	return info.forAll
+func (info *Info) Dest() string {
+	return info.destination
 }
 
-func (info *Info) ToMe() string {
-	return info.forMe
+func (info *Info) Msg() string {
+	return info.message
 }
 
 func (info *Info) Err() error {

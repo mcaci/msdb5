@@ -28,18 +28,19 @@ func (c *player) read() {
 		}
 		// execute action
 		command := string(msg)
+		log.Println(command)
 		origin := c.socket.RemoteAddr().String()
 		info := c.room.msdb5game.Process(command, origin)
-		send("----^ NEW MOVE ^----", c.room.forward)
-		if info.Err() == nil {
-			log.Println(command)
-			// Simpler game info sent to everyone
-			send(info.ToAll(), c.room.forward)
-			// Player info sent to myself only
-			send(info.ToMe(), c.send)
+		// send("----^ NEW MOVE ^----", c.room.forward)
+		if info[0].Err() == nil {
+			for _, information := range info {
+				// Simpler game info sent to everyone
+				c.room.send(information.Dest(), information.Msg())
+			}
 		} else {
-			log.Println(info.Err())
-			send(info.Err().Error(), c.send)
+			log.Println(info[0].Err())
+			c.room.send(info[0].Err().Error(), info[0].Err().Error())
+			// send(info[0].Err().Error(), c.send)
 		}
 	}
 }
@@ -53,8 +54,4 @@ func (c *player) write() {
 			log.Println("Write to UI error:", err)
 		}
 	}
-}
-
-func send(message string, to chan []byte) {
-	to <- []byte(message)
 }

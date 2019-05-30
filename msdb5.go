@@ -13,7 +13,7 @@ func main() {
 	var side = flag.Bool("side", false, "Whether to use side deck or not.")
 	flag.Parse() // parse the flags
 
-	r := frw.NewRoom(*side)
+	r := frw.NewGameRoom(*side)
 	http.Handle("/", frw.NewTemplateHandler())
 	http.Handle("/room", r)
 

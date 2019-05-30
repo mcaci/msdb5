@@ -27,8 +27,8 @@ func TestCompletedGameReturningScoreInfo(t *testing.T) {
 	gameTest.Process("Card#9#Coin", "127.0.0.53")
 	gameTest.Process("Card#1#Cup", "127.0.0.54")
 	info := gameTest.Process("Card#3#Cup", "127.0.0.55")
-	if info.ToAll() == "" {
-		t.Log(info.Err())
+	if info[0].Dest() == "" {
+		t.Log(info[0].Err())
 		t.Fatal("Expecting transition to end game and scoring")
 	}
 }

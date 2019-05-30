@@ -50,6 +50,9 @@ func (player Player) Folded() bool { return player.fold }
 // IsSameHost func
 func (player Player) IsSameHost(origin string) bool { return player.host == origin }
 
+// Host func
+func (player Player) Host() string { return player.host }
+
 // Name func
 func (player Player) Name() string { return player.name }
 

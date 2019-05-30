@@ -10,7 +10,7 @@ import (
 )
 
 // Process func
-func (g *Game) Process(request, origin string) *Info {
+func (g *Game) Process(request, origin string) []*Info {
 	// phase step
 	currentPhase := g.phase
 	inputPhase, err := phase.ToID(request)
@@ -47,7 +47,13 @@ func (g *Game) Process(request, origin string) *Info {
 	nextPlayer(g, currentPhase, actingPlayerIndex)
 
 	// log action to players
-	info := NewInfo(gamelog.ToAll(g), gamelog.ToMe(g), err)
+	infos := make([]*Info, 0)
+	for _, pl := range g.players {
+		if pl.IsSameHost(origin) {
+			infos = append(infos, NewInfo(pl.Host(), gamelog.ToMe(g), err))
+		}
+		infos = append(infos, NewInfo(pl.Host(), gamelog.ToAll(g), err))
+	}
 	gamelog.ToConsole(g, request, err)
 
 	// clean phase
@@ -63,8 +69,8 @@ func (g *Game) Process(request, origin string) *Info {
 			scorers = append(scorers, p)
 		}
 		scoreTeam1, scoreTeam2 := team.Score(g.caller, g.companion, scorers...)
-		info = NewInfo(fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2), "", nil)
+		infos = []*Info{NewInfo(fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2), "", nil)}
 	}
 
-	return info
+	return infos
 }
