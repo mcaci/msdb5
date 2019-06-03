@@ -19,6 +19,7 @@ type Game struct {
 	caller       *player.Player
 	companion    *player.Player
 	briscolaCard card.ID
+	withSide     bool
 	side         deck.Cards
 	playedCards  deck.Cards
 	auctionScore auction.Score
@@ -28,15 +29,22 @@ type Game struct {
 // NewGame func
 func NewGame(withSide bool) *Game {
 	g := new(Game)
-	makePlayers(g)
-	distributeCards(&g.players, &g.side, withSide)
-	trackActing(&g.lastPlaying, g.players[0])
+	g.withSide = withSide
 	return g
 }
 
-func makePlayers(g *Game) {
-	for i := 0; i < 5; i++ {
-		g.players.Add(*player.New())
+// Join func
+func (g *Game) Join(origin string, channel chan []byte) {
+	if len(g.players) >= 5 {
+		return
+	}
+	p := player.New()
+	p.Join(origin)
+	p.Attach(channel)
+	g.players.Add(*p)
+	trackActing(&g.lastPlaying, p)
+	if len(g.players) >= 5 {
+		distributeCards(&g.players, &g.side, g.withSide)
 	}
 }
 
@@ -63,7 +71,7 @@ func (g *Game) Companion() *player.Player     { return g.companion }
 func (g *Game) LastCardPlayed() card.ID       { return g.playedCards[len(g.playedCards)-1] }
 func (g *Game) Phase() phase.ID               { return g.phase }
 func (g *Game) SideDeck() deck.Cards          { return g.side }
-func (g *Game) IsSideUsed() bool              { return len(g.side) > 0 }
+func (g *Game) IsSideUsed() bool              { return g.withSide }
 func (g *Game) LastPlayer() *player.Player    { return g.lastPlaying.Back().Value.(*player.Player) }
 func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }
 

@@ -10,31 +10,39 @@ import (
 )
 
 // Process func
-func (g *Game) Process(request, origin string) []*Info {
-	// phase step
-	currentPhase := g.phase
-	inputPhase, err := phase.ToID(request)
-	if err != nil {
-		gamelog.ToConsole(g, request, err)
-		return NewErrorInfo(err)
-	}
-	if currentPhase != inputPhase {
-		gamelog.ToConsole(g, request, err)
-		return NewErrorInfo(fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase))
-	}
-
+func (g *Game) Process(request, origin string) {
 	// find step
 	criteria := findCriteria(g, request, origin)
 	actingPlayerIndex, actingPlayer, err := g.players.Find(criteria)
 	if err != nil {
 		gamelog.ToConsole(g, request, err)
-		return NewErrorInfo(err)
+		criteria := findCriteria(g, "Origin", origin)
+		_, originPlayer, stillErr := g.players.Find(criteria)
+		if stillErr == nil {
+			originPlayer.ReplyWith(err.Error())
+		}
+		return
+	}
+
+	// phase step
+	currentPhase := g.phase
+	inputPhase, err := phase.ToID(request)
+	if err != nil {
+		gamelog.ToConsole(g, request, err)
+		actingPlayer.ReplyWith(err.Error())
+		return
+	}
+	if currentPhase != inputPhase {
+		gamelog.ToConsole(g, request, err)
+		actingPlayer.ReplyWith(fmt.Sprintf("Phase is not %d but %d", inputPhase, currentPhase))
+		return
 	}
 
 	// do step
 	if err := play(g, actingPlayer, request, origin); err != nil {
 		gamelog.ToConsole(g, request, err)
-		return NewErrorInfo(err)
+		actingPlayer.ReplyWith(err.Error())
+		return
 	}
 
 	// log action to file
@@ -47,12 +55,9 @@ func (g *Game) Process(request, origin string) []*Info {
 	nextPlayer(g, currentPhase, actingPlayerIndex)
 
 	// log action to players
-	infos := make([]*Info, 0)
+	g.LastPlayer().ReplyWith(gamelog.ToMe(g))
 	for _, pl := range g.players {
-		if pl.IsSameHost(origin) {
-			infos = append(infos, NewInfo(pl.Host(), gamelog.ToMe(g), err))
-		}
-		infos = append(infos, NewInfo(pl.Host(), gamelog.ToAll(g), err))
+		pl.ReplyWith(gamelog.ToAll(g))
 	}
 	gamelog.ToConsole(g, request, err)
 
@@ -69,8 +74,6 @@ func (g *Game) Process(request, origin string) []*Info {
 			scorers = append(scorers, p)
 		}
 		scoreTeam1, scoreTeam2 := team.Score(g.caller, g.companion, scorers...)
-		infos = []*Info{NewInfo(fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2), "", nil)}
+		actingPlayer.ReplyWith(fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2))
 	}
-
-	return infos
 }

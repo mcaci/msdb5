@@ -10,10 +10,10 @@ var testPlayers Players
 
 func init() {
 	var a player.Player
-	a.Join("A", "")
+	a.RegisterAs("A")
 	testPlayers.Add(a)
 	var b player.Player
-	b.Join("B", "")
+	b.RegisterAs("B")
 	b.Hand().Add(33)
 	testPlayers.Add(b)
 }

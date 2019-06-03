@@ -4,7 +4,8 @@ import "testing"
 
 func initTest() *Player {
 	p := New()
-	p.Join("Michi", "127.0.0.1")
+	p.RegisterAs("Michi")
+	p.Join("127.0.0.1")
 	return p
 }
 

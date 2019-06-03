@@ -14,6 +14,8 @@ func findCriteria(g *Game, request, origin string) playerPredicate {
 	switch action {
 	case "Join":
 		expectedPlayerFinder = func(p *player.Player) bool { return p.IsNameEmpty() }
+	case "Origin":
+		expectedPlayerFinder = func(p *player.Player) bool { return p.IsSameHost(origin) }
 	default:
 		expectedPlayerFinder = func(p *player.Player) bool { return p.IsExpectedPlayer(g.CurrentPlayer(), origin) }
 	}

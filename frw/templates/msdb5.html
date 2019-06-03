@@ -87,7 +87,7 @@
           } 
           socket.onmessage = function(e) { 
             var messages = $("#messages");
-            messages.empty();
+            // messages.empty();
             messages.prepend($("<li>").text(e.data)); 
           } 
         } 

@@ -18,7 +18,7 @@ func play(g *Game, p *player.Player, request, origin string) error {
 	switch action {
 	case "Join":
 		name := strings.Split(request, "#")[1]
-		p.Join(name, origin)
+		p.RegisterAs(name)
 		return nil
 	case "Auction":
 		score := strings.Split(request, "#")[1]

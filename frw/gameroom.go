@@ -10,20 +10,21 @@ import (
 
 // Action interface
 type Action interface {
-	Process(request, origin string) []*game.Info
+	Process(request, origin string)
+	Join(origin string, playerChannel chan []byte)
 }
 
 // GameRoom struct
 type GameRoom struct {
-	// forward is a channel that holds incoming messages
+	// commandChan is a channel that holds incoming messages
 	// that should be forwarded to the other players.
-	forward chan []byte
+	commandChan chan playerCommand
 	// join is a channel for players wishing to join the room.
-	join chan *player
+	join chan *playerClient
 	// leave is a channel for players wishing to leave the room.
-	leave chan *player
+	leave chan *playerClient
 	// players holds all current players in this room.
-	players map[*player]bool
+	players map[*playerClient]bool
 	// msdb5 game instance
 	msdb5game Action
 }
@@ -31,11 +32,11 @@ type GameRoom struct {
 // NewGameRoom makes a new room.
 func NewGameRoom(side bool) *GameRoom {
 	return &GameRoom{
-		forward:   make(chan []byte),
-		join:      make(chan *player),
-		leave:     make(chan *player),
-		players:   make(map[*player]bool),
-		msdb5game: game.NewGame(side),
+		commandChan: make(chan playerCommand),
+		join:        make(chan *playerClient),
+		leave:       make(chan *playerClient),
+		players:     make(map[*playerClient]bool),
+		msdb5game:   game.NewGame(side),
 	}
 }
 
@@ -49,12 +50,9 @@ func (r *GameRoom) Run() {
 		case player := <-r.leave:
 			// leaving
 			delete(r.players, player)
-			close(player.send)
-		case msg := <-r.forward:
-			// forward message to all players
-			for player := range r.players {
-				player.send <- msg
-			}
+		case msg := <-r.commandChan:
+			// commandChan message to all players
+			r.msdb5game.Process(msg.request, msg.origin)
 		}
 	}
 }
@@ -73,32 +71,21 @@ func (r *GameRoom) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		log.Fatal("ServeHTTP:", err)
 		return
 	}
-	player := &player{
-		socket: socket,
-		send:   make(chan []byte, messageBufferSize),
-		room:   r,
-	}
-	r.join <- player
-	player.send <- []byte("Enter name and connect")
+	player := r.joinWith(socket)
 	defer func() { r.leave <- player }()
 	go player.write()
 	player.read()
 }
 
-func (r *GameRoom) send(destination, message string) {
-	for pl := range r.players {
-		if pl.socket.RemoteAddr().String() != destination {
-			continue
-		}
-		pl.send <- []byte(message)
-		break
+func (r *GameRoom) joinWith(socket *websocket.Conn) *playerClient {
+	playerChannel := make(chan []byte, messageBufferSize)
+	r.msdb5game.Join(socket.RemoteAddr().String(), playerChannel)
+	player := &playerClient{
+		socket:      socket,
+		infoChannel: playerChannel,
+		room:        r,
 	}
-	// func send(message string, to chan []byte) {
-
-	// Simpler game info sent to everyone
-	// send(info.Msg(), c.room.forward)
-	// Player info sent to myself only
-	// send(info.ToMe(), c.send)
-
-	// to <- []byte(message)
+	r.join <- player
+	player.infoChannel <- []byte("Enter name and connect")
+	return player
 }

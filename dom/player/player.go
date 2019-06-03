@@ -13,6 +13,7 @@ type Player struct {
 	hand       deck.Cards
 	pile       deck.Cards
 	fold       bool
+	info       chan []byte
 }
 
 // New func
@@ -38,10 +39,24 @@ func (player *Player) Hand() *deck.Cards {
 	return &player.hand
 }
 
-// Join func
-func (player *Player) Join(name, origin string) {
+// RegisterAs func
+func (player *Player) RegisterAs(name string) {
 	player.name = name
+}
+
+// Join func
+func (player *Player) Join(origin string) {
 	player.host = origin
+}
+
+// Attach func
+func (player *Player) Attach(info chan []byte) {
+	player.info = info
+}
+
+// ReplyWith func
+func (player *Player) ReplyWith(message string) {
+	player.info <- []byte(message)
 }
 
 // Folded func
