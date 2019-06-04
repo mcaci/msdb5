@@ -54,7 +54,7 @@ func (g *Game) Join(origin string, channel chan []byte) {
 }
 
 func distributeCards(players *team.Players, side *deck.Cards, withSide bool) {
-	d := deck.Deck()
+	d := deck.New()
 	for i := 0; i < deck.DeckSize; i++ {
 		if withSide && i >= deck.DeckSize-5 {
 			side.Add(d.Supply())
