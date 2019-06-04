@@ -30,21 +30,26 @@ type Game struct {
 func NewGame(withSide bool) *Game {
 	g := new(Game)
 	g.withSide = withSide
+	makePlayers(g)
+	distributeCards(&g.players, &g.side, withSide)
+	trackActing(&g.lastPlaying, g.players[0])
 	return g
+}
+
+func makePlayers(g *Game) {
+	for i := 0; i < 5; i++ {
+		g.players.Add(*player.New())
+	}
 }
 
 // Join func
 func (g *Game) Join(origin string, channel chan []byte) {
-	if len(g.players) >= 5 {
-		return
-	}
-	p := player.New()
-	p.Join(origin)
-	p.Attach(channel)
-	g.players.Add(*p)
-	trackActing(&g.lastPlaying, p)
-	if len(g.players) >= 5 {
-		distributeCards(&g.players, &g.side, g.withSide)
+	for _, player := range g.players {
+		if player.IsSameHost("") {
+			player.Join(origin)
+			player.Attach(channel)
+			break
+		}
 	}
 }
 
