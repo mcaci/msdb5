@@ -5,9 +5,10 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
 )
 
-func nextPlayer(g *Game, current phase.ID, index int) {
+func nextPlayer(g *Game, request, origin string, current phase.ID) {
+	actingPlayerIndex := g.senderIndex(origin)
 	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
-	playerIndex := uint8(index)
+	playerIndex := uint8(actingPlayerIndex)
 	nextPlayer := playersRoundRobin(playerIndex)
 	switch current {
 	case phase.ChoosingCompanion, phase.ExchangingCards:

@@ -9,8 +9,8 @@ import (
 // ToAll func
 func ToAll(gameInfo informer) string {
 	all := fmt.Sprintf("Game: %+v", gameInfo)
-	sideDeck := gameInfo.SideDeck()
 	if gameInfo.Phase() == phase.InsideAuction && gameInfo.IsSideUsed() {
+		sideDeck := gameInfo.SideDeck()
 		score := gameInfo.AuctionScore()
 		if score >= 90 {
 			all += fmt.Sprintf("First card: %+v", sideDeck[0])

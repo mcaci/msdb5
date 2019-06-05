@@ -1,6 +1,7 @@
 package player
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
@@ -24,19 +25,14 @@ func New() *Player {
 }
 
 // Draw func
-func (player *Player) Draw(cards deck.Cards) {
-	player.hand.Add(cards.Supply())
+func (player *Player) Draw(supplier func() card.ID) {
+	player.hand.Add(supplier())
 }
 
 // Has func
 func (player *Player) Has(id card.ID) bool {
 	_, err := player.hand.Find(id)
 	return err == nil
-}
-
-// Hand func
-func (player *Player) Hand() *deck.Cards {
-	return &player.hand
 }
 
 // RegisterAs func
@@ -65,9 +61,6 @@ func (player Player) Folded() bool { return player.fold }
 // IsSameHost func
 func (player Player) IsSameHost(origin string) bool { return player.host == origin }
 
-// Host func
-func (player Player) Host() string { return player.host }
-
 // Name func
 func (player Player) Name() string { return player.name }
 
@@ -75,18 +68,31 @@ func (player Player) Name() string { return player.name }
 func (player Player) IsNameEmpty() bool { return player.name == "" }
 
 // IsHandEmpty func
-func (player Player) IsHandEmpty() bool { return len(*player.Hand()) == 0 }
+func (player Player) IsHandEmpty() bool { return len(player.hand) == 0 }
 
 // Fold func
 func (player *Player) Fold() { player.fold = true }
 
 // Play function
 func (player *Player) Play(card card.ID) (err error) {
-	index, err := player.Hand().Find(card)
+	index, err := player.hand.Find(card)
 	if err == nil {
-		player.Hand().Remove(index)
+		player.hand.Remove(index)
 	}
 	return
+}
+
+// Exchange func
+func (player *Player) Exchange(card card.ID, side *deck.Cards) error {
+	cardIndex, err := player.hand.Find(card)
+	if err != nil {
+		return errors.New("Card is not in players hand")
+	}
+	player.hand.Add((*side)[0])
+	side.Remove(0)
+	side.Add(card)
+	player.hand.Remove(cardIndex)
+	return nil
 }
 
 // Collect func
@@ -94,17 +100,15 @@ func (player *Player) Collect(cards *deck.Cards) {
 	player.pile.Add(*cards...)
 }
 
-// Count func
-func (player Player) Count(scorer func(card.ID) uint8) uint8 {
+// Points func
+func (player Player) Points(scorer func(card.ID) uint8) uint8 {
 	return player.pile.Sum(scorer)
 }
 
 // IsExpectedPlayer func
 func (player *Player) IsExpectedPlayer(other *Player, origin string) bool {
-	return player.isSame(other) && player.IsSameHost(origin)
+	return player == other && player.IsSameHost(origin)
 }
-
-func (player *Player) isSame(other *Player) bool { return player == other }
 
 func (player Player) String() string {
 	return fmt.Sprintf("(Name: %s, Cards: %+v, Pile: %+v, Has folded? %v)",

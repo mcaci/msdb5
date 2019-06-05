@@ -31,7 +31,7 @@ func NewGame(withSide bool) *Game {
 	g := new(Game)
 	g.withSide = withSide
 	makePlayers(g)
-	distributeCards(&g.players, &g.side, withSide)
+	distributeCards(g)
 	trackActing(&g.lastPlaying, g.players[0])
 	return g
 }
@@ -53,13 +53,14 @@ func (g *Game) Join(origin string, channel chan []byte) {
 	}
 }
 
-func distributeCards(players *team.Players, side *deck.Cards, withSide bool) {
+func distributeCards(g *Game) {
 	d := deck.New()
 	for i := 0; i < deck.DeckSize; i++ {
-		if withSide && i >= deck.DeckSize-5 {
-			side.Add(d.Supply())
+		if g.withSide && i >= deck.DeckSize-5 {
+			g.side.Add(d.Supply())
 		} else {
-			(*players)[i%5].Draw(d)
+			trackActing(&g.lastPlaying, g.players[i%5])
+			g.CurrentPlayer().Draw(d.Supply)
 		}
 	}
 }
@@ -80,8 +81,14 @@ func (g *Game) IsSideUsed() bool              { return g.withSide }
 func (g *Game) LastPlayer() *player.Player    { return g.lastPlaying.Back().Value.(*player.Player) }
 func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }
 
-func (g *Game) briscola() card.Seed  { return g.briscolaCard.Seed() }
-func (g *Game) cardsOnTheBoard() int { return len(g.playedCards) }
+func (g *Game) briscola() card.Seed                 { return g.briscolaCard.Seed() }
+func (g *Game) sender(origin string) *player.Player { return g.players[g.senderIndex(origin)] }
+func (g *Game) cardsOnTheBoard() int                { return len(g.playedCards) }
+func (g *Game) senderIndex(origin string) int {
+	criteria := findCriteria(g, "Origin", origin)
+	index, _, _ := g.players.Find(criteria)
+	return index
+}
 
 func (g Game) String() (str string) {
 	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, Phase: %d)",

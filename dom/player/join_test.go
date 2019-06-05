@@ -9,12 +9,6 @@ func initTest() *Player {
 	return p
 }
 
-func TestJoinPlayerSameToItself(t *testing.T) {
-	if p := initTest(); !p.isSame(p) {
-		t.Fatal("P should be equal to itself")
-	}
-}
-
 func TestJoinPlayerName(t *testing.T) {
 	if p := initTest(); p.Name() != "Michi" {
 		t.Fatal("Unexpected name")

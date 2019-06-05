@@ -3,6 +3,8 @@ package team
 import (
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/dom/card"
+
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
@@ -14,7 +16,7 @@ func init() {
 	testPlayers.Add(a)
 	var b player.Player
 	b.RegisterAs("B")
-	b.Hand().Add(33)
+	b.Draw(func() card.ID { return 33 })
 	testPlayers.Add(b)
 }
 

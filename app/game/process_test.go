@@ -8,8 +8,8 @@ package game
 // 	gameTest.Join("127.0.0.54", make(chan []byte))
 // 	gameTest.Join("127.0.0.55", make(chan []byte))
 // 	for i, pl := range gameTest.players {
-// 		pl.Hand().Clear()
-// 		pl.Hand().Add(card.ID(2*i + 5))
+// 		pl = player.New()
+// 		pl.Draw(func() card.ID { return card.ID(2*i + 5) })
 // 		if i > 0 {
 // 			pl.Fold()
 // 		}

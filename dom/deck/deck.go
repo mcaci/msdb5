@@ -10,7 +10,7 @@ import (
 // DeckSize of a cards of cards
 const DeckSize = 40
 
-// Deck func
+// New func
 func New() (cards Cards) {
 	rand.Seed(time.Now().UnixNano())
 	ints := rand.Perm(DeckSize)

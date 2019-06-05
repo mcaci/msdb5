@@ -1,7 +1,6 @@
 package game
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -13,7 +12,8 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
-func play(g *Game, p *player.Player, request, origin string) error {
+func play(g *Game, request, origin string) error {
+	p := g.CurrentPlayer()
 	action := strings.Split(request, "#")[0]
 	switch action {
 	case "Join":
@@ -39,15 +39,7 @@ func play(g *Game, p *player.Player, request, origin string) error {
 		if err != nil {
 			return err
 		}
-		index, err := p.Hand().Find(c)
-		if err != nil {
-			return errors.New("Card is not in players hand")
-		}
-		p.Hand().Add(g.side[0])
-		g.side.Remove(0)
-		g.side.Add(c)
-		p.Hand().Remove(index)
-		return nil
+		return p.Exchange(c, &g.side)
 	case "Companion":
 		number := strings.Split(request, "#")[1]
 		seed := strings.Split(request, "#")[2]
@@ -77,10 +69,6 @@ func play(g *Game, p *player.Player, request, origin string) error {
 			var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
 			next := playersRoundRobin(uint8(playerIndex) + winningCardIndex)
 			g.players[next].Collect(&g.playedCards)
-			a := make([]player.EmptyHandChecker, 0)
-			for _, p := range g.players {
-				a = append(a, p)
-			}
 			if team.Count(g.players, func(p *player.Player) bool { return p.IsHandEmpty() }) == 5 &&
 				len(g.side) > 0 {
 				g.players[next].Collect(&g.side)

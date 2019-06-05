@@ -13,22 +13,23 @@ func TestPlayerHasNoCardsAtStartGame(t *testing.T) {
 	}
 }
 
-func TestPlayerWinsCards(t *testing.T) {
+func initPlayerForCollectTest() *Player {
 	p := New()
 	cards := deck.Cards{1, 2, 3, 4, 5}
 	p.Collect(&cards)
+	return p
+}
 
+func TestPlayerWinsCards(t *testing.T) {
+	p := initPlayerForCollectTest()
 	if p.pile == nil {
-		t.Fatalf("Player should have %v but has %v", cards, p.pile)
+		t.Fatalf("Player should have %v but has %v", deck.Cards{1, 2, 3, 4, 5}, p.pile)
 	}
 }
 
 func TestPlayerCountPoints(t *testing.T) {
-	p := New()
-	cards := deck.Cards{1, 2, 3, 4, 5}
-	p.Collect(&cards)
-
-	if score := p.Count(func(card.ID) uint8 { return 1 }); score != 5 {
+	p := initPlayerForCollectTest()
+	if score := p.Points(func(card.ID) uint8 { return 1 }); score != 5 {
 		t.Fatalf("Player should have 5 points but has %d", score)
 	}
 }
