@@ -1,78 +1,49 @@
 package game
 
 import (
-	"fmt"
-
 	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
-	"github.com/nikiforosFreespirit/msdb5/dom/team"
+	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
 // Process func
 func (g *Game) Process(request, origin string) {
-	// phase step
-	currentPhase := g.phase
-	inputPhase, err := phase.ToID(request)
+	notify := func(p *player.Player, msg string) { p.ReplyWith(msg) }
+
+	// verify phase step
+	err := verifyPhase(g, request, origin, notify)
 	if err != nil {
-		gamelog.ToConsole(g, g.sender(origin), request, err)
-		g.CurrentPlayer().ReplyWith(err.Error())
-		return
-	}
-	if currentPhase != inputPhase {
-		gamelog.ToConsole(g, g.sender(origin), request, err)
-		g.CurrentPlayer().ReplyWith(fmt.Sprintf("Phase is not %d but %d", inputPhase, currentPhase))
 		return
 	}
 
-	// find step
-	criteria := findCriteria(g, request, origin)
-	_, actingPlayer, err := g.players.Find(criteria)
+	// verify player step
+	err = verifyPlayer(g, request, origin, notify)
 	if err != nil {
-		gamelog.ToConsole(g, g.sender(origin), request, err)
-		g.sender(origin).ReplyWith(err.Error())
-
 		return
 	}
-	trackActing(&g.lastPlaying, actingPlayer)
 
 	// do step
-	if err := play(g, request, origin); err != nil {
-		gamelog.ToConsole(g, g.sender(origin), request, err)
-		g.CurrentPlayer().ReplyWith(err.Error())
+	err = processRequest(g, request, origin, notify)
+	if err != nil {
 		return
 	}
 
 	// log action to file
 	gamelog.Write(g)
 
-	// next phase
-	g.phase = nextPhase(g, request)
-
 	// next player step
-	nextPlayer(g, request, origin, currentPhase)
+	nextPlayer(g, request, origin, notify)
+
+	// next phase
+	nextPhase(g, request)
 
 	// log action to players
-	g.LastPlayer().ReplyWith(gamelog.ToMe(g))
-	for _, pl := range g.players {
-		pl.ReplyWith(gamelog.ToAll(g))
-	}
+	notifyPlayer(g, request, origin, notify)
+	notifyAll(g, request, origin, notify)
 	gamelog.ToConsole(g, g.sender(origin), request, err)
 
 	// clean phase
-	if g.cardsOnTheBoard() >= 5 {
-		g.playedCards.Clear()
-	}
+	cleanPhase(g, request, origin, notify)
 
 	// process end game
-	phaseAtEndTurn := g.phase
-	if phaseAtEndTurn == phase.End {
-		scorers := make([]team.Scorer, 0)
-		for _, p := range g.players {
-			scorers = append(scorers, p)
-		}
-		scoreTeam1, scoreTeam2 := team.Score(g.caller, g.companion, scorers...)
-		for _, p := range g.players {
-			p.ReplyWith(fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2))
-		}
-	}
+	endGamePhase(g, request, origin, notify)
 }

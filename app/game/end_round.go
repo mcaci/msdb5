@@ -4,9 +4,37 @@ import (
 	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
+	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
+
+func nextPlayer(g *Game, request, origin string, notify func(*player.Player, string)) {
+	current := g.phase
+	actingPlayerIndex := g.senderIndex(origin)
+	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
+	playerIndex := uint8(actingPlayerIndex)
+	nextPlayer := playersRoundRobin(playerIndex)
+	switch current {
+	case phase.ChoosingCompanion, phase.ExchangingCards:
+		nextPlayer = playerIndex
+	case phase.InsideAuction:
+		for g.players[nextPlayer].Folded() {
+			nextPlayer = playersRoundRobin(nextPlayer)
+		}
+		if nextPlayer == playerIndex {
+			g.caller = g.players[playerIndex]
+		}
+	case phase.PlayingCards:
+		roundHasEnded := len(g.playedCards) == 5
+		if roundHasEnded {
+			winningCardIndex := briscola.IndexOfWinningCard(g.playedCards, g.briscola())
+			nextPlayer = playersRoundRobin(playerIndex + winningCardIndex)
+		}
+	default:
+	}
+	trackActing(&g.lastPlaying, g.players[nextPlayer])
+}
 
 func nextPhase(g *Game, request string) phase.ID {
 	current, nextPhase := g.phase, g.phase+1
@@ -36,7 +64,15 @@ func nextPhase(g *Game, request string) phase.ID {
 		}
 	}
 	if predicateToNextPhase() {
+		g.phase = nextPhase
 		return nextPhase
 	}
 	return current
+}
+
+func cleanPhase(g *Game, request, origin string, notify func(*player.Player, string)) error {
+	if g.cardsOnTheBoard() >= 5 {
+		g.playedCards.Clear()
+	}
+	return nil
 }

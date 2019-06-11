@@ -3,8 +3,8 @@ package game
 import (
 	"fmt"
 	"strconv"
-	"strings"
 
+	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
@@ -12,16 +12,25 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
-func play(g *Game, request, origin string) error {
+func processRequest(g *Game, request, origin string, notify func(*player.Player, string)) error {
+	rq := newReq(request, origin)
+	err := play(g, *rq, notify)
+	if err != nil {
+		gamelog.ToConsole(g, g.sender(origin), request, err)
+		notify(g.CurrentPlayer(), err.Error())
+	}
+	return err
+}
+
+func play(g *Game, rq req, notify func(*player.Player, string)) error {
 	p := g.CurrentPlayer()
-	action := strings.Split(request, "#")[0]
-	switch action {
+	switch rq.Action() {
 	case "Join":
-		name := strings.Split(request, "#")[1]
+		name := rq.data1
 		p.RegisterAs(name)
 		return nil
 	case "Auction":
-		score := strings.Split(request, "#")[1]
+		score := rq.data1
 		currentScore, err := strconv.Atoi(score)
 		if err == nil && g.auctionScore.CheckWith(auction.Score(currentScore)) && !p.Folded() {
 			g.auctionScore.Update(auction.Score(currentScore))
@@ -30,19 +39,19 @@ func play(g *Game, request, origin string) error {
 		}
 		return nil
 	case "Exchange":
-		number := strings.Split(request, "#")[1]
+		number := rq.data1
 		if number == "0" {
 			return nil
 		}
-		seed := strings.Split(request, "#")[2]
+		seed := rq.data2
 		c, err := card.Create(number, seed)
 		if err != nil {
 			return err
 		}
 		return p.Exchange(c, &g.side)
 	case "Companion":
-		number := strings.Split(request, "#")[1]
-		seed := strings.Split(request, "#")[2]
+		number := rq.data1
+		seed := rq.data2
 		c, err := card.Create(number, seed)
 		if err != nil {
 			return err
@@ -54,8 +63,8 @@ func play(g *Game, request, origin string) error {
 		}
 		return nil
 	case "Card":
-		number := strings.Split(request, "#")[1]
-		seed := strings.Split(request, "#")[2]
+		number := rq.data1
+		seed := rq.data2
 		c, err := card.Create(number, seed)
 		err = p.Play(c)
 		if err != nil {
@@ -77,6 +86,6 @@ func play(g *Game, request, origin string) error {
 		}
 		return err
 	default:
-		return fmt.Errorf("Action %s not valid", action)
+		return fmt.Errorf("Action %s not valid", rq.Action())
 	}
 }
