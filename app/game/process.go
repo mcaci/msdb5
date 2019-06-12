@@ -8,21 +8,22 @@ import (
 // Process func
 func (g *Game) Process(request, origin string) {
 	notify := func(p *player.Player, msg string) { p.ReplyWith(msg) }
+	rq := newReq(request, origin)
 
 	// verify phase step
-	err := verifyPhase(g, request, origin, notify)
+	err := verifyPhase(g, rq, notify)
 	if err != nil {
 		return
 	}
 
 	// verify player step
-	err = verifyPlayer(g, request, origin, notify)
+	err = verifyPlayer(g, rq, notify)
 	if err != nil {
 		return
 	}
 
 	// do step
-	err = processRequest(g, request, origin, notify)
+	err = processRequest(g, rq, notify)
 	if err != nil {
 		return
 	}
@@ -31,19 +32,19 @@ func (g *Game) Process(request, origin string) {
 	gamelog.Write(g)
 
 	// next player step
-	nextPlayer(g, request, origin, notify)
+	nextPlayer(g, rq, notify)
 
 	// next phase
-	nextPhase(g, request)
+	nextPhase(g, rq, notify)
 
 	// log action to players
-	notifyPlayer(g, request, origin, notify)
-	notifyAll(g, request, origin, notify)
-	gamelog.ToConsole(g, g.sender(origin), request, err)
+	notifyPlayer(g, rq, notify)
+	notifyAll(g, rq, notify)
+	gamelog.ToConsole(g, g.sender(rq.From()), rq.Action(), err)
 
 	// clean phase
-	cleanPhase(g, request, origin, notify)
+	cleanPhase(g, rq, notify)
 
 	// process end game
-	endGamePhase(g, request, origin, notify)
+	endGamePhase(g, rq, notify)
 }

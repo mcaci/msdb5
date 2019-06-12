@@ -1,17 +1,15 @@
 package game
 
 import (
-	"strings"
-
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
-func nextPlayer(g *Game, request, origin string, notify func(*player.Player, string)) {
+func nextPlayer(g *Game, rq *req, notify func(*player.Player, string)) error {
 	current := g.phase
-	actingPlayerIndex := g.senderIndex(origin)
+	actingPlayerIndex := g.senderIndex(rq.From())
 	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
 	playerIndex := uint8(actingPlayerIndex)
 	nextPlayer := playersRoundRobin(playerIndex)
@@ -34,9 +32,10 @@ func nextPlayer(g *Game, request, origin string, notify func(*player.Player, str
 	default:
 	}
 	trackActing(&g.lastPlaying, g.players[nextPlayer])
+	return nil
 }
 
-func nextPhase(g *Game, request string) phase.ID {
+func nextPhase(g *Game, rq *req, notify func(*player.Player, string)) error {
 	current, nextPhase := g.phase, g.phase+1
 	predicateToNextPhase := func() bool { return true }
 	switch current {
@@ -52,10 +51,7 @@ func nextPhase(g *Game, request string) phase.ID {
 			nextPhase = current + 2
 		}
 	case phase.ExchangingCards:
-		predicateToNextPhase = func() bool {
-			data := strings.Split(request, "#")
-			return len(data) > 1 && data[1] == "0"
-		}
+		predicateToNextPhase = rq.EndExchange
 	case phase.ChoosingCompanion:
 		nextPhase = phase.PlayingCards
 	case phase.PlayingCards:
@@ -65,12 +61,11 @@ func nextPhase(g *Game, request string) phase.ID {
 	}
 	if predicateToNextPhase() {
 		g.phase = nextPhase
-		return nextPhase
 	}
-	return current
+	return nil
 }
 
-func cleanPhase(g *Game, request, origin string, notify func(*player.Player, string)) error {
+func cleanPhase(g *Game, rq *req, notify func(*player.Player, string)) error {
 	if g.cardsOnTheBoard() >= 5 {
 		g.playedCards.Clear()
 	}

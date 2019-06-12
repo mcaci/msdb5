@@ -85,7 +85,8 @@ func (g *Game) briscola() card.Seed                 { return g.briscolaCard.Seed
 func (g *Game) sender(origin string) *player.Player { return g.players[g.senderIndex(origin)] }
 func (g *Game) cardsOnTheBoard() int                { return len(g.playedCards) }
 func (g *Game) senderIndex(origin string) int {
-	criteria := findCriteria(g, "Origin", origin)
+	rq := newReq("Origin", origin)
+	criteria := findCriteria(g, rq)
 	index, _, _ := g.players.Find(criteria)
 	return index
 }

@@ -10,8 +10,9 @@ var messageSink = func(p *player.Player, msg string) {}
 
 func TestProcessRequestWithNoErr(t *testing.T) {
 	gameTest := NewGame(false)
-	gameTest.Join("127.0.0.51", nil)
-	err := processRequest(gameTest, "Join#A", "127.0.0.51", messageSink)
+	rq := newReq("Join#A", "127.0.0.51")
+	gameTest.Join(rq.From(), nil)
+	err := processRequest(gameTest, rq, messageSink)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -19,9 +20,20 @@ func TestProcessRequestWithNoErr(t *testing.T) {
 
 func TestProcessRequestWithErr(t *testing.T) {
 	gameTest := NewGame(false)
-	gameTest.Join("127.0.0.51", nil)
-	err := processRequest(gameTest, "Card#A#B", "127.0.0.51", messageSink)
+	rq := newReq("Card#A#B", "127.0.0.51")
+	gameTest.Join(rq.From(), nil)
+	err := processRequest(gameTest, rq, messageSink)
 	if err == nil {
 		t.Fatal("Error was expected")
+	}
+}
+
+func TestProcessAuctionRequestWithNoErr(t *testing.T) {
+	gameTest := NewGame(false)
+	rq := newReq("Auction#75", "127.0.0.51")
+	gameTest.Join(rq.From(), nil)
+	err := processRequest(gameTest, rq, messageSink)
+	if err != nil {
+		t.Fatal(err)
 	}
 }

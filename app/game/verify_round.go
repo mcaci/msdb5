@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
@@ -11,27 +10,27 @@ import (
 
 type playerPredicate func(p *player.Player) bool
 
-func findCriteria(g *Game, request, origin string) playerPredicate {
+func findCriteria(g *Game, rq *req) playerPredicate {
 	var expectedPlayerFinder playerPredicate
-	action := strings.Split(request, "#")[0]
-	switch action {
+	switch rq.Action() {
 	case "Join":
 		expectedPlayerFinder = func(p *player.Player) bool { return p.IsNameEmpty() }
 	case "Origin":
-		expectedPlayerFinder = func(p *player.Player) bool { return p.IsSameHost(origin) }
+		expectedPlayerFinder = func(p *player.Player) bool { return p.IsSameHost(rq.From()) }
 	default:
-		expectedPlayerFinder = func(p *player.Player) bool { return p.IsExpectedPlayer(g.CurrentPlayer(), origin) }
+		expectedPlayerFinder = func(p *player.Player) bool { return p.IsExpectedPlayer(g.CurrentPlayer(), rq.From()) }
 	}
 	return expectedPlayerFinder
 }
 
-func verifyPlayer(g *Game, request, origin string, notify func(*player.Player, string)) error {
-	criteria := findCriteria(g, request, origin)
+func verifyPlayer(g *Game, rq *req, notify func(*player.Player, string)) error {
+	criteria := findCriteria(g, rq)
 	_, actingPlayer, err := g.players.Find(criteria)
 	if err != nil {
 		err = fmt.Errorf("%v. Expecting player %s to play", err, g.CurrentPlayer().Name())
-		gamelog.ToConsole(g, g.sender(origin), request, err)
-		notify(g.sender(origin), err.Error())
+		sender := g.sender(rq.From())
+		gamelog.ToConsole(g, sender, rq.Action(), err)
+		notify(sender, err.Error())
 		return err
 	}
 	if g.CurrentPlayer() == actingPlayer {
@@ -41,19 +40,17 @@ func verifyPlayer(g *Game, request, origin string, notify func(*player.Player, s
 	return nil
 }
 
-func verifyPhase(g *Game, request, origin string, notify func(*player.Player, string)) error {
+func verifyPhase(g *Game, rq *req, notify func(*player.Player, string)) error {
 	currentPhase := g.phase
-	inputPhase, err := phase.ToID(request)
-	if err != nil {
-		gamelog.ToConsole(g, g.sender(origin), request, err)
-		notify(g.sender(origin), err.Error())
-		return err
+	inputPhase, err := phase.ToID(rq.Action())
+	if err == nil && currentPhase == inputPhase {
+		return nil
 	}
-	if currentPhase != inputPhase {
+	sender := g.sender(rq.From())
+	if err == nil && currentPhase != inputPhase {
 		err = fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase)
-		gamelog.ToConsole(g, g.sender(origin), request, err)
-		notify(g.sender(origin), err.Error())
-		return err
 	}
-	return nil
+	gamelog.ToConsole(g, sender, rq.Action(), err)
+	notify(sender, err.Error())
+	return err
 }
