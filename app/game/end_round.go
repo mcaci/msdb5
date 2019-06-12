@@ -1,6 +1,9 @@
 package game
 
 import (
+	"fmt"
+
+	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
@@ -19,9 +22,6 @@ func nextPlayer(g *Game, rq *req, notify func(*player.Player, string)) error {
 	case phase.InsideAuction:
 		for g.players[nextPlayer].Folded() {
 			nextPlayer = playersRoundRobin(nextPlayer)
-		}
-		if nextPlayer == playerIndex {
-			g.caller = g.players[playerIndex]
 		}
 	case phase.PlayingCards:
 		roundHasEnded := len(g.playedCards) == 5
@@ -50,6 +50,10 @@ func nextPhase(g *Game, rq *req, notify func(*player.Player, string)) error {
 		if !g.IsSideUsed() {
 			nextPhase = current + 2
 		}
+		if predicateToNextPhase() {
+			_, p, _ := g.players.Find(func(p *player.Player) bool { return !p.Folded() })
+			g.caller = p
+		}
 	case phase.ExchangingCards:
 		predicateToNextPhase = rq.EndExchange
 	case phase.ChoosingCompanion:
@@ -62,6 +66,11 @@ func nextPhase(g *Game, rq *req, notify func(*player.Player, string)) error {
 	if predicateToNextPhase() {
 		g.phase = nextPhase
 	}
+	notify(g.LastPlayer(), gamelog.ToLast(g))
+	for _, pl := range g.players {
+		notify(pl, fmt.Sprintf("Game: %+v", g))
+	}
+	notify(g.CurrentPlayer(), gamelog.ToCurrent(g))
 	return nil
 }
 

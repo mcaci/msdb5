@@ -16,7 +16,9 @@ func endGamePhase(g *Game, rq *req, notify func(*player.Player, string)) error {
 			scorers = append(scorers, p)
 		}
 		scoreTeam1, scoreTeam2 := team.Score(g.caller, g.companion, scorers...)
-		notify(g.CurrentPlayer(), fmt.Sprintf("Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2))
+		for _, pl := range g.players {
+			notify(pl, fmt.Sprintf("The end - Callers: %+v; Others: %+v", scoreTeam1, scoreTeam2))
+		}
 	}
 	return nil
 }

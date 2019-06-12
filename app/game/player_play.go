@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
@@ -12,15 +11,6 @@ import (
 )
 
 func processRequest(g *Game, rq *req, notify func(*player.Player, string)) error {
-	err := play(g, *rq, notify)
-	if err != nil {
-		gamelog.ToConsole(g, g.sender(rq.From()), rq.Action(), err)
-		notify(g.CurrentPlayer(), err.Error())
-	}
-	return err
-}
-
-func play(g *Game, rq req, notify func(*player.Player, string)) error {
 	p := g.CurrentPlayer()
 	switch rq.Action() {
 	case "Join":
@@ -32,6 +22,30 @@ func play(g *Game, rq req, notify func(*player.Player, string)) error {
 		currentScore, err := strconv.Atoi(score)
 		if err == nil && g.auctionScore.CheckWith(auction.Score(currentScore)) && !p.Folded() {
 			g.auctionScore.Update(auction.Score(currentScore))
+			if g.IsSideUsed() {
+				sideDeck := g.SideDeck()
+				score := g.AuctionScore()
+				if score >= 90 {
+					for _, pl := range g.players {
+						notify(pl, fmt.Sprintf("First card: %+v\n", sideDeck[0]))
+					}
+				}
+				if score >= 100 {
+					for _, pl := range g.players {
+						notify(pl, fmt.Sprintf("Second card: %+v\n", sideDeck[1]))
+					}
+				}
+				if score >= 110 {
+					for _, pl := range g.players {
+						notify(pl, fmt.Sprintf("Third card: %+v\n", sideDeck[2]))
+					}
+				}
+				if score >= 120 {
+					for _, pl := range g.players {
+						notify(pl, fmt.Sprintf("Fourth and fifth cards: %+v, %+v\n", sideDeck[3], sideDeck[4]))
+					}
+				}
+			}
 		} else {
 			p.Fold()
 		}

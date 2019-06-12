@@ -72,18 +72,18 @@ func trackActing(lastPlaying *list.List, actingPlayer *player.Player) {
 	}
 }
 
-func (g *Game) AuctionScore() auction.Score   { return g.auctionScore }
-func (g *Game) Companion() *player.Player     { return g.companion }
-func (g *Game) LastCardPlayed() card.ID       { return g.playedCards[len(g.playedCards)-1] }
-func (g *Game) Phase() phase.ID               { return g.phase }
-func (g *Game) SideDeck() deck.Cards          { return g.side }
-func (g *Game) IsSideUsed() bool              { return g.withSide }
-func (g *Game) LastPlayer() *player.Player    { return g.lastPlaying.Back().Value.(*player.Player) }
-func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }
+func (g *Game) AuctionScore() auction.Score         { return g.auctionScore }
+func (g *Game) Companion() *player.Player           { return g.companion }
+func (g *Game) LastCardPlayed() card.ID             { return g.playedCards[len(g.playedCards)-1] }
+func (g *Game) Phase() phase.ID                     { return g.phase }
+func (g *Game) SideDeck() deck.Cards                { return g.side }
+func (g *Game) IsSideUsed() bool                    { return g.withSide }
+func (g *Game) LastPlayer() *player.Player          { return g.lastPlaying.Back().Value.(*player.Player) }
+func (g *Game) CurrentPlayer() *player.Player       { return g.lastPlaying.Front().Value.(*player.Player) }
+func (g *Game) Sender(origin string) *player.Player { return g.players[g.senderIndex(origin)] }
 
-func (g *Game) briscola() card.Seed                 { return g.briscolaCard.Seed() }
-func (g *Game) sender(origin string) *player.Player { return g.players[g.senderIndex(origin)] }
-func (g *Game) cardsOnTheBoard() int                { return len(g.playedCards) }
+func (g *Game) briscola() card.Seed  { return g.briscolaCard.Seed() }
+func (g *Game) cardsOnTheBoard() int { return len(g.playedCards) }
 func (g *Game) senderIndex(origin string) int {
 	rq := newReq("Origin", origin)
 	criteria := findCriteria(g, rq)

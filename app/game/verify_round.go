@@ -3,7 +3,6 @@ package game
 import (
 	"fmt"
 
-	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
@@ -28,9 +27,6 @@ func verifyPlayer(g *Game, rq *req, notify func(*player.Player, string)) error {
 	_, actingPlayer, err := g.players.Find(criteria)
 	if err != nil {
 		err = fmt.Errorf("%v. Expecting player %s to play", err, g.CurrentPlayer().Name())
-		sender := g.sender(rq.From())
-		gamelog.ToConsole(g, sender, rq.Action(), err)
-		notify(sender, err.Error())
 		return err
 	}
 	if g.CurrentPlayer() == actingPlayer {
@@ -46,11 +42,8 @@ func verifyPhase(g *Game, rq *req, notify func(*player.Player, string)) error {
 	if err == nil && currentPhase == inputPhase {
 		return nil
 	}
-	sender := g.sender(rq.From())
 	if err == nil && currentPhase != inputPhase {
 		err = fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase)
 	}
-	gamelog.ToConsole(g, sender, rq.Action(), err)
-	notify(sender, err.Error())
 	return err
 }

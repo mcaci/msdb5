@@ -5,10 +5,25 @@ import (
 	"os"
 
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
+	"github.com/nikiforosFreespirit/msdb5/dom/auction"
+	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/nikiforosFreespirit/msdb5/dom/deck"
+	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
-// Write func
-func Write(gameInfo informer) {
+type miner interface {
+	AuctionScore() auction.Score
+	Companion() *player.Player
+	CurrentPlayer() *player.Player
+	LastCardPlayed() card.ID
+	Phase() phase.ID
+	// not registerd yet
+	IsSideUsed() bool
+	SideDeck() deck.Cards
+}
+
+// ToFile func
+func ToFile(gameInfo miner) {
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		log.Println(err)

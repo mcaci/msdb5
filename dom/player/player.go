@@ -29,6 +29,11 @@ func (player *Player) Draw(supplier func() card.ID) {
 	player.hand.Add(supplier())
 }
 
+// DropCards func
+func (player *Player) DropCards() {
+	player.hand.Clear()
+}
+
 // Has func
 func (player *Player) Has(id card.ID) bool {
 	_, err := player.hand.Find(id)

@@ -13,23 +13,26 @@ func (g *Game) Process(request, origin string) {
 	// verify phase step
 	err := verifyPhase(g, rq, notify)
 	if err != nil {
+		gamelog.SendErrToSender(err, g, rq, notify)
 		return
 	}
 
 	// verify player step
 	err = verifyPlayer(g, rq, notify)
 	if err != nil {
+		gamelog.SendErrToSender(err, g, rq, notify)
 		return
 	}
 
-	// do step
+	// play step
 	err = processRequest(g, rq, notify)
 	if err != nil {
+		gamelog.SendErrToSender(err, g, rq, notify)
 		return
 	}
 
 	// log action to file
-	gamelog.Write(g)
+	gamelog.ToFile(g)
 
 	// next player step
 	nextPlayer(g, rq, notify)
@@ -37,10 +40,8 @@ func (g *Game) Process(request, origin string) {
 	// next phase
 	nextPhase(g, rq, notify)
 
-	// log action to players
-	notifyPlayer(g, rq, notify)
-	notifyAll(g, rq, notify)
-	gamelog.ToConsole(g, g.sender(rq.From()), rq.Action(), err)
+	// log action to console
+	gamelog.ToConsole(g, rq)
 
 	// clean phase
 	cleanPhase(g, rq, notify)

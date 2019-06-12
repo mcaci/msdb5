@@ -6,11 +6,20 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
+type senderInformer interface {
+	Sender(string) *player.Player
+}
+
 // ToConsole func
-func ToConsole(gameInfo informer, sender *player.Player, request string, err error) {
-	log.Printf("New Action by %s\n", sender.Name())
-	log.Printf("Action is %s\n", request)
-	log.Printf("Any error raised: %+v\n", err)
-	log.Printf("Player info after action: %+v\n", sender)
-	log.Printf("Game info after action: %+v\n", gameInfo)
+func ToConsole(gameInfo senderInformer, rq requester) {
+	sender := gameInfo.Sender(rq.From())
+	log.Printf("New Action by %s: %s\n", sender.Name(), rq.Action())
+	log.Printf("Sender info: %+v\n", sender)
+	log.Printf("Game info: %+v\n", gameInfo)
+}
+
+// ErrToConsole func
+func ErrToConsole(senderName, request string, err error) {
+	log.Printf("New Action by %s: %s\n", senderName, request)
+	log.Printf("Error raised: %+v\n", err)
 }
