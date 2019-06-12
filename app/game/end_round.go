@@ -77,6 +77,16 @@ func nextPhase(g *Game, rq *req, notify func(*player.Player, string)) error {
 func cleanPhase(g *Game, rq *req, notify func(*player.Player, string)) error {
 	if g.cardsOnTheBoard() >= 5 {
 		g.playedCards.Clear()
+		// roundsLeft := g.players[0].HandSize()
+		// TODO: loop on high briscola cards
+		// _, playerWithHighestBriscola, _ := g.players.Find(func(p *player.Player) bool {
+		// 	return p.Has(1)
+		// })
+		// if caller team or others team has all high briscola
+		// playerWithHighestBriscola.Collect(all hands)
+		// notify all players (callers or others have all briscolas)
+		// log mining file eith player who got all other cards
+		// g.phase = phase.End
 	}
 	return nil
 }

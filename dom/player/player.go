@@ -34,6 +34,11 @@ func (player *Player) DropCards() {
 	player.hand.Clear()
 }
 
+// HandSize func
+func (player *Player) HandSize() int {
+	return len(player.hand)
+}
+
 // Has func
 func (player *Player) Has(id card.ID) bool {
 	_, err := player.hand.Find(id)
