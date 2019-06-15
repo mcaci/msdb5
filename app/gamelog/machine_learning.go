@@ -1,7 +1,7 @@
 package gamelog
 
 import (
-	"log"
+	"io"
 	"os"
 
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
@@ -22,20 +22,16 @@ type miner interface {
 	SideDeck() deck.Cards
 }
 
+// OpenFile func
+func OpenFile() (*os.File, error) {
+	return os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+}
+
 // ToFile func
-func ToFile(gameInfo miner) {
-	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-	if err != nil {
-		log.Println(err)
+func ToFile(gameInfo miner, writer io.Writer) {
+	canLog, msg := createMlMsg(gameInfo)
+	if !canLog {
+		return
 	}
-	defer f.Close()
-	logger := log.New(f, "", log.LstdFlags)
-	switch gameInfo.Phase() {
-	case phase.ChoosingCompanion:
-		logger.Printf("%s, %s, %d\n", gameInfo.CurrentPlayer().Name(), gameInfo.Companion().Name(), gameInfo.AuctionScore())
-	case phase.PlayingCards:
-		logger.Printf("%s, %d\n", gameInfo.CurrentPlayer().Name(), gameInfo.LastCardPlayed())
-	case phase.End:
-		logger.Printf("%s\n", gameInfo.CurrentPlayer().Name())
-	}
+	write(writer, msg)
 }

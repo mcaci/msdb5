@@ -1,6 +1,8 @@
 package game
 
 import (
+	"os"
+
 	"github.com/nikiforosFreespirit/msdb5/app/end"
 	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
@@ -18,14 +20,14 @@ func (g *Game) Process(inputRequest, origin string) {
 	// verify phase step
 	err := request.VerifyPhase(g, rq, notify)
 	if err != nil {
-		gamelog.SendErrToSender(err, g, rq, notify)
+		gamelog.NotifyError(err, g, rq, notify, os.Stdout)
 		return
 	}
 
 	// verify player step
 	err = request.VerifyPlayer(g, rq, notify)
 	if err != nil {
-		gamelog.SendErrToSender(err, g, rq, notify)
+		gamelog.NotifyError(err, g, rq, notify, os.Stdout)
 		return
 	}
 
@@ -34,12 +36,18 @@ func (g *Game) Process(inputRequest, origin string) {
 	setBriscolaCard := func(c card.ID) { g.briscolaCard = c }
 	err = play.Request(g, rq, setCompanion, setBriscolaCard, notify)
 	if err != nil {
-		gamelog.SendErrToSender(err, g, rq, notify)
+		gamelog.NotifyError(err, g, rq, notify, os.Stdout)
 		return
 	}
 
 	// log action to file
-	gamelog.ToFile(g)
+	f, err := gamelog.OpenFile()
+	if err != nil {
+		gamelog.ErrToConsole(rq.From(), rq.Action(), err, os.Stdout)
+		return
+	}
+	defer f.Close()
+	gamelog.ToFile(g, f)
 
 	// end round
 	setCaller := func(p *player.Player) { g.caller = p }
@@ -47,7 +55,7 @@ func (g *Game) Process(inputRequest, origin string) {
 	end.Round(g, rq, setCaller, setPhase, notify)
 
 	// log action to console
-	gamelog.ToConsole(g, rq)
+	gamelog.ToConsole(g, rq, os.Stdout)
 
 	// process end game
 	if g.phase == phase.End {
