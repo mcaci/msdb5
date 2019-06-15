@@ -13,11 +13,11 @@ var testPlayers Players
 func init() {
 	var a player.Player
 	a.RegisterAs("A")
-	testPlayers.Add(a)
+	testPlayers.Add(&a)
 	var b player.Player
 	b.RegisterAs("B")
 	b.Draw(func() card.ID { return 33 })
-	testPlayers.Add(b)
+	testPlayers.Add(&b)
 }
 
 func TestSuccessfulFindNoErr(t *testing.T) {

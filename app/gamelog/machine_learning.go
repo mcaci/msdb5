@@ -12,7 +12,7 @@ import (
 )
 
 type miner interface {
-	AuctionScore() auction.Score
+	AuctionScore() *auction.Score
 	Companion() *player.Player
 	CurrentPlayer() *player.Player
 	LastCardPlayed() card.ID
@@ -35,5 +35,7 @@ func ToFile(gameInfo miner) {
 		logger.Printf("%s, %s, %d\n", gameInfo.CurrentPlayer().Name(), gameInfo.Companion().Name(), gameInfo.AuctionScore())
 	case phase.PlayingCards:
 		logger.Printf("%s, %d\n", gameInfo.CurrentPlayer().Name(), gameInfo.LastCardPlayed())
+	case phase.End:
+		logger.Printf("%s\n", gameInfo.CurrentPlayer().Name())
 	}
 }

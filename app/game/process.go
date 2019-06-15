@@ -1,31 +1,38 @@
 package game
 
 import (
+	"github.com/nikiforosFreespirit/msdb5/app/end"
 	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
+	"github.com/nikiforosFreespirit/msdb5/app/play"
+	"github.com/nikiforosFreespirit/msdb5/app/request"
+	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
 // Process func
-func (g *Game) Process(request, origin string) {
+func (g *Game) Process(inputRequest, origin string) {
 	notify := func(p *player.Player, msg string) { p.ReplyWith(msg) }
-	rq := newReq(request, origin)
+	rq := request.New(inputRequest, origin)
 
 	// verify phase step
-	err := verifyPhase(g, rq, notify)
+	err := request.VerifyPhase(g, rq, notify)
 	if err != nil {
 		gamelog.SendErrToSender(err, g, rq, notify)
 		return
 	}
 
 	// verify player step
-	err = verifyPlayer(g, rq, notify)
+	err = request.VerifyPlayer(g, rq, notify)
 	if err != nil {
 		gamelog.SendErrToSender(err, g, rq, notify)
 		return
 	}
 
 	// play step
-	err = processRequest(g, rq, notify)
+	setCompanion := func(p *player.Player) { g.companion = p }
+	setBriscolaCard := func(c card.ID) { g.briscolaCard = c }
+	err = play.Request(g, rq, setCompanion, setBriscolaCard, notify)
 	if err != nil {
 		gamelog.SendErrToSender(err, g, rq, notify)
 		return
@@ -34,18 +41,16 @@ func (g *Game) Process(request, origin string) {
 	// log action to file
 	gamelog.ToFile(g)
 
-	// next player step
-	nextPlayer(g, rq, notify)
-
-	// next phase
-	nextPhase(g, rq, notify)
+	// end round
+	setCaller := func(p *player.Player) { g.caller = p }
+	setPhase := func(p phase.ID) { g.phase = p }
+	end.Round(g, rq, setCaller, setPhase, notify)
 
 	// log action to console
 	gamelog.ToConsole(g, rq)
 
-	// clean phase
-	cleanPhase(g, rq, notify)
-
 	// process end game
-	endGamePhase(g, rq, notify)
+	if g.phase == phase.End {
+		end.Process(g, notify)
+	}
 }

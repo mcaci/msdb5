@@ -10,8 +10,8 @@ import (
 type Players []*player.Player
 
 // Add func
-func (playerSet *Players) Add(p player.Player) {
-	*playerSet = append(*playerSet, &p)
+func (playerSet *Players) Add(p *player.Player) {
+	*playerSet = append(*playerSet, p)
 }
 
 // Find func

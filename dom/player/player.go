@@ -34,6 +34,11 @@ func (player *Player) DropCards() {
 	player.hand.Clear()
 }
 
+// Hand func
+func (player *Player) Hand() *deck.Cards {
+	return &player.hand
+}
+
 // HandSize func
 func (player *Player) HandSize() int {
 	return len(player.hand)
