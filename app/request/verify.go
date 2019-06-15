@@ -2,8 +2,8 @@ package request
 
 import (
 	"container/list"
-	"fmt"
 
+	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
@@ -42,8 +42,7 @@ func VerifyPlayer(g expectedPlayerInterface, rq requester, notify func(*player.P
 	criteria := FindCriteria(g, rq)
 	_, actingPlayer, err := g.Players().Find(criteria)
 	if err != nil {
-		err = fmt.Errorf("%v. Expecting player %s to play", err, g.CurrentPlayer().Name())
-		return err
+		return gamelog.ErrPlayerNotFound(err, g.CurrentPlayer().Name())
 	}
 	if g.CurrentPlayer() == actingPlayer {
 		return nil
@@ -59,7 +58,7 @@ func VerifyPhase(g expectedPlayerInterface, rq requester, notify func(*player.Pl
 		return nil
 	}
 	if err == nil && currentPhase != inputPhase {
-		err = fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase)
+		err = gamelog.ErrPhaseNotExpected(uint8(inputPhase), uint8(currentPhase))
 	}
 	return err
 }

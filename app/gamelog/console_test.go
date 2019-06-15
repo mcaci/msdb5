@@ -8,18 +8,12 @@ import (
 
 type fakeSender struct{}
 
-func (s fakeSender) Sender(string) *player.Player {
-	return player.New()
-}
+func (s fakeSender) Sender(string) *player.Player { return player.New() }
 
 type fakeRq struct{}
 
-func (r fakeRq) From() string {
-	return "127.0.0.1"
-}
-func (r fakeRq) Action() string {
-	return "Card#1#Sword"
-}
+func (r fakeRq) From() string   { return "127.0.0.1" }
+func (r fakeRq) Action() string { return "Card#1#Sword" }
 
 type fakeWriter string
 

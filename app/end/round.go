@@ -2,8 +2,8 @@ package end
 
 import (
 	"container/list"
-	"fmt"
 
+	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 
 	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
@@ -16,6 +16,7 @@ import (
 )
 
 type roundInformer interface {
+	AuctionScore() *auction.Score
 	Caller() *player.Player
 	Companion() *player.Player
 	CurrentPlayer() *player.Player
@@ -28,7 +29,7 @@ type roundInformer interface {
 	SenderIndex(string) int
 
 	IsSideUsed() bool
-	SideDeck() deck.Cards
+	SideDeck() *deck.Cards
 	CardsOnTheBoard() int
 }
 
@@ -37,6 +38,7 @@ type requestInformer interface {
 	EndExchange() bool
 }
 
+// Round func
 func Round(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID), notify func(*player.Player, string)) {
 	// next player step
 	nextPlayer(g, rq, notify)
@@ -58,6 +60,14 @@ func nextPlayer(g roundInformer, rq requestInformer, notify func(*player.Player,
 	case phase.ChoosingCompanion, phase.ExchangingCards:
 		nextPlayer = playerIndex
 	case phase.InsideAuction:
+		if *g.AuctionScore() >= 120 {
+			for i := range g.Players() {
+				if i == actingPlayerIndex {
+					continue
+				}
+				g.Players()[i].Fold()
+			}
+		}
 		for g.Players()[nextPlayer].Folded() {
 			nextPlayer = playersRoundRobin(nextPlayer)
 		}
@@ -106,7 +116,7 @@ func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Playe
 	}
 	notify(g.LastPlayer(), gamelog.ToLast(g))
 	for _, pl := range g.Players() {
-		notify(pl, fmt.Sprintf("Game: %+v", g))
+		notify(pl, gamelog.GameInfoMsg(g))
 	}
 	notify(g.CurrentPlayer(), gamelog.ToCurrent(g))
 	return nil

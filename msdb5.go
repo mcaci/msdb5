@@ -10,10 +10,10 @@ import (
 
 func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
-	var side = flag.Bool("side", false, "Whether to use side deck or not.")
+	var noSide = flag.Bool("no-side", false, "Add flag to specify no side deck is to be used.")
 	flag.Parse() // parse the flags
 
-	r := frw.NewGameRoom(*side)
+	r := frw.NewGameRoom(!*noSide)
 	http.Handle("/", frw.NewTemplateHandler())
 	http.Handle("/room", r)
 

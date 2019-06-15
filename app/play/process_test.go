@@ -39,8 +39,8 @@ func (g fakeGame) LastPlaying() *list.List       { return list.New() }
 func (g fakeGame) Phase() phase.ID               { return g.phase }
 func (g fakeGame) Briscola() card.Seed           { return card.Coin }
 func (g fakeGame) IsSideUsed() bool              { return true }
-func (g fakeGame) PlayedCards() *deck.Cards      { return &deck.Cards{} }
-func (g fakeGame) SideDeck() deck.Cards          { return deck.Cards{} }
+func (g fakeGame) PlayedCards() *deck.Cards      { return new(deck.Cards) }
+func (g fakeGame) SideDeck() *deck.Cards         { return new(deck.Cards) }
 func (g fakeGame) AuctionScore() *auction.Score  { score := auction.Score(80); return &score }
 
 type fakeRq struct {

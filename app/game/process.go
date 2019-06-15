@@ -59,6 +59,6 @@ func (g *Game) Process(inputRequest, origin string) {
 
 	// process end game
 	if g.phase == phase.End {
-		end.Process(g, notify)
+		end.Process(g, f, notify)
 	}
 }

@@ -80,7 +80,7 @@ func (g *Game) Phase() phase.ID                     { return g.phase }
 func (g *Game) Players() team.Players               { return g.players }
 func (g *Game) PlayedCards() *deck.Cards            { return &g.playedCards }
 func (g *Game) Sender(origin string) *player.Player { return g.players[g.SenderIndex(origin)] }
-func (g *Game) SideDeck() deck.Cards                { return g.side }
+func (g *Game) SideDeck() *deck.Cards               { return &g.side }
 func (g *Game) CardsOnTheBoard() int                { return len(g.playedCards) }
 func (g *Game) SenderIndex(origin string) int {
 	rq := request.New("Origin", origin)

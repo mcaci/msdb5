@@ -2,9 +2,9 @@ package play
 
 import (
 	"container/list"
-	"fmt"
 	"strconv"
 
+	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
@@ -23,7 +23,7 @@ type playInterface interface {
 	Phase() phase.ID
 	PlayedCards() *deck.Cards
 	Players() team.Players
-	SideDeck() deck.Cards
+	SideDeck() *deck.Cards
 }
 
 type dataProvider interface {
@@ -33,6 +33,7 @@ type dataProvider interface {
 	EndExchange() bool
 }
 
+// Request func
 func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player), setBriscolaCard func(card.ID), notify func(*player.Player, string)) error {
 	p := g.CurrentPlayer()
 	switch rq.Action() {
@@ -41,36 +42,24 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		p.RegisterAs(name)
 		return nil
 	case "Auction":
-		score := rq.Value()
-		currentScore, err := strconv.Atoi(score)
-		if err == nil && g.AuctionScore().CheckWith(auction.Score(currentScore)) && !p.Folded() {
-			g.AuctionScore().Update(auction.Score(currentScore))
-			if g.IsSideUsed() {
-				sideDeck := g.SideDeck()
-				score := *g.AuctionScore()
-				if score >= 90 {
-					for _, pl := range g.Players() {
-						notify(pl, fmt.Sprintf("First card: %+v\n", sideDeck[0]))
-					}
-				}
-				if score >= 100 {
-					for _, pl := range g.Players() {
-						notify(pl, fmt.Sprintf("Second card: %+v\n", sideDeck[1]))
-					}
-				}
-				if score >= 110 {
-					for _, pl := range g.Players() {
-						notify(pl, fmt.Sprintf("Third card: %+v\n", sideDeck[2]))
-					}
-				}
-				if score >= 120 {
-					for _, pl := range g.Players() {
-						notify(pl, fmt.Sprintf("Fourth and fifth cards: %+v, %+v\n", sideDeck[3], sideDeck[4]))
-					}
-				}
-			}
-		} else {
+		if p.Folded() {
+			return nil
+		}
+		score, err := strconv.Atoi(rq.Value())
+		if err != nil || !g.AuctionScore().CheckWith(auction.Score(score)) {
 			p.Fold()
+			return nil
+		}
+		g.AuctionScore().Update(auction.Score(score))
+		if !g.IsSideUsed() {
+			return nil
+		}
+		cardsToShow := SideCardsToDisplay(*g.AuctionScore())
+		if cardsToShow == 0 {
+			return nil
+		}
+		for _, pl := range g.Players() {
+			notify(pl, gamelog.SideDeckContent(g, cardsToShow))
 		}
 		return nil
 	case "Exchange":
@@ -82,7 +71,7 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 			return err
 		}
 		side := g.SideDeck()
-		return p.Exchange(c, &side)
+		return p.Exchange(c, side)
 	case "Companion":
 		c, err := rq.Card()
 		if err != nil {
@@ -112,12 +101,12 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 			if team.Count(g.Players(), func(p *player.Player) bool { return p.IsHandEmpty() }) == 5 &&
 				g.IsSideUsed() {
 				side := g.SideDeck()
-				g.Players()[next].Collect(&side)
+				g.Players()[next].Collect(side)
 				side.Clear()
 			}
 		}
 		return err
 	default:
-		return fmt.Errorf("Action %s not valid", rq.Action())
+		return gamelog.ErrInvalidAction(rq.Action())
 	}
 }

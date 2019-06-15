@@ -10,9 +10,13 @@ import (
 func createInGameMsg(gameInfo selfInformer, pl *player.Player) string {
 	me := fmt.Sprintf("Player: %+v\n", pl)
 	if gameInfo.Phase() == phase.ExchangingCards {
-		me += fmt.Sprintf("Side deck: %+v\n", gameInfo.SideDeck())
+		me += fmt.Sprintf("Side deck: %+v\n", *gameInfo.SideDeck())
 	}
 	return me
+}
+
+func createSideGameMsg(gameInfo sidedeckInformer, quantity uint8) string {
+	return fmt.Sprintf("Side deck: %+v\n", (*gameInfo.SideDeck())[:quantity])
 }
 
 func createMlMsg(gameInfo miner) (bool, string) {
@@ -20,7 +24,7 @@ func createMlMsg(gameInfo miner) (bool, string) {
 	canLog := true
 	switch gameInfo.Phase() {
 	case phase.ChoosingCompanion:
-		msg = fmt.Sprintf("%s, %s, %d\n", gameInfo.CurrentPlayer().Name(), gameInfo.Companion().Name(), gameInfo.AuctionScore())
+		msg = fmt.Sprintf("%s, %s, %d\n", gameInfo.CurrentPlayer().Name(), gameInfo.Companion().Name(), *(gameInfo.AuctionScore()))
 	case phase.PlayingCards:
 		msg = fmt.Sprintf("%s, %d\n", gameInfo.CurrentPlayer().Name(), gameInfo.LastCardPlayed())
 	case phase.End:

@@ -19,7 +19,7 @@ type miner interface {
 	Phase() phase.ID
 	// not registerd yet
 	IsSideUsed() bool
-	SideDeck() deck.Cards
+	SideDeck() *deck.Cards
 }
 
 // OpenFile func

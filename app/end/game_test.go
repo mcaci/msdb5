@@ -2,9 +2,15 @@ package end
 
 import (
 	"container/list"
+	"os"
 	"testing"
 
+	"github.com/nikiforosFreespirit/msdb5/app/phase"
+
+	"github.com/nikiforosFreespirit/msdb5/dom/auction"
+
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
@@ -68,11 +74,18 @@ func newTestGameNoCards() fakeGame {
 	return f
 }
 
-func (g fakeGame) Caller() *player.Player    { return g.call }
-func (g fakeGame) Companion() *player.Player { return g.comp }
-func (g fakeGame) Players() team.Players     { return g.players }
-func (g fakeGame) LastPlaying() *list.List   { return list.New() }
-func (g fakeGame) Briscola() card.Seed       { return card.Coin }
+func (g fakeGame) AuctionScore() *auction.Score  { a := auction.Score(75); return &a }
+func (g fakeGame) Caller() *player.Player        { return g.call }
+func (g fakeGame) Companion() *player.Player     { return g.comp }
+func (g fakeGame) CurrentPlayer() *player.Player { return g.call }
+func (g fakeGame) Players() team.Players         { return g.players }
+func (g fakeGame) LastPlaying() *list.List       { return list.New() }
+func (g fakeGame) LastCardPlayed() card.ID       { return 1 }
+func (g fakeGame) Briscola() card.Seed           { return card.Coin }
+func (g fakeGame) IsSideUsed() bool              { return true }
+func (g fakeGame) SideDeck() *deck.Cards         { return &deck.Cards{1, 2, 3, 4, 5} }
+func (g fakeGame) CardsOnTheBoard() int          { return 5 }
+func (g fakeGame) Phase() phase.ID               { return 5 }
 
 func TestTrueCheckWithCardLeft(t *testing.T) {
 	gameTest := newTestGame3Cards()
@@ -100,7 +113,7 @@ func TestTrueCheckWithNoCardLeft(t *testing.T) {
 
 func TestProcessWithNoErr(t *testing.T) {
 	gameTest := newTestGameNoCards()
-	err := Process(gameTest, messageSink)
+	err := Process(gameTest, os.Stdout, messageSink)
 	if err != nil {
 		t.Fatal(err)
 	}
