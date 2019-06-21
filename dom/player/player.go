@@ -65,9 +65,10 @@ func (player *Player) Attach(info chan []byte) {
 	player.info = info
 }
 
-// ReplyWith func
-func (player *Player) ReplyWith(message string) {
-	player.info <- []byte(message)
+// Write func
+func (player *Player) Write(msg []byte) (n int, err error) {
+	player.info <- []byte(msg)
+	return len(msg), nil
 }
 
 // Folded func

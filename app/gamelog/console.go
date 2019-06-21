@@ -17,7 +17,7 @@ type requester interface {
 }
 
 // ToConsole func
-func ToConsole(gameInfo senderInformer, rq requester, to io.Writer) {
+func ToConsole(to io.Writer, gameInfo senderInformer, rq requester) {
 	sender := gameInfo.Sender(rq.From())
 	msg := fmt.Sprintf("New Action by %s: %s\n"+
 		"Sender info: %+v\n"+

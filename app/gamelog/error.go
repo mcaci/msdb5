@@ -3,40 +3,16 @@ package gamelog
 import (
 	"fmt"
 	"io"
-
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
 // NotifyError func
-func NotifyError(err error, gameInfo senderInformer, rq requester, notify func(*player.Player, string), to io.Writer) {
-	sender := gameInfo.Sender(rq.From())
-	ErrToConsole(sender.Name(), rq.Action(), err, to)
-	errToSender(sender, err, notify)
-}
-
-func errToSender(sender *player.Player, err error, notify func(*player.Player, string)) {
-	notify(sender, fmt.Sprintf("Error: %+v\n", err))
+func NotifyError(dest io.Writer, err error, gameInfo senderInformer, rq requester) {
+	ErrToConsole(dest, err, gameInfo, rq)
+	write(gameInfo.Sender(rq.From()), fmt.Sprintf("Error: %+v\n", err))
 }
 
 // ErrToConsole func
-func ErrToConsole(senderName, request string, err error, to io.Writer) {
-	msg := fmt.Sprintf("New Action by %s: %s\n"+
-		"Error raised: %+v\n",
-		senderName, request, err)
-	write(to, msg)
-}
-
-// ErrPlayerNotFound func
-func ErrPlayerNotFound(err error, name string) error {
-	return fmt.Errorf("%v. Expecting player %s to play", err, name)
-}
-
-// ErrPhaseNotExpected func
-func ErrPhaseNotExpected(inputPhase, currentPhase uint8) error {
-	return fmt.Errorf("Phase is not %d but %d", inputPhase, currentPhase)
-}
-
-// ErrInvalidAction func
-func ErrInvalidAction(action string) error {
-	return fmt.Errorf("Action %s not valid", action)
+func ErrToConsole(dest io.Writer, err error, gameInfo senderInformer, rq requester) {
+	sender := gameInfo.Sender(rq.From())
+	write(dest, fmt.Sprintf("New Action by %s: %s\nError raised: %+v\n", sender.Name(), rq.Action(), err))
 }
