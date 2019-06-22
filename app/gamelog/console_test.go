@@ -25,7 +25,7 @@ func (w *fakeWriter) Write(p []byte) (int, error) {
 
 func TestConsoleMsg(t *testing.T) {
 	s := new(fakeWriter)
-	ToConsole(fakeSender{}, fakeRq{}, s)
+	ToConsole(s, fakeSender{}, fakeRq{})
 	if len(*s) == 0 {
 		t.Fatalf("Expecting %s but got %s", "", *s)
 	}

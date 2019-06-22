@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 // Players struct
@@ -21,12 +23,15 @@ func (playerSet Players) Find(predicate func(p *player.Player) bool) (int, *play
 			return i, p, nil
 		}
 	}
-	return -1, nil, fmt.Errorf("Player not found")
+	printer := message.NewPrinter(language.English)
+	msg := printer.Sprint("Player not found")
+	return -1, nil, fmt.Errorf(msg)
 }
 
 func (playerSet Players) String() (str string) {
+	printer := message.NewPrinter(language.English)
 	for _, p := range playerSet {
-		str += fmt.Sprintf("- %+v -", *p)
+		str += printer.Sprintf("- %+v -", *p)
 	}
 	return
 

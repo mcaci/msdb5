@@ -2,7 +2,6 @@ package game
 
 import (
 	"container/list"
-	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/request"
@@ -12,6 +11,8 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 // Game struct
@@ -90,6 +91,7 @@ func (g *Game) SenderIndex(origin string) int {
 }
 
 func (g Game) String() (str string) {
-	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, Phase: %d)",
+	printer := message.NewPrinter(language.English)
+	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, Phase: %d)",
 		g.CurrentPlayer().Name(), g.briscolaCard, g.playedCards, g.auctionScore, g.phase)
 }

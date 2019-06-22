@@ -2,10 +2,11 @@ package player
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 // Player struct
@@ -127,6 +128,7 @@ func (player *Player) IsExpectedPlayer(other *Player, origin string) bool {
 }
 
 func (player Player) String() string {
-	return fmt.Sprintf("(Name: %s, Cards: %+v, Pile: %+v, Has folded? %v)",
+	printer := message.NewPrinter(language.English)
+	return printer.Sprintf("(Name: %s, Cards: %+v, Pile: %+v, Has folded? %v)",
 		player.name, player.hand, player.pile, player.fold)
 }

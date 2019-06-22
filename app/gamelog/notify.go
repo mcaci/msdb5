@@ -1,11 +1,11 @@
 package gamelog
 
 import (
-	"fmt"
-
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 type selfInformer interface {
@@ -36,15 +36,18 @@ func SideDeckContent(gameInfo sidedeckInformer, quantity uint8) string {
 
 // GameInfoMsg func
 func GameInfoMsg(gameInfo sidedeckInformer) string {
-	return fmt.Sprintf("Game: %+v", gameInfo)
+	printer := message.NewPrinter(language.English)
+	return printer.Sprintf("Game: %+v", gameInfo)
 }
 
 // NotifyAnticipatedEnding func
 func NotifyAnticipatedEnding(team string) string {
-	return fmt.Sprintf("The end - %s team has all briscola, ending game", team)
+	printer := message.NewPrinter(language.English)
+	return printer.Sprintf("The end - %s team has all briscola, ending game", team)
 }
 
 // NotifyScore func
 func NotifyScore(scoreTeam1, scoreTeam2 uint8) string {
-	return fmt.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
+	printer := message.NewPrinter(language.English)
+	return printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
 }
