@@ -5,6 +5,7 @@ import (
 	"io"
 
 	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
@@ -12,6 +13,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/notify"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
+	_ "github.com/nikiforosFreespirit/msdb5/catalog"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
@@ -58,12 +60,13 @@ func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
 		}
 		if callers != others {
 			p := g.Caller()
-			team := "Callers"
+			printer := message.NewPrinter(g.Lang())
+			team := printer.Sprint("Callers")
 			if others {
 				_, p = g.Players().Find(func(p *player.Player) bool {
 					return p == g.Caller() || p == g.Companion()
 				})
-				team = "Others"
+				team = printer.Sprint("Others")
 			}
 			collect(g, p, team, sendMsg)
 

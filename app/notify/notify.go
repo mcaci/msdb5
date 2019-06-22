@@ -45,7 +45,7 @@ func GameInfoMsg(gameInfo sidedeckInformer) string {
 // NotifyAnticipatedEnding func
 func NotifyAnticipatedEnding(team string, lang language.Tag) string {
 	printer := message.NewPrinter(lang)
-	return printer.Sprintf("The end - %s team has all briscola, ending game", team)
+	return printer.Sprintf("The end - %s team has all briscola cards", team)
 }
 
 // NotifyScore func
