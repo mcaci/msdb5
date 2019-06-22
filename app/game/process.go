@@ -20,14 +20,14 @@ func (g *Game) Process(inputRequest, origin string) {
 	// verify phase step
 	err := request.VerifyPhase(g, rq, sendMsg)
 	if err != nil {
-		notify.NotifyError(os.Stdout, err, g, rq)
+		notify.Err(os.Stdout, err, g, rq)
 		return
 	}
 
 	// verify player step
 	err = request.VerifyPlayer(g, rq, sendMsg)
 	if err != nil {
-		notify.NotifyError(os.Stdout, err, g, rq)
+		notify.Err(os.Stdout, err, g, rq)
 		return
 	}
 
@@ -36,7 +36,7 @@ func (g *Game) Process(inputRequest, origin string) {
 	setBriscolaCard := func(c card.ID) { g.briscolaCard = c }
 	err = play.Request(g, rq, setCompanion, setBriscolaCard, sendMsg)
 	if err != nil {
-		notify.NotifyError(os.Stdout, err, g, rq)
+		notify.Err(os.Stdout, err, g, rq)
 		return
 	}
 

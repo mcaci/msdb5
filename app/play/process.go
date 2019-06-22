@@ -4,6 +4,8 @@ import (
 	"container/list"
 	"strconv"
 
+	"golang.org/x/text/language"
+
 	"github.com/nikiforosFreespirit/msdb5/app/notify"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
@@ -20,6 +22,7 @@ type playInterface interface {
 	CurrentPlayer() *player.Player
 	IsSideUsed() bool
 	LastPlaying() *list.List
+	Lang() language.Tag
 	Phase() phase.ID
 	PlayedCards() *deck.Cards
 	Players() team.Players
@@ -104,6 +107,6 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		}
 		return err
 	default:
-		return notify.ErrInvalidAction(rq.Action())
+		return notify.ErrInvalidAction(rq.Action(), g.Lang())
 	}
 }

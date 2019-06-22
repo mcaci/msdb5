@@ -84,6 +84,7 @@ func (g *Game) Players() team.Players               { return g.players }
 func (g *Game) PlayedCards() *deck.Cards            { return &g.playedCards }
 func (g *Game) Sender(origin string) *player.Player { return g.players[g.SenderIndex(origin)] }
 func (g *Game) SideDeck() *deck.Cards               { return &g.side }
+func (g *Game) Lang() language.Tag                  { return g.lang }
 func (g *Game) CardsOnTheBoard() int                { return len(g.playedCards) }
 func (g *Game) SenderIndex(origin string) int {
 	rq := request.New("Origin", origin)
@@ -93,7 +94,7 @@ func (g *Game) SenderIndex(origin string) int {
 }
 
 func (g Game) String() (str string) {
-	printer := message.NewPrinter(language.English)
+	printer := message.NewPrinter(g.lang)
 	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, Phase: %d)",
 		g.CurrentPlayer().Name(), g.briscolaCard, g.playedCards, g.auctionScore, g.phase)
 }

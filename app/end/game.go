@@ -4,6 +4,8 @@ import (
 	"container/list"
 	"io"
 
+	"golang.org/x/text/language"
+
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 
@@ -22,6 +24,7 @@ type playersInformer interface {
 	Players() team.Players
 	Briscola() card.Seed
 	LastPlaying() *list.List
+	Lang() language.Tag
 	CardsOnTheBoard() int
 	IsSideUsed() bool
 	SideDeck() *deck.Cards
@@ -73,7 +76,7 @@ func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
 func collect(g playersInformer, p *player.Player, team string, sendMsg func(*player.Player, string)) {
 	for _, pl := range g.Players() {
 		p.Collect(pl.Hand())
-		sendMsg(pl, notify.NotifyAnticipatedEnding(team))
+		sendMsg(pl, notify.NotifyAnticipatedEnding(team, g.Lang()))
 	}
 	if g.IsSideUsed() {
 		p.Collect(g.SideDeck())
@@ -86,6 +89,7 @@ type endGameInformer interface {
 	Caller() *player.Player
 	Companion() *player.Player
 	CurrentPlayer() *player.Player
+	Lang() language.Tag
 	LastCardPlayed() card.ID
 	Phase() phase.ID
 
@@ -103,7 +107,7 @@ func Process(g endGameInformer, file io.Writer, sendMsg func(*player.Player, str
 	}
 	scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), scorers...)
 	for _, pl := range g.Players() {
-		sendMsg(pl, notify.NotifyScore(scoreTeam1, scoreTeam2))
+		sendMsg(pl, notify.NotifyScore(scoreTeam1, scoreTeam2, g.Lang()))
 	}
 	notify.ToFile(g, file)
 	return nil

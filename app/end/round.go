@@ -5,6 +5,7 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
+	"golang.org/x/text/language"
 
 	"github.com/nikiforosFreespirit/msdb5/app/notify"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
@@ -25,6 +26,7 @@ type roundInformer interface {
 	PlayedCards() *deck.Cards
 	Phase() phase.ID
 	Briscola() card.Seed
+	Lang() language.Tag
 	LastPlaying() *list.List
 	SenderIndex(string) int
 

@@ -3,9 +3,6 @@ package phase
 import (
 	"fmt"
 	"strings"
-
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
 )
 
 // ID type
@@ -37,9 +34,7 @@ func ToID(request string) (ID, error) {
 	case "Card":
 		id = PlayingCards
 	default:
-		printer := message.NewPrinter(language.English)
-		msg := printer.Sprintf("Request %s not valid", phase)
-		err = fmt.Errorf(msg)
+		err = fmt.Errorf("Request %s not valid", phase)
 	}
 	return id, err
 }

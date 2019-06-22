@@ -8,6 +8,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
+	"golang.org/x/text/language"
 )
 
 type playerPredicate func(p *player.Player) bool
@@ -15,6 +16,7 @@ type playerPredicate func(p *player.Player) bool
 type expectedPlayerInterface interface {
 	CurrentPlayer() *player.Player
 	LastPlaying() *list.List
+	Lang() language.Tag
 	Phase() phase.ID
 	Players() team.Players
 }
@@ -42,7 +44,7 @@ func VerifyPlayer(g expectedPlayerInterface, rq requester, sendMsg func(*player.
 	criteria := FindCriteria(g, rq)
 	_, actingPlayer := g.Players().Find(criteria)
 	if actingPlayer == nil {
-		return notify.ErrPlayerNotFound(g.CurrentPlayer().Name())
+		return notify.ErrPlayerNotFound(g.CurrentPlayer().Name(), g.Lang())
 	}
 	if g.CurrentPlayer() == actingPlayer {
 		return nil
@@ -58,7 +60,7 @@ func VerifyPhase(g expectedPlayerInterface, rq requester, sendMsg func(*player.P
 		return nil
 	}
 	if err == nil && currentPhase != inputPhase {
-		err = notify.ErrPhaseNotExpected(uint8(inputPhase), uint8(currentPhase))
+		err = notify.ErrPhaseNotExpected(uint8(inputPhase), uint8(currentPhase), g.Lang())
 	}
 	return err
 }

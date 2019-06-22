@@ -7,6 +7,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
+	"golang.org/x/text/language"
 )
 
 var messageSink = func(p *player.Player, msg string) {}
@@ -32,6 +33,7 @@ func newTestGame(ph phase.ID) fakeGame {
 
 func (g fakeGame) CurrentPlayer() *player.Player { return g.current }
 func (g fakeGame) Players() team.Players         { return g.players }
+func (g fakeGame) Lang() language.Tag            { return language.English }
 func (g fakeGame) LastPlaying() *list.List       { return list.New() }
 func (g fakeGame) Phase() phase.ID               { return g.phase }
 

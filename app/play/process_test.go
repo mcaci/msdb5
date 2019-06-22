@@ -4,6 +4,8 @@ import (
 	"container/list"
 	"testing"
 
+	"golang.org/x/text/language"
+
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
@@ -36,6 +38,7 @@ func newTestGame(ph phase.ID) fakeGame {
 func (g fakeGame) CurrentPlayer() *player.Player { return g.current }
 func (g fakeGame) Players() team.Players         { return g.players }
 func (g fakeGame) LastPlaying() *list.List       { return list.New() }
+func (g fakeGame) Lang() language.Tag            { return language.English }
 func (g fakeGame) Phase() phase.ID               { return g.phase }
 func (g fakeGame) Briscola() card.Seed           { return card.Coin }
 func (g fakeGame) IsSideUsed() bool              { return true }

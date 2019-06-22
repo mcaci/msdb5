@@ -3,12 +3,15 @@ package notify
 import (
 	"testing"
 
+	"golang.org/x/text/language"
+
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
 type fakeSender struct{}
 
 func (s fakeSender) Sender(string) *player.Player { return player.New() }
+func (s fakeSender) Lang() language.Tag           { return language.English }
 
 type fakeRq struct{}
 

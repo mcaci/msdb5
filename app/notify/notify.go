@@ -11,6 +11,7 @@ import (
 type selfInformer interface {
 	CurrentPlayer() *player.Player
 	LastPlayer() *player.Player
+	Lang() language.Tag
 	Phase() phase.ID
 	SideDeck() *deck.Cards
 }
@@ -26,6 +27,7 @@ func ToLast(gameInfo selfInformer) string {
 }
 
 type sidedeckInformer interface {
+	Lang() language.Tag
 	SideDeck() *deck.Cards
 }
 
@@ -36,18 +38,18 @@ func SideDeckContent(gameInfo sidedeckInformer, quantity uint8) string {
 
 // GameInfoMsg func
 func GameInfoMsg(gameInfo sidedeckInformer) string {
-	printer := message.NewPrinter(language.English)
+	printer := message.NewPrinter(gameInfo.Lang())
 	return printer.Sprintf("Game: %+v", gameInfo)
 }
 
 // NotifyAnticipatedEnding func
-func NotifyAnticipatedEnding(team string) string {
-	printer := message.NewPrinter(language.English)
+func NotifyAnticipatedEnding(team string, lang language.Tag) string {
+	printer := message.NewPrinter(lang)
 	return printer.Sprintf("The end - %s team has all briscola, ending game", team)
 }
 
 // NotifyScore func
-func NotifyScore(scoreTeam1, scoreTeam2 uint8) string {
-	printer := message.NewPrinter(language.English)
+func NotifyScore(scoreTeam1, scoreTeam2 uint8, lang language.Tag) string {
+	printer := message.NewPrinter(lang)
 	return printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
 }
