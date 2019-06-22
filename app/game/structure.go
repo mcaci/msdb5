@@ -27,6 +27,7 @@ type Game struct {
 	playedCards  deck.Cards
 	auctionScore auction.Score
 	phase        phase.ID
+	lang         language.Tag
 }
 
 // NewGame func
@@ -36,6 +37,7 @@ func NewGame(withSide bool, lang language.Tag) *Game {
 	makePlayers(g)
 	distributeCards(g)
 	track.Player(&g.lastPlaying, g.players[0])
+	g.lang = lang
 	return g
 }
 
