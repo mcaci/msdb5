@@ -8,9 +8,9 @@ import (
 )
 
 // ErrPlayerNotFound func
-func ErrPlayerNotFound(err error, name string) error {
+func ErrPlayerNotFound(name string) error {
 	printer := message.NewPrinter(language.English)
-	msg := printer.Sprintf("%v. Expecting player %s to play", err, name)
+	msg := printer.Sprintf("Expecting player %s to play", name)
 	return fmt.Errorf(msg)
 }
 

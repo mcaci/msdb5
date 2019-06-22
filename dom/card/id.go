@@ -1,9 +1,6 @@
 package card
 
-import (
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
-)
+import "fmt"
 
 // ID is the id of a card from 1 to 40
 type ID uint8
@@ -19,6 +16,5 @@ func (id ID) Seed() Seed {
 }
 
 func (id ID) String() string {
-	printer := message.NewPrinter(language.English)
-	return printer.Sprintf("(%d of %s)", id.Number(), id.Seed())
+	return fmt.Sprintf("(%d of %s)", id.Number(), id.Seed())
 }

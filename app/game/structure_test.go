@@ -17,8 +17,8 @@ func TestRegisterPlayerHasLocalhostOrigin(t *testing.T) {
 	playerInfo := "localhost"
 	testGame.Join(playerInfo, make(chan []byte))
 	testPlayers := testGame.players
-	_, _, err := testPlayers.Find(func(p *player.Player) bool { return p.IsSameHost(playerInfo) })
-	if err != nil {
+	_, p := testPlayers.Find(func(p *player.Player) bool { return p.IsSameHost(playerInfo) })
+	if p == nil {
 		t.Fatalf("Player %s is expected to exist", playerInfo)
 	}
 }

@@ -99,7 +99,7 @@ func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Playe
 			nextPhase = current + 2
 		}
 		if predicateToNextPhase() {
-			_, p, _ := g.Players().Find(func(p *player.Player) bool { return !p.Folded() })
+			_, p := g.Players().Find(func(p *player.Player) bool { return !p.Folded() })
 			setCaller(p)
 		}
 	case phase.ExchangingCards:

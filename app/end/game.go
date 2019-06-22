@@ -37,10 +37,10 @@ func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
 			if roundsChecked == roundsLeft {
 				break
 			}
-			_, p, err := g.Players().Find(func(p *player.Player) bool {
+			_, p := g.Players().Find(func(p *player.Player) bool {
 				return p.Has(card)
 			})
-			if err != nil { // no one has card
+			if p == nil { // no one has card
 				continue
 			}
 			if p == g.Caller() || p == g.Companion() {
@@ -57,7 +57,7 @@ func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
 			p := g.Caller()
 			team := "Callers"
 			if others {
-				_, p, _ = g.Players().Find(func(p *player.Player) bool {
+				_, p = g.Players().Find(func(p *player.Player) bool {
 					return p == g.Caller() || p == g.Companion()
 				})
 				team = "Others"

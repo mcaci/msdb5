@@ -78,10 +78,7 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 			return err
 		}
 		setBriscolaCard(c)
-		_, pl, err := g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
-		if err != nil {
-			return err
-		}
+		_, pl := g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
 		setCompanion(pl)
 		return nil
 	case "Card":
@@ -93,7 +90,7 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		g.PlayedCards().Add(c)
 		roundHasEnded := len(*g.PlayedCards()) == 5
 		if roundHasEnded {
-			playerIndex, _, _ := g.Players().Find(func(pl *player.Player) bool { return pl == p })
+			playerIndex, _ := g.Players().Find(func(pl *player.Player) bool { return pl == p })
 			winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards(), g.Briscola())
 			var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
 			next := playersRoundRobin(uint8(playerIndex) + winningCardIndex)

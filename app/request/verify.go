@@ -40,9 +40,9 @@ func FindCriteria(g expectedPlayerInterface, rq requester) playerPredicate {
 
 func VerifyPlayer(g expectedPlayerInterface, rq requester, sendMsg func(*player.Player, string)) error {
 	criteria := FindCriteria(g, rq)
-	_, actingPlayer, err := g.Players().Find(criteria)
-	if err != nil {
-		return notify.ErrPlayerNotFound(err, g.CurrentPlayer().Name())
+	_, actingPlayer := g.Players().Find(criteria)
+	if actingPlayer == nil {
+		return notify.ErrPlayerNotFound(g.CurrentPlayer().Name())
 	}
 	if g.CurrentPlayer() == actingPlayer {
 		return nil

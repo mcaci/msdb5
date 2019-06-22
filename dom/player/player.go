@@ -2,11 +2,10 @@ package player
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
 )
 
 // Player struct
@@ -47,8 +46,7 @@ func (player *Player) HandSize() int {
 
 // Has func
 func (player *Player) Has(id card.ID) bool {
-	_, err := player.hand.Find(id)
-	return err == nil
+	return player.hand.Find(id) != -1
 }
 
 // RegisterAs func
@@ -91,24 +89,25 @@ func (player Player) IsHandEmpty() bool { return len(player.hand) == 0 }
 func (player *Player) Fold() { player.fold = true }
 
 // Play function
-func (player *Player) Play(card card.ID) (err error) {
-	index, err := player.hand.Find(card)
-	if err == nil {
-		player.hand.Remove(index)
+func (player *Player) Play(card card.ID) error {
+	index := player.hand.Find(card)
+	if index == -1 {
+		return errors.New("Card is not in players hand")
 	}
-	return
+	player.hand.Remove(index)
+	return nil
 }
 
 // Exchange func
 func (player *Player) Exchange(card card.ID, side *deck.Cards) error {
-	cardIndex, err := player.hand.Find(card)
-	if err != nil {
+	index := player.hand.Find(card)
+	if index == -1 {
 		return errors.New("Card is not in players hand")
 	}
 	player.hand.Add((*side)[0])
 	side.Remove(0)
 	side.Add(card)
-	player.hand.Remove(cardIndex)
+	player.hand.Remove(index)
 	return nil
 }
 
@@ -128,7 +127,6 @@ func (player *Player) IsExpectedPlayer(other *Player, origin string) bool {
 }
 
 func (player Player) String() string {
-	printer := message.NewPrinter(language.English)
-	return printer.Sprintf("(Name: %s, Cards: %+v, Pile: %+v, Has folded? %v)",
+	return fmt.Sprintf("(Name: %s, Cards: %+v, Pile: %+v, Has folded? %v)",
 		player.name, player.hand, player.pile, player.fold)
 }

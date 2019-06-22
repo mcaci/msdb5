@@ -1,8 +1,6 @@
 package deck
 
 import (
-	"errors"
-
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 )
 
@@ -33,13 +31,13 @@ func (cards *Cards) Sum(point func(card.ID) uint8) (sum uint8) {
 }
 
 // Find func
-func (cards *Cards) Find(id card.ID) (int, error) {
+func (cards *Cards) Find(id card.ID) int {
 	for index, c := range *cards {
 		if c == id {
-			return index, nil
+			return index
 		}
 	}
-	return -1, errors.New("Card not found")
+	return -1
 }
 
 // Supply func

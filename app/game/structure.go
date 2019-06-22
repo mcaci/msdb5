@@ -86,7 +86,7 @@ func (g *Game) CardsOnTheBoard() int                { return len(g.playedCards) 
 func (g *Game) SenderIndex(origin string) int {
 	rq := request.New("Origin", origin)
 	criteria := request.FindCriteria(g, rq)
-	index, _, _ := g.players.Find(criteria)
+	index, _ := g.players.Find(criteria)
 	return index
 }
 
