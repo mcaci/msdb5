@@ -6,7 +6,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 
-	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
+	"github.com/nikiforosFreespirit/msdb5/app/notify"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
@@ -39,18 +39,18 @@ type requestInformer interface {
 }
 
 // Round func
-func Round(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID), notify func(*player.Player, string)) {
+func Round(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID), sendMsg func(*player.Player, string)) {
 	// next player step
-	nextPlayer(g, rq, notify)
+	nextPlayer(g, rq, sendMsg)
 
 	// next phase
-	nextPhase(g, rq, setCaller, setPhase, notify)
+	nextPhase(g, rq, setCaller, setPhase, sendMsg)
 
 	// clean phase
-	cleanPhase(g, rq, notify)
+	cleanPhase(g, rq, sendMsg)
 }
 
-func nextPlayer(g roundInformer, rq requestInformer, notify func(*player.Player, string)) error {
+func nextPlayer(g roundInformer, rq requestInformer, sendMsg func(*player.Player, string)) error {
 	current := g.Phase()
 	actingPlayerIndex := g.SenderIndex(rq.From())
 	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
@@ -83,7 +83,7 @@ func nextPlayer(g roundInformer, rq requestInformer, notify func(*player.Player,
 	return nil
 }
 
-func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID), notify func(*player.Player, string)) error {
+func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID), sendMsg func(*player.Player, string)) error {
 	current, nextPhase := g.Phase(), g.Phase()+1
 	predicateToNextPhase := func() bool { return true }
 	switch current {
@@ -108,21 +108,21 @@ func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Playe
 		nextPhase = phase.PlayingCards
 	case phase.PlayingCards:
 		predicateToNextPhase = func() bool {
-			return Check(g, notify)
+			return Check(g, sendMsg)
 		}
 	}
 	if predicateToNextPhase() {
 		setPhase(nextPhase)
 	}
-	notify(g.LastPlayer(), gamelog.ToLast(g))
+	sendMsg(g.LastPlayer(), notify.ToLast(g))
 	for _, pl := range g.Players() {
-		notify(pl, gamelog.GameInfoMsg(g))
+		sendMsg(pl, notify.GameInfoMsg(g))
 	}
-	notify(g.CurrentPlayer(), gamelog.ToCurrent(g))
+	sendMsg(g.CurrentPlayer(), notify.ToCurrent(g))
 	return nil
 }
 
-func cleanPhase(g roundInformer, rq requestInformer, notify func(*player.Player, string)) error {
+func cleanPhase(g roundInformer, rq requestInformer, sendMsg func(*player.Player, string)) error {
 	if g.CardsOnTheBoard() >= 5 {
 		g.PlayedCards().Clear()
 	}

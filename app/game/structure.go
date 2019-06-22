@@ -30,7 +30,7 @@ type Game struct {
 }
 
 // NewGame func
-func NewGame(withSide bool) *Game {
+func NewGame(withSide bool, lang language.Tag) *Game {
 	g := new(Game)
 	g.withSide = withSide
 	makePlayers(g)

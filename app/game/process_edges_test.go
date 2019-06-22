@@ -9,7 +9,7 @@ import (
 
 func TestExchangeCardThatPlayerDoesntHaveReturnsError(t *testing.T) {
 	cards := deck.Cards{1, 2}
-	gameTest := NewGame(true)
+	gameTest := testGame(true)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
 	gameTest.Join("127.0.0.55", playerChannel)
@@ -26,7 +26,7 @@ func TestExchangeCardThatPlayerDoesntHaveReturnsError(t *testing.T) {
 
 func TestExchangeCardThatDoesntExistReturnsError(t *testing.T) {
 	cards := deck.Cards{1, 2}
-	gameTest := NewGame(true)
+	gameTest := testGame(true)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
 	gameTest.Join("127.0.0.55", playerChannel)
@@ -43,7 +43,7 @@ func TestExchangeCardThatDoesntExistReturnsError(t *testing.T) {
 
 func TestPlayCardThatDoesntExistReturnsError(t *testing.T) {
 	cards := deck.Cards{1, 2}
-	gameTest := NewGame(true)
+	gameTest := testGame(true)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
 	gameTest.Join("127.0.0.55", playerChannel)
@@ -59,7 +59,7 @@ func TestPlayCardThatDoesntExistReturnsError(t *testing.T) {
 }
 
 func TestCompanionCardThatDoesntExistReturnsError(t *testing.T) {
-	gameTest := NewGame(false)
+	gameTest := testGame(false)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
 	gameTest.Join("127.0.0.55", playerChannel)
@@ -72,7 +72,7 @@ func TestCompanionCardThatDoesntExistReturnsError(t *testing.T) {
 }
 
 func TestInexistentPhaseReturnsError(t *testing.T) {
-	gameTest := NewGame(false)
+	gameTest := testGame(false)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
 	gameTest.Join("127.0.0.55", playerChannel)
@@ -85,7 +85,7 @@ func TestInexistentPhaseReturnsError(t *testing.T) {
 }
 
 func TestUnexpectedPhaseReturnsError(t *testing.T) {
-	gameTest := NewGame(false)
+	gameTest := testGame(false)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
 	gameTest.Join("127.0.0.55", playerChannel)

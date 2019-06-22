@@ -9,7 +9,7 @@ import (
 )
 
 func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
-	gameTest := NewGame(true)
+	gameTest := testGame(true)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
 	gameTest.Join("127.0.0.51", playerChannel)
@@ -47,7 +47,7 @@ func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
 }
 
 func TestCompletedGameReturningScoreInfoWithNoSide(t *testing.T) {
-	gameTest := NewGame(false)
+	gameTest := testGame(false)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
 	gameTest.Join("127.0.0.51", playerChannel)

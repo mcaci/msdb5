@@ -4,7 +4,7 @@ import (
 	"container/list"
 	"strconv"
 
-	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
+	"github.com/nikiforosFreespirit/msdb5/app/notify"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
@@ -34,7 +34,7 @@ type dataProvider interface {
 }
 
 // Request func
-func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player), setBriscolaCard func(card.ID), notify func(*player.Player, string)) error {
+func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player), setBriscolaCard func(card.ID), sendMsg func(*player.Player, string)) error {
 	p := g.CurrentPlayer()
 	switch rq.Action() {
 	case "Join":
@@ -59,7 +59,7 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 			return nil
 		}
 		for _, pl := range g.Players() {
-			notify(pl, gamelog.SideDeckContent(g, cardsToShow))
+			sendMsg(pl, notify.SideDeckContent(g, cardsToShow))
 		}
 		return nil
 	case "Exchange":
@@ -107,6 +107,6 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		}
 		return err
 	default:
-		return gamelog.ErrInvalidAction(rq.Action())
+		return notify.ErrInvalidAction(rq.Action())
 	}
 }

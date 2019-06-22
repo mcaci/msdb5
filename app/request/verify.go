@@ -3,7 +3,7 @@ package request
 import (
 	"container/list"
 
-	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
+	"github.com/nikiforosFreespirit/msdb5/app/notify"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
@@ -38,11 +38,11 @@ func FindCriteria(g expectedPlayerInterface, rq requester) playerPredicate {
 	return expectedPlayerFinder
 }
 
-func VerifyPlayer(g expectedPlayerInterface, rq requester, notify func(*player.Player, string)) error {
+func VerifyPlayer(g expectedPlayerInterface, rq requester, sendMsg func(*player.Player, string)) error {
 	criteria := FindCriteria(g, rq)
 	_, actingPlayer, err := g.Players().Find(criteria)
 	if err != nil {
-		return gamelog.ErrPlayerNotFound(err, g.CurrentPlayer().Name())
+		return notify.ErrPlayerNotFound(err, g.CurrentPlayer().Name())
 	}
 	if g.CurrentPlayer() == actingPlayer {
 		return nil
@@ -51,14 +51,14 @@ func VerifyPlayer(g expectedPlayerInterface, rq requester, notify func(*player.P
 	return nil
 }
 
-func VerifyPhase(g expectedPlayerInterface, rq requester, notify func(*player.Player, string)) error {
+func VerifyPhase(g expectedPlayerInterface, rq requester, sendMsg func(*player.Player, string)) error {
 	currentPhase := g.Phase()
 	inputPhase, err := phase.ToID(rq.Action())
 	if err == nil && currentPhase == inputPhase {
 		return nil
 	}
 	if err == nil && currentPhase != inputPhase {
-		err = gamelog.ErrPhaseNotExpected(uint8(inputPhase), uint8(currentPhase))
+		err = notify.ErrPhaseNotExpected(uint8(inputPhase), uint8(currentPhase))
 	}
 	return err
 }

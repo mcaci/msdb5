@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"golang.org/x/text/language"
+
 	"github.com/gorilla/websocket"
 	"github.com/nikiforosFreespirit/msdb5/app/game"
 )
@@ -30,13 +32,13 @@ type GameRoom struct {
 }
 
 // NewGameRoom makes a new room.
-func NewGameRoom(side bool) *GameRoom {
+func NewGameRoom(side bool, lang language.Tag) *GameRoom {
 	return &GameRoom{
 		commandChan: make(chan playerCommand),
 		join:        make(chan *playerClient),
 		leave:       make(chan *playerClient),
 		players:     make(map[*playerClient]bool),
-		msdb5game:   game.NewGame(side),
+		msdb5game:   game.NewGame(side, lang),
 	}
 }
 

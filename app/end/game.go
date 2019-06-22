@@ -7,7 +7,7 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 
-	"github.com/nikiforosFreespirit/msdb5/app/gamelog"
+	"github.com/nikiforosFreespirit/msdb5/app/notify"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 
@@ -27,7 +27,7 @@ type playersInformer interface {
 	SideDeck() *deck.Cards
 }
 
-func Check(g playersInformer, notify func(*player.Player, string)) bool {
+func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
 	roundsLeft := g.Players()[0].HandSize()
 	if g.CardsOnTheBoard() >= 5 && roundsLeft <= 3 {
 		highbriscolaCard := deck.Highest(g.Briscola())
@@ -62,7 +62,7 @@ func Check(g playersInformer, notify func(*player.Player, string)) bool {
 				})
 				team = "Others"
 			}
-			collect(g, p, team, notify)
+			collect(g, p, team, sendMsg)
 
 			return true
 		}
@@ -70,10 +70,10 @@ func Check(g playersInformer, notify func(*player.Player, string)) bool {
 	return team.Count(g.Players(), func(p *player.Player) bool { return p.IsHandEmpty() }) == 5
 }
 
-func collect(g playersInformer, p *player.Player, team string, notify func(*player.Player, string)) {
+func collect(g playersInformer, p *player.Player, team string, sendMsg func(*player.Player, string)) {
 	for _, pl := range g.Players() {
 		p.Collect(pl.Hand())
-		notify(pl, gamelog.NotifyAnticipatedEnding(team))
+		sendMsg(pl, notify.NotifyAnticipatedEnding(team))
 	}
 	if g.IsSideUsed() {
 		p.Collect(g.SideDeck())
@@ -96,15 +96,15 @@ type endGameInformer interface {
 }
 
 // Process func
-func Process(g endGameInformer, file io.Writer, notify func(*player.Player, string)) error {
+func Process(g endGameInformer, file io.Writer, sendMsg func(*player.Player, string)) error {
 	scorers := make([]team.Scorer, 0)
 	for _, p := range g.Players() {
 		scorers = append(scorers, p)
 	}
 	scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), scorers...)
 	for _, pl := range g.Players() {
-		notify(pl, gamelog.NotifyScore(scoreTeam1, scoreTeam2))
+		sendMsg(pl, notify.NotifyScore(scoreTeam1, scoreTeam2))
 	}
-	gamelog.ToFile(g, file)
+	notify.ToFile(g, file)
 	return nil
 }
