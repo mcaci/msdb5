@@ -2,96 +2,6 @@
     "language": "en",
     "messages": [
         {
-            "id": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "message": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "translation": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Name",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "g.CurrentPlayer().Name()"
-                },
-                {
-                    "id": "BriscolaCard",
-                    "string": "%[2]s",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/card.ID",
-                    "underlyingType": "uint8",
-                    "argNum": 2,
-                    "expr": "g.briscolaCard"
-                },
-                {
-                    "id": "PlayedCards",
-                    "string": "%+[3]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
-                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
-                    "argNum": 3,
-                    "expr": "g.playedCards"
-                },
-                {
-                    "id": "AuctionScore",
-                    "string": "%[4]d",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/auction.Score",
-                    "underlyingType": "uint8",
-                    "argNum": 4,
-                    "expr": "g.auctionScore"
-                },
-                {
-                    "id": "Phase",
-                    "string": "%[5]d",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/phase.ID",
-                    "underlyingType": "uint8",
-                    "argNum": 5,
-                    "expr": "g.phase"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "New Action by {Name}: {Action}\nSender info: {Sender}\nGame info: {GameInfo}",
-            "message": "New Action by {Name}: {Action}\nSender info: {Sender}\nGame info: {GameInfo}",
-            "translation": "New Action by {Name}: {Action}\nSender info: {Sender}\nGame info: {GameInfo}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Name",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "sender.Name()"
-                },
-                {
-                    "id": "Action",
-                    "string": "%[2]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 2,
-                    "expr": "rq.Action()"
-                },
-                {
-                    "id": "Sender",
-                    "string": "%+[3]v",
-                    "type": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
-                    "underlyingType": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
-                    "argNum": 3,
-                    "expr": "sender"
-                },
-                {
-                    "id": "GameInfo",
-                    "string": "%+[4]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/notify.senderInformer",
-                    "underlyingType": "interface{Lang() golang.org/x/text/language.Tag; Sender(string) *github.com/nikiforosFreespirit/msdb5/dom/player.Player}",
-                    "argNum": 4,
-                    "expr": "gameInfo"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
             "id": "Error: {Err}",
             "message": "Error: {Err}",
             "translation": "Error: {Err}",
@@ -273,6 +183,55 @@
                     "underlyingType": "uint8",
                     "argNum": 2,
                     "expr": "scoreTeam2"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "message": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "translation": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "g.CurrentPlayer().Name()"
+                },
+                {
+                    "id": "BriscolaCard",
+                    "string": "%[2]s",
+                    "type": "github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "underlyingType": "uint8",
+                    "argNum": 2,
+                    "expr": "g.briscolaCard"
+                },
+                {
+                    "id": "PlayedCards",
+                    "string": "%+[3]v",
+                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
+                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "argNum": 3,
+                    "expr": "g.playedCards"
+                },
+                {
+                    "id": "AuctionScore",
+                    "string": "%[4]d",
+                    "type": "github.com/nikiforosFreespirit/msdb5/dom/auction.Score",
+                    "underlyingType": "uint8",
+                    "argNum": 4,
+                    "expr": "g.auctionScore"
+                },
+                {
+                    "id": "Phase",
+                    "string": "%[5]d",
+                    "type": "github.com/nikiforosFreespirit/msdb5/app/phase.ID",
+                    "underlyingType": "uint8",
+                    "argNum": 5,
+                    "expr": "g.phase"
                 }
             ],
             "fuzzy": true

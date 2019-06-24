@@ -2,9 +2,175 @@
     "language": "it",
     "messages": [
         {
+            "id": "Error: {Err}",
+            "message": "Error: {Err}",
+            "translation": "Errore: {Err}",
+            "placeholders": [
+                {
+                    "id": "Err",
+                    "string": "%+[1]v",
+                    "type": "error",
+                    "underlyingType": "interface{Error() string}",
+                    "argNum": 1,
+                    "expr": "err"
+                }
+            ]
+        },
+        {
+            "id": "Expecting player {Name} to play",
+            "message": "Expecting player {Name} to play",
+            "translation": "Mi aspetto che sia {Name} a giocare",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "name"
+                }
+            ]
+        },
+        {
+            "id": "Phase is not {InputPhase} but {CurrentPhase}",
+            "message": "Phase is not {InputPhase} but {CurrentPhase}",
+            "translation": "La fase non e' {InputPhase} ma {CurrentPhase}",
+            "placeholders": [
+                {
+                    "id": "InputPhase",
+                    "string": "%[1]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 1,
+                    "expr": "inputPhase"
+                },
+                {
+                    "id": "CurrentPhase",
+                    "string": "%[2]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 2,
+                    "expr": "currentPhase"
+                }
+            ]
+        },
+        {
+            "id": "Action {Action} not valid",
+            "message": "Action {Action} not valid",
+            "translation": "Azione {Action} non valida",
+            "placeholders": [
+                {
+                    "id": "Action",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "action"
+                }
+            ]
+        },
+        {
+            "id": "Player: {Pl}",
+            "message": "Player: {Pl}",
+            "translation": "Giocatore: {Pl}",
+            "placeholders": [
+                {
+                    "id": "Pl",
+                    "string": "%+[1]v",
+                    "type": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
+                    "underlyingType": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
+                    "argNum": 1,
+                    "expr": "pl"
+                }
+            ]
+        },
+        {
+            "id": "Side deck: {SideDeck}",
+            "message": "Side deck: {SideDeck}",
+            "translation": "Monte: {SideDeck}",
+            "placeholders": [
+                {
+                    "id": "SideDeck",
+                    "string": "%+[1]v",
+                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
+                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "argNum": 1,
+                    "expr": "*gameInfo.SideDeck()"
+                }
+            ]
+        },
+        {
+            "id": "Side deck section: {SideDeckquantity}",
+            "message": "Side deck section: {SideDeckquantity}",
+            "translation": "Sezione del monte: {SideDeckquantity}",
+            "placeholders": [
+                {
+                    "id": "SideDeckquantity",
+                    "string": "%+[1]v",
+                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
+                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "argNum": 1,
+                    "expr": "(*gameInfo.SideDeck())[:quantity]"
+                }
+            ]
+        },
+        {
+            "id": "Game: {GameInfo}",
+            "message": "Game: {GameInfo}",
+            "translation": "Informazioni di gioco {GameInfo}",
+            "placeholders": [
+                {
+                    "id": "GameInfo",
+                    "string": "%+[1]v",
+                    "type": "github.com/nikiforosFreespirit/msdb5/app/notify.sidedeckInformer",
+                    "underlyingType": "interface{Lang() golang.org/x/text/language.Tag; SideDeck() *github.com/nikiforosFreespirit/msdb5/dom/deck.Cards}",
+                    "argNum": 1,
+                    "expr": "gameInfo"
+                }
+            ]
+        },
+        {
+            "id": "The end - {Team} team has all briscola cards",
+            "message": "The end - {Team} team has all briscola cards",
+            "translation": "Fine - I {Team} hanno tutte le briscole",
+            "placeholders": [
+                {
+                    "id": "Team",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "team"
+                }
+            ]
+        },
+        {
+            "id": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "message": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "translation": "Fine - Chiamanti: {ScoreTeam1}; Non-chiamanti: {ScoreTeam2}",
+            "placeholders": [
+                {
+                    "id": "ScoreTeam1",
+                    "string": "%[1]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 1,
+                    "expr": "scoreTeam1"
+                },
+                {
+                    "id": "ScoreTeam2",
+                    "string": "%[2]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 2,
+                    "expr": "scoreTeam2"
+                }
+            ]
+        },
+        {
             "id": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards}, Auction score: {AuctionScore}, Phase: {Phase})",
             "message": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "translation": "Inserire traduzione qui",
+            "translation": "(Turno di: {Name}, Compagno: {BriscolaCard}, Carte giocate: {PlayedCards}, Puntegggio d'asta: {AuctionScore}, Fase: {Phase})",
             "placeholders": [
                 {
                     "id": "Name",
@@ -45,211 +211,6 @@
                     "underlyingType": "uint8",
                     "argNum": 5,
                     "expr": "g.phase"
-                }
-            ]
-        },
-        {
-            "id": "New Action by {Name}: {Action}\nSender info: {Sender}\nGame info: {GameInfo}",
-            "message": "New Action by {Name}: {Action}\nSender info: {Sender}\nGame info: {GameInfo}",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "Name",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "sender.Name()"
-                },
-                {
-                    "id": "Action",
-                    "string": "%[2]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 2,
-                    "expr": "rq.Action()"
-                },
-                {
-                    "id": "Sender",
-                    "string": "%+[3]v",
-                    "type": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
-                    "underlyingType": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
-                    "argNum": 3,
-                    "expr": "sender"
-                },
-                {
-                    "id": "GameInfo",
-                    "string": "%+[4]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/notify.senderInformer",
-                    "underlyingType": "interface{Lang() golang.org/x/text/language.Tag; Sender(string) *github.com/nikiforosFreespirit/msdb5/dom/player.Player}",
-                    "argNum": 4,
-                    "expr": "gameInfo"
-                }
-            ]
-        },
-        {
-            "id": "Error: {Err}",
-            "message": "Error: {Err}",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "Err",
-                    "string": "%+[1]v",
-                    "type": "error",
-                    "underlyingType": "interface{Error() string}",
-                    "argNum": 1,
-                    "expr": "err"
-                }
-            ]
-        },
-        {
-            "id": "Expecting player {Name} to play",
-            "message": "Expecting player {Name} to play",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "Name",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "name"
-                }
-            ]
-        },
-        {
-            "id": "Phase is not {InputPhase} but {CurrentPhase}",
-            "message": "Phase is not {InputPhase} but {CurrentPhase}",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "InputPhase",
-                    "string": "%[1]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 1,
-                    "expr": "inputPhase"
-                },
-                {
-                    "id": "CurrentPhase",
-                    "string": "%[2]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 2,
-                    "expr": "currentPhase"
-                }
-            ]
-        },
-        {
-            "id": "Action {Action} not valid",
-            "message": "Action {Action} not valid",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "Action",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "action"
-                }
-            ]
-        },
-        {
-            "id": "Player: {Pl}",
-            "message": "Player: {Pl}",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "Pl",
-                    "string": "%+[1]v",
-                    "type": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
-                    "underlyingType": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
-                    "argNum": 1,
-                    "expr": "pl"
-                }
-            ]
-        },
-        {
-            "id": "Side deck: {SideDeck}",
-            "message": "Side deck: {SideDeck}",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "SideDeck",
-                    "string": "%+[1]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
-                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
-                    "argNum": 1,
-                    "expr": "*gameInfo.SideDeck()"
-                }
-            ]
-        },
-        {
-            "id": "Side deck section: {SideDeckquantity}",
-            "message": "Side deck section: {SideDeckquantity}",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "SideDeckquantity",
-                    "string": "%+[1]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
-                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
-                    "argNum": 1,
-                    "expr": "(*gameInfo.SideDeck())[:quantity]"
-                }
-            ]
-        },
-        {
-            "id": "Game: {GameInfo}",
-            "message": "Game: {GameInfo}",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "GameInfo",
-                    "string": "%+[1]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/notify.sidedeckInformer",
-                    "underlyingType": "interface{Lang() golang.org/x/text/language.Tag; SideDeck() *github.com/nikiforosFreespirit/msdb5/dom/deck.Cards}",
-                    "argNum": 1,
-                    "expr": "gameInfo"
-                }
-            ]
-        },
-        {
-            "id": "The end - {Team} team has all briscola cards",
-            "message": "The end - {Team} team has all briscola cards",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "Team",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "team"
-                }
-            ]
-        },
-        {
-            "id": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "message": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "translation": "Inserire traduzione qui",
-            "placeholders": [
-                {
-                    "id": "ScoreTeam1",
-                    "string": "%[1]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 1,
-                    "expr": "scoreTeam1"
-                },
-                {
-                    "id": "ScoreTeam2",
-                    "string": "%[2]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 2,
-                    "expr": "scoreTeam2"
                 }
             ]
         }
