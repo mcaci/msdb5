@@ -1,6 +1,7 @@
 package notify
 
 import (
+	"errors"
 	"testing"
 
 	"golang.org/x/text/language"
@@ -29,6 +30,14 @@ func (w *fakeWriter) Write(p []byte) (int, error) {
 func TestConsoleMsg(t *testing.T) {
 	s := new(fakeWriter)
 	ToConsole(s, fakeSender{}, fakeRq{})
+	if len(*s) == 0 {
+		t.Fatalf("Expecting %s but got %s", "", *s)
+	}
+}
+
+func TestErrConsoleMsg(t *testing.T) {
+	s := new(fakeWriter)
+	ErrToConsole(s, errors.New("fake err"), fakeSender{}, fakeRq{})
 	if len(*s) == 0 {
 		t.Fatalf("Expecting %s but got %s", "", *s)
 	}

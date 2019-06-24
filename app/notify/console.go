@@ -1,12 +1,12 @@
 package notify
 
 import (
+	"fmt"
 	"io"
 
 	"golang.org/x/text/language"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"golang.org/x/text/message"
 )
 
 type senderInformer interface {
@@ -19,13 +19,18 @@ type requester interface {
 	Action() string
 }
 
+func sendToConsole(to io.Writer, gameInfo senderInformer, rq requester, addInfo string) {
+	sender := gameInfo.Sender(rq.From())
+	write(to, fmt.Sprintf("New Action by %s: %s\n", sender.Name(), rq.Action())+addInfo)
+}
+
 // ToConsole func
 func ToConsole(to io.Writer, gameInfo senderInformer, rq requester) {
 	sender := gameInfo.Sender(rq.From())
-	printer := message.NewPrinter(gameInfo.Lang())
-	msg := printer.Sprintf("New Action by %s: %s\n"+
-		"Sender info: %+v\n"+
-		"Game info: %+v\n",
-		sender.Name(), rq.Action(), sender, gameInfo)
-	write(to, msg)
+	sendToConsole(to, gameInfo, rq, fmt.Sprintf("Sender info: %+v\nGame info: %+v\n", sender, gameInfo))
+}
+
+// ErrToConsole func
+func ErrToConsole(to io.Writer, err error, gameInfo senderInformer, rq requester) {
+	sendToConsole(to, gameInfo, rq, fmt.Sprintf("Error raised: %+v\n", err))
 }
