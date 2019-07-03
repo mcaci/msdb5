@@ -1,0 +1,97 @@
+<html> 
+  <head> 
+    <title>Msdb5</title> 
+    <style> 
+      input { display: block; } 
+      ul    { list-style: none; } 
+    </style> 
+  </head> 
+  <body> 
+    <form id="connect"> 
+      <p>
+        Nome:<input type="text" name="name" id="name"/><br>
+        <input type="submit" value="Connect" /> 
+      </p>
+    </form>
+    <form id="auction"> 
+      <p>
+        <label>Punteggio d'asta</label>
+        <input type="text" name="auction" id="auctionvalue">
+      </p>
+      <input type="submit" value="Send" /> 
+    </form>
+    <form id="play"> 
+      <p>
+        <label>Numero e seme della carta</label>
+        <input type="number" name="number" id="number" min="0" max="10">
+        <select name="seed" id="seed">
+          <option value="Coin">Oro</option>
+          <option value="Cup">Coppe</option>
+          <option value="Sword">Spade</option>
+          <option value="Cudgel">Bastoni</option>
+        </select>
+        <input type="radio" name="action" value="Exchange"> Cambia carta con monte
+        <input type="radio" name="action" value="Companion"> Scegli compagno
+        <input type="radio" name="action" value="Card" checked="checked"> Gioca carta
+      </p>
+      <input type="submit" value="Play" /> 
+    </form> 
+    <ul id="messages"></ul> 
+    <script  src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> </script> 
+    <script>
+      $(function(){ 
+        var socket = null; 
+        $("#connect").submit(function(){
+          const playerName = $("#connect #name"); 
+          if (!playerName.val()) return false; 
+          if (!socket) { 
+            alert("Error: There is no socket connection."); 
+            return false; 
+          }
+          socket.send("Join#" + playerName.val()); 
+          playerName.val(""); 
+          return false; 
+        });
+        $("#auction").submit(function(){
+          const auction = $("#auctionvalue");
+          if (!auction.val()) return false; 
+          if (!socket) { 
+            alert("Error: There is no socket connection."); 
+            return false; 
+          }
+          socket.send("Auction#" + auction.val()); 
+          auction.val(""); 
+          return false; 
+        });
+        $("#play").submit(function(){
+          const number = $("#play #number");
+          const seed = $("#play #seed"); 
+          const action = $("input[name=action]:checked").val();
+          if (!number.val()) return false; 
+          if (!seed.val()) return false; 
+          if (!action) return false; 
+          if (!socket) { 
+            alert("Error: There is no socket connection."); 
+            return false; 
+          } 
+          socket.send(action + "#" + number.val() + "#" + seed.val()); 
+          number.val(""); 
+          return false; 
+        });
+        if (!window["WebSocket"]) {
+          alert("Error: Your browser does not support web sockets.") 
+        } else { 
+          socket = new WebSocket("ws://{{.Host}}/room"); 
+          socket.onclose = function() {
+            // alert("Connection has been closed."); 
+          } 
+          socket.onmessage = function(e) { 
+            var messages = $("#messages");
+            // messages.empty();
+            messages.prepend($("<li>").text(e.data)); 
+          } 
+        } 
+      }); 
+    </script> 
+  </body> 
+</html> 

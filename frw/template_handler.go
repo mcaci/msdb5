@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"sync"
+
+	"golang.org/x/text/language"
 )
 
 // TemplateHandler templ represents a single template
@@ -16,8 +18,15 @@ type TemplateHandler struct {
 }
 
 // NewTemplateHandler func
-func NewTemplateHandler() *TemplateHandler {
-	return &TemplateHandler{filename: "msdb5.html"}
+func NewTemplateHandler(lang language.Tag) *TemplateHandler {
+	var tmpl string
+	switch lang {
+	case language.Italian:
+		tmpl = "msdb5-it.html"
+	default:
+		tmpl = "msdb5.html"
+	}
+	return &TemplateHandler{filename: tmpl}
 }
 
 // ServeHTTP handles the HTTP request.
