@@ -127,6 +127,6 @@ func (player *Player) IsExpectedPlayer(other *Player, origin string) bool {
 }
 
 func (player Player) String() string {
-	return fmt.Sprintf("(Name: %s, Cards: %+v, Pile: %+v, Has folded? %v)",
+	return fmt.Sprintf("(Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)",
 		player.name, player.hand, player.pile, player.fold)
 }
