@@ -22,8 +22,9 @@ func main() {
 	var lang = flag.String("lang", "it", "Add flag to specify the language to use.")
 	flag.Parse() // parse the flags
 
-	r := frw.NewGameRoom(!*noSide, language.MustParse(*lang))
-	http.Handle("/", frw.NewTemplateHandler())
+	langTag := language.MustParse(*lang)
+	r := frw.NewGameRoom(!*noSide, langTag)
+	http.Handle("/", frw.NewTemplateHandler(langTag))
 	http.Handle("/room", r)
 
 	// get the room going
