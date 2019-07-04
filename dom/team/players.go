@@ -1,8 +1,6 @@
 package team
 
 import (
-	"fmt"
-
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
@@ -22,12 +20,4 @@ func (playerSet Players) Find(predicate func(p *player.Player) bool) (int, *play
 		}
 	}
 	return -1, nil
-}
-
-func (playerSet Players) String() (str string) {
-	for _, p := range playerSet {
-		str += fmt.Sprintf("- %+v -", *p)
-	}
-	return
-
 }

@@ -3,6 +3,7 @@ package game
 import (
 	"container/list"
 
+	"github.com/nikiforosFreespirit/msdb5/app/notify"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/request"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
@@ -95,6 +96,7 @@ func (g *Game) SenderIndex(origin string) int {
 
 func (g Game) String() (str string) {
 	printer := message.NewPrinter(g.lang)
-	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %+v, Auction score: %d, Phase: %d)",
-		g.CurrentPlayer().Name(), g.briscolaCard, g.playedCards, g.auctionScore, g.phase)
+
+	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %d)",
+		g.CurrentPlayer().Name(), g.briscolaCard, notify.TranslateCards(g.playedCards, printer), g.auctionScore, g.phase)
 }

@@ -10,16 +10,16 @@ import (
 
 func createInGameMsg(gameInfo selfInformer, pl *player.Player) string {
 	printer := message.NewPrinter(gameInfo.Lang())
-	me := printer.Sprintf("Player: %+v\n", pl)
+	me := TranslatePlayer(*pl, printer)
 	if gameInfo.Phase() == phase.ExchangingCards {
-		me += printer.Sprintf("Side deck: %+v\n", *gameInfo.SideDeck())
+		me += printer.Sprintf("Side deck: %s\n", TranslateCards(*gameInfo.SideDeck(), printer))
 	}
 	return me
 }
 
 func createSideGameMsg(gameInfo sidedeckInformer, quantity uint8) string {
 	printer := message.NewPrinter(gameInfo.Lang())
-	return printer.Sprintf("Side deck section: %+v\n", (*gameInfo.SideDeck())[:quantity])
+	return printer.Sprintf("Side deck section: %s\n", TranslateCards((*gameInfo.SideDeck())[:quantity], printer))
 }
 
 func createMlMsg(gameInfo miner) (bool, string) {

@@ -19,18 +19,20 @@ type requester interface {
 	Action() string
 }
 
-func sendToConsole(to io.Writer, gameInfo senderInformer, rq requester, addInfo string) {
-	sender := gameInfo.Sender(rq.From())
-	write(to, fmt.Sprintf("New Action by %s: %s\n", sender.Name(), rq.Action())+addInfo)
+func sendToConsole(to io.Writer, senderName, action, addInfo string) {
+	write(to, fmt.Sprintf("New Action by %s: %s\n%s\n", senderName, action, addInfo))
 }
 
 // ToConsole func
 func ToConsole(to io.Writer, gameInfo senderInformer, rq requester) {
 	sender := gameInfo.Sender(rq.From())
-	sendToConsole(to, gameInfo, rq, fmt.Sprintf("Sender info: %+v\nGame info: %+v\n", sender, gameInfo))
+	addInfo := fmt.Sprintf("Sender info: %+v\nGame info: %+v", sender, gameInfo)
+	sendToConsole(to, sender.Name(), rq.Action(), addInfo)
 }
 
 // ErrToConsole func
 func ErrToConsole(to io.Writer, err error, gameInfo senderInformer, rq requester) {
-	sendToConsole(to, gameInfo, rq, fmt.Sprintf("Error raised: %+v\n", err))
+	sender := gameInfo.Sender(rq.From())
+	addInfo := fmt.Sprintf("Error raised: %+v", err)
+	sendToConsole(to, sender.Name(), rq.Action(), addInfo)
 }

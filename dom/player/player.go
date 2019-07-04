@@ -39,6 +39,11 @@ func (player *Player) Hand() *deck.Cards {
 	return &player.hand
 }
 
+// Pile func
+func (player *Player) Pile() *deck.Cards {
+	return &player.pile
+}
+
 // HandSize func
 func (player *Player) HandSize() int {
 	return len(player.hand)
