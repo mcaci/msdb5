@@ -36,7 +36,7 @@ func (t *TemplateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return !os.IsNotExist(err)
 	})
 	t.once.Do(func() {
-		t.templ = template.Must(template.ParseFiles(filepath.Join(path, t.filename)))
+		t.templ = template.Must(template.ParseFiles(path))
 	})
 	t.templ.Execute(w, r)
 }
