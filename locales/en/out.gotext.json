@@ -279,16 +279,9 @@
             "fuzzy": true
         },
         {
-            "id": "Enter name and connect",
-            "message": "Enter name and connect",
-            "translation": "Enter name and connect",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "message": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "translation": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "id": "(Turn of: {Name}, Companion is: {BriscolaCard_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "message": "(Turn of: {Name}, Companion is: {BriscolaCard_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "translation": "(Turn of: {Name}, Companion is: {BriscolaCard_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
@@ -300,12 +293,12 @@
                     "expr": "g.CurrentPlayer().Name()"
                 },
                 {
-                    "id": "BriscolaCard",
+                    "id": "BriscolaCard_printer",
                     "string": "%[2]s",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/card.ID",
-                    "underlyingType": "uint8",
+                    "type": "string",
+                    "underlyingType": "string",
                     "argNum": 2,
-                    "expr": "g.briscolaCard"
+                    "expr": "notify.TranslateCard(g.briscolaCard, printer)"
                 },
                 {
                     "id": "PlayedCards_printer",
@@ -332,6 +325,13 @@
                     "expr": "g.phase"
                 }
             ],
+            "fuzzy": true
+        },
+        {
+            "id": "Enter name and connect",
+            "message": "Enter name and connect",
+            "translation": "Enter name and connect",
+            "translatorComment": "Copied from source.",
             "fuzzy": true
         }
     ]

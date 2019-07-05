@@ -98,5 +98,5 @@ func (g Game) String() (str string) {
 	printer := message.NewPrinter(g.lang)
 
 	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %d)",
-		g.CurrentPlayer().Name(), g.briscolaCard, notify.TranslateCards(g.playedCards, printer), g.auctionScore, g.phase)
+		g.CurrentPlayer().Name(), notify.TranslateCard(g.briscolaCard, printer), notify.TranslateCards(g.playedCards, printer), g.auctionScore, g.phase)
 }

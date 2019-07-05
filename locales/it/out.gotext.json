@@ -155,22 +155,22 @@
         {
             "id": "Coin",
             "message": "Coin",
-            "translation": ""
+            "translation": "Oro"
         },
         {
             "id": "Cup",
             "message": "Cup",
-            "translation": ""
+            "translation": "Coppe"
         },
         {
             "id": "Sword",
             "message": "Sword",
-            "translation": ""
+            "translation": "Spade"
         },
         {
             "id": "Cudgel",
             "message": "Cudgel",
-            "translation": ""
+            "translation": "Bastoni"
         },
         {
             "id": "({Number} of {Seed})",
@@ -237,22 +237,17 @@
         {
             "id": "Callers",
             "message": "Callers",
-            "translation": ""
+            "translation": "Chiamanti"
         },
         {
             "id": "Others",
             "message": "Others",
-            "translation": ""
+            "translation": "Non chiamanti"
         },
         {
-            "id": "Enter name and connect",
-            "message": "Enter name and connect",
-            "translation": ""
-        },
-        {
-            "id": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "message": "(Turn of: {Name}, Companion is: {BriscolaCard}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "translation": "(Turno di: {Name}, Compagno: {BriscolaCard}, Carte giocate: {PlayedCards_printer}, Punteggio d'asta: {AuctionScore}, Fase: {Phase})",
+            "id": "(Turn of: {Name}, Companion is: {BriscolaCard_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "message": "(Turn of: {Name}, Companion is: {BriscolaCard_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "translation": "(Turno di: {Name}, Compagno: {BriscolaCard_printer}, Carte giocate: {PlayedCards_printer}, Punteggio d'asta: {AuctionScore}, Fase: {Phase})",
             "placeholders": [
                 {
                     "id": "Name",
@@ -263,12 +258,12 @@
                     "expr": "g.CurrentPlayer().Name()"
                 },
                 {
-                    "id": "BriscolaCard",
+                    "id": "BriscolaCard_printer",
                     "string": "%[2]s",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/card.ID",
-                    "underlyingType": "uint8",
+                    "type": "string",
+                    "underlyingType": "string",
                     "argNum": 2,
-                    "expr": "g.briscolaCard"
+                    "expr": "notify.TranslateCard(g.briscolaCard, printer)"
                 },
                 {
                     "id": "PlayedCards_printer",
@@ -295,6 +290,11 @@
                     "expr": "g.phase"
                 }
             ]
+        },
+        {
+            "id": "Enter name and connect",
+            "message": "Enter name and connect",
+            "translation": "Inserisci il nome e collegati"
         }
     ]
 }
