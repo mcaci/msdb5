@@ -61,12 +61,12 @@ func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
 		if callers != others {
 			p := g.Caller()
 			printer := message.NewPrinter(g.Lang())
-			team := printer.Sprint("Callers")
+			team := printer.Sprintf("Callers")
 			if others {
 				_, p = g.Players().Find(func(p *player.Player) bool {
 					return p == g.Caller() || p == g.Companion()
 				})
-				team = printer.Sprint("Others")
+				team = printer.Sprintf("Others")
 			}
 			collect(g, p, team, sendMsg)
 

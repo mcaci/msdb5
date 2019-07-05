@@ -10,8 +10,8 @@ import (
 
 // TranslateCards func
 func TranslateCards(cards deck.Cards, printer *message.Printer) string {
-	seeds := []string{printer.Sprint("Coin"), printer.Sprint("Cup"),
-		printer.Sprint("Sword"), printer.Sprint("Cudgel")}
+	seeds := []string{printer.Sprintf("Coin"), printer.Sprintf("Cup"),
+		printer.Sprintf("Sword"), printer.Sprintf("Cudgel")}
 	mappedCards := make([]string, 0)
 	for _, c := range cards {
 		card := printer.Sprintf("(%d of %s)", c.Number(), seeds[c.Seed()])

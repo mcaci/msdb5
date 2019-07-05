@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 
 	"github.com/gorilla/websocket"
 	"github.com/nikiforosFreespirit/msdb5/app/game"
@@ -29,6 +30,8 @@ type GameRoom struct {
 	players map[*playerClient]bool
 	// msdb5 game instance
 	msdb5game Action
+	// lang language tag
+	lang language.Tag
 }
 
 // NewGameRoom makes a new room.
@@ -39,6 +42,7 @@ func NewGameRoom(side bool, lang language.Tag) *GameRoom {
 		leave:       make(chan *playerClient),
 		players:     make(map[*playerClient]bool),
 		msdb5game:   game.NewGame(side, lang),
+		lang:        lang,
 	}
 }
 
@@ -88,6 +92,7 @@ func (r *GameRoom) joinWith(socket *websocket.Conn) *playerClient {
 		room:        r,
 	}
 	r.join <- player
-	player.infoChannel <- []byte("Enter name and connect")
+	printer := message.NewPrinter(r.lang)
+	player.infoChannel <- []byte(printer.Sprintf("Enter name and connect"))
 	return player
 }
