@@ -9,8 +9,8 @@
   <body> 
     <form id="connect"> 
       <p>
-        Nome:<input type="text" name="name" id="name"/><br>
-        <input type="submit" value="Connect" /> 
+        Nome<input type="text" name="name" id="name"/><br>
+        <input type="submit" value="Connetti" /> 
       </p>
     </form>
     <form id="auction"> 
@@ -18,23 +18,31 @@
         <label>Punteggio d'asta</label>
         <input type="text" name="auction" id="auctionvalue">
       </p>
-      <input type="submit" value="Send" /> 
+      <input type="submit" value="Dichiara" /> 
     </form>
     <form id="play"> 
       <p>
         <label>Numero e seme della carta</label>
-        <input type="number" name="number" id="number" min="0" max="10">
-        <select name="seed" id="seed">
-          <option value="Coin">Oro</option>
-          <option value="Cup">Coppe</option>
-          <option value="Sword">Spade</option>
-          <option value="Cudgel">Bastoni</option>
-        </select>
+        <table>
+          <tr>
+            <td>
+              <input type="number" name="number" id="number" min="0" max="10">
+            </td>
+            <td>
+              <select name="seed" id="seed">
+                <option value="Coin">Oro</option>
+                <option value="Cup">Coppe</option>
+                <option value="Sword">Spade</option>
+                <option value="Cudgel">Bastoni</option>
+              </select>
+            </td>
+          </tr>
+        </table>
         <input type="radio" name="action" value="Exchange"> Cambia carta con monte
         <input type="radio" name="action" value="Companion"> Scegli compagno
         <input type="radio" name="action" value="Card" checked="checked"> Gioca carta
       </p>
-      <input type="submit" value="Play" /> 
+      <input type="submit" value="Gioca" /> 
     </form> 
     <ul id="messages"></ul> 
     <script  src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"> </script> 

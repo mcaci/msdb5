@@ -9,7 +9,7 @@
   <body> 
     <form id="connect"> 
       <p>
-        Name:<input type="text" name="name" id="name"/><br>
+        Name<input type="text" name="name" id="name"/><br>
         <input type="submit" value="Connect" /> 
       </p>
     </form>
@@ -23,13 +23,21 @@
     <form id="play"> 
       <p>
         <label>Card number and seed</label>
-        <input type="number" name="number" id="number" min="0" max="10">
-        <select name="seed" id="seed">
-          <option value="Coin">Coin</option>
-          <option value="Cup">Cup</option>
-          <option value="Sword">Sword</option>
-          <option value="Cudgel">Cudgel</option>
-        </select>
+        <table>
+          <tr>
+            <td>
+              <input type="number" name="number" id="number" min="0" max="10">
+            </td>
+            <td>
+              <select name="seed" id="seed">
+                <option value="Coin">Coin</option>
+                <option value="Cup">Cup</option>
+                <option value="Sword">Sword</option>
+                <option value="Cudgel">Cudgel</option>
+              </select>
+            </td>
+          </tr>
+        </table>
         <input type="radio" name="action" value="Exchange"> Change card with side deck
         <input type="radio" name="action" value="Companion"> Choose companion card
         <input type="radio" name="action" value="Card" checked="checked"> Play card
