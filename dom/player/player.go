@@ -39,11 +39,6 @@ func (player *Player) Pile() *deck.Cards {
 	return &player.pile
 }
 
-// HandSize func
-func (player *Player) HandSize() int {
-	return len(player.hand)
-}
-
 // Has func
 func (player *Player) Has(id card.ID) bool {
 	return player.hand.Find(id) != -1
@@ -90,24 +85,11 @@ func (player *Player) Fold() { player.fold = true }
 
 // Play function
 func (player *Player) Play(card card.ID) error {
-	index := player.hand.Find(card)
-	if index == -1 {
+	fromCardIndex := player.hand.Find(card)
+	if fromCardIndex == -1 {
 		return errors.New("Card is not in players hand")
 	}
-	player.hand.Remove(index)
-	return nil
-}
-
-// Exchange func
-func (player *Player) Exchange(card card.ID, side *deck.Cards) error {
-	index := player.hand.Find(card)
-	if index == -1 {
-		return errors.New("Card is not in players hand")
-	}
-	player.hand.Add((*side)[0])
-	side.Remove(0)
-	side.Add(card)
-	player.hand.Remove(index)
+	player.hand.Remove(fromCardIndex)
 	return nil
 }
 
@@ -119,11 +101,6 @@ func (player *Player) Collect(cards *deck.Cards) {
 // Points func
 func (player Player) Points(scorer func(card.ID) uint8) uint8 {
 	return player.pile.Sum(scorer)
-}
-
-// IsExpectedPlayer func
-func (player *Player) IsExpectedPlayer(other *Player, origin string) bool {
-	return player == other && player.IsSameHost(origin)
 }
 
 func (player Player) String() string {
