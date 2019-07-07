@@ -1,7 +1,6 @@
 package player
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
@@ -82,16 +81,6 @@ func (player Player) IsHandEmpty() bool { return len(player.hand) == 0 }
 
 // Fold func
 func (player *Player) Fold() { player.fold = true }
-
-// Play function
-func (player *Player) Play(card card.ID) error {
-	fromCardIndex := player.hand.Find(card)
-	if fromCardIndex == -1 {
-		return errors.New("Card is not in players hand")
-	}
-	player.hand.Remove(fromCardIndex)
-	return nil
-}
 
 // Collect func
 func (player *Player) Collect(cards *deck.Cards) {

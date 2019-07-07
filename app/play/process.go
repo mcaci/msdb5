@@ -85,7 +85,7 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		return nil
 	case "Card":
 		c, err := rq.Card()
-		err = p.Play(c)
+		err = Play(p, c)
 		if err != nil {
 			return err
 		}

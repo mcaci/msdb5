@@ -1,9 +1,10 @@
-package player
+package play
 
 import (
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
 func TestPlayerPlaysCard(t *testing.T) {
@@ -36,10 +37,10 @@ type dataTest struct {
 }
 
 func testPlay(number, seed string) dataTest {
-	p := New()
+	p := player.New()
 	p.Draw(func() card.ID { return 1 })
-	oldHand := p.hand
+	oldHand := *p.Hand()
 	c, err := card.Create(number, seed)
-	err = p.Play(c)
-	return dataTest{len(oldHand) - len(p.hand), err}
+	err = Play(p, c)
+	return dataTest{len(oldHand) - len(*p.Hand()), err}
 }
