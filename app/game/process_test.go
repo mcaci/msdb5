@@ -22,7 +22,7 @@ func testGameSetup(withSide bool) *Game {
 		gameTest.side.Add(card.ID(31))
 	}
 	for i, pl := range gameTest.players {
-		pl.DropCards()
+		pl.Hand().Clear()
 		pl.Draw(func() card.ID { return card.ID(2*i + 5) })
 		if i > 1 {
 			pl.Fold()
