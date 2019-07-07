@@ -4,8 +4,6 @@ import (
 	"testing"
 
 	"golang.org/x/text/language"
-
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
 )
 
 func testGame(hasSide bool) *Game {
@@ -16,9 +14,7 @@ func TestRegisterPlayerHasLocalhostOrigin(t *testing.T) {
 	testGame := testGame(false)
 	playerInfo := "localhost"
 	testGame.Join(playerInfo, make(chan []byte))
-	testPlayers := testGame.players
-	_, p := testPlayers.Find(func(p *player.Player) bool { return p.IsSameHost(playerInfo) })
-	if p == nil {
+	if p := testGame.players[0]; p == nil {
 		t.Fatalf("Player %s is expected to exist", playerInfo)
 	}
 }
