@@ -2,16 +2,13 @@ package end
 
 import (
 	"container/list"
-	"io"
 
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 
 	"github.com/nikiforosFreespirit/msdb5/app/notify"
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 	_ "github.com/nikiforosFreespirit/msdb5/catalog"
 
@@ -85,33 +82,4 @@ func collect(g playersInformer, p *player.Player, team string, sendMsg func(*pla
 		p.Collect(g.SideDeck())
 	}
 	track.Player(g.LastPlaying(), p)
-}
-
-type endGameInformer interface {
-	AuctionScore() *auction.Score
-	Caller() *player.Player
-	Companion() *player.Player
-	CurrentPlayer() *player.Player
-	Lang() language.Tag
-	LastCardPlayed() card.ID
-	Phase() phase.ID
-
-	Players() team.Players
-	// not registerd yet
-	IsSideUsed() bool
-	SideDeck() *deck.Cards
-}
-
-// Process func
-func Process(g endGameInformer, file io.Writer, sendMsg func(*player.Player, string)) error {
-	scorers := make([]team.Scorer, 0)
-	for _, p := range g.Players() {
-		scorers = append(scorers, p)
-	}
-	scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), scorers...)
-	for _, pl := range g.Players() {
-		sendMsg(pl, notify.NotifyScore(scoreTeam1, scoreTeam2, g.Lang()))
-	}
-	notify.ToFile(g, file)
-	return nil
 }

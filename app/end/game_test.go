@@ -2,7 +2,6 @@ package end
 
 import (
 	"container/list"
-	"os"
 	"testing"
 
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
@@ -109,14 +108,6 @@ func TestTrueCheckWithNoCardLeft(t *testing.T) {
 	gameTest := newTestGameNoCards()
 	err := Check(gameTest, messageSink)
 	if !err {
-		t.Fatal(err)
-	}
-}
-
-func TestProcessWithNoErr(t *testing.T) {
-	gameTest := newTestGameNoCards()
-	err := Process(gameTest, os.Stdout, messageSink)
-	if err != nil {
 		t.Fatal(err)
 	}
 }

@@ -57,8 +57,11 @@ func (g *Game) Process(inputRequest, origin string) {
 	// log action to console
 	notify.ToConsole(os.Stdout, g, rq)
 
-	// process end game
-	if g.phase == phase.End {
-		end.Process(g, f, sendMsg)
+	// exit if not end game
+	if g.phase != phase.End {
+		return
 	}
+	// process end game
+	end.Score(g, sendMsg)
+	notify.ToFile(g, f)
 }
