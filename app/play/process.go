@@ -33,7 +33,6 @@ type dataProvider interface {
 	Value() string
 	Action() string
 	Card() (card.ID, error)
-	EndExchange() bool
 }
 
 // Request func
@@ -66,7 +65,7 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		}
 		return nil
 	case "Exchange":
-		if rq.EndExchange() {
+		if rq.Value() == "0" {
 			return nil
 		}
 		c, err := rq.Card()
@@ -74,7 +73,7 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 			return err
 		}
 		side := g.SideDeck()
-		return p.Exchange(c, side)
+		return Exchange(c, p.Hand(), side)
 	case "Companion":
 		c, err := rq.Card()
 		if err != nil {

@@ -43,7 +43,3 @@ func (r *Req) Card() (card.ID, error) {
 func (r *Req) Value() string {
 	return r.data1
 }
-
-func (r *Req) EndExchange() bool {
-	return r.data1 == "0"
-}

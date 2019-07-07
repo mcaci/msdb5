@@ -37,7 +37,7 @@ type roundInformer interface {
 
 type requestInformer interface {
 	From() string
-	EndExchange() bool
+	Value() string
 }
 
 // Round func
@@ -105,7 +105,7 @@ func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Playe
 			setCaller(p)
 		}
 	case phase.ExchangingCards:
-		predicateToNextPhase = rq.EndExchange
+		predicateToNextPhase = func() bool { return rq.Value() == "0" }
 	case phase.ChoosingCompanion:
 		nextPhase = phase.PlayingCards
 	case phase.PlayingCards:

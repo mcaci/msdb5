@@ -54,7 +54,6 @@ type fakeRq struct {
 func (r fakeRq) Value() string          { return r.value }
 func (r fakeRq) Action() string         { return r.request }
 func (r fakeRq) Card() (card.ID, error) { return r.c, nil }
-func (r fakeRq) EndExchange() bool      { return false }
 
 func TestProcessRequestWithNoErr(t *testing.T) {
 	gameTest := newTestGame(0)
