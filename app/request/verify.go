@@ -35,7 +35,7 @@ func FindCriteria(g expectedPlayerInterface, rq requester) playerPredicate {
 	case "Origin":
 		expectedPlayerFinder = func(p *player.Player) bool { return p.IsSameHost(rq.From()) }
 	default:
-		expectedPlayerFinder = func(p *player.Player) bool { return p.IsExpectedPlayer(g.CurrentPlayer(), rq.From()) }
+		expectedPlayerFinder = func(p *player.Player) bool { return p == g.CurrentPlayer() && p.IsSameHost(rq.From()) }
 	}
 	return expectedPlayerFinder
 }
