@@ -37,8 +37,7 @@ type dataTest struct {
 
 func testPlay(number, seed string) dataTest {
 	p := New()
-	cardID := card.ID(1)
-	p.Draw(func() card.ID { return cardID })
+	p.Draw(func() card.ID { return 1 })
 	oldHand := p.hand
 	c, err := card.Create(number, seed)
 	err = p.Play(c)

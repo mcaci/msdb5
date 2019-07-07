@@ -3,13 +3,12 @@ package player
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
+	"github.com/nikiforosFreespirit/msdb5/dom/card"
 )
 
 func TestPlayerDrawsOneCard(t *testing.T) {
 	player := New()
-	cards := deck.Cards{1}
-	player.Draw(cards.Supply)
+	player.Draw(func() card.ID { return 1 })
 	if !player.Has(1) {
 		t.Fatalf("Expecting player to have drawn %v", 1)
 	}
