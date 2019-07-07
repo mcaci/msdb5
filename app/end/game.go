@@ -33,7 +33,7 @@ type playersInformer interface {
 }
 
 func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
-	roundsLeft := g.Players()[0].HandSize()
+	roundsLeft := len(*g.Players()[0].Hand())
 	if g.CardsOnTheBoard() >= 5 && roundsLeft <= 3 {
 		highbriscolaCard := deck.Highest(g.Briscola())
 		var callers, others bool
