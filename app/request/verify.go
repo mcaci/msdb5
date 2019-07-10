@@ -3,7 +3,7 @@ package request
 import (
 	"container/list"
 
-	"github.com/nikiforosFreespirit/msdb5/app/notify"
+	"github.com/nikiforosFreespirit/msdb5/app/msg"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 	"github.com/nikiforosFreespirit/msdb5/dom/player"
@@ -44,7 +44,7 @@ func VerifyPlayer(g expectedPlayerInterface, rq requester, sendMsg func(*player.
 	criteria := FindCriteria(g, rq)
 	_, actingPlayer := g.Players().Find(criteria)
 	if actingPlayer == nil {
-		return notify.ErrPlayerNotFound(g.CurrentPlayer().Name(), g.Lang())
+		return msg.ErrPlayerNotFound(g.CurrentPlayer().Name(), g.Lang())
 	}
 	if g.CurrentPlayer() == actingPlayer {
 		return nil
@@ -60,7 +60,7 @@ func VerifyPhase(g expectedPlayerInterface, rq requester, sendMsg func(*player.P
 		return nil
 	}
 	if err == nil && currentPhase != inputPhase {
-		err = notify.ErrPhaseNotExpected(uint8(inputPhase), uint8(currentPhase), g.Lang())
+		err = msg.ErrPhaseNotExpected(uint8(inputPhase), uint8(currentPhase), g.Lang())
 	}
 	return err
 }

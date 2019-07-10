@@ -5,8 +5,9 @@ import (
 	"strconv"
 
 	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 
-	"github.com/nikiforosFreespirit/msdb5/app/notify"
+	"github.com/nikiforosFreespirit/msdb5/app/msg"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
@@ -60,8 +61,9 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		if cardsToShow == 0 {
 			return nil
 		}
+		printer := message.NewPrinter(g.Lang())
 		for _, pl := range g.Players() {
-			sendMsg(pl, notify.SideDeckContent(g, cardsToShow))
+			printer.Fprintf(pl, "Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:cardsToShow], printer))
 		}
 		return nil
 	case "Exchange":
@@ -106,6 +108,6 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		}
 		return err
 	default:
-		return notify.ErrInvalidAction(rq.Action(), g.Lang())
+		return msg.ErrInvalidAction(rq.Action(), g.Lang())
 	}
 }

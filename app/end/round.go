@@ -6,8 +6,9 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/deck"
 	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 
-	"github.com/nikiforosFreespirit/msdb5/app/notify"
+	"github.com/nikiforosFreespirit/msdb5/app/msg"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
@@ -43,16 +44,16 @@ type requestInformer interface {
 // Round func
 func Round(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID), sendMsg func(*player.Player, string)) {
 	// next player step
-	nextPlayer(g, rq, sendMsg)
+	nextPlayer(g, rq)
 
 	// next phase
 	nextPhase(g, rq, setCaller, setPhase, sendMsg)
 
 	// clean phase
-	cleanPhase(g, rq, sendMsg)
+	cleanPhase(g, rq)
 }
 
-func nextPlayer(g roundInformer, rq requestInformer, sendMsg func(*player.Player, string)) error {
+func nextPlayer(g roundInformer, rq requestInformer) error {
 	current := g.Phase()
 	actingPlayerIndex := g.SenderIndex(rq.From())
 	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
@@ -110,21 +111,22 @@ func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Playe
 		nextPhase = phase.PlayingCards
 	case phase.PlayingCards:
 		predicateToNextPhase = func() bool {
-			return Check(g, sendMsg)
+			return check(g)
 		}
 	}
 	if predicateToNextPhase() {
 		setPhase(nextPhase)
 	}
-	sendMsg(g.LastPlayer(), notify.ToLast(g))
+	printer := message.NewPrinter(g.Lang())
+	printer.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
 	for _, pl := range g.Players() {
-		sendMsg(pl, notify.GameInfoMsg(g))
+		printer.Fprintf(pl, "Game: %+v", g)
 	}
-	sendMsg(g.CurrentPlayer(), notify.ToCurrent(g))
+	printer.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 	return nil
 }
 
-func cleanPhase(g roundInformer, rq requestInformer, sendMsg func(*player.Player, string)) error {
+func cleanPhase(g roundInformer, rq requestInformer) error {
 	if g.CardsOnTheBoard() >= 5 {
 		g.PlayedCards().Clear()
 	}

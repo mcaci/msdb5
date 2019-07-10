@@ -8,7 +8,6 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
 
-	"github.com/nikiforosFreespirit/msdb5/app/notify"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 	_ "github.com/nikiforosFreespirit/msdb5/catalog"
 
@@ -29,7 +28,7 @@ type playersInformer interface {
 	SideDeck() *deck.Cards
 }
 
-func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
+func check(g playersInformer) bool {
 	roundsLeft := len(*g.Players()[0].Hand())
 	if g.CardsOnTheBoard() >= 5 && roundsLeft <= 3 {
 		highbriscolaCard := deck.Highest(g.Briscola())
@@ -65,7 +64,7 @@ func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
 				})
 				team = printer.Sprintf("Others")
 			}
-			collect(g, p, team, sendMsg)
+			collect(g, p, team)
 
 			return true
 		}
@@ -73,10 +72,11 @@ func Check(g playersInformer, sendMsg func(*player.Player, string)) bool {
 	return team.Count(g.Players(), func(p *player.Player) bool { return p.IsHandEmpty() }) == 5
 }
 
-func collect(g playersInformer, p *player.Player, team string, sendMsg func(*player.Player, string)) {
+func collect(g playersInformer, p *player.Player, team string) {
+	printer := message.NewPrinter(g.Lang())
 	for _, pl := range g.Players() {
 		p.Collect(pl.Hand())
-		sendMsg(pl, notify.NotifyAnticipatedEnding(team, g.Lang()))
+		printer.Fprintf(pl, "The end - %s team has all briscola cards", team)
 	}
 	if g.IsSideUsed() {
 		p.Collect(g.SideDeck())

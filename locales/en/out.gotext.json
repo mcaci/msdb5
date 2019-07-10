@@ -120,7 +120,7 @@
                 {
                     "id": "GameInfo",
                     "string": "%+[1]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/notify.sidedeckInformer",
+                    "type": "github.com/nikiforosFreespirit/msdb5/app/msg.sidedeckInformer",
                     "underlyingType": "interface{Lang() golang.org/x/text/language.Tag; SideDeck() *github.com/nikiforosFreespirit/msdb5/dom/deck.Cards}",
                     "argNum": 1,
                     "expr": "gameInfo"
@@ -298,7 +298,7 @@
                     "type": "string",
                     "underlyingType": "string",
                     "argNum": 2,
-                    "expr": "notify.TranslateCard(g.briscolaCard, printer)"
+                    "expr": "msg.TranslateCard(g.briscolaCard, printer)"
                 },
                 {
                     "id": "PlayedCards_printer",
@@ -306,7 +306,7 @@
                     "type": "string",
                     "underlyingType": "string",
                     "argNum": 3,
-                    "expr": "notify.TranslateCards(g.playedCards, printer)"
+                    "expr": "msg.TranslateCards(g.playedCards, printer)"
                 },
                 {
                     "id": "AuctionScore",
