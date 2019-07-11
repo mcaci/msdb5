@@ -5,7 +5,6 @@ import (
 
 	"github.com/nikiforosFreespirit/msdb5/app/msg"
 	"github.com/nikiforosFreespirit/msdb5/app/phase"
-	"github.com/nikiforosFreespirit/msdb5/app/request"
 	"github.com/nikiforosFreespirit/msdb5/app/track"
 	"github.com/nikiforosFreespirit/msdb5/dom/auction"
 	"github.com/nikiforosFreespirit/msdb5/dom/card"
@@ -71,32 +70,24 @@ func distributeCards(g *Game) {
 	}
 }
 
-func (g *Game) AuctionScore() *auction.Score        { return &g.auctionScore }
-func (g *Game) Briscola() card.Seed                 { return g.briscolaCard.Seed() }
-func (g *Game) Caller() *player.Player              { return g.caller }
-func (g *Game) Companion() *player.Player           { return g.companion }
-func (g *Game) CurrentPlayer() *player.Player       { return g.lastPlaying.Front().Value.(*player.Player) }
-func (g *Game) IsSideUsed() bool                    { return g.withSide }
-func (g *Game) LastCardPlayed() card.ID             { return g.playedCards[len(g.playedCards)-1] }
-func (g *Game) LastPlayer() *player.Player          { return g.lastPlaying.Back().Value.(*player.Player) }
-func (g *Game) LastPlaying() *list.List             { return &g.lastPlaying }
-func (g *Game) Phase() phase.ID                     { return g.phase }
-func (g *Game) Players() team.Players               { return g.players }
-func (g *Game) PlayedCards() *deck.Cards            { return &g.playedCards }
-func (g *Game) Sender(origin string) *player.Player { return g.players[g.SenderIndex(origin)] }
-func (g *Game) SideDeck() *deck.Cards               { return &g.side }
-func (g *Game) Lang() language.Tag                  { return g.lang }
-func (g *Game) CardsOnTheBoard() int                { return len(g.playedCards) }
-func (g *Game) SenderIndex(origin string) int {
-	rq := request.New("Origin", origin)
-	criteria := request.FindCriteria(g, rq)
-	index, _ := g.players.Find(criteria)
-	return index
-}
+func (g *Game) AuctionScore() *auction.Score  { return &g.auctionScore }
+func (g *Game) Briscola() card.Seed           { return g.briscolaCard.Seed() }
+func (g *Game) Caller() *player.Player        { return g.caller }
+func (g *Game) Companion() *player.Player     { return g.companion }
+func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }
+func (g *Game) IsSideUsed() bool              { return g.withSide }
+func (g *Game) LastCardPlayed() card.ID       { return g.playedCards[len(g.playedCards)-1] }
+func (g *Game) LastPlayer() *player.Player    { return g.lastPlaying.Back().Value.(*player.Player) }
+func (g *Game) LastPlaying() *list.List       { return &g.lastPlaying }
+func (g *Game) Phase() phase.ID               { return g.phase }
+func (g *Game) Players() team.Players         { return g.players }
+func (g *Game) PlayedCards() *deck.Cards      { return &g.playedCards }
+func (g *Game) SideDeck() *deck.Cards         { return &g.side }
+func (g *Game) Lang() language.Tag            { return g.lang }
+func (g *Game) CardsOnTheBoard() int          { return len(g.playedCards) }
 
 func (g Game) String() (str string) {
 	printer := message.NewPrinter(g.lang)
-
 	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %d)",
 		g.CurrentPlayer().Name(), msg.TranslateCard(g.briscolaCard, printer), msg.TranslateCards(g.playedCards, printer), g.auctionScore, g.phase)
 }

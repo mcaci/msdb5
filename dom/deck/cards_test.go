@@ -19,14 +19,6 @@ func TestAddCardToSet(t *testing.T) {
 	}
 }
 
-func TestRemoveCardFromSet(t *testing.T) {
-	cards := Cards{15}
-	cards.Remove(0)
-	if index := cards.Find(15); index != -1 {
-		t.Fatalf("Cards should be empty")
-	}
-}
-
 func TestMovedCardsAreAddedToDestination(t *testing.T) {
 	playedCards := Cards{2, 3, 4, 5, 6}
 	playerPile := Cards{}

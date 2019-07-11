@@ -31,16 +31,14 @@ type playersInformer interface {
 func check(g playersInformer) bool {
 	roundsLeft := len(*g.Players()[0].Hand())
 	if g.CardsOnTheBoard() >= 5 && roundsLeft <= 3 {
-		highbriscolaCard := deck.Highest(g.Briscola())
+		highbriscolaCard := deck.BriscolaSerie(g.Briscola())
 		var callers, others bool
 		var roundsChecked int
 		for _, card := range highbriscolaCard {
 			if roundsChecked == roundsLeft {
 				break
 			}
-			_, p := g.Players().Find(func(p *player.Player) bool {
-				return p.Has(card)
-			})
+			_, p := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
 			if p == nil { // no one has card
 				continue
 			}
@@ -59,9 +57,7 @@ func check(g playersInformer) bool {
 			printer := message.NewPrinter(g.Lang())
 			team := printer.Sprintf("Callers")
 			if others {
-				_, p = g.Players().Find(func(p *player.Player) bool {
-					return p == g.Caller() || p == g.Companion()
-				})
+				_, p = g.Players().Find(func(p *player.Player) bool { return p == g.Caller() || p == g.Companion() })
 				team = printer.Sprintf("Others")
 			}
 			collect(g, p, team)
@@ -69,7 +65,7 @@ func check(g playersInformer) bool {
 			return true
 		}
 	}
-	return team.Count(g.Players(), func(p *player.Player) bool { return p.IsHandEmpty() }) == 5
+	return team.Count(g.Players(), player.IsHandEmpty) == 5
 }
 
 func collect(g playersInformer, p *player.Player, team string) {

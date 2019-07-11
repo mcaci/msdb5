@@ -17,7 +17,7 @@ func TranslateCard(c card.ID, printer *message.Printer) string {
 
 // TranslateCards func
 func TranslateCards(cards deck.Cards, printer *message.Printer) string {
-	mappedCards := make([]string, 0)
+	mappedCards := make([]string, 0, len(cards))
 	for _, c := range cards {
 		mappedCards = append(mappedCards, TranslateCard(c, printer))
 	}

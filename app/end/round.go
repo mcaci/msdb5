@@ -29,8 +29,6 @@ type roundInformer interface {
 	Briscola() card.Seed
 	Lang() language.Tag
 	LastPlaying() *list.List
-	SenderIndex(string) int
-
 	IsSideUsed() bool
 	SideDeck() *deck.Cards
 	CardsOnTheBoard() int
@@ -38,24 +36,28 @@ type roundInformer interface {
 
 type requestInformer interface {
 	From() string
+	Action() string
 	Value() string
 }
 
 // Round func
-func Round(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID), sendMsg func(*player.Player, string)) {
-	// next player step
+func Round(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID)) {
+	// next player
 	nextPlayer(g, rq)
-
 	// next phase
-	nextPhase(g, rq, setCaller, setPhase, sendMsg)
-
+	nextPhase(g, rq, setCaller, setPhase)
 	// clean phase
 	cleanPhase(g, rq)
 }
 
+func senderIndex(g roundInformer, rq requestInformer) int {
+	index, _ := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(rq.From()) })
+	return index
+}
+
 func nextPlayer(g roundInformer, rq requestInformer) error {
 	current := g.Phase()
-	actingPlayerIndex := g.SenderIndex(rq.From())
+	actingPlayerIndex := senderIndex(g, rq)
 	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
 	playerIndex := uint8(actingPlayerIndex)
 	nextPlayer := playersRoundRobin(playerIndex)
@@ -71,7 +73,7 @@ func nextPlayer(g roundInformer, rq requestInformer) error {
 				g.Players()[i].Fold()
 			}
 		}
-		for g.Players()[nextPlayer].Folded() {
+		for player.Folded(g.Players()[nextPlayer]) {
 			nextPlayer = playersRoundRobin(nextPlayer)
 		}
 	case phase.PlayingCards:
@@ -86,35 +88,32 @@ func nextPlayer(g roundInformer, rq requestInformer) error {
 	return nil
 }
 
-func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID), sendMsg func(*player.Player, string)) error {
-	current, nextPhase := g.Phase(), g.Phase()+1
-	predicateToNextPhase := func() bool { return true }
+func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID)) {
+	current := g.Phase()
+	nextPhase := current + 1
+	switch {
+	case current == phase.InsideAuction && !g.IsSideUsed():
+		nextPhase = current + 2
+	default:
+		nextPhase = current + 1
+	}
+	isNext := true
 	switch current {
 	case phase.Joining:
-		predicateToNextPhase = func() bool {
-			return team.Count(g.Players(), func(p *player.Player) bool { return p.IsNameEmpty() }) == 0
-		}
+		isNext = team.Count(g.Players(), player.IsNameEmpty) == 0
 	case phase.InsideAuction:
-		predicateToNextPhase = func() bool {
-			return team.Count(g.Players(), func(p *player.Player) bool { return p.Folded() }) == 4
-		}
-		if !g.IsSideUsed() {
-			nextPhase = current + 2
-		}
-		if predicateToNextPhase() {
-			_, p := g.Players().Find(func(p *player.Player) bool { return !p.Folded() })
-			setCaller(p)
-		}
+		isNext = team.Count(g.Players(), player.Folded) == 4
 	case phase.ExchangingCards:
-		predicateToNextPhase = func() bool { return rq.Value() == "0" }
-	case phase.ChoosingCompanion:
-		nextPhase = phase.PlayingCards
+		isNext = rq.Value() == "0"
 	case phase.PlayingCards:
-		predicateToNextPhase = func() bool {
-			return check(g)
-		}
+		isNext = check(g)
 	}
-	if predicateToNextPhase() {
+	if isNext && current == phase.InsideAuction {
+		_, p := g.Players().Find(func(p *player.Player) bool { return !player.Folded(p) })
+		setCaller(p)
+		setPhase(nextPhase)
+	}
+	if isNext && current != phase.InsideAuction {
 		setPhase(nextPhase)
 	}
 	printer := message.NewPrinter(g.Lang())
@@ -123,12 +122,11 @@ func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Playe
 		printer.Fprintf(pl, "Game: %+v", g)
 	}
 	printer.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
-	return nil
 }
 
-func cleanPhase(g roundInformer, rq requestInformer) error {
-	if g.CardsOnTheBoard() >= 5 {
-		g.PlayedCards().Clear()
+func cleanPhase(g roundInformer, rq requestInformer) {
+	if g.CardsOnTheBoard() < 5 {
+		return
 	}
-	return nil
+	g.PlayedCards().Clear()
 }

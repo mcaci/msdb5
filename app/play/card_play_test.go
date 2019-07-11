@@ -41,6 +41,6 @@ func testPlay(number, seed string) dataTest {
 	p.Draw(func() card.ID { return 1 })
 	oldHand := *p.Hand()
 	c, err := card.Create(number, seed)
-	err = Play(p, c)
+	err = Play(c, p.Hand())
 	return dataTest{len(oldHand) - len(*p.Hand()), err}
 }

@@ -151,9 +151,9 @@
             "fuzzy": true
         },
         {
-            "id": "New Action by {Name}: {Action}\nSender info: {Sender}\nGame info: {GameInfo}",
-            "message": "New Action by {Name}: {Action}\nSender info: {Sender}\nGame info: {GameInfo}",
-            "translation": "New Action by {Name}: {Action}\nSender info: {Sender}\nGame info: {GameInfo}",
+            "id": "New Action by {Name}: {Action}\nSender info: {sender}\nGame info: {GameInfo}",
+            "message": "New Action by {Name}: {Action}\nSender info: {sender}\nGame info: {GameInfo}",
+            "translation": "New Action by {Name}: {Action}\nSender info: {sender}\nGame info: {GameInfo}",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
@@ -173,7 +173,7 @@
                     "expr": "rq.Action()"
                 },
                 {
-                    "id": "Sender",
+                    "id": "sender",
                     "string": "%+[3]v",
                     "type": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
                     "underlyingType": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
@@ -184,7 +184,7 @@
                     "id": "GameInfo",
                     "string": "%+[4]v",
                     "type": "github.com/nikiforosFreespirit/msdb5/app/gamelog.senderInformer",
-                    "underlyingType": "interface{Sender(string) *github.com/nikiforosFreespirit/msdb5/dom/player.Player}",
+                    "underlyingType": "interface{sender(string) *github.com/nikiforosFreespirit/msdb5/dom/player.Player}",
                     "argNum": 4,
                     "expr": "gameInfo"
                 }

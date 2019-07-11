@@ -14,8 +14,6 @@ import (
 	"github.com/nikiforosFreespirit/msdb5/dom/team"
 )
 
-var messageSink = func(p *player.Player, msg string) {}
-
 type fakeGame struct {
 	current *player.Player
 	phase   phase.ID
@@ -60,7 +58,7 @@ func TestProcessRequestWithNoErr(t *testing.T) {
 	rq := fakeRq{"Join", "A", 1}
 	setCompanion := func(p *player.Player) {}
 	setBriscolaCard := func(c card.ID) {}
-	err := Request(gameTest, rq, setCompanion, setBriscolaCard, messageSink)
+	err := Request(gameTest, rq, setCompanion, setBriscolaCard)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -71,7 +69,7 @@ func TestProcessRequestWithErr(t *testing.T) {
 	rq := fakeRq{"Card", "A", 50}
 	setCompanion := func(p *player.Player) {}
 	setBriscolaCard := func(c card.ID) {}
-	err := Request(gameTest, rq, setCompanion, setBriscolaCard, messageSink)
+	err := Request(gameTest, rq, setCompanion, setBriscolaCard)
 	if err == nil {
 		t.Fatal("Error was expected")
 	}
@@ -82,7 +80,7 @@ func TestProcessAuctionRequestWithNoErr(t *testing.T) {
 	rq := fakeRq{"Auction", "75", 1}
 	setCompanion := func(p *player.Player) {}
 	setBriscolaCard := func(c card.ID) {}
-	err := Request(gameTest, rq, setCompanion, setBriscolaCard, messageSink)
+	err := Request(gameTest, rq, setCompanion, setBriscolaCard)
 	if err != nil {
 		t.Fatal(err)
 	}

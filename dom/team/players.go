@@ -13,7 +13,7 @@ func (playerSet *Players) Add(p *player.Player) {
 }
 
 // Find func
-func (playerSet Players) Find(predicate func(p *player.Player) bool) (int, *player.Player) {
+func (playerSet Players) Find(predicate player.Predicate) (int, *player.Player) {
 	for i, p := range playerSet {
 		if predicate(p) {
 			return i, p

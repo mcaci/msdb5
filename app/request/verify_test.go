@@ -10,8 +10,6 @@ import (
 	"golang.org/x/text/language"
 )
 
-var messageSink = func(p *player.Player, msg string) {}
-
 type fakeGame struct {
 	current *player.Player
 	phase   phase.ID
@@ -45,28 +43,28 @@ func (r rq) From() string   { return r.origin }
 func (r rq) Action() string { return r.request }
 
 func TestVerifyPlayerWithNoErr(t *testing.T) {
-	err := VerifyPlayer(newTestGame(0), rq{"Auction#A", "127.0.0.51"}, messageSink)
+	err := VerifyPlayer(newTestGame(0), rq{"Auction#A", "127.0.0.51"})
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestVerifyPlayerWithErr(t *testing.T) {
-	err := VerifyPlayer(newTestGame(0), rq{"Auction#A", "127.0.0.52"}, messageSink)
+	err := VerifyPlayer(newTestGame(0), rq{"Auction#A", "127.0.0.52"})
 	if err == nil {
 		t.Fatal("Error was expected")
 	}
 }
 
 func TestVerifyPhaseWithNoErr(t *testing.T) {
-	err := VerifyPhase(newTestGame(0), rq{"Join#A", "127.0.0.51"}, messageSink)
+	err := VerifyPhase(newTestGame(0), rq{"Join#A", "127.0.0.51"})
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestVerifyPhaseWithErr(t *testing.T) {
-	err := VerifyPhase(newTestGame(4), rq{"Join#A", "127.0.0.51"}, messageSink)
+	err := VerifyPhase(newTestGame(4), rq{"Join#A", "127.0.0.51"})
 	if err == nil {
 		t.Fatal("Error was expected")
 	}

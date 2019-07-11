@@ -2,6 +2,7 @@ package play
 
 import (
 	"container/list"
+	"fmt"
 	"strconv"
 
 	"golang.org/x/text/language"
@@ -37,15 +38,14 @@ type dataProvider interface {
 }
 
 // Request func
-func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player), setBriscolaCard func(card.ID), sendMsg func(*player.Player, string)) error {
+func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player), setBriscolaCard func(card.ID)) error {
 	p := g.CurrentPlayer()
 	switch rq.Action() {
 	case "Join":
 		name := rq.Value()
 		p.RegisterAs(name)
-		return nil
 	case "Auction":
-		if p.Folded() {
+		if player.Folded(p) {
 			return nil
 		}
 		score, err := strconv.Atoi(rq.Value())
@@ -65,7 +65,6 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		for _, pl := range g.Players() {
 			printer.Fprintf(pl, "Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:cardsToShow], printer))
 		}
-		return nil
 	case "Exchange":
 		if rq.Value() == "0" {
 			return nil
@@ -74,40 +73,39 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		if err != nil {
 			return err
 		}
-		side := g.SideDeck()
-		return Exchange(c, p.Hand(), side)
+		return Exchange(c, p.Hand(), g.SideDeck())
 	case "Companion":
 		c, err := rq.Card()
 		if err != nil {
 			return err
 		}
-		setBriscolaCard(c)
-		_, pl := g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
-		setCompanion(pl)
-		return nil
+		return Companion(c, g.Players(), setCompanion, setBriscolaCard)
 	case "Card":
 		c, err := rq.Card()
-		err = Play(p, c)
+		if err != nil {
+			return err
+		}
+		err = Play(c, p.Hand())
 		if err != nil {
 			return err
 		}
 		g.PlayedCards().Add(c)
 		roundHasEnded := len(*g.PlayedCards()) == 5
-		if roundHasEnded {
-			playerIndex, _ := g.Players().Find(func(pl *player.Player) bool { return pl == p })
-			winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards(), g.Briscola())
-			var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
-			next := playersRoundRobin(uint8(playerIndex) + winningCardIndex)
-			g.Players()[next].Collect(g.PlayedCards())
-			if team.Count(g.Players(), func(p *player.Player) bool { return p.IsHandEmpty() }) == 5 &&
-				g.IsSideUsed() {
-				side := g.SideDeck()
-				g.Players()[next].Collect(side)
-				side.Clear()
-			}
+		if !roundHasEnded {
+			break
 		}
-		return err
+		playerIndex, _ := g.Players().Find(func(pl *player.Player) bool { return pl == p })
+		winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards(), g.Briscola())
+		next := (playerIndex + int(winningCardIndex) + 1) % 5
+		g.Players()[next].Collect(g.PlayedCards())
+		if !(team.Count(g.Players(), player.IsHandEmpty) == 5 && g.IsSideUsed()) {
+			break
+		}
+		side := g.SideDeck()
+		g.Players()[next].Collect(side)
+		side.Clear()
 	default:
-		return msg.ErrInvalidAction(rq.Action(), g.Lang())
+		return msg.Error(fmt.Sprintf("Action %s not valid", rq.Action()), g.Lang())
 	}
+	return nil
 }

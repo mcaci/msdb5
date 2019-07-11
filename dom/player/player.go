@@ -10,8 +10,7 @@ import (
 // Player struct
 type Player struct {
 	name, host string
-	hand       deck.Cards
-	pile       deck.Cards
+	hand, pile deck.Cards
 	fold       bool
 	info       chan []byte
 }
@@ -64,20 +63,23 @@ func (player *Player) Write(msg []byte) (n int, err error) {
 	return len(msg), nil
 }
 
-// Folded func
-func (player Player) Folded() bool { return player.fold }
-
 // IsSameHost func
 func (player Player) IsSameHost(origin string) bool { return player.host == origin }
 
 // Name func
 func (player Player) Name() string { return player.name }
 
+// Predicate type
+type Predicate func(p *Player) bool
+
 // IsNameEmpty func
-func (player Player) IsNameEmpty() bool { return player.name == "" }
+var IsNameEmpty Predicate = func(p *Player) bool { return p.name == "" }
 
 // IsHandEmpty func
-func (player Player) IsHandEmpty() bool { return len(player.hand) == 0 }
+var IsHandEmpty Predicate = func(p *Player) bool { return len(p.hand) == 0 }
+
+// Folded func
+var Folded Predicate = func(p *Player) bool { return p.fold }
 
 // Fold func
 func (player *Player) Fold() { player.fold = true }
