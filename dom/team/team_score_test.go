@@ -3,7 +3,7 @@ package team
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/card"
 )
 
 type mockScorer struct{}

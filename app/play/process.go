@@ -8,14 +8,14 @@ import (
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 
-	"github.com/nikiforosFreespirit/msdb5/app/msg"
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
-	"github.com/nikiforosFreespirit/msdb5/dom/auction"
-	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/team"
+	"github.com/mcaci/msdb5/app/msg"
+	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/briscola"
+	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/deck"
+	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
 type playInterface interface {

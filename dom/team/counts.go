@@ -1,7 +1,7 @@
 package team
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/player"
 )
 
 // Count func

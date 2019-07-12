@@ -1,7 +1,7 @@
 package briscola
 
 import "testing"
-import "github.com/nikiforosFreespirit/msdb5/dom/card"
+import "github.com/mcaci/msdb5/dom/card"
 
 func TestScenarioWithAceOfCoinWinning(t *testing.T) {
 	// testing 1 and 2 of Coin, briscola is Coin

@@ -3,11 +3,11 @@ package play
 import (
 	"fmt"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/team"
+	"github.com/mcaci/msdb5/dom/team"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/deck"
+	"github.com/mcaci/msdb5/dom/player"
 )
 
 // Play func

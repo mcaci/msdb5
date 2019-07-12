@@ -47,6 +47,6 @@ func templatePath(filename string, fileExists func(string) bool) string {
 	if fileExists(localFile) {
 		return localFile
 	}
-	const packagePath = "github.com/nikiforosFreespirit/msdb5/"
+	const packagePath = "github.com/mcaci/msdb5/"
 	return packagePath + localFile
 }

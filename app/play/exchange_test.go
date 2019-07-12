@@ -3,7 +3,7 @@ package play
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
+	"github.com/mcaci/msdb5/dom/deck"
 )
 
 func TestExchangeNotFailing(t *testing.T) {

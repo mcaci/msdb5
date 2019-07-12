@@ -4,11 +4,11 @@ import (
 	"container/list"
 	"fmt"
 
-	"github.com/nikiforosFreespirit/msdb5/app/msg"
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
-	"github.com/nikiforosFreespirit/msdb5/app/track"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/team"
+	"github.com/mcaci/msdb5/app/msg"
+	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/app/track"
+	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/language"
 )
 

@@ -1,6 +1,6 @@
 package briscola
 
-import "github.com/nikiforosFreespirit/msdb5/dom/card"
+import "github.com/mcaci/msdb5/dom/card"
 
 // Points func
 func Points(id card.ID) uint8 {

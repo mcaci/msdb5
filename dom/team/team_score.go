@@ -1,8 +1,8 @@
 package team
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/dom/briscola"
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/briscola"
+	"github.com/mcaci/msdb5/dom/card"
 )
 
 // Scorer interface

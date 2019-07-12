@@ -6,12 +6,12 @@ import (
 
 	"golang.org/x/text/language"
 
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
-	"github.com/nikiforosFreespirit/msdb5/dom/auction"
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/team"
+	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/deck"
+	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
 type fakeGame struct {

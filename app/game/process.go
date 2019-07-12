@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/nikiforosFreespirit/msdb5/app/end"
-	"github.com/nikiforosFreespirit/msdb5/app/msg"
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
-	"github.com/nikiforosFreespirit/msdb5/app/play"
-	"github.com/nikiforosFreespirit/msdb5/app/request"
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/mcaci/msdb5/app/end"
+	"github.com/mcaci/msdb5/app/msg"
+	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/app/play"
+	"github.com/mcaci/msdb5/app/request"
+	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/message"
 )
 
@@ -68,7 +69,15 @@ func (g *Game) Process(inputRequest, origin string) {
 
 	// exit if not end game
 	if g.phase == phase.End {
-		end.Score(g) // process end game
+		// compute score
+		scorers := make([]team.Scorer, 0)
+		for _, p := range g.Players() {
+			scorers = append(scorers, p)
+		}
+		scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), scorers...)
+		for _, pl := range g.Players() {
+			printer.Fprintf(pl, "The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
+		}
 		// write to file
 		canLog, text = msg.CreateMlMsg(g)
 		if canLog {

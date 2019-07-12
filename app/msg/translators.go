@@ -3,8 +3,8 @@ package msg
 import (
 	"strings"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
+	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/deck"
 	"golang.org/x/text/message"
 )
 

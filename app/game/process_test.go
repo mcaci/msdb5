@@ -3,9 +3,9 @@ package game
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
+	"github.com/mcaci/msdb5/app/phase"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/card"
 )
 
 func testGameSetup(withSide bool) *Game {

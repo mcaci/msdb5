@@ -3,8 +3,8 @@ package play
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/player"
 )
 
 func TestPlayerPlaysCard(t *testing.T) {

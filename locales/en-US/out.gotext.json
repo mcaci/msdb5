@@ -10,8 +10,8 @@
                 {
                     "id": "Player",
                     "string": "%+[1]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/player.Player",
-                    "underlyingType": "struct{name string; host string; hand github.com/nikiforosFreespirit/msdb5/dom/deck.Cards; pile github.com/nikiforosFreespirit/msdb5/dom/deck.Cards; fold bool; info chan []byte}",
+                    "type": "github.com/mcaci/msdb5/dom/player.Player",
+                    "underlyingType": "struct{name string; host string; hand github.com/mcaci/msdb5/dom/deck.Cards; pile github.com/mcaci/msdb5/dom/deck.Cards; fold bool; info chan []byte}",
                     "argNum": 1,
                     "expr": "*p"
                 }
@@ -35,7 +35,7 @@
                 {
                     "id": "BriscolaCard",
                     "string": "%[2]s",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "type": "github.com/mcaci/msdb5/dom/card.ID",
                     "underlyingType": "uint8",
                     "argNum": 2,
                     "expr": "g.briscolaCard"
@@ -43,15 +43,15 @@
                 {
                     "id": "PlayedCards",
                     "string": "%+[3]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
-                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "type": "github.com/mcaci/msdb5/dom/deck.Cards",
+                    "underlyingType": "[]github.com/mcaci/msdb5/dom/card.ID",
                     "argNum": 3,
                     "expr": "g.playedCards"
                 },
                 {
                     "id": "AuctionScore",
                     "string": "%[4]d",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/auction.Score",
+                    "type": "github.com/mcaci/msdb5/dom/auction.Score",
                     "underlyingType": "uint8",
                     "argNum": 4,
                     "expr": "g.auctionScore"
@@ -59,7 +59,7 @@
                 {
                     "id": "Phase",
                     "string": "%[5]d",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/phase.ID",
+                    "type": "github.com/mcaci/msdb5/app/phase.ID",
                     "underlyingType": "uint8",
                     "argNum": 5,
                     "expr": "g.phase"
@@ -84,7 +84,7 @@
                 {
                     "id": "Seed",
                     "string": "%[2]s",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/card.Seed",
+                    "type": "github.com/mcaci/msdb5/dom/card.Seed",
                     "underlyingType": "uint8",
                     "argNum": 2,
                     "expr": "id.Seed()"
@@ -109,16 +109,16 @@
                 {
                     "id": "Hand",
                     "string": "%+[2]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
-                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "type": "github.com/mcaci/msdb5/dom/deck.Cards",
+                    "underlyingType": "[]github.com/mcaci/msdb5/dom/card.ID",
                     "argNum": 2,
                     "expr": "player.hand"
                 },
                 {
                     "id": "Pile",
                     "string": "%+[3]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
-                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "type": "github.com/mcaci/msdb5/dom/deck.Cards",
+                    "underlyingType": "[]github.com/mcaci/msdb5/dom/card.ID",
                     "argNum": 3,
                     "expr": "player.pile"
                 },
@@ -175,16 +175,16 @@
                 {
                     "id": "sender",
                     "string": "%+[3]v",
-                    "type": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
-                    "underlyingType": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
+                    "type": "*github.com/mcaci/msdb5/dom/player.Player",
+                    "underlyingType": "*github.com/mcaci/msdb5/dom/player.Player",
                     "argNum": 3,
                     "expr": "sender"
                 },
                 {
                     "id": "GameInfo",
                     "string": "%+[4]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/gamelog.senderInformer",
-                    "underlyingType": "interface{sender(string) *github.com/nikiforosFreespirit/msdb5/dom/player.Player}",
+                    "type": "github.com/mcaci/msdb5/app/gamelog.senderInformer",
+                    "underlyingType": "interface{sender(string) *github.com/mcaci/msdb5/dom/player.Player}",
                     "argNum": 4,
                     "expr": "gameInfo"
                 }
@@ -317,8 +317,8 @@
                 {
                     "id": "Pl",
                     "string": "%+[1]v",
-                    "type": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
-                    "underlyingType": "*github.com/nikiforosFreespirit/msdb5/dom/player.Player",
+                    "type": "*github.com/mcaci/msdb5/dom/player.Player",
+                    "underlyingType": "*github.com/mcaci/msdb5/dom/player.Player",
                     "argNum": 1,
                     "expr": "pl"
                 }
@@ -334,8 +334,8 @@
                 {
                     "id": "SideDeck",
                     "string": "%+[1]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
-                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "type": "github.com/mcaci/msdb5/dom/deck.Cards",
+                    "underlyingType": "[]github.com/mcaci/msdb5/dom/card.ID",
                     "argNum": 1,
                     "expr": "*gameInfo.SideDeck()"
                 }
@@ -351,8 +351,8 @@
                 {
                     "id": "SideDeckquantity",
                     "string": "%+[1]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/deck.Cards",
-                    "underlyingType": "[]github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "type": "github.com/mcaci/msdb5/dom/deck.Cards",
+                    "underlyingType": "[]github.com/mcaci/msdb5/dom/card.ID",
                     "argNum": 1,
                     "expr": "(*gameInfo.SideDeck())[:quantity]"
                 }
@@ -384,7 +384,7 @@
                 {
                     "id": "AuctionScore",
                     "string": "%[3]d",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/auction.Score",
+                    "type": "github.com/mcaci/msdb5/dom/auction.Score",
                     "underlyingType": "uint8",
                     "argNum": 3,
                     "expr": "*(gameInfo.AuctionScore())"
@@ -409,7 +409,7 @@
                 {
                     "id": "LastCardPlayed",
                     "string": "%[2]d",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/card.ID",
+                    "type": "github.com/mcaci/msdb5/dom/card.ID",
                     "underlyingType": "uint8",
                     "argNum": 2,
                     "expr": "gameInfo.LastCardPlayed()"
@@ -443,8 +443,8 @@
                 {
                     "id": "GameInfo",
                     "string": "%+[1]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/gamelog.sidedeckInformer",
-                    "underlyingType": "interface{SideDeck() *github.com/nikiforosFreespirit/msdb5/dom/deck.Cards}",
+                    "type": "github.com/mcaci/msdb5/app/gamelog.sidedeckInformer",
+                    "underlyingType": "interface{SideDeck() *github.com/mcaci/msdb5/dom/deck.Cards}",
                     "argNum": 1,
                     "expr": "gameInfo"
                 }

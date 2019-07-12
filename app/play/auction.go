@@ -1,7 +1,7 @@
 package play
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/auction"
 )
 
 // SideCardsToDisplay func

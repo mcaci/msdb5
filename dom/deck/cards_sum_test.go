@@ -3,7 +3,7 @@ package deck
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/card"
 )
 
 func testScoreCount(t *testing.T, expectedScore uint8, cards Cards) {

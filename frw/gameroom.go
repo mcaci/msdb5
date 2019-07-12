@@ -8,7 +8,7 @@ import (
 	"golang.org/x/text/message"
 
 	"github.com/gorilla/websocket"
-	"github.com/nikiforosFreespirit/msdb5/app/game"
+	"github.com/mcaci/msdb5/app/game"
 )
 
 // Action interface

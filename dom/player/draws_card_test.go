@@ -3,7 +3,7 @@ package player
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/card"
 )
 
 func TestPlayerDrawsOneCard(t *testing.T) {

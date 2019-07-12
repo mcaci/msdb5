@@ -1,7 +1,7 @@
 package deck
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/card"
 )
 
 // Cards type

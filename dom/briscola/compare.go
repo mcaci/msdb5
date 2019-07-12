@@ -1,8 +1,8 @@
 package briscola
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
+	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/deck"
 )
 
 // IndexOfWinningCard func

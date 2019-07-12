@@ -107,8 +107,8 @@
                 {
                     "id": "GameInfo",
                     "string": "%+[1]v",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/msg.sidedeckInformer",
-                    "underlyingType": "interface{Lang() golang.org/x/text/language.Tag; SideDeck() *github.com/nikiforosFreespirit/msdb5/dom/deck.Cards}",
+                    "type": "github.com/mcaci/msdb5/app/msg.sidedeckInformer",
+                    "underlyingType": "interface{Lang() golang.org/x/text/language.Tag; SideDeck() *github.com/mcaci/msdb5/dom/deck.Cards}",
                     "argNum": 1,
                     "expr": "gameInfo"
                 }
@@ -276,7 +276,7 @@
                 {
                     "id": "AuctionScore",
                     "string": "%[4]d",
-                    "type": "github.com/nikiforosFreespirit/msdb5/dom/auction.Score",
+                    "type": "github.com/mcaci/msdb5/dom/auction.Score",
                     "underlyingType": "uint8",
                     "argNum": 4,
                     "expr": "g.auctionScore"
@@ -284,7 +284,7 @@
                 {
                     "id": "Phase",
                     "string": "%[5]d",
-                    "type": "github.com/nikiforosFreespirit/msdb5/app/phase.ID",
+                    "type": "github.com/mcaci/msdb5/app/phase.ID",
                     "underlyingType": "uint8",
                     "argNum": 5,
                     "expr": "g.phase"

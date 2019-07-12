@@ -3,7 +3,7 @@ package request
 import (
 	"strings"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/card"
 )
 
 type Req struct {

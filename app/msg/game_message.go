@@ -1,9 +1,9 @@
 package msg
 
 import (
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/dom/deck"
+	"github.com/mcaci/msdb5/dom/player"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )

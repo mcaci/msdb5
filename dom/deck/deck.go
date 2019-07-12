@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/card"
 )
 
 // DeckSize of a cards of cards
