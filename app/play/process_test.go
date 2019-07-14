@@ -38,7 +38,7 @@ func (g fakeGame) Players() team.Players         { return g.players }
 func (g fakeGame) LastPlaying() *list.List       { return list.New() }
 func (g fakeGame) Lang() language.Tag            { return language.English }
 func (g fakeGame) Phase() phase.ID               { return g.phase }
-func (g fakeGame) Briscola() card.Seed           { return card.Coin }
+func (g fakeGame) Briscola() card.ID             { return 1 }
 func (g fakeGame) IsSideUsed() bool              { return true }
 func (g fakeGame) PlayedCards() *deck.Cards      { return new(deck.Cards) }
 func (g fakeGame) SideDeck() *deck.Cards         { return new(deck.Cards) }

@@ -11,7 +11,6 @@ import (
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/auction"
-	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/card"
 	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
@@ -20,7 +19,7 @@ import (
 
 type playInterface interface {
 	AuctionScore() *auction.Score
-	Briscola() card.Seed
+	Briscola() card.ID
 	CurrentPlayer() *player.Player
 	IsSideUsed() bool
 	LastPlaying() *list.List
@@ -90,20 +89,6 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 			return err
 		}
 		g.PlayedCards().Add(c)
-		roundHasEnded := len(*g.PlayedCards()) == 5
-		if !roundHasEnded {
-			break
-		}
-		playerIndex, _ := g.Players().Find(func(pl *player.Player) bool { return pl == p })
-		winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards(), g.Briscola())
-		next := (playerIndex + int(winningCardIndex) + 1) % 5
-		g.Players()[next].Collect(g.PlayedCards())
-		if !(team.Count(g.Players(), player.IsHandEmpty) == 5 && g.IsSideUsed()) {
-			break
-		}
-		side := g.SideDeck()
-		g.Players()[next].Collect(side)
-		side.Clear()
 	default:
 		return msg.Error(fmt.Sprintf("Action %s not valid", rq.Action()), g.Lang())
 	}

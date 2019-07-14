@@ -8,25 +8,25 @@ import (
 )
 
 func TestPlayerPlaysCard(t *testing.T) {
-	if testPlay("1", "Coin").err != nil {
+	if fakePlay("1", "Coin").err != nil {
 		t.Fatal("Card should come from player's hand")
 	}
 }
 
 func TestHandSizeChangesIfPlayerPlaysCardInHand(t *testing.T) {
-	if testPlay("1", "Coin").diffHandLenght != 1 {
+	if fakePlay("1", "Coin").diffHandLenght != 1 {
 		t.Fatal("Hand before playing owned card should contain one more card")
 	}
 }
 
 func TestErrIfPlayerPlaysCardNotInHand(t *testing.T) {
-	if testPlay("2", "Coin").err == nil {
+	if fakePlay("2", "Coin").err == nil {
 		t.Fatal("Card should come from player's hand")
 	}
 }
 
 func TestHandSizeDoesntChangeIfPlayerPlaysCardNotInHand(t *testing.T) {
-	if testPlay("2", "Coin").diffHandLenght != 0 {
+	if fakePlay("2", "Coin").diffHandLenght != 0 {
 		t.Fatal("In case of error handsize should not change")
 	}
 }
@@ -36,7 +36,7 @@ type dataTest struct {
 	err            error
 }
 
-func testPlay(number, seed string) dataTest {
+func fakePlay(number, seed string) dataTest {
 	p := player.New()
 	p.Draw(func() card.ID { return 1 })
 	oldHand := *p.Hand()
