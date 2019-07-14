@@ -68,27 +68,23 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		if rq.Value() == "0" {
 			return nil
 		}
-		c, err := rq.Card()
-		if err != nil {
-			return err
-		}
-		return Exchange(c, p.Hand(), g.SideDeck())
+		return CardAction(rq, p.Hand(), g.SideDeck(), func(cards, to *deck.Cards, index, toIndex int) {
+			(*cards)[index], (*to)[toIndex] = (*to)[index], (*cards)[toIndex]
+		})
 	case "Companion":
 		c, err := rq.Card()
 		if err != nil {
 			return err
 		}
-		return Companion(c, g.Players(), setCompanion, setBriscolaCard)
+		setBriscolaCard(c)
+		_, pl := g.Players().Find(func(p *player.Player) bool { return p.Has(c) })
+		setCompanion(pl)
+		return nil
 	case "Card":
-		c, err := rq.Card()
-		if err != nil {
-			return err
-		}
-		err = Play(c, p.Hand())
-		if err != nil {
-			return err
-		}
-		g.PlayedCards().Add(c)
+		return CardAction(rq, p.Hand(), g.PlayedCards(), func(cards, to *deck.Cards, index, toIndex int) {
+			to.Add((*cards)[index])
+			*cards = append((*cards)[:index], (*cards)[index+1:]...)
+		})
 	default:
 		return msg.Error(fmt.Sprintf("Action %s not valid", rq.Action()), g.Lang())
 	}
