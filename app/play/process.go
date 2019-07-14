@@ -56,7 +56,7 @@ func Request(g playInterface, rq dataProvider, setCompanion func(*player.Player)
 		if !g.IsSideUsed() {
 			return nil
 		}
-		cardsToShow := SideCardsToDisplay(*g.AuctionScore())
+		cardsToShow := auction.SideCardsToDisplay(*g.AuctionScore())
 		if cardsToShow == 0 {
 			return nil
 		}
