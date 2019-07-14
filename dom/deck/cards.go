@@ -41,14 +41,3 @@ func (cards *Cards) Supply() card.ID {
 	*cards = (*cards)[1:]
 	return card
 }
-
-// BriscolaSerie func
-func BriscolaSerie(briscola card.Seed) Cards {
-	set := Cards{1, 3, 10, 9, 8, 7, 6, 5, 4, 2}
-	if briscola != card.Coin {
-		for i := range set {
-			set[i] += card.ID(10 * briscola)
-		}
-	}
-	return set
-}
