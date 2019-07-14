@@ -71,7 +71,7 @@ func distributeCards(g *Game) {
 }
 
 func (g *Game) AuctionScore() *auction.Score  { return &g.auctionScore }
-func (g *Game) Briscola() card.Seed           { return g.briscolaCard.Seed() }
+func (g *Game) Briscola() card.ID             { return g.briscolaCard }
 func (g *Game) Caller() *player.Player        { return g.caller }
 func (g *Game) Companion() *player.Player     { return g.companion }
 func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }

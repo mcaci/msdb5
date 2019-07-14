@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mcaci/msdb5/app/end"
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/play"
@@ -62,7 +61,14 @@ func (g *Game) Process(inputRequest, origin string) {
 	// end round
 	setCaller := func(p *player.Player) { g.caller = p }
 	setPhase := func(p phase.ID) { g.phase = p }
-	end.Round(g, rq, setCaller, setPhase)
+	// actions to do post request
+	postRequest(g, rq)
+	// next player
+	nextPlayer(g, rq)
+	// next phase
+	nextPhase(g, rq, setCaller, setPhase)
+	// clean phase
+	cleanPhase(g, rq)
 
 	// log action to console
 	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), rq.Action(), sender(g, rq), g)
@@ -84,10 +90,6 @@ func (g *Game) Process(inputRequest, origin string) {
 			fmt.Fprintf(f, text)
 		}
 	}
-}
-
-type requestInformer interface {
-	From() string
 }
 
 func sender(g *Game, rq requestInformer) *player.Player {

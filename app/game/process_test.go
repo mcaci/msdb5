@@ -8,8 +8,8 @@ import (
 	"github.com/mcaci/msdb5/dom/card"
 )
 
-func testGameSetup(withSide bool) *Game {
-	gameTest := testGame(withSide)
+func fakeGameSetup(withSide bool) *Game {
+	gameTest := fakeGame(withSide)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
 	gameTest.Join("127.0.0.51", playerChannel)
@@ -31,7 +31,7 @@ func testGameSetup(withSide bool) *Game {
 	return gameTest
 }
 
-func testGamePlay(gameTest *Game) {
+func fakeGamePlay(gameTest *Game) {
 	gameTest.Process("Join#A", "127.0.0.51")
 	gameTest.Process("Join#B", "127.0.0.52")
 	gameTest.Process("Join#C", "127.0.0.53")
@@ -57,16 +57,16 @@ func testGamePlay(gameTest *Game) {
 }
 
 func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
-	gameTest := testGameSetup(true)
-	testGamePlay(gameTest)
+	gameTest := fakeGameSetup(true)
+	fakeGamePlay(gameTest)
 	if gameTest.phase != phase.End {
 		t.Fatal("Expecting transition to end game and scoring")
 	}
 }
 
 func TestCompletedGameReturningScoreInfoWithNoSide(t *testing.T) {
-	gameTest := testGameSetup(false)
-	testGamePlay(gameTest)
+	gameTest := fakeGameSetup(false)
+	fakeGamePlay(gameTest)
 	if gameTest.phase != phase.End {
 		t.Fatal("Expecting transition to end game and scoring")
 	}
