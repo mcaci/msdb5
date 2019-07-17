@@ -45,11 +45,11 @@ func fakeGamePlayWith2HandSize(gameTest *Game) {
 	gameTest.Process("Card#5#Cup", "127.0.0.53")
 	gameTest.Process("Card#4#Coin", "127.0.0.54")
 	gameTest.Process("Card#5#Coin", "127.0.0.55")
-	gameTest.Process("Card#7#Cup", "127.0.0.55")
+	gameTest.Process("Card#9#Cup", "127.0.0.55")
 	gameTest.Process("Card#1#Coin", "127.0.0.51")
 	gameTest.Process("Card#2#Coin", "127.0.0.52")
 	gameTest.Process("Card#3#Coin", "127.0.0.53")
-	gameTest.Process("Card#9#Cup", "127.0.0.54")
+	gameTest.Process("Card#7#Cup", "127.0.0.54")
 }
 
 func TestCompletedGameWith2HandsCard(t *testing.T) {
