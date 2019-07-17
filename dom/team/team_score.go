@@ -2,19 +2,19 @@ package team
 
 import (
 	"github.com/mcaci/msdb5/dom/briscola"
-	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/deck"
 )
 
-// Scorer interface
-type Scorer interface {
-	Points(scorer func(card.ID) uint8) uint8
+// Piler interface
+type Piler interface {
+	Pile() *deck.Cards
 }
 
 // Score func
-func Score(caller, companion Scorer, players ...Scorer) (totalTeam1, totalTeam2 uint8) {
-	for _, player := range players {
-		score := player.Points(briscola.Points)
-		if player == caller || player == companion {
+func Score(caller, companion Piler, players []Piler) (totalTeam1, totalTeam2 uint8) {
+	for _, pl := range players {
+		score := pl.Pile().Sum(briscola.Points)
+		if pl == caller || pl == companion {
 			totalTeam1 += score
 			continue
 		}

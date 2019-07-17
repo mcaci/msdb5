@@ -7,6 +7,7 @@ import (
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/play"
 	"github.com/mcaci/msdb5/app/request"
+	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/card"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
@@ -60,19 +61,18 @@ func (g *Game) Process(inputRequest, origin string) {
 		lastPlayed := g.playedCards[len(g.playedCards)-1]
 		fmt.Fprintf(f, "%s, %d\n", g.CurrentPlayer().Name(), lastPlayed)
 	}
-
-	// end round
-	setCaller := func(p *player.Player) { g.caller = p }
-	setPhase := func(p phase.ID) { g.phase = p }
-	// actions to do post request
-	postRequest(g, rq)
-	// next player
-	nextPlayer(g, rq)
-	// next phase
-	nextPhase(g, rq, setCaller, setPhase)
-
 	// log action to console
 	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), rq.Action(), sender(g, rq), g)
+
+	// end round: next player
+	nextPlIdx := nextPlayer(g, rq)
+	// next phase
+	setCaller := func(p *player.Player) { g.caller = p }
+	ph := nextPhase(g, rq, setCaller)
+	// clean up
+	cleanUp(g, rq)
+	g.phase = ph
+	track.Player(g.LastPlaying(), g.Players()[nextPlIdx])
 
 	// process end phase
 	if g.phase == phase.End {
@@ -81,11 +81,11 @@ func (g *Game) Process(inputRequest, origin string) {
 			collect(g)
 		}
 		// compute score
-		scorers := make([]team.Scorer, 0)
+		pilers := make([]team.Piler, 0)
 		for _, p := range g.Players() {
-			scorers = append(scorers, p)
+			pilers = append(pilers, p)
 		}
-		scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), scorers...)
+		scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers)
 		for _, pl := range g.Players() {
 			printer.Fprintf(pl, "The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
 		}

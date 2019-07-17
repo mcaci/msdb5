@@ -27,7 +27,7 @@ type roundInformer interface {
 	LastPlaying() *list.List
 	IsSideUsed() bool
 	SideDeck() *deck.Cards
-	IsNotMaxPlayedCards() bool
+	IsRoundOngoing() bool
 }
 
 type requestInformer interface {
@@ -36,12 +36,11 @@ type requestInformer interface {
 	Value() string
 }
 
-func postRequest(g roundInformer, rq requestInformer) {
+func cleanUp(g roundInformer, rq requestInformer) {
 	current := g.Phase()
 	switch current {
 	case phase.PlayingCards:
-		roundHasEnded := len(*g.PlayedCards()) == 5
-		if !roundHasEnded {
+		if g.IsRoundOngoing() {
 			break
 		}
 		playerIndex, _ := g.Players().Find(func(pl *player.Player) bool { return pl == g.CurrentPlayer() })

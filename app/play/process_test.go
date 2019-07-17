@@ -53,35 +53,57 @@ func (r fakeRq) Value() string          { return r.value }
 func (r fakeRq) Action() string         { return r.request }
 func (r fakeRq) Card() (card.ID, error) { return r.c, nil }
 
-func TestProcessRequestWithNoErr(t *testing.T) {
-	gameTest := newTestGame(0)
-	rq := fakeRq{"Join", "A", 1}
+func executeTest(ph phase.ID, rq dataProvider) error {
+	gameTest := newTestGame(ph)
 	setCompanion := func(p *player.Player) {}
 	setBriscolaCard := func(c card.ID) {}
-	err := Request(gameTest, rq, setCompanion, setBriscolaCard)
+	return Request(gameTest, rq, setCompanion, setBriscolaCard)
+}
+
+func TestProcessRequestWithNoErr(t *testing.T) {
+	err := executeTest(0, fakeRq{"Join", "A", 1})
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestProcessRequestWithErr(t *testing.T) {
-	gameTest := newTestGame(4)
-	rq := fakeRq{"Card", "A", 50}
-	setCompanion := func(p *player.Player) {}
-	setBriscolaCard := func(c card.ID) {}
-	err := Request(gameTest, rq, setCompanion, setBriscolaCard)
+	err := executeTest(4, fakeRq{"Card", "A", 1})
+	if err == nil {
+		t.Fatal("Error was expected")
+	}
+}
+func TestProcessExchangeRequestWithErr(t *testing.T) {
+	err := executeTest(4, fakeRq{"Exchange", "1", 1})
 	if err == nil {
 		t.Fatal("Error was expected")
 	}
 }
 
-func TestProcessAuctionRequestWithNoErr(t *testing.T) {
-	gameTest := newTestGame(3)
-	rq := fakeRq{"Auction", "75", 1}
-	setCompanion := func(p *player.Player) {}
-	setBriscolaCard := func(c card.ID) {}
-	err := Request(gameTest, rq, setCompanion, setBriscolaCard)
+func TestProcessStopExchangeRequest(t *testing.T) {
+	err := executeTest(4, fakeRq{"Exchange", "0", 1})
 	if err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestProcessAuctionRequestWithNoErr(t *testing.T) {
+	err := executeTest(3, fakeRq{"Auction", "75", 1})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestProcessCompanionRequestWithNoErr(t *testing.T) {
+	err := executeTest(3, fakeRq{"Companion", "23", 23})
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestProcessInexistentRequest(t *testing.T) {
+	err := executeTest(3, fakeRq{"Promo", "0", 0})
+	if err == nil {
+		t.Fatal("Error was expected")
 	}
 }

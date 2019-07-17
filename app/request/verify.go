@@ -59,7 +59,7 @@ type expectedPhaseInterface interface {
 
 func VerifyPhase(g expectedPhaseInterface, rq requester) error {
 	currentPhase := g.Phase()
-	inputPhase, err := phase.ToID(rq.Action())
+	inputPhase, err := phase.ToID(rq)
 	if err == nil && currentPhase == inputPhase {
 		return nil
 	}

@@ -2,7 +2,6 @@ package game
 
 import (
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/player"
 )
@@ -12,7 +11,7 @@ func senderIndex(g roundInformer, rq requestInformer) int {
 	return index
 }
 
-func nextPlayer(g roundInformer, rq requestInformer) {
+func nextPlayer(g roundInformer, rq requestInformer) uint8 {
 	current := g.Phase()
 	actingPlayerIndex := senderIndex(g, rq)
 	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
@@ -34,12 +33,10 @@ func nextPlayer(g roundInformer, rq requestInformer) {
 			nextPlayer = playersRoundRobin(nextPlayer)
 		}
 	case phase.PlayingCards:
-		roundHasEnded := len(*g.PlayedCards()) == 5
-		if roundHasEnded {
+		if !g.IsRoundOngoing() {
 			winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards(), g.Briscola())
 			nextPlayer = playersRoundRobin(playerIndex + winningCardIndex)
 		}
-	default:
 	}
-	track.Player(g.LastPlaying(), g.Players()[nextPlayer])
+	return nextPlayer
 }

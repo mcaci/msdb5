@@ -19,12 +19,12 @@ type predictor interface {
 	Briscola() card.ID
 	Caller() *player.Player
 	Companion() *player.Player
-	IsNotMaxPlayedCards() bool
+	IsRoundOngoing() bool
 	Players() team.Players
 }
 
 func predict(g predictor, roundsBefore, limit uint8) bool {
-	return !(g.IsNotMaxPlayedCards() || roundsBefore > limit || oneTeamHasAllBriscola(g, limit))
+	return !g.IsRoundOngoing() && roundsBefore <= limit && oneTeamHasAllBriscola(g, limit)
 }
 
 func oneTeamHasAllBriscola(g predictor, limit uint8) bool {
@@ -40,11 +40,11 @@ func oneTeamHasAllBriscola(g predictor, limit uint8) bool {
 			continue
 		}
 		isPlayerInCallers := p == g.Caller() || p == g.Companion()
-		if callers || isPlayerInCallers == others || !isPlayerInCallers {
-			return false
-		}
 		callers = callers || isPlayerInCallers
 		others = others || !isPlayerInCallers
+		if callers == others {
+			break
+		}
 		roundsChecked++
 	}
 	return callers != others

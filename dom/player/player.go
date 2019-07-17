@@ -3,7 +3,6 @@ package player
 import (
 	"fmt"
 
-	"github.com/mcaci/msdb5/dom/card"
 	"github.com/mcaci/msdb5/dom/deck"
 )
 
@@ -26,29 +25,19 @@ func New() *Player {
 func (player Player) Name() string { return player.name }
 
 // Hand func
-func (player *Player) Hand() *deck.Cards {
-	return &player.hand
-}
+func (player *Player) Hand() *deck.Cards { return &player.hand }
 
 // Pile func
-func (player *Player) Pile() *deck.Cards {
-	return &player.pile
-}
+func (player *Player) Pile() *deck.Cards { return &player.pile }
 
 // RegisterAs func
-func (player *Player) RegisterAs(name string) {
-	player.name = name
-}
+func (player *Player) RegisterAs(name string) { player.name = name }
 
 // Join func
-func (player *Player) Join(origin string) {
-	player.host = origin
-}
+func (player *Player) Join(origin string) { player.host = origin }
 
 // Attach func
-func (player *Player) Attach(info chan []byte) {
-	player.info = info
-}
+func (player *Player) Attach(info chan []byte) { player.info = info }
 
 // Fold func
 func (player *Player) Fold() { player.fold = true }
@@ -57,11 +46,6 @@ func (player *Player) Fold() { player.fold = true }
 func (player *Player) Write(msg []byte) (n int, err error) {
 	player.info <- []byte(msg)
 	return len(msg), nil
-}
-
-// Points func
-func (player Player) Points(scorer func(card.ID) uint8) uint8 {
-	return player.pile.Sum(scorer)
 }
 
 func (player Player) String() string {

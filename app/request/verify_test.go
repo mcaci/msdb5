@@ -35,36 +35,29 @@ func (g fakeGame) Lang() language.Tag            { return language.English }
 func (g fakeGame) LastPlaying() *list.List       { return list.New() }
 func (g fakeGame) Phase() phase.ID               { return g.phase }
 
-type rq struct {
-	request, origin string
-}
-
-func (r rq) From() string   { return r.origin }
-func (r rq) Action() string { return r.request }
-
 func TestVerifyPlayerWithNoErr(t *testing.T) {
-	err := VerifyPlayer(newTestGame(0), rq{"Auction#A", "127.0.0.51"})
+	err := VerifyPlayer(newTestGame(0), New("Auction#A", "127.0.0.51"))
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestVerifyPlayerWithErr(t *testing.T) {
-	err := VerifyPlayer(newTestGame(0), rq{"Auction#A", "127.0.0.52"})
+	err := VerifyPlayer(newTestGame(0), New("Auction#A", "127.0.0.52"))
 	if err == nil {
 		t.Fatal("Error was expected")
 	}
 }
 
 func TestVerifyPhaseWithNoErr(t *testing.T) {
-	err := VerifyPhase(newTestGame(0), rq{"Join#A", "127.0.0.51"})
+	err := VerifyPhase(newTestGame(0), New("Join#A", "127.0.0.51"))
 	if err != nil {
 		t.Fatal(err)
 	}
 }
 
 func TestVerifyPhaseWithErr(t *testing.T) {
-	err := VerifyPhase(newTestGame(4), rq{"Join#A", "127.0.0.51"})
+	err := VerifyPhase(newTestGame(4), New("Join#A", "127.0.0.51"))
 	if err == nil {
 		t.Fatal("Error was expected")
 	}

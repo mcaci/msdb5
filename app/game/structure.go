@@ -83,7 +83,7 @@ func (g *Game) Players() team.Players         { return g.players }
 func (g *Game) PlayedCards() *deck.Cards      { return &g.playedCards }
 func (g *Game) SideDeck() *deck.Cards         { return &g.side }
 func (g *Game) Lang() language.Tag            { return g.lang }
-func (g *Game) IsNotMaxPlayedCards() bool     { return len(g.playedCards) < 5 }
+func (g *Game) IsRoundOngoing() bool          { return len(g.playedCards) < 5 }
 
 func (g Game) String() (str string) {
 	printer := message.NewPrinter(g.lang)

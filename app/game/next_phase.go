@@ -8,7 +8,7 @@ import (
 	"golang.org/x/text/message"
 )
 
-func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Player), setPhase func(phase.ID)) {
+func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Player)) phase.ID {
 	current := g.Phase()
 	nextPhase := current + 1
 	switch {
@@ -32,10 +32,6 @@ func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Playe
 	if isNext && current == phase.InsideAuction {
 		_, p := g.Players().Find(func(p *player.Player) bool { return !player.Folded(p) })
 		setCaller(p)
-		setPhase(nextPhase)
-	}
-	if isNext && current != phase.InsideAuction {
-		setPhase(nextPhase)
 	}
 	printer := message.NewPrinter(g.Lang())
 	printer.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
@@ -43,4 +39,8 @@ func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Playe
 		printer.Fprintf(pl, "Game: %+v", g)
 	}
 	printer.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
+	if !isNext {
+		return current
+	}
+	return nextPhase
 }

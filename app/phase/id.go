@@ -2,7 +2,6 @@ package phase
 
 import (
 	"fmt"
-	"strings"
 )
 
 // ID type
@@ -17,24 +16,19 @@ const (
 	End
 )
 
+type requester interface {
+	Action() string
+}
+
 // ToID func
-func ToID(request string) (ID, error) {
-	phase := strings.Split(request, "#")[0]
-	var id ID
-	var err error
-	switch phase {
-	case "Join":
-		id = Joining
-	case "Auction":
-		id = InsideAuction
-	case "Exchange":
-		id = ExchangingCards
-	case "Companion":
-		id = ChoosingCompanion
-	case "Card":
-		id = PlayingCards
-	default:
-		err = fmt.Errorf("Request %s not valid", phase)
+func ToID(rq requester) (ID, error) {
+	phase := rq.Action()
+	set := []string{"Join", "Auction", "Exchange", "Companion", "Card"}
+	for i := range set {
+		if set[i] != phase {
+			continue
+		}
+		return ID(i), nil
 	}
-	return id, err
+	return ID(0), fmt.Errorf("Request %s not valid", phase)
 }
