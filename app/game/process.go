@@ -18,20 +18,22 @@ import (
 func (g *Game) Process(inputRequest, origin string) {
 	printer := message.NewPrinter(g.Lang())
 	rq := request.New(inputRequest, origin)
+	report := func(err error) {
+		fmt.Fprintf(os.Stdout, "New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), *rq, err)
+		printer.Fprintf(sender(g, rq), "Error: %+v\n", err)
+	}
 
 	// verify phase step
 	err := request.VerifyPhase(g, rq)
 	if err != nil {
-		fmt.Fprintf(os.Stdout, "New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), rq.Action(), err)
-		printer.Fprintf(sender(g, rq), "Error: %+v\n", err)
+		report(err)
 		return
 	}
 
 	// verify player step
 	err = request.VerifyPlayer(g, rq)
 	if err != nil {
-		fmt.Fprintf(os.Stdout, "New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), rq.Action(), err)
-		printer.Fprintf(sender(g, rq), "Error: %+v\n", err)
+		report(err)
 		return
 	}
 
@@ -40,19 +42,17 @@ func (g *Game) Process(inputRequest, origin string) {
 	setBriscolaCard := func(c card.ID) { g.briscolaCard = c }
 	err = play.Request(g, rq, setCompanion, setBriscolaCard)
 	if err != nil {
-		fmt.Fprintf(os.Stdout, "New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), rq.Action(), err)
-		printer.Fprintf(sender(g, rq), "Error: %+v\n", err)
+		report(err)
 		return
 	}
 
 	// log action to file for ml
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		fmt.Fprintf(os.Stdout, "New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), rq.Action(), err)
+		fmt.Fprintln(os.Stdout, err)
 		return
 	}
 	defer f.Close()
-
 	// write to file for ml
 	switch g.Phase() {
 	case phase.ChoosingCompanion:
@@ -62,7 +62,7 @@ func (g *Game) Process(inputRequest, origin string) {
 		fmt.Fprintf(f, "%s, %d\n", g.CurrentPlayer().Name(), lastPlayed)
 	}
 	// log action to console
-	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), rq.Action(), sender(g, rq), g)
+	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), *rq, sender(g, rq), g)
 
 	// end round: next player
 	nextPlIdx := nextPlayer(g, rq)
