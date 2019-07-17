@@ -57,7 +57,8 @@ func (g *Game) Process(inputRequest, origin string) {
 	case phase.ChoosingCompanion:
 		fmt.Fprintf(f, "%s, %s, %d\n", g.CurrentPlayer().Name(), g.Companion().Name(), *(g.AuctionScore()))
 	case phase.PlayingCards:
-		fmt.Fprintf(f, "%s, %d\n", g.CurrentPlayer().Name(), g.LastCardPlayed())
+		lastPlayed := g.playedCards[len(g.playedCards)-1]
+		fmt.Fprintf(f, "%s, %d\n", g.CurrentPlayer().Name(), lastPlayed)
 	}
 
 	// end round
@@ -69,14 +70,16 @@ func (g *Game) Process(inputRequest, origin string) {
 	nextPlayer(g, rq)
 	// next phase
 	nextPhase(g, rq, setCaller, setPhase)
-	// clean phase
-	cleanPhase(g, rq)
 
 	// log action to console
 	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), rq.Action(), sender(g, rq), g)
 
 	// process end phase
 	if g.phase == phase.End {
+		remainingCards := len(*g.Players()[0].Hand())
+		if remainingCards > 0 {
+			collect(g)
+		}
 		// compute score
 		scorers := make([]team.Scorer, 0)
 		for _, p := range g.Players() {

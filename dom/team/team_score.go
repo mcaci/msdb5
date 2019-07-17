@@ -16,9 +16,9 @@ func Score(caller, companion Scorer, players ...Scorer) (totalTeam1, totalTeam2 
 		score := player.Points(briscola.Points)
 		if player == caller || player == companion {
 			totalTeam1 += score
-		} else {
-			totalTeam2 += score
+			continue
 		}
+		totalTeam2 += score
 	}
 	return
 }

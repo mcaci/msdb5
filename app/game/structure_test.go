@@ -38,8 +38,8 @@ func TestSideDeckHasNoCardsWhenAbsent(t *testing.T) {
 func TestPlayedCardsAreNotPresentAtCreation(t *testing.T) {
 	gameTest := fakeGame(false)
 	gameTest.Join("127.0.0.51", make(chan []byte))
-	if gameTest.CardsOnTheBoard() != 0 {
-		t.Fatalf("Side deck has %d cards", gameTest.CardsOnTheBoard())
+	if !gameTest.IsNotMaxPlayedCards() {
+		t.Fatal("Side deck is expected to have no more than 5 cards")
 	}
 }
 

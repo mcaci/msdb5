@@ -10,8 +10,7 @@ import (
 
 // TranslateCard func
 func TranslateCard(c card.ID, printer *message.Printer) string {
-	var undefinedCard card.ID
-	if c == undefinedCard {
+	if c == 0 {
 		return printer.Sprintf("(Undefined card)")
 	}
 	seeds := []string{printer.Sprintf("Coin"), printer.Sprintf("Cup"),

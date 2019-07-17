@@ -3,9 +3,7 @@ package player
 import "github.com/mcaci/msdb5/dom/card"
 
 // Has func
-func (player *Player) Has(id card.ID) bool {
-	return player.hand.Find(id) != -1
-}
+func (player *Player) Has(id card.ID) bool { return player.hand.Find(id) != -1 }
 
 // IsSameHost func
 func (player Player) IsSameHost(origin string) bool { return player.host == origin }

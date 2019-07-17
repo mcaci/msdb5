@@ -10,12 +10,6 @@ import (
 	"golang.org/x/text/language"
 )
 
-type contextKey int
-
-const (
-	messagePrinterKey contextKey = 1
-)
-
 func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
 	var noSide = flag.Bool("no-side", false, "Add flag to specify no side deck is to be used.")
@@ -35,5 +29,4 @@ func main() {
 	if err := http.ListenAndServe(*addr, nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
-
 }

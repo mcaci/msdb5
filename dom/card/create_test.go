@@ -19,9 +19,9 @@ func Test1OfCoinIsCreatedCorrectly_NumberIs1(t *testing.T) {
 }
 
 func Test1OfCoinIsCreatedCorrectly_SeedIsCoin(t *testing.T) {
-	seed := "Coin"
-	check := func(card ID, err error) bool { return card.Seed().String() != seed }
-	applyCheck(t, "1", seed, check, "Card's seed is not created well from %s and %s")
+	seed := Coin
+	check := func(card ID, err error) bool { return card.Seed() != seed }
+	applyCheck(t, "1", "Coin", check, "Card's seed is not created well from %s and %s")
 }
 
 func Test2OfSwordIsCreatedCorrectly_NoError(t *testing.T) {
@@ -35,9 +35,9 @@ func Test2OfSwordIsCreatedCorrectly_NumberIs2(t *testing.T) {
 }
 
 func Test2OfSwordIsCreatedCorrectly_SeedIsSword(t *testing.T) {
-	seed := "Sword"
-	check := func(card ID, err error) bool { return card.Seed().String() != seed }
-	applyCheck(t, "2", seed, check, "Card's seed is not created well from %s and %s")
+	seed := Sword
+	check := func(card ID, err error) bool { return card.Seed() != seed }
+	applyCheck(t, "2", "Sword", check, "Card's seed is not created well from %s and %s")
 }
 
 func Test8OfCupIsCreatedCorrectly_NoError(t *testing.T) {
@@ -51,9 +51,9 @@ func Test8OfCupIsCreatedCorrectly_NumberIs8(t *testing.T) {
 }
 
 func Test8OfCupIsCreatedCorrectly_SeedIsCup(t *testing.T) {
-	seed := "Cup"
-	check := func(card ID, err error) bool { return card.Seed().String() != seed }
-	applyCheck(t, "8", seed, check, "Card's seed is not created well from %s and %s")
+	seed := Cup
+	check := func(card ID, err error) bool { return card.Seed() != seed }
+	applyCheck(t, "8", "Cup", check, "Card's seed is not created well from %s and %s")
 }
 
 func Test10OfCudgelIsCreatedCorrectly_NoError(t *testing.T) {
@@ -67,9 +67,9 @@ func Test10OfCudgelIsCreatedCorrectly_NumberIs10(t *testing.T) {
 }
 
 func Test10OfCudgelIsCreatedCorrectly_SeedIsCudgel(t *testing.T) {
-	seed := "Cudgel"
-	check := func(card ID, err error) bool { return card.Seed().String() != seed }
-	applyCheck(t, "10", seed, check, "Card's seed is not created well from %s and %s")
+	seed := Cudgel
+	check := func(card ID, err error) bool { return card.Seed() != seed }
+	applyCheck(t, "10", "Cudgel", check, "Card's seed is not created well from %s and %s")
 }
 
 func Test15OfCupDoesntExist(t *testing.T) {

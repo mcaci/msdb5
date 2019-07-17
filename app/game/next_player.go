@@ -7,6 +7,11 @@ import (
 	"github.com/mcaci/msdb5/dom/player"
 )
 
+func senderIndex(g roundInformer, rq requestInformer) int {
+	index, _ := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(rq.From()) })
+	return index
+}
+
 func nextPlayer(g roundInformer, rq requestInformer) {
 	current := g.Phase()
 	actingPlayerIndex := senderIndex(g, rq)

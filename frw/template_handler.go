@@ -42,11 +42,9 @@ func (t *TemplateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func templatePath(filename string, fileExists func(string) bool) string {
-	const localPath = "frw/templates"
-	localFile := filepath.Join(localPath, filename)
+	localFile := filepath.Join("frw/templates", filename)
 	if fileExists(localFile) {
 		return localFile
 	}
-	const packagePath = "github.com/mcaci/msdb5/"
-	return packagePath + localFile
+	return "github.com/mcaci/msdb5/" + localFile
 }

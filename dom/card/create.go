@@ -29,13 +29,13 @@ func nameToNumber(number string) (uint8, error) {
 
 func nameToSeed(seed string) (s Seed, err error) {
 	switch seed {
-	case Coin.String():
+	case "Coin":
 		s = Coin
-	case Cup.String():
+	case "Cup":
 		s = Cup
-	case Sword.String():
+	case "Sword":
 		s = Sword
-	case Cudgel.String():
+	case "Cudgel":
 		s = Cudgel
 	default:
 		err = errors.New("Seed '" + seed + "' doesn't exist")

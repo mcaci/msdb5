@@ -49,10 +49,10 @@ func makePlayers(g *Game) {
 
 // Join func
 func (g *Game) Join(origin string, channel chan []byte) {
-	for _, player := range g.players {
-		if player.IsSameHost("") {
-			player.Join(origin)
-			player.Attach(channel)
+	for _, p := range g.players {
+		if p.IsSameHost("") {
+			p.Join(origin)
+			p.Attach(channel)
 			break
 		}
 	}
@@ -76,7 +76,6 @@ func (g *Game) Caller() *player.Player        { return g.caller }
 func (g *Game) Companion() *player.Player     { return g.companion }
 func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }
 func (g *Game) IsSideUsed() bool              { return g.withSide }
-func (g *Game) LastCardPlayed() card.ID       { return g.playedCards[len(g.playedCards)-1] }
 func (g *Game) LastPlayer() *player.Player    { return g.lastPlaying.Back().Value.(*player.Player) }
 func (g *Game) LastPlaying() *list.List       { return &g.lastPlaying }
 func (g *Game) Phase() phase.ID               { return g.phase }
@@ -84,7 +83,7 @@ func (g *Game) Players() team.Players         { return g.players }
 func (g *Game) PlayedCards() *deck.Cards      { return &g.playedCards }
 func (g *Game) SideDeck() *deck.Cards         { return &g.side }
 func (g *Game) Lang() language.Tag            { return g.lang }
-func (g *Game) CardsOnTheBoard() int          { return len(g.playedCards) }
+func (g *Game) IsNotMaxPlayedCards() bool     { return len(g.playedCards) < 5 }
 
 func (g Game) String() (str string) {
 	printer := message.NewPrinter(g.lang)

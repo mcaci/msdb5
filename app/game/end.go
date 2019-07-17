@@ -1,14 +1,8 @@
 package game
 
 import (
-	"container/list"
-
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
-
-	"github.com/mcaci/msdb5/app/track"
+	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/card"
-	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -21,54 +15,37 @@ func check(g checker) bool {
 	return team.Count(g.Players(), player.IsHandEmpty) == 5
 }
 
-type allInformer interface {
-	Caller() *player.Player
-	Companion() *player.Player
-	Players() team.Players
+type predictor interface {
 	Briscola() card.ID
-	LastPlaying() *list.List
-	Lang() language.Tag
-	CardsOnTheBoard() int
-	IsSideUsed() bool
-	SideDeck() *deck.Cards
-}
-
-func predict(g allInformer, roundsBefore, limit uint8) bool {
-	if g.CardsOnTheBoard() < 5 || roundsBefore > limit {
-		return false
-	}
-	callers, others := anyoneHasAllBriscola(g, limit)
-	if callers == others {
-		return false
-	}
-	collect(g, others)
-	return true
-}
-
-type collector interface {
 	Caller() *player.Player
 	Companion() *player.Player
+	IsNotMaxPlayedCards() bool
 	Players() team.Players
-	LastPlaying() *list.List
-	Lang() language.Tag
-	IsSideUsed() bool
-	SideDeck() *deck.Cards
 }
 
-func collect(g collector, others bool) {
-	p := g.Caller()
-	printer := message.NewPrinter(g.Lang())
-	team := printer.Sprintf("Callers")
-	if others {
-		_, p = g.Players().Find(func(p *player.Player) bool { return p == g.Caller() || p == g.Companion() })
-		team = printer.Sprintf("Others")
+func predict(g predictor, roundsBefore, limit uint8) bool {
+	return !(g.IsNotMaxPlayedCards() || roundsBefore > limit || oneTeamHasAllBriscola(g, limit))
+}
+
+func oneTeamHasAllBriscola(g predictor, limit uint8) bool {
+	highbriscolaCard := briscola.Serie(g.Briscola())
+	var callers, others bool
+	var roundsChecked uint8
+	for _, card := range highbriscolaCard {
+		if roundsChecked == limit {
+			break
+		}
+		_, p := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
+		if p == nil { // no one has card
+			continue
+		}
+		isPlayerInCallers := p == g.Caller() || p == g.Companion()
+		if callers || isPlayerInCallers == others || !isPlayerInCallers {
+			return false
+		}
+		callers = callers || isPlayerInCallers
+		others = others || !isPlayerInCallers
+		roundsChecked++
 	}
-	for _, pl := range g.Players() {
-		move(pl.Hand(), p.Pile())
-		printer.Fprintf(pl, "The end - %s team has all briscola cards", team)
-	}
-	if g.IsSideUsed() {
-		move(g.SideDeck(), p.Pile())
-	}
-	track.Player(g.LastPlaying(), p)
+	return callers != others
 }
