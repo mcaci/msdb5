@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/play"
 	"github.com/mcaci/msdb5/app/request"
@@ -45,17 +44,20 @@ func (g *Game) Process(inputRequest, origin string) {
 		return
 	}
 
-	// log action to file
+	// log action to file for ml
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Fprintf(os.Stdout, "New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), rq.Action(), err)
 		return
 	}
 	defer f.Close()
-	// write to file
-	canLog, text := msg.CreateMlMsg(g)
-	if canLog {
-		fmt.Fprintf(f, text)
+
+	// write to file for ml
+	switch g.Phase() {
+	case phase.ChoosingCompanion:
+		fmt.Fprintf(f, "%s, %s, %d\n", g.CurrentPlayer().Name(), g.Companion().Name(), *(g.AuctionScore()))
+	case phase.PlayingCards:
+		fmt.Fprintf(f, "%s, %d\n", g.CurrentPlayer().Name(), g.LastCardPlayed())
 	}
 
 	// end round
@@ -73,7 +75,7 @@ func (g *Game) Process(inputRequest, origin string) {
 	// log action to console
 	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), rq.Action(), sender(g, rq), g)
 
-	// exit if not end game
+	// process end phase
 	if g.phase == phase.End {
 		// compute score
 		scorers := make([]team.Scorer, 0)
@@ -85,10 +87,7 @@ func (g *Game) Process(inputRequest, origin string) {
 			printer.Fprintf(pl, "The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
 		}
 		// write to file
-		canLog, text = msg.CreateMlMsg(g)
-		if canLog {
-			fmt.Fprintf(f, text)
-		}
+		fmt.Fprintf(f, "%s\n", g.CurrentPlayer().Name())
 	}
 }
 

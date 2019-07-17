@@ -45,7 +45,7 @@ func (rq fakeInput) Card() (card.ID, error) {
 
 func fakePlay(number, seed string) dataTest {
 	p := player.New()
-	p.Draw(func() card.ID { return 1 })
+	p.Hand().Add(1)
 	oldHand := *p.Hand()
 	c, _ := card.Create(number, seed)
 	err := CardAction(fakeInput(c), p.Hand(), &deck.Cards{}, func(cards, to *deck.Cards, index, toIndex int) {

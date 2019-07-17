@@ -23,7 +23,7 @@ func fakeGameSetup(withSide bool) *Game {
 	}
 	for i, pl := range gameTest.players {
 		pl.Hand().Clear()
-		pl.Draw(func() card.ID { return card.ID(2*i + 5) })
+		pl.Hand().Add(card.ID(2*i + 5))
 		if i > 1 {
 			pl.Fold()
 		}

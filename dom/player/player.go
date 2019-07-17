@@ -22,10 +22,8 @@ func New() *Player {
 	return player
 }
 
-// Draw func
-func (player *Player) Draw(supplier func() card.ID) {
-	player.hand.Add(supplier())
-}
+// Name func
+func (player Player) Name() string { return player.name }
 
 // Hand func
 func (player *Player) Hand() *deck.Cards {
@@ -35,11 +33,6 @@ func (player *Player) Hand() *deck.Cards {
 // Pile func
 func (player *Player) Pile() *deck.Cards {
 	return &player.pile
-}
-
-// Has func
-func (player *Player) Has(id card.ID) bool {
-	return player.hand.Find(id) != -1
 }
 
 // RegisterAs func
@@ -57,36 +50,13 @@ func (player *Player) Attach(info chan []byte) {
 	player.info = info
 }
 
+// Fold func
+func (player *Player) Fold() { player.fold = true }
+
 // Write func
 func (player *Player) Write(msg []byte) (n int, err error) {
 	player.info <- []byte(msg)
 	return len(msg), nil
-}
-
-// IsSameHost func
-func (player Player) IsSameHost(origin string) bool { return player.host == origin }
-
-// Name func
-func (player Player) Name() string { return player.name }
-
-// Predicate type
-type Predicate func(p *Player) bool
-
-// IsNameEmpty func
-var IsNameEmpty Predicate = func(p *Player) bool { return p.name == "" }
-
-// IsHandEmpty func
-var IsHandEmpty Predicate = func(p *Player) bool { return len(p.hand) == 0 }
-
-// Folded func
-var Folded Predicate = func(p *Player) bool { return p.fold }
-
-// Fold func
-func (player *Player) Fold() { player.fold = true }
-
-// Collect func
-func (player *Player) Collect(cards *deck.Cards) {
-	player.pile.Add(*cards...)
 }
 
 // Points func

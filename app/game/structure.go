@@ -65,7 +65,7 @@ func distributeCards(g *Game) {
 			g.side.Add(d.Supply())
 		} else {
 			track.Player(&g.lastPlaying, g.players[i%5])
-			g.CurrentPlayer().Draw(d.Supply)
+			g.CurrentPlayer().Hand().Add(d.Supply())
 		}
 	}
 }

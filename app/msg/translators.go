@@ -10,11 +10,12 @@ import (
 
 // TranslateCard func
 func TranslateCard(c card.ID, printer *message.Printer) string {
+	var undefinedCard card.ID
+	if c == undefinedCard {
+		return printer.Sprintf("(Undefined card)")
+	}
 	seeds := []string{printer.Sprintf("Coin"), printer.Sprintf("Cup"),
 		printer.Sprintf("Sword"), printer.Sprintf("Cudgel")}
-	if c.Seed() < 0 || c.Seed() > 3 {
-		return printer.Sprintf("No card selected")
-	}
 	return printer.Sprintf("(%d of %s)", c.Number(), seeds[c.Seed()])
 }
 

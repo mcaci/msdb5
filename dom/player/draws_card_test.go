@@ -2,14 +2,18 @@ package player
 
 import (
 	"testing"
-
-	"github.com/mcaci/msdb5/dom/card"
 )
 
+func TestPlayerHasNoCardsAtStartGame(t *testing.T) {
+	if p := New(); !IsHandEmpty(p) {
+		t.Fatal("Player should not have cards at creation")
+	}
+}
+
 func TestPlayerDrawsOneCard(t *testing.T) {
-	player := New()
-	player.Draw(func() card.ID { return 1 })
-	if !player.Has(1) {
+	p := New()
+	p.Hand().Add(1)
+	if !p.Has(1) {
 		t.Fatalf("Expecting player to have drawn %v", 1)
 	}
 }
