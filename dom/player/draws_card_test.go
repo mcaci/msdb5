@@ -13,7 +13,8 @@ func TestPlayerHasNoCardsAtStartGame(t *testing.T) {
 func TestPlayerDrawsOneCard(t *testing.T) {
 	p := New()
 	p.Hand().Add(1)
-	if !p.Has(1) {
+	plPredicate := IsCardInHand(1)
+	if !plPredicate(p) {
 		t.Fatalf("Expecting player to have drawn %v", 1)
 	}
 }

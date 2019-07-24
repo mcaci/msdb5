@@ -60,13 +60,6 @@ func executeTest(ph phase.ID, rq dataProvider) error {
 	return Request(gameTest, rq, setCompanion, setBriscolaCard)
 }
 
-func TestProcessRequestWithNoErr(t *testing.T) {
-	err := executeTest(0, fakeRq{"Join", "A", 1})
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
 func TestProcessRequestWithErr(t *testing.T) {
 	err := executeTest(4, fakeRq{"Card", "A", 1})
 	if err == nil {
@@ -82,13 +75,6 @@ func TestProcessExchangeRequestWithErr(t *testing.T) {
 
 func TestProcessStopExchangeRequest(t *testing.T) {
 	err := executeTest(4, fakeRq{"Exchange", "0", 1})
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
-func TestProcessAuctionRequestWithNoErr(t *testing.T) {
-	err := executeTest(3, fakeRq{"Auction", "75", 1})
 	if err != nil {
 		t.Fatal(err)
 	}

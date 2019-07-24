@@ -27,7 +27,7 @@ type collector interface {
 func collect(g collector) {
 	highbriscolaCard := briscola.Serie(g.Briscola())
 	for _, card := range highbriscolaCard {
-		_, p := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
+		_, p := g.Players().Find(player.IsCardInHand(card))
 		if p == nil { // no one has card
 			continue
 		}

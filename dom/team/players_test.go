@@ -19,14 +19,14 @@ func init() {
 }
 
 func TestSuccessfulFindNoErr(t *testing.T) {
-	if _, p := testPlayers.Find(func(p *player.Player) bool { return p.Has(33) }); p == nil {
-		t.Fatal("Player not found with criteria p.Has(33)")
+	if _, p := testPlayers.Find(player.IsCardInHand(33)); p == nil {
+		t.Fatal("Player not found with criteria player.Has(33)")
 	}
 }
 
 func TestSuccessfulFindIndex(t *testing.T) {
-	if index, _ := testPlayers.Find(func(p *player.Player) bool { return p.Has(33) }); index != 1 {
-		t.Fatal("Player not found with criteria p.Has(33)")
+	if index, _ := testPlayers.Find(player.IsCardInHand(33)); index != 1 {
+		t.Fatal("Player not found with criteria player.Has(33)")
 	}
 }
 
@@ -38,7 +38,7 @@ func TestSuccessfulFindDataCorresponds(t *testing.T) {
 }
 
 func TestUnsuccessfulFind(t *testing.T) {
-	if _, p := testPlayers.Find(func(p *player.Player) bool { return p.Has(24) }); p != nil {
+	if _, p := testPlayers.Find(player.IsCardInHand(24)); p != nil {
 		t.Fatal("Player should not be found")
 	}
 }

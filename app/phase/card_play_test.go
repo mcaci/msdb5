@@ -1,6 +1,7 @@
-package play
+package phase
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/mcaci/msdb5/dom/card"
@@ -53,4 +54,19 @@ func fakePlay(number, seed string) dataTest {
 		*cards = append((*cards)[:index], (*cards)[index+1:]...)
 	})
 	return dataTest{len(oldHand) - len(*p.Hand()), err}
+}
+
+type fakeInputWithErr struct{}
+
+func (rq fakeInputWithErr) Card() (card.ID, error) {
+	return 1, fmt.Errorf("error")
+}
+
+func TestFakePlayWithErr(t *testing.T) {
+	p := player.New()
+	p.Hand().Add(1)
+	err := CardAction(fakeInputWithErr{}, p.Hand(), &deck.Cards{}, nil)
+	if err == nil {
+		t.Fatal("Expecting an error")
+	}
 }

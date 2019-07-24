@@ -4,23 +4,23 @@ package auction
 type Score uint8
 
 // Update func
-func (actual *Score) Update(proposed Score) {
+func Update(actual, proposed Score) Score {
 	const minScore = 61
 	const maxScore = 120
 	actualScore := proposed
 	switch {
-	case proposed < *actual:
-		actualScore = *actual
+	case proposed < actual:
+		actualScore = actual
 	case proposed < minScore:
 		actualScore = minScore
 	case proposed > maxScore:
 		actualScore = maxScore
 	default:
 	}
-	*actual = actualScore
+	return actualScore
 }
 
-// CheckWith func
-func (actual *Score) CheckWith(proposed Score) bool {
-	return proposed > *actual
+// CheckScores func
+func CheckScores(actual, proposed Score) bool {
+	return proposed > actual
 }

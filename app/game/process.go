@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/mcaci/msdb5/dom/auction"
+
+	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/play"
 	"github.com/mcaci/msdb5/app/request"
@@ -38,14 +41,32 @@ func (g *Game) Process(inputRequest, origin string) {
 	}
 
 	// play step
-	setCompanion := func(p *player.Player) { g.companion = p }
-	setBriscolaCard := func(c card.ID) { g.briscolaCard = c }
-	err = play.Request(g, rq, setCompanion, setBriscolaCard)
-	if err != nil {
-		report(err)
-		return
+	switch g.Phase() {
+	case phase.Joining:
+		data := phase.Join(rq)
+		PostJoin(data, g)
+	case phase.InsideAuction:
+		data := phase.Auction(rq, auctionData{g.CurrentPlayer(), g.AuctionScore()})
+		if data.ToFold() {
+			PostAuctionFold(g)
+			break
+		}
+		PostAuctionScore(data, g)
+		if data.SideCards() == 0 {
+			break
+		}
+		for _, pl := range g.Players() {
+			printer.Fprintf(pl, "Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:data.SideCards()], printer))
+		}
+	default:
+		setCompanion := func(p *player.Player) { g.companion = p }
+		setBriscolaCard := func(c card.ID) { g.briscolaCard = c }
+		err = play.Request(g, rq, setCompanion, setBriscolaCard)
+		if err != nil {
+			report(err)
+			return
+		}
 	}
-
 	// log action to file for ml
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -98,3 +119,11 @@ func sender(g *Game, rq requestInformer) *player.Player {
 	index, _ := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(rq.From()) })
 	return g.Players()[index]
 }
+
+type auctionData struct {
+	pl    *player.Player
+	score *auction.Score
+}
+
+func (a auctionData) Folded() bool                 { return player.Folded(a.pl) }
+func (a auctionData) AuctionScore() *auction.Score { return a.score }

@@ -35,7 +35,7 @@ func oneTeamHasAllBriscola(g predictor, limit uint8) bool {
 		if roundsChecked == limit {
 			break
 		}
-		_, p := g.Players().Find(func(p *player.Player) bool { return p.Has(card) })
+		_, p := g.Players().Find(player.IsCardInHand(card))
 		if p == nil { // no one has card
 			continue
 		}

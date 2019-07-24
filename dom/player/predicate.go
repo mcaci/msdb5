@@ -2,6 +2,11 @@ package player
 
 import "github.com/mcaci/msdb5/dom/card"
 
+// IsCardInHand func
+func IsCardInHand(c card.ID) Predicate {
+	return func(p *Player) bool { return p.Has(c) }
+}
+
 // Has func
 func (player *Player) Has(id card.ID) bool { return player.hand.Find(id) != -1 }
 

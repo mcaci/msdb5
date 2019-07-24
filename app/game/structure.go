@@ -85,6 +85,8 @@ func (g *Game) SideDeck() *deck.Cards         { return &g.side }
 func (g *Game) Lang() language.Tag            { return g.lang }
 func (g *Game) IsRoundOngoing() bool          { return len(g.playedCards) < 5 }
 
+func (g *Game) SetAuction(s auction.Score) { g.auctionScore = s }
+
 func (g Game) String() (str string) {
 	printer := message.NewPrinter(g.lang)
 	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %d)",
