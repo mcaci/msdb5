@@ -16,9 +16,10 @@ type Data struct {
 	score     auction.Score
 	sideCards uint8
 
-	briscola     card.ID
-	comp         uint8
-	cardNotFound error
+	card          card.ID
+	plIdx         uint8
+	cardNotFound  error
+	cardNotInHand error
 }
 
 func (d Data) Name() string { return d.name }
@@ -27,5 +28,6 @@ func (d Data) ToFold() bool         { return d.toFold }
 func (d Data) Score() auction.Score { return d.score }
 func (d Data) SideCards() uint8     { return d.sideCards }
 
-func (d Data) Briscola() card.ID { return d.briscola }
-func (d Data) CompIdx() uint8    { return d.comp }
+func (d Data) Card() card.ID       { return d.card }
+func (d Data) PlIdx() uint8        { return d.plIdx }
+func (d Data) CardNotFound() error { return d.cardNotFound }

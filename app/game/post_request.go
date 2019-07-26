@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/card"
 	"github.com/mcaci/msdb5/dom/player"
 )
 
@@ -16,4 +17,14 @@ func PostAuctionFold(auctioner interface{ CurrentPlayer() *player.Player }) {
 func PostAuctionScore(scoreProvider interface{ Score() auction.Score },
 	effector interface{ SetAuction(auction.Score) }) {
 	effector.SetAuction(scoreProvider.Score())
+}
+
+func PostCompanionCard(cardProvider interface{ Card() card.ID },
+	effector interface{ SetBriscola(card.ID) }) {
+	effector.SetBriscola(cardProvider.Card())
+}
+
+func PostCompanionPlayer(playerProvider interface{ PlIdx() uint8 },
+	effector interface{ SetCompanion(uint8) }) {
+	effector.SetCompanion(playerProvider.PlIdx())
 }

@@ -5,13 +5,12 @@ import (
 	"os"
 
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/deck"
 
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/app/play"
 	"github.com/mcaci/msdb5/app/request"
 	"github.com/mcaci/msdb5/app/track"
-	"github.com/mcaci/msdb5/dom/card"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/message"
@@ -58,15 +57,36 @@ func (g *Game) Process(inputRequest, origin string) {
 		for _, pl := range g.Players() {
 			printer.Fprintf(pl, "Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:data.SideCards()], printer))
 		}
-	default:
-		setCompanion := func(p *player.Player) { g.companion = p }
-		setBriscolaCard := func(c card.ID) { g.briscolaCard = c }
-		err = play.Request(g, rq, setCompanion, setBriscolaCard)
-		if err != nil {
+	case phase.ExchangingCards:
+		if rq.Value() == "0" {
+			break
+		}
+		data := phase.Companion(rq, g.Players())
+		plHand := g.players[data.PlIdx()].Hand()
+		idx := plHand.Find(data.Card())
+		func(cards, to *deck.Cards, index, toIndex int) {
+			(*cards)[index], (*to)[toIndex] = (*to)[index], (*cards)[toIndex]
+		}(plHand, g.SideDeck(), idx, 0)
+	case phase.ChoosingCompanion:
+		data := phase.Companion(rq, g.Players())
+		if err := data.CardNotFound(); err != nil {
 			report(err)
 			return
 		}
+		PostCompanionCard(data, g)
+		PostCompanionPlayer(data, g)
+	case phase.PlayingCards:
+		data := phase.Companion(rq, g.Players())
+		plHand := g.players[data.PlIdx()].Hand()
+		idx := plHand.Find(data.Card())
+		func(cards, to *deck.Cards, index, toIndex int) {
+			to.Add((*cards)[index])
+			*cards = append((*cards)[:index], (*cards)[index+1:]...)
+		}(plHand, g.PlayedCards(), idx, 0)
+	default:
+		report(msg.Error(fmt.Sprintf("Action %s not valid", rq.Action()), g.Lang()))
 	}
+
 	// log action to file for ml
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -95,24 +115,26 @@ func (g *Game) Process(inputRequest, origin string) {
 	g.phase = ph
 	track.Player(g.LastPlaying(), g.Players()[nextPlIdx])
 
-	// process end phase
-	if g.phase == phase.End {
-		remainingCards := len(*g.Players()[0].Hand())
-		if remainingCards > 0 {
-			collect(g)
-		}
-		// compute score
-		pilers := make([]team.Piler, 0)
-		for _, p := range g.Players() {
-			pilers = append(pilers, p)
-		}
-		scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers)
-		for _, pl := range g.Players() {
-			printer.Fprintf(pl, "The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
-		}
-		// write to file
-		fmt.Fprintf(f, "%s\n", g.CurrentPlayer().Name())
+	if g.phase != phase.End {
+		return
 	}
+
+	// process end phase
+	remainingCards := len(*g.Players()[0].Hand())
+	if remainingCards > 0 {
+		collect(g)
+	}
+	// compute score
+	pilers := make([]team.Piler, 0)
+	for _, p := range g.Players() {
+		pilers = append(pilers, p)
+	}
+	scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers)
+	for _, pl := range g.Players() {
+		printer.Fprintf(pl, "The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
+	}
+	// write to file
+	fmt.Fprintf(f, "%s\n", g.CurrentPlayer().Name())
 }
 
 func sender(g *Game, rq requestInformer) *player.Player {

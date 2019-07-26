@@ -86,6 +86,8 @@ func (g *Game) Lang() language.Tag            { return g.lang }
 func (g *Game) IsRoundOngoing() bool          { return len(g.playedCards) < 5 }
 
 func (g *Game) SetAuction(s auction.Score) { g.auctionScore = s }
+func (g *Game) SetBriscola(c card.ID)      { g.briscolaCard = c }
+func (g *Game) SetCompanion(idx uint8)     { g.companion = g.players[idx] }
 
 func (g Game) String() (str string) {
 	printer := message.NewPrinter(g.lang)
