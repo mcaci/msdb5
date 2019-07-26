@@ -3,6 +3,7 @@ package game
 import (
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
 )
 
@@ -27,4 +28,13 @@ func PostCompanionCard(cardProvider interface{ Card() card.ID },
 func PostCompanionPlayer(playerProvider interface{ PlIdx() uint8 },
 	effector interface{ SetCompanion(uint8) }) {
 	effector.SetCompanion(playerProvider.PlIdx())
+}
+
+func PostExchange(cards, to *deck.Cards, index, toIndex int) {
+	(*cards)[index], (*to)[toIndex] = (*to)[index], (*cards)[toIndex]
+}
+
+func PostCardPlay(cards, to *deck.Cards, index int) {
+	to.Add((*cards)[index])
+	*cards = append((*cards)[:index], (*cards)[index+1:]...)
 }
