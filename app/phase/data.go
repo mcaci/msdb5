@@ -12,9 +12,8 @@ type cardProvider interface{ Card() (card.ID, error) }
 type Data struct {
 	name string
 
-	toFold    bool
-	score     auction.Score
-	sideCards uint8
+	toFold bool
+	score  auction.Score
 
 	card          card.ID
 	plIdx         uint8
@@ -26,7 +25,6 @@ func (d Data) Name() string { return d.name }
 
 func (d Data) ToFold() bool         { return d.toFold }
 func (d Data) Score() auction.Score { return d.score }
-func (d Data) SideCards() uint8     { return d.sideCards }
 
 func (d Data) Card() card.ID       { return d.card }
 func (d Data) PlIdx() uint8        { return d.plIdx }
