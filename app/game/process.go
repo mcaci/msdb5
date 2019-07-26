@@ -65,14 +65,14 @@ func (g *Game) Process(inputRequest, origin string) {
 	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), *rq, sender(g, rq), g)
 
 	// end round: next player
-	nextPlIdx := nextPlayer(g, rq)
+	plIndex := nextPlayer(g, rq)
 	// next phase
 	setCaller := func(p *player.Player) { g.caller = p }
 	ph := nextPhase(g, rq, setCaller)
 	// clean up
-	cleanUp(g, rq)
+	g.cleanUp(plIndex)
 	g.phase = ph
-	track.Player(g.LastPlaying(), g.Players()[nextPlIdx])
+	track.Player(g.LastPlaying(), g.Players()[plIndex])
 
 	if g.phase != phase.End {
 		return
