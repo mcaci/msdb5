@@ -27,5 +27,5 @@ func (d Data) ToFold() bool         { return d.toFold }
 func (d Data) Score() auction.Score { return d.score }
 
 func (d Data) Card() card.ID       { return d.card }
-func (d Data) PlIdx() uint8        { return d.plIdx }
+func (d Data) Index() uint8        { return d.plIdx }
 func (d Data) CardNotFound() error { return d.cardNotFound }

@@ -11,11 +11,11 @@ func (g *Game) play(rq *request.Req) error {
 	switch g.Phase() {
 	case phase.Joining:
 		data := phase.Join(rq)
-		PostJoin(data, g)
+		PostJoin(data, g.CurrentPlayer())
 	case phase.InsideAuction:
 		data := phase.Auction(rq, auctionData{g.CurrentPlayer(), g.AuctionScore()})
 		if data.ToFold() {
-			PostAuctionFold(g)
+			PostAuctionFold(g.CurrentPlayer())
 			return nil
 		}
 		PostAuctionScore(data, g)
@@ -23,20 +23,20 @@ func (g *Game) play(rq *request.Req) error {
 		if rq.Value() == "0" {
 			return nil
 		}
-		data := phase.Companion(rq, g.Players())
-		plHand := g.players[data.PlIdx()].Hand()
+		data := phase.CardAction(rq, g.Players())
+		plHand := g.players[data.Index()].Hand()
 		idx := plHand.Find(data.Card())
 		PostExchange(plHand, g.SideDeck(), idx, 0)
 	case phase.ChoosingCompanion:
-		data := phase.Companion(rq, g.Players())
+		data := phase.CardAction(rq, g.Players())
 		if err := data.CardNotFound(); err != nil {
 			return err
 		}
 		PostCompanionCard(data, g)
 		PostCompanionPlayer(data, g)
 	case phase.PlayingCards:
-		data := phase.Companion(rq, g.Players())
-		plHand := g.players[data.PlIdx()].Hand()
+		data := phase.CardAction(rq, g.Players())
+		plHand := g.players[data.Index()].Hand()
 		idx := plHand.Find(data.Card())
 		PostCardPlay(plHand, g.PlayedCards(), idx)
 	default:

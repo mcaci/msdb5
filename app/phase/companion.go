@@ -10,7 +10,7 @@ type companioner interface {
 	Find(player.Predicate) (int, *player.Player)
 }
 
-func Companion(rq cardProvider, comp companioner) Data {
+func CardAction(rq cardProvider, comp companioner) Data {
 	c, err := rq.Card()
 	idx, _ := comp.Find(player.IsCardInHand(c))
 	var errCardNotInHand error

@@ -21,15 +21,15 @@ func (rq fakeInput) Card() (card.ID, error) {
 
 func (c companiontest) Value() string { return string(c) }
 
-func TestCompanionIndex(t *testing.T) {
-	data := Companion(fakeInput(1), companiontest("A"))
-	if data.PlIdx() != 1 {
+func TestCardActionIndex(t *testing.T) {
+	data := CardAction(fakeInput(1), companiontest("A"))
+	if data.Index() != 1 {
 		t.Fatal("Unexpected player")
 	}
 }
 
-func TestCompanionCard(t *testing.T) {
-	data := Companion(fakeInput(11), companiontest("A"))
+func TestCardActionCard(t *testing.T) {
+	data := CardAction(fakeInput(11), companiontest("A"))
 	if data.Card() != 11 {
 		t.Fatal("Unexpected briscola")
 	}
@@ -41,8 +41,8 @@ func (e errortest) Find(player.Predicate) (int, *player.Player) {
 	return -1, nil
 }
 
-func TestCompanionErr(t *testing.T) {
-	data := Companion(fakeInput(11), errortest{})
+func TestCardActionErr(t *testing.T) {
+	data := CardAction(fakeInput(11), errortest{})
 	if data.CardNotFound() != nil {
 		t.Fatal("Error is expected")
 	}
