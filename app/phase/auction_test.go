@@ -71,10 +71,3 @@ func TestScoreAuctionWithFoldFromScore(t *testing.T) {
 		t.Fatalf("Unexpected value: %d", data.Score())
 	}
 }
-
-func TestSideCardsInAuction(t *testing.T) {
-	data := Auction(auctiontest("100"), auctionertest{score: 90})
-	if data.SideCards() != 2 {
-		t.Fatalf("Unexpected value: %d", data.SideCards())
-	}
-}

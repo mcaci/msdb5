@@ -3,10 +3,8 @@ package game
 import (
 	"fmt"
 
-	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/request"
-	"github.com/mcaci/msdb5/dom/deck"
 )
 
 func (g *Game) play(rq *request.Req) error {
@@ -28,9 +26,7 @@ func (g *Game) play(rq *request.Req) error {
 		data := phase.Companion(rq, g.Players())
 		plHand := g.players[data.PlIdx()].Hand()
 		idx := plHand.Find(data.Card())
-		func(cards, to *deck.Cards, index, toIndex int) {
-			(*cards)[index], (*to)[toIndex] = (*to)[index], (*cards)[toIndex]
-		}(plHand, g.SideDeck(), idx, 0)
+		PostExchange(plHand, g.SideDeck(), idx, 0)
 	case phase.ChoosingCompanion:
 		data := phase.Companion(rq, g.Players())
 		if err := data.CardNotFound(); err != nil {
@@ -42,12 +38,9 @@ func (g *Game) play(rq *request.Req) error {
 		data := phase.Companion(rq, g.Players())
 		plHand := g.players[data.PlIdx()].Hand()
 		idx := plHand.Find(data.Card())
-		func(cards, to *deck.Cards, index int) {
-			to.Add((*cards)[index])
-			*cards = append((*cards)[:index], (*cards)[index+1:]...)
-		}(plHand, g.PlayedCards(), idx)
+		PostCardPlay(plHand, g.PlayedCards(), idx)
 	default:
-		return msg.Error(fmt.Sprintf("Action %s not valid", rq.Action()), g.Lang())
+		return fmt.Errorf("Action %s not valid", rq.Action())
 	}
 	return nil
 }
