@@ -2,6 +2,51 @@
     "language": "it",
     "messages": [
         {
+            "id": "Enter name and connect",
+            "message": "Enter name and connect",
+            "translation": "Inserisci il nome e collegati"
+        },
+        {
+            "id": "Callers",
+            "message": "Callers",
+            "translation": "Chiamanti"
+        },
+        {
+            "id": "Others",
+            "message": "Others",
+            "translation": "Non chiamanti"
+        },
+        {
+            "id": "The end - {Team} team has all briscola cards",
+            "message": "The end - {Team} team has all briscola cards",
+            "translation": "Fine - I {Team} hanno tutte le briscole",
+            "placeholders": [
+                {
+                    "id": "Team",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "team"
+                }
+            ]
+        },
+        {
+            "id": "Game: {RoundInformer}",
+            "message": "Game: {RoundInformer}",
+            "translation": "Gioco: {RoundInformer}",
+            "placeholders": [
+                {
+                    "id": "RoundInformer",
+                    "string": "%+[1]v",
+                    "type": "github.com/mcaci/msdb5/app/game.roundInformer",
+                    "underlyingType": "interface{AuctionScore() *github.com/mcaci/msdb5/dom/auction.Score; Briscola() github.com/mcaci/msdb5/dom/card.ID; Caller() *github.com/mcaci/msdb5/dom/player.Player; Companion() *github.com/mcaci/msdb5/dom/player.Player; CurrentPlayer() *github.com/mcaci/msdb5/dom/player.Player; IsRoundOngoing() bool; IsSideUsed() bool; Lang() golang.org/x/text/language.Tag; LastPlayer() *github.com/mcaci/msdb5/dom/player.Player; LastPlaying() *container/list.List; Phase() github.com/mcaci/msdb5/app/phase.ID; PlayedCards() *github.com/mcaci/msdb5/dom/deck.Cards; Players() github.com/mcaci/msdb5/dom/team.Players; SideDeck() *github.com/mcaci/msdb5/dom/deck.Cards}",
+                    "argNum": 1,
+                    "expr": "g"
+                }
+            ]
+        },
+        {
             "id": "Error: {Err}",
             "message": "Error: {Err}",
             "translation": "Errore: {Err}",
@@ -17,115 +62,17 @@
             ]
         },
         {
-            "id": "Expecting player {Name} to play",
-            "message": "Expecting player {Name} to play",
-            "translation": "Mi aspetto che sia {Name} a giocare",
+            "id": "Side deck section: {AuctionScore_printer}",
+            "message": "Side deck section: {AuctionScore_printer}",
+            "translation": "Sezione del monte: {AuctionScore_printer}",
             "placeholders": [
                 {
-                    "id": "Name",
+                    "id": "AuctionScore_printer",
                     "string": "%[1]s",
                     "type": "string",
                     "underlyingType": "string",
                     "argNum": 1,
-                    "expr": "name"
-                }
-            ]
-        },
-        {
-            "id": "Phase is not {InputPhase} but {CurrentPhase}",
-            "message": "Phase is not {InputPhase} but {CurrentPhase}",
-            "translation": "La fase non e' {InputPhase} ma {CurrentPhase}",
-            "placeholders": [
-                {
-                    "id": "InputPhase",
-                    "string": "%[1]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 1,
-                    "expr": "inputPhase"
-                },
-                {
-                    "id": "CurrentPhase",
-                    "string": "%[2]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 2,
-                    "expr": "currentPhase"
-                }
-            ]
-        },
-        {
-            "id": "Action {Action} not valid",
-            "message": "Action {Action} not valid",
-            "translation": "Azione {Action} non valida",
-            "placeholders": [
-                {
-                    "id": "Action",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "action"
-                }
-            ]
-        },
-        {
-            "id": "Side deck: {SideDeck_printer}",
-            "message": "Side deck: {SideDeck_printer}",
-            "translation": "Monte: {SideDeck_printer}",
-            "placeholders": [
-                {
-                    "id": "SideDeck_printer",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "TranslateCards(*gameInfo.SideDeck(), printer)"
-                }
-            ]
-        },
-        {
-            "id": "Side deck section: {SideDeckquantity_printer}",
-            "message": "Side deck section: {SideDeckquantity_printer}",
-            "translation": "Sezione del monte: {SideDeckquantity_printer}",
-            "placeholders": [
-                {
-                    "id": "SideDeckquantity_printer",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "TranslateCards((*gameInfo.SideDeck())[:quantity], printer)"
-                }
-            ]
-        },
-        {
-            "id": "Game: {GameInfo}",
-            "message": "Game: {GameInfo}",
-            "translation": "Informazioni di gioco {GameInfo}",
-            "placeholders": [
-                {
-                    "id": "GameInfo",
-                    "string": "%+[1]v",
-                    "type": "github.com/mcaci/msdb5/app/msg.sidedeckInformer",
-                    "underlyingType": "interface{Lang() golang.org/x/text/language.Tag; SideDeck() *github.com/mcaci/msdb5/dom/deck.Cards}",
-                    "argNum": 1,
-                    "expr": "gameInfo"
-                }
-            ]
-        },
-        {
-            "id": "The end - {Team} team has all briscola cards",
-            "message": "The end - {Team} team has all briscola cards",
-            "translation": "Fine - I {Team} hanno tutte le briscole",
-            "placeholders": [
-                {
-                    "id": "Team",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "team"
+                    "expr": "msg.TranslateCards((*g.SideDeck())[:auction.SideCards(*g.AuctionScore())], printer)"
                 }
             ]
         },
@@ -151,103 +98,6 @@
                     "expr": "scoreTeam2"
                 }
             ]
-        },
-        {
-            "id": "Coin",
-            "message": "Coin",
-            "translation": "Oro"
-        },
-        {
-            "id": "Cup",
-            "message": "Cup",
-            "translation": "Coppe"
-        },
-        {
-            "id": "Sword",
-            "message": "Sword",
-            "translation": "Spade"
-        },
-        {
-            "id": "Cudgel",
-            "message": "Cudgel",
-            "translation": "Bastoni"
-        },
-        {
-            "id": "({Number} of {Seed})",
-            "message": "({Number} of {Seed})",
-            "translation": "({Number} di {Seed})",
-            "placeholders": [
-                {
-                    "id": "Number",
-                    "string": "%[1]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 1,
-                    "expr": "c.Number()"
-                },
-                {
-                    "id": "Seed",
-                    "string": "%[2]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 2,
-                    "expr": "seeds[c.Seed()]"
-                }
-            ]
-        },
-        {
-            "id": "(Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Folded})",
-            "message": "(Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Folded})",
-            "translation": "(Nome: {Name}, Mano: {Hand_printer}, Carte prese: {Pile_printer}, Ha passato? {Folded})",
-            "placeholders": [
-                {
-                    "id": "Name",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "pl.Name()"
-                },
-                {
-                    "id": "Hand_printer",
-                    "string": "%+[2]v",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 2,
-                    "expr": "TranslateCards(*pl.Hand(), printer)"
-                },
-                {
-                    "id": "Pile_printer",
-                    "string": "%+[3]v",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 3,
-                    "expr": "TranslateCards(*pl.Pile(), printer)"
-                },
-                {
-                    "id": "Folded",
-                    "string": "%[4]t",
-                    "type": "bool",
-                    "underlyingType": "bool",
-                    "argNum": 4,
-                    "expr": "pl.Folded()"
-                }
-            ]
-        },
-        {
-            "id": "Callers",
-            "message": "Callers",
-            "translation": "Chiamanti"
-        },
-        {
-            "id": "Others",
-            "message": "Others",
-            "translation": "Non chiamanti"
-        },
-        {
-            "id": "Enter name and connect",
-            "message": "Enter name and connect",
-            "translation": "Inserisci il nome e collegati"
         },
         {
             "id": "(Turn of: {Name}, Companion is: {BriscolaCard_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
@@ -293,6 +143,108 @@
                     "underlyingType": "uint8",
                     "argNum": 5,
                     "expr": "g.phase"
+                }
+            ]
+        },
+        {
+            "id": "(Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
+            "message": "(Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
+            "translation": "(Nome: {Name}, Mano: {Hand_printer}, Carte prese: {Pile_printer}, Ha foldato? {Foldedpl})",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "pl.Name()"
+                },
+                {
+                    "id": "Hand_printer",
+                    "string": "%+[2]v",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 2,
+                    "expr": "TranslateCards(*pl.Hand(), printer)"
+                },
+                {
+                    "id": "Pile_printer",
+                    "string": "%+[3]v",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 3,
+                    "expr": "TranslateCards(*pl.Pile(), printer)"
+                },
+                {
+                    "id": "Foldedpl",
+                    "string": "%[4]t",
+                    "type": "bool",
+                    "underlyingType": "bool",
+                    "argNum": 4,
+                    "expr": "player.Folded(pl)"
+                }
+            ]
+        },
+        {
+            "id": "Side deck: {SideDeck_printer}",
+            "message": "Side deck: {SideDeck_printer}",
+            "translation": "Monte: {SideDeck_printer}",
+            "placeholders": [
+                {
+                    "id": "SideDeck_printer",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "TranslateCards(*gameInfo.SideDeck(), printer)"
+                }
+            ]
+        },
+        {
+            "id": "(Undefined card)",
+            "message": "(Undefined card)",
+            "translation": "(Carta assente)"
+        },
+        {
+            "id": "Coin",
+            "message": "Coin",
+            "translation": "Oro"
+        },
+        {
+            "id": "Cup",
+            "message": "Cup",
+            "translation": "Coppe"
+        },
+        {
+            "id": "Sword",
+            "message": "Sword",
+            "translation": "Spade"
+        },
+        {
+            "id": "Cudgel",
+            "message": "Cudgel",
+            "translation": "Bastoni"
+        },
+        {
+            "id": "({Number} of {Seed})",
+            "message": "({Number} of {Seed})",
+            "translation": "({Number} di {Seed})",
+            "placeholders": [
+                {
+                    "id": "Number",
+                    "string": "%[1]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 1,
+                    "expr": "c.Number()"
+                },
+                {
+                    "id": "Seed",
+                    "string": "%[2]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 2,
+                    "expr": "seeds[c.Seed()]"
                 }
             ]
         }
