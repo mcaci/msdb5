@@ -4,13 +4,11 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mcaci/msdb5/dom/auction"
-	"github.com/mcaci/msdb5/dom/deck"
-
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/request"
 	"github.com/mcaci/msdb5/app/track"
+	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/message"
@@ -40,51 +38,12 @@ func (g *Game) Process(inputRequest, origin string) {
 	}
 
 	// play step
-	switch g.Phase() {
-	case phase.Joining:
-		data := phase.Join(rq)
-		PostJoin(data, g)
-	case phase.InsideAuction:
-		data := phase.Auction(rq, auctionData{g.CurrentPlayer(), g.AuctionScore()})
-		if data.ToFold() {
-			PostAuctionFold(g)
-			break
-		}
-		PostAuctionScore(data, g)
-		if data.SideCards() == 0 {
-			break
-		}
+	g.play(rq)
+
+	if phase.InsideAuction == g.Phase() && len(*g.SideDeck()) != 0 {
 		for _, pl := range g.Players() {
-			printer.Fprintf(pl, "Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:data.SideCards()], printer))
+			printer.Fprintf(pl, "Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:auction.SideCards(*g.AuctionScore())], printer))
 		}
-	case phase.ExchangingCards:
-		if rq.Value() == "0" {
-			break
-		}
-		data := phase.Companion(rq, g.Players())
-		plHand := g.players[data.PlIdx()].Hand()
-		idx := plHand.Find(data.Card())
-		func(cards, to *deck.Cards, index, toIndex int) {
-			(*cards)[index], (*to)[toIndex] = (*to)[index], (*cards)[toIndex]
-		}(plHand, g.SideDeck(), idx, 0)
-	case phase.ChoosingCompanion:
-		data := phase.Companion(rq, g.Players())
-		if err := data.CardNotFound(); err != nil {
-			report(err)
-			return
-		}
-		PostCompanionCard(data, g)
-		PostCompanionPlayer(data, g)
-	case phase.PlayingCards:
-		data := phase.Companion(rq, g.Players())
-		plHand := g.players[data.PlIdx()].Hand()
-		idx := plHand.Find(data.Card())
-		func(cards, to *deck.Cards, index, toIndex int) {
-			to.Add((*cards)[index])
-			*cards = append((*cards)[:index], (*cards)[index+1:]...)
-		}(plHand, g.PlayedCards(), idx, 0)
-	default:
-		report(msg.Error(fmt.Sprintf("Action %s not valid", rq.Action()), g.Lang()))
 	}
 
 	// log action to file for ml
