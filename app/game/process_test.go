@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/mcaci/msdb5/app/phase"
-
 	"github.com/mcaci/msdb5/dom/card"
 )
 

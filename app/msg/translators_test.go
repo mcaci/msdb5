@@ -3,12 +3,10 @@ package msg
 import (
 	"testing"
 
+	"github.com/mcaci/msdb5/dom/card"
 	"github.com/mcaci/msdb5/dom/deck"
-
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
-
-	"github.com/mcaci/msdb5/dom/card"
 )
 
 func TestValidCardTranslation(t *testing.T) {

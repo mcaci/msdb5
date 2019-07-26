@@ -6,7 +6,6 @@ import (
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
-
 	"golang.org/x/text/language"
 )
 

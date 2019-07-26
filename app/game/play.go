@@ -3,10 +3,9 @@ package game
 import (
 	"fmt"
 
-	"github.com/mcaci/msdb5/app/request"
-
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/app/request"
 	"github.com/mcaci/msdb5/dom/deck"
 )
 
