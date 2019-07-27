@@ -16,6 +16,8 @@ const (
 	End
 )
 
+var phases = []string{"Join", "Auction", "Exchange", "Companion", "Card", "End"}
+
 type requester interface {
 	Action() string
 }
@@ -23,12 +25,15 @@ type requester interface {
 // ToID func
 func ToID(rq requester) (ID, error) {
 	phase := rq.Action()
-	set := []string{"Join", "Auction", "Exchange", "Companion", "Card"}
-	for i := range set {
-		if set[i] != phase {
+	for i := range phases {
+		if phases[i] != phase {
 			continue
 		}
 		return ID(i), nil
 	}
 	return ID(0), fmt.Errorf("Request %s not valid", phase)
+}
+
+func (id ID) String() string {
+	return phases[id]
 }
