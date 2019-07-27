@@ -89,6 +89,6 @@ func (g *Game) SetBriscola(c card.ID)      { g.briscolaCard = c }
 func (g *Game) SetCompanion(idx uint8)     { g.companion = g.players[idx] }
 
 func (g Game) String() string {
-	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %d)",
+	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %s)",
 		g.CurrentPlayer().Name(), g.briscolaCard, g.playedCards, g.auctionScore, g.phase)
 }

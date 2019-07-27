@@ -2,116 +2,16 @@
     "language": "en",
     "messages": [
         {
-            "id": "Callers",
-            "message": "Callers",
-            "translation": "Callers",
+            "id": "Enter name and connect",
+            "message": "Enter name and connect",
+            "translation": "Enter name and connect",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },
         {
-            "id": "Others",
-            "message": "Others",
-            "translation": "Others",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "The end - {Team} team has all briscola cards",
-            "message": "The end - {Team} team has all briscola cards",
-            "translation": "The end - {Team} team has all briscola cards",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Team",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "team"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "Game: {RoundInformer}",
-            "message": "Game: {RoundInformer}",
-            "translation": "Game: {RoundInformer}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "RoundInformer",
-                    "string": "%+[1]v",
-                    "type": "github.com/mcaci/msdb5/app/game.roundInformer",
-                    "underlyingType": "interface{AuctionScore() *github.com/mcaci/msdb5/dom/auction.Score; Briscola() github.com/mcaci/msdb5/dom/card.ID; Caller() *github.com/mcaci/msdb5/dom/player.Player; Companion() *github.com/mcaci/msdb5/dom/player.Player; CurrentPlayer() *github.com/mcaci/msdb5/dom/player.Player; IsRoundOngoing() bool; IsSideUsed() bool; Lang() golang.org/x/text/language.Tag; LastPlayer() *github.com/mcaci/msdb5/dom/player.Player; LastPlaying() *container/list.List; Phase() github.com/mcaci/msdb5/app/phase.ID; PlayedCards() *github.com/mcaci/msdb5/dom/deck.Cards; Players() github.com/mcaci/msdb5/dom/team.Players; SideDeck() *github.com/mcaci/msdb5/dom/deck.Cards}",
-                    "argNum": 1,
-                    "expr": "g"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "Error: {Err}",
-            "message": "Error: {Err}",
-            "translation": "Error: {Err}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Err",
-                    "string": "%+[1]v",
-                    "type": "error",
-                    "underlyingType": "interface{Error() string}",
-                    "argNum": 1,
-                    "expr": "err"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "Side deck section: {AuctionScore_printer}",
-            "message": "Side deck section: {AuctionScore_printer}",
-            "translation": "Side deck section: {AuctionScore_printer}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "AuctionScore_printer",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "msg.TranslateCards((*g.SideDeck())[:auction.SideCards(*g.AuctionScore())], printer)"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "message": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "translation": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "ScoreTeam1",
-                    "string": "%[1]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 1,
-                    "expr": "scoreTeam1"
-                },
-                {
-                    "id": "ScoreTeam2",
-                    "string": "%[2]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 2,
-                    "expr": "scoreTeam2"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "(Turn of: {Name}, Companion is: {BriscolaCard_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "message": "(Turn of: {Name}, Companion is: {BriscolaCard_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "translation": "(Turn of: {Name}, Companion is: {BriscolaCard_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "id": "Expecting player {Name} to play",
+            "message": "Expecting player {Name} to play",
+            "translation": "Expecting player {Name} to play",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
@@ -120,39 +20,32 @@
                     "type": "string",
                     "underlyingType": "string",
                     "argNum": 1,
-                    "expr": "g.CurrentPlayer().Name()"
-                },
+                    "expr": "name"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Phase is not {Input} but {Current}",
+            "message": "Phase is not {Input} but {Current}",
+            "translation": "Phase is not {Input} but {Current}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
                 {
-                    "id": "BriscolaCard_printer",
-                    "string": "%[2]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 2,
-                    "expr": "msg.TranslateCard(g.briscolaCard, printer)"
-                },
-                {
-                    "id": "PlayedCards_printer",
-                    "string": "%[3]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 3,
-                    "expr": "msg.TranslateCards(g.playedCards, printer)"
-                },
-                {
-                    "id": "AuctionScore",
-                    "string": "%[4]d",
-                    "type": "github.com/mcaci/msdb5/dom/auction.Score",
-                    "underlyingType": "uint8",
-                    "argNum": 4,
-                    "expr": "g.auctionScore"
-                },
-                {
-                    "id": "Phase",
-                    "string": "%[5]d",
+                    "id": "Input",
+                    "string": "%[1]d",
                     "type": "github.com/mcaci/msdb5/app/phase.ID",
                     "underlyingType": "uint8",
-                    "argNum": 5,
-                    "expr": "g.phase"
+                    "argNum": 1,
+                    "expr": "input"
+                },
+                {
+                    "id": "Current",
+                    "string": "%[2]d",
+                    "type": "github.com/mcaci/msdb5/app/phase.ID",
+                    "underlyingType": "uint8",
+                    "argNum": 2,
+                    "expr": "current"
                 }
             ],
             "fuzzy": true
@@ -276,10 +169,125 @@
             "fuzzy": true
         },
         {
-            "id": "Enter name and connect",
-            "message": "Enter name and connect",
-            "translation": "Enter name and connect",
+            "id": "(Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "message": "(Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "translation": "(Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
             "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Name",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "g.CurrentPlayer().Name()"
+                },
+                {
+                    "id": "Briscola_printer",
+                    "string": "%[2]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 2,
+                    "expr": "TranslateCard(g.Briscola(), printer)"
+                },
+                {
+                    "id": "PlayedCards_printer",
+                    "string": "%[3]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 3,
+                    "expr": "TranslateCards(*g.PlayedCards(), printer)"
+                },
+                {
+                    "id": "AuctionScore",
+                    "string": "%[4]d",
+                    "type": "*github.com/mcaci/msdb5/dom/auction.Score",
+                    "underlyingType": "*github.com/mcaci/msdb5/dom/auction.Score",
+                    "argNum": 4,
+                    "expr": "g.AuctionScore()"
+                },
+                {
+                    "id": "Phase",
+                    "string": "%[5]s",
+                    "type": "github.com/mcaci/msdb5/app/phase.ID",
+                    "underlyingType": "uint8",
+                    "argNum": 5,
+                    "expr": "g.Phase()"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Callers",
+            "message": "Callers",
+            "translation": "Callers",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Others",
+            "message": "Others",
+            "translation": "Others",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Error: {Err}",
+            "message": "Error: {Err}",
+            "translation": "Error: {Err}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Err",
+                    "string": "%+[1]v",
+                    "type": "error",
+                    "underlyingType": "interface{Error() string}",
+                    "argNum": 1,
+                    "expr": "err"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Game: {G}",
+            "message": "Game: {G}",
+            "translation": "Game: {G}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "G",
+                    "string": "%+[1]v",
+                    "type": "*github.com/mcaci/msdb5/app/game.Game",
+                    "underlyingType": "*github.com/mcaci/msdb5/app/game.Game",
+                    "argNum": 1,
+                    "expr": "g"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "message": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "translation": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "ScoreTeam1",
+                    "string": "%[1]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 1,
+                    "expr": "scoreTeam1"
+                },
+                {
+                    "id": "ScoreTeam2",
+                    "string": "%[2]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 2,
+                    "expr": "scoreTeam2"
+                }
+            ],
             "fuzzy": true
         }
     ]

@@ -42,7 +42,7 @@ func (g *Game) Process(inputRequest, origin string) {
 
 	if phase.InsideAuction == g.Phase() && len(*g.SideDeck()) != 0 {
 		for _, pl := range g.Players() {
-			printer.Fprintf(pl, "Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:auction.SideCards(*g.AuctionScore())], printer))
+			fmt.Fprintf(pl, "Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:auction.SideCards(*g.AuctionScore())], printer))
 		}
 	}
 
@@ -69,11 +69,11 @@ func (g *Game) Process(inputRequest, origin string) {
 	// next phase
 	setCaller := func(p *player.Player) { g.caller = p }
 	ph := nextPhase(g, rq, setCaller)
-	printer.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
+	fmt.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
 	for _, pl := range g.Players() {
 		printer.Fprintf(pl, "Game: %+v", g)
 	}
-	printer.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
+	fmt.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 	// clean up
 	g.cleanUp(plIndex)
 	g.phase = ph

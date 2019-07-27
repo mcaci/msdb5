@@ -2,6 +2,7 @@ package game
 
 import (
 	"container/list"
+	"fmt"
 
 	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/briscola"
@@ -43,7 +44,7 @@ func collect(g collector) {
 		if p != g.Caller() && p != g.Companion() {
 			team = printer.Sprintf("Others")
 		}
-		printer.Fprintf(p, "The end - %s team has all briscola cards", team)
+		fmt.Fprintf(p, "The end - %s team has all briscola cards", team)
 		break
 	}
 }
