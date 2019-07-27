@@ -2,8 +2,8 @@ package game
 
 import (
 	"container/list"
+	"fmt"
 
-	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/auction"
@@ -12,7 +12,6 @@ import (
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/language"
-	"golang.org/x/text/message"
 )
 
 // Game struct
@@ -89,8 +88,7 @@ func (g *Game) SetAuction(s auction.Score) { g.auctionScore = s }
 func (g *Game) SetBriscola(c card.ID)      { g.briscolaCard = c }
 func (g *Game) SetCompanion(idx uint8)     { g.companion = g.players[idx] }
 
-func (g Game) String() (str string) {
-	printer := message.NewPrinter(g.lang)
-	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %d)",
-		g.CurrentPlayer().Name(), msg.TranslateCard(g.briscolaCard, printer), msg.TranslateCards(g.playedCards, printer), g.auctionScore, g.phase)
+func (g Game) String() string {
+	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %d)",
+		g.CurrentPlayer().Name(), g.briscolaCard, g.playedCards, g.auctionScore, g.phase)
 }

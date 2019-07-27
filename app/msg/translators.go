@@ -3,8 +3,11 @@ package msg
 import (
 	"strings"
 
+	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/card"
 	"github.com/mcaci/msdb5/dom/deck"
+	"github.com/mcaci/msdb5/dom/player"
 	"golang.org/x/text/message"
 )
 
@@ -25,4 +28,18 @@ func TranslateCards(cards deck.Cards, printer *message.Printer) string {
 		mappedCards = append(mappedCards, TranslateCard(c, printer))
 	}
 	return strings.Join(mappedCards, ",")
+}
+
+type statusProvider interface {
+	AuctionScore() *auction.Score
+	Briscola() card.ID
+	CurrentPlayer() *player.Player
+	Phase() phase.ID
+	PlayedCards() *deck.Cards
+}
+
+// TranslateGameStatus func
+func TranslateGameStatus(g statusProvider, printer *message.Printer) string {
+	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %d)",
+		g.CurrentPlayer().Name(), TranslateCard(g.Briscola(), printer), TranslateCards(*g.PlayedCards(), printer), g.AuctionScore(), g.Phase())
 }
