@@ -69,6 +69,11 @@ func (g *Game) Process(inputRequest, origin string) {
 	// next phase
 	setCaller := func(p *player.Player) { g.caller = p }
 	ph := nextPhase(g, rq, setCaller)
+	printer.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
+	for _, pl := range g.Players() {
+		printer.Fprintf(pl, "Game: %+v", g)
+	}
+	printer.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 	// clean up
 	g.cleanUp(plIndex)
 	g.phase = ph

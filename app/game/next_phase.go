@@ -1,11 +1,9 @@
 package game
 
 import (
-	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
-	"golang.org/x/text/message"
 )
 
 func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Player)) phase.ID {
@@ -33,12 +31,6 @@ func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Playe
 		_, p := g.Players().Find(func(p *player.Player) bool { return !player.Folded(p) })
 		setCaller(p)
 	}
-	printer := message.NewPrinter(g.Lang())
-	printer.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
-	for _, pl := range g.Players() {
-		printer.Fprintf(pl, "Game: %+v", g)
-	}
-	printer.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 	if !isNext {
 		return current
 	}
