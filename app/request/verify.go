@@ -2,15 +2,20 @@ package request
 
 import (
 	"container/list"
-	"fmt"
+	"errors"
 
-	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/language"
 )
+
+// ErrUnexpectedPlayer error
+var ErrUnexpectedPlayer = errors.New("Unexpected player")
+
+// ErrUnexpectedPhase error
+var ErrUnexpectedPhase = errors.New("Unexpected phase")
 
 type expectedPlayerFinder interface {
 	CurrentPlayer() *player.Player
@@ -43,7 +48,7 @@ func VerifyPlayer(g expectedPlayerInterface, rq requester) error {
 	criteria := FindCriteria(g, rq)
 	_, actingPlayer := g.Players().Find(criteria)
 	if actingPlayer == nil {
-		return msg.Error(fmt.Sprintf("Expecting player %s to play", g.CurrentPlayer().Name()), g.Lang())
+		return ErrUnexpectedPlayer
 	}
 	if g.CurrentPlayer() == actingPlayer {
 		return nil
@@ -64,7 +69,7 @@ func VerifyPhase(g expectedPhaseInterface, rq requester) error {
 		return nil
 	}
 	if err == nil && currentPhase != inputPhase {
-		err = msg.Error(fmt.Sprintf("Phase is not %d but %d", inputPhase, currentPhase), g.Lang())
+		err = ErrUnexpectedPhase
 	}
 	return err
 }
