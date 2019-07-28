@@ -20,7 +20,7 @@ func (g *Game) Process(inputRequest, origin string) {
 	rq := request.New(inputRequest, origin)
 	report := func(err error) {
 		fmt.Fprintf(os.Stdout, "New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), *rq, err)
-		printer.Fprintf(sender(g, rq), "Error: %+v\n", err)
+		fmt.Fprintf(sender(g, rq), "Error: %+v\n", err)
 	}
 
 	// verify phase step
@@ -71,7 +71,7 @@ func (g *Game) Process(inputRequest, origin string) {
 	ph := nextPhase(g, rq, setCaller)
 	fmt.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
 	for _, pl := range g.Players() {
-		printer.Fprintf(pl, "Game: %+v", g)
+		printer.Fprintf(pl, "Game: %+v", msg.TranslateGameStatus(g, printer))
 	}
 	fmt.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 	// clean up
@@ -95,7 +95,7 @@ func (g *Game) Process(inputRequest, origin string) {
 	}
 	scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers)
 	for _, pl := range g.Players() {
-		printer.Fprintf(pl, "The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
+		fmt.Fprintf(pl, "The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
 	}
 	// write to file
 	fmt.Fprintf(f, "%s\n", g.CurrentPlayer().Name())

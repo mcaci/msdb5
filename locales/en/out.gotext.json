@@ -2,6 +2,37 @@
     "language": "en",
     "messages": [
         {
+            "id": "Callers",
+            "message": "Callers",
+            "translation": "Callers",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Others",
+            "message": "Others",
+            "translation": "Others",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Game: {G}",
+            "message": "Game: {G}",
+            "translation": "Game: {G}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "G",
+                    "string": "%+[1]v",
+                    "type": "*github.com/mcaci/msdb5/app/game.Game",
+                    "underlyingType": "*github.com/mcaci/msdb5/app/game.Game",
+                    "argNum": 1,
+                    "expr": "g"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
             "id": "Enter name and connect",
             "message": "Enter name and connect",
             "translation": "Enter name and connect",
@@ -213,79 +244,6 @@
                     "underlyingType": "uint8",
                     "argNum": 5,
                     "expr": "g.Phase()"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "Callers",
-            "message": "Callers",
-            "translation": "Callers",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "Others",
-            "message": "Others",
-            "translation": "Others",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "Error: {Err}",
-            "message": "Error: {Err}",
-            "translation": "Error: {Err}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Err",
-                    "string": "%+[1]v",
-                    "type": "error",
-                    "underlyingType": "interface{Error() string}",
-                    "argNum": 1,
-                    "expr": "err"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "Game: {G}",
-            "message": "Game: {G}",
-            "translation": "Game: {G}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "G",
-                    "string": "%+[1]v",
-                    "type": "*github.com/mcaci/msdb5/app/game.Game",
-                    "underlyingType": "*github.com/mcaci/msdb5/app/game.Game",
-                    "argNum": 1,
-                    "expr": "g"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "message": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "translation": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "ScoreTeam1",
-                    "string": "%[1]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 1,
-                    "expr": "scoreTeam1"
-                },
-                {
-                    "id": "ScoreTeam2",
-                    "string": "%[2]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 2,
-                    "expr": "scoreTeam2"
                 }
             ],
             "fuzzy": true
