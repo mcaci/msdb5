@@ -16,23 +16,6 @@
             "fuzzy": true
         },
         {
-            "id": "Game: {G}",
-            "message": "Game: {G}",
-            "translation": "Game: {G}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "G",
-                    "string": "%+[1]v",
-                    "type": "*github.com/mcaci/msdb5/app/game.Game",
-                    "underlyingType": "*github.com/mcaci/msdb5/app/game.Game",
-                    "argNum": 1,
-                    "expr": "g"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
             "id": "Enter name and connect",
             "message": "Enter name and connect",
             "translation": "Enter name and connect",
@@ -200,9 +183,9 @@
             "fuzzy": true
         },
         {
-            "id": "(Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "message": "(Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
-            "translation": "(Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "id": "Game: (Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "message": "Game: (Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
+            "translation": "Game: (Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Auction score: {AuctionScore}, Phase: {Phase})",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
@@ -232,10 +215,10 @@
                 {
                     "id": "AuctionScore",
                     "string": "%[4]d",
-                    "type": "*github.com/mcaci/msdb5/dom/auction.Score",
-                    "underlyingType": "*github.com/mcaci/msdb5/dom/auction.Score",
+                    "type": "github.com/mcaci/msdb5/dom/auction.Score",
+                    "underlyingType": "uint8",
                     "argNum": 4,
-                    "expr": "g.AuctionScore()"
+                    "expr": "*g.AuctionScore()"
                 },
                 {
                     "id": "Phase",

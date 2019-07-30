@@ -36,51 +36,50 @@ func init() {
 }
 
 var messageKeyToIndex = map[string]int{
-	"(%d of %s)": 13,
-	"(Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)":                               6,
-	"(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %s)": 14,
-	"(Undefined card)":            8,
+	"(%d of %s)": 12,
+	"(Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)": 5,
+	"(Undefined card)":            7,
 	"Callers":                     0,
-	"Coin":                        9,
-	"Cudgel":                      12,
-	"Cup":                         10,
-	"Enter name and connect":      3,
-	"Expecting player %s to play": 4,
-	"Game: %+v":                   2,
-	"Others":                      1,
-	"Phase is not %d but %d":      5,
-	"Side deck: %s\n":             7,
-	"Sword":                       11,
+	"Coin":                        8,
+	"Cudgel":                      11,
+	"Cup":                         9,
+	"Enter name and connect":      2,
+	"Expecting player %s to play": 3,
+	"Game: (Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %s)": 13,
+	"Others":                 1,
+	"Phase is not %d but %d": 4,
+	"Side deck: %s\n":        6,
+	"Sword":                  10,
 }
 
-var enIndex = []uint32{ // 16 elements
-	0x00000000, 0x00000008, 0x0000000f, 0x0000001c,
-	0x00000033, 0x00000052, 0x0000006f, 0x000000ad,
-	0x000000c3, 0x000000d4, 0x000000d9, 0x000000dd,
-	0x000000e3, 0x000000ea, 0x000000fb, 0x0000015a,
-} // Size: 88 bytes
+var enIndex = []uint32{ // 15 elements
+	0x00000000, 0x00000008, 0x0000000f, 0x00000026,
+	0x00000045, 0x00000062, 0x000000a0, 0x000000b6,
+	0x000000c7, 0x000000cc, 0x000000d0, 0x000000d6,
+	0x000000dd, 0x000000ee, 0x00000153,
+} // Size: 84 bytes
 
-const enData string = "" + // Size: 346 bytes
-	"\x02Callers\x02Others\x02Game: %+[1]v\x02Enter name and connect\x02Expec" +
-	"ting player %[1]s to play\x02Phase is not %[1]d but %[2]d\x02(Name: %[1]" +
-	"s, Cards: %+[2]v, Pile: %+[3]v, Has folded? %[4]t)\x04\x00\x01\x0a\x11" +
-	"\x02Side deck: %[1]s\x02(Undefined card)\x02Coin\x02Cup\x02Sword\x02Cudg" +
-	"el\x02(%[1]d of %[2]s)\x02(Turn of: %[1]s, Companion is: %[2]s, Played c" +
-	"ards: %[3]s, Auction score: %[4]d, Phase: %[5]s)"
+const enData string = "" + // Size: 339 bytes
+	"\x02Callers\x02Others\x02Enter name and connect\x02Expecting player %[1]" +
+	"s to play\x02Phase is not %[1]d but %[2]d\x02(Name: %[1]s, Cards: %+[2]v" +
+	", Pile: %+[3]v, Has folded? %[4]t)\x04\x00\x01\x0a\x11\x02Side deck: %[1" +
+	"]s\x02(Undefined card)\x02Coin\x02Cup\x02Sword\x02Cudgel\x02(%[1]d of %[" +
+	"2]s)\x02Game: (Turn of: %[1]s, Companion is: %[2]s, Played cards: %[3]s," +
+	" Auction score: %[4]d, Phase: %[5]s)"
 
-var itIndex = []uint32{ // 16 elements
-	0x00000000, 0x0000000a, 0x00000018, 0x00000026,
-	0x00000044, 0x00000067, 0x00000085, 0x000000c9,
-	0x000000db, 0x000000eb, 0x000000ef, 0x000000f5,
-	0x000000fb, 0x00000103, 0x00000114, 0x00000173,
-} // Size: 88 bytes
+var itIndex = []uint32{ // 15 elements
+	0x00000000, 0x0000000a, 0x00000018, 0x00000036,
+	0x00000059, 0x00000077, 0x000000bb, 0x000000cd,
+	0x000000dd, 0x000000e1, 0x000000e7, 0x000000ed,
+	0x000000f5, 0x00000106, 0x0000016c,
+} // Size: 84 bytes
 
-const itData string = "" + // Size: 371 bytes
-	"\x02Chiamanti\x02Non chiamanti\x02Gioco: %+[1]v\x02Inserisci il nome e c" +
-	"ollegati\x02Mi aspetto che sia %[1]s a giocare\x02La fase non e' %[1]d m" +
-	"a %[2]d\x02(Nome: %[1]s, Mano: %+[2]v, Carte prese: %+[3]v, Ha foldato? " +
-	"%[4]t)\x04\x00\x01\x0a\x0d\x02Monte: %[1]s\x02(Carta assente)\x02Oro\x02" +
-	"Coppe\x02Spade\x02Bastoni\x02(%[1]d di %[2]s)\x02(Turno di: %[1]s, Compa" +
-	"gno: %[2]s, Carte giocate: %[3]s, Punteggio d'asta: %[4]d, Fase: %[5]s)"
+const itData string = "" + // Size: 364 bytes
+	"\x02Chiamanti\x02Non chiamanti\x02Inserisci il nome e collegati\x02Mi as" +
+	"petto che sia %[1]s a giocare\x02La fase non e' %[1]d ma %[2]d\x02(Nome:" +
+	" %[1]s, Mano: %+[2]v, Carte prese: %+[3]v, Ha foldato? %[4]t)\x04\x00" +
+	"\x01\x0a\x0d\x02Monte: %[1]s\x02(Carta assente)\x02Oro\x02Coppe\x02Spade" +
+	"\x02Bastoni\x02(%[1]d di %[2]s)\x02Gioco: (Turno di: %[1]s, Compagno: %[" +
+	"2]s, Carte giocate: %[3]s, Punteggio d'asta: %[4]d, Fase: %[5]s)"
 
-	// Total table size 893 bytes (0KiB); checksum: FBE9A476
+	// Total table size 871 bytes (0KiB); checksum: 7418B8E2

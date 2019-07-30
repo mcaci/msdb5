@@ -61,23 +61,24 @@ func (g *Game) Process(inputRequest, origin string) {
 		lastPlayed := g.playedCards[len(g.playedCards)-1]
 		fmt.Fprintf(f, "%s, %d\n", g.CurrentPlayer().Name(), lastPlayed)
 	}
-	// log action to console
-	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), *rq, sender(g, rq), g)
 
 	// end round: next player
 	plIndex := nextPlayer(g, rq)
 	// next phase
 	setCaller := func(p *player.Player) { g.caller = p }
 	ph := nextPhase(g, rq, setCaller)
-	fmt.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
-	for _, pl := range g.Players() {
-		printer.Fprintf(pl, "Game: %+v", msg.TranslateGameStatus(g, printer))
-	}
-	fmt.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 	// clean up
 	g.cleanUp(plIndex)
 	g.phase = ph
 	track.Player(g.LastPlaying(), g.Players()[plIndex])
+	
+	// log action to console
+	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), *rq, sender(g, rq), g)
+	fmt.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
+	for _, pl := range g.Players() {
+		fmt.Fprintf(pl, msg.TranslateGameStatus(g, printer))
+	}
+	fmt.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 
 	if g.phase != phase.End {
 		return
