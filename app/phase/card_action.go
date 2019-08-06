@@ -9,13 +9,13 @@ import (
 // ErrCardNotInHand error
 var ErrCardNotInHand = errors.New("Card not in hand")
 
-type companioner interface {
+type cardActioner interface {
 	Find(player.Predicate) (int, *player.Player)
 }
 
-func CardAction(rq cardProvider, comp companioner) Data {
+func CardAction(rq cardProvider, act cardActioner) Data {
 	c, err := rq.Card()
-	idx, _ := comp.Find(player.IsCardInHand(c))
+	idx, _ := act.Find(player.IsCardInHand(c))
 	var errCardNotInHand error
 	if idx < 0 {
 		errCardNotInHand = ErrCardNotInHand

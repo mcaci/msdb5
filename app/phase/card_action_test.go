@@ -7,9 +7,9 @@ import (
 	"github.com/mcaci/msdb5/dom/player"
 )
 
-type companiontest string
+type cardactiontest string
 
-func (c companiontest) Find(player.Predicate) (int, *player.Player) {
+func (c cardactiontest) Find(player.Predicate) (int, *player.Player) {
 	return 1, nil
 }
 
@@ -19,17 +19,17 @@ func (rq fakeInput) Card() (card.ID, error) {
 	return card.ID(rq), nil
 }
 
-func (c companiontest) Value() string { return string(c) }
+func (c cardactiontest) Value() string { return string(c) }
 
 func TestCardActionIndex(t *testing.T) {
-	data := CardAction(fakeInput(1), companiontest("A"))
+	data := CardAction(fakeInput(1), cardactiontest("A"))
 	if data.Index() != 1 {
 		t.Fatal("Unexpected player")
 	}
 }
 
 func TestCardActionCard(t *testing.T) {
-	data := CardAction(fakeInput(11), companiontest("A"))
+	data := CardAction(fakeInput(11), cardactiontest("A"))
 	if data.Card() != 11 {
 		t.Fatal("Unexpected briscola")
 	}
