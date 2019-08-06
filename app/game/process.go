@@ -2,6 +2,7 @@ package game
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"github.com/mcaci/msdb5/app/msg"
@@ -19,8 +20,8 @@ func (g *Game) Process(inputRequest, origin string) {
 	printer := message.NewPrinter(g.Lang())
 	rq := request.New(inputRequest, origin)
 	report := func(err error) {
-		fmt.Fprintf(os.Stdout, "New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), *rq, err)
-		fmt.Fprintf(sender(g, rq), "Error: %+v\n", err)
+		io.WriteString(os.Stdout, fmt.Sprintf("New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), *rq, err))
+		io.WriteString(sender(g, rq), fmt.Sprintf("Error: %+v\n", err))
 	}
 
 	// verify phase step
@@ -42,24 +43,24 @@ func (g *Game) Process(inputRequest, origin string) {
 
 	if phase.InsideAuction == g.Phase() && len(*g.SideDeck()) != 0 {
 		for _, pl := range g.Players() {
-			fmt.Fprintf(pl, "Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:auction.SideCards(*g.AuctionScore())], printer))
+			io.WriteString(pl, fmt.Sprintf("Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:auction.SideCards(*g.AuctionScore())], printer)))
 		}
 	}
 
 	// log action to file for ml
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
-		fmt.Fprintln(os.Stdout, err)
+		io.WriteString(os.Stdout, err.Error())
 		return
 	}
 	defer f.Close()
 	// write to file for ml
 	switch g.Phase() {
 	case phase.ChoosingCompanion:
-		fmt.Fprintf(f, "%s, %s, %d\n", g.CurrentPlayer().Name(), g.Companion().Name(), *(g.AuctionScore()))
+		io.WriteString(f, fmt.Sprintf("%s, %s, %d\n", g.CurrentPlayer().Name(), g.Companion().Name(), *(g.AuctionScore())))
 	case phase.PlayingCards:
 		lastPlayed := g.playedCards[len(g.playedCards)-1]
-		fmt.Fprintf(f, "%s, %d\n", g.CurrentPlayer().Name(), lastPlayed)
+		io.WriteString(f, fmt.Sprintf("%s, %d\n", g.CurrentPlayer().Name(), lastPlayed))
 	}
 
 	// end round: next player
@@ -71,14 +72,14 @@ func (g *Game) Process(inputRequest, origin string) {
 	g.cleanUp(plIndex)
 	g.phase = ph
 	track.Player(g.LastPlaying(), g.Players()[plIndex])
-	
+
 	// log action to console
-	fmt.Fprintf(os.Stdout, "New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), *rq, sender(g, rq), g)
-	fmt.Fprintf(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
+	io.WriteString(os.Stdout, fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), *rq, sender(g, rq), g))
+	io.WriteString(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
 	for _, pl := range g.Players() {
-		fmt.Fprintf(pl, msg.TranslateGameStatus(g, printer))
+		io.WriteString(pl, msg.TranslateGameStatus(g, printer))
 	}
-	fmt.Fprintf(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
+	io.WriteString(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 
 	if g.phase != phase.End {
 		return
@@ -96,10 +97,10 @@ func (g *Game) Process(inputRequest, origin string) {
 	}
 	scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers)
 	for _, pl := range g.Players() {
-		fmt.Fprintf(pl, "The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
+		io.WriteString(pl, fmt.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2))
 	}
 	// write to file
-	fmt.Fprintf(f, "%s\n", g.CurrentPlayer().Name())
+	io.WriteString(f, fmt.Sprintf("%s\n", g.CurrentPlayer().Name()))
 }
 
 func sender(g *Game, rq requestInformer) *player.Player {
