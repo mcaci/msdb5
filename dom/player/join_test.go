@@ -9,7 +9,15 @@ func initTest() *Player {
 	p := New()
 	p.RegisterAs("Michi")
 	p.Join("127.0.0.1")
-	p.Attach(make(chan []byte, 500))
+	p.Attach(make(chan []byte, 3))
+	return p
+}
+
+func initTestWithName(name string) *Player {
+	p := New()
+	p.RegisterAs(name)
+	p.Join("127.0.0.1")
+	p.Attach(make(chan []byte))
 	return p
 }
 
@@ -39,24 +47,8 @@ func TestJoinPlayerPileIsEmpty(t *testing.T) {
 
 func TestWriteToPlayer(t *testing.T) {
 	p := initTest()
-	go fmt.Fprintf(p, "Hello")
+	go fmt.Fprint(p, "Hello")
 	if str := <-p.info; string(str) != "Hello" {
 		t.Fatal("Unexpected message: ", str)
-	}
-}
-
-func TestMultpleWriteToPlayer(t *testing.T) {
-	pls := []*Player{initTest(), initTest(), initTest()}
-	for _, p := range pls {
-		go func(pl *Player) {
-			fmt.Fprint(pl, "Hello")
-			fmt.Fprint(pl, "It's me")
-			fmt.Fprintln(pl, "Mario")
-		}(p)
-	}
-	for _, p := range pls {
-		if str := <-p.info; string(str) != "HelloIt's meMario" {
-			t.Fatalf("Unexpected message: %s", str)
-		}
 	}
 }
