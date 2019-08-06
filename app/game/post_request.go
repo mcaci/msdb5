@@ -6,35 +6,37 @@ import (
 	"github.com/mcaci/msdb5/dom/deck"
 )
 
-func PostJoin(nameProvider interface{ Name() string },
+func postJoin(nameProvider interface{ Name() string },
 	action interface{ RegisterAs(string) }) {
 	action.RegisterAs(nameProvider.Name())
 }
 
-func PostAuctionFold(action interface{ Fold() }) {
+func postAuctionFold(action interface{ Fold() }) {
 	action.Fold()
 }
 
-func PostAuctionScore(scoreProvider interface{ Score() auction.Score },
+func postAuctionScore(scoreProvider interface{ Score() auction.Score },
 	action interface{ SetAuction(auction.Score) }) {
 	action.SetAuction(scoreProvider.Score())
 }
 
-func PostCompanionCard(cardProvider interface{ Card() card.ID },
+func postCompanionCard(cardProvider interface{ Card() card.ID },
 	action interface{ SetBriscola(card.ID) }) {
 	action.SetBriscola(cardProvider.Card())
 }
 
-func PostCompanionPlayer(playerProvider interface{ Index() uint8 },
+func postCompanionPlayer(playerProvider interface{ Index() uint8 },
 	action interface{ SetCompanion(uint8) }) {
 	action.SetCompanion(playerProvider.Index())
 }
 
-func PostExchange(cards, to *deck.Cards, index, toIndex int) {
-	(*cards)[index], (*to)[toIndex] = (*to)[index], (*cards)[toIndex]
+func postExchange(cards, to *deck.Cards, index int) {
+	awayCard := (*cards)[index]
+	(*cards)[index] = (*to)[0]
+	*to = append((*to)[1:], awayCard)
 }
 
-func PostCardPlay(cards, to *deck.Cards, index int) {
+func postCardPlay(cards, to *deck.Cards, index int) {
 	to.Add((*cards)[index])
 	*cards = append((*cards)[:index], (*cards)[index+1:]...)
 }
