@@ -41,9 +41,10 @@ func (g *Game) Process(inputRequest, origin string) {
 	// play step
 	g.play(rq)
 
-	if phase.InsideAuction == g.Phase() && len(*g.SideDeck()) != 0 {
+	cardN := auction.SideCards(*g.AuctionScore())
+	if phase.InsideAuction == g.Phase() && len(*g.SideDeck()) != 0 && cardN > 0 {
 		for _, pl := range g.Players() {
-			io.WriteString(pl, fmt.Sprintf("Side deck section: %s\n", msg.TranslateCards((*g.SideDeck())[:auction.SideCards(*g.AuctionScore())], printer)))
+			io.WriteString(pl, printer.Sprintf("Side deck section: (%s)\n", msg.TranslateCards((*g.SideDeck())[:cardN], printer)))
 		}
 	}
 
@@ -75,6 +76,9 @@ func (g *Game) Process(inputRequest, origin string) {
 
 	// log action to console
 	io.WriteString(os.Stdout, fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), *rq, sender(g, rq), g))
+	for _, pl := range g.Players() {
+		io.WriteString(pl, "-----")
+	}
 	io.WriteString(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
 	for _, pl := range g.Players() {
 		io.WriteString(pl, msg.TranslateGameStatus(g, printer))
@@ -97,7 +101,7 @@ func (g *Game) Process(inputRequest, origin string) {
 	}
 	scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers)
 	for _, pl := range g.Players() {
-		io.WriteString(pl, fmt.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2))
+		io.WriteString(pl, printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2))
 	}
 	// write to file
 	io.WriteString(f, fmt.Sprintf("%s\n", g.CurrentPlayer().Name()))

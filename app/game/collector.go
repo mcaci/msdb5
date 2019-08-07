@@ -2,7 +2,6 @@ package game
 
 import (
 	"container/list"
-	"fmt"
 	"io"
 
 	"github.com/mcaci/msdb5/app/track"
@@ -45,7 +44,9 @@ func collect(g collector) {
 		if p != g.Caller() && p != g.Companion() {
 			team = printer.Sprintf("Others")
 		}
-		io.WriteString(p, fmt.Sprintf("The end - %s team has all briscola cards", team))
+		for _, pl := range g.Players() {
+			io.WriteString(pl, printer.Sprintf("The end - %s team has all briscola cards", team))
+		}
 		break
 	}
 }

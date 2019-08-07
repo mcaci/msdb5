@@ -55,3 +55,12 @@ func TestValidGameStatusTranslation(t *testing.T) {
 		t.Fatal("Expecting the translation of the set of card")
 	}
 }
+
+func TestValidPhaseTranslation(t *testing.T) {
+	printer := message.NewPrinter(language.English)
+	p := phase.Joining
+	str := TranslatePhase(p, printer)
+	if str == "" {
+		t.Fatal("Expecting the translation of the phase")
+	}
+}

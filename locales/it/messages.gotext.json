@@ -12,9 +12,57 @@
             "translation": "Non chiamanti"
         },
         {
-            "id": "Enter name and connect",
-            "message": "Enter name and connect",
-            "translation": "Inserisci il nome e collegati"
+            "id": "The end - {Team} team has all briscola cards",
+            "message": "The end - {Team} team has all briscola cards",
+            "translation": "Fine - I {Team} hanno tutte le briscole",
+            "placeholders": [
+                {
+                    "id": "Team",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "team"
+                }
+            ]
+        },
+        {
+            "id": "Side deck section: ({SideDeckcardN_printer})",
+            "message": "Side deck section: ({SideDeckcardN_printer})",
+            "translation": "Sezione del monte: ({SideDeckcardN_printer})",
+            "placeholders": [
+                {
+                    "id": "SideDeckcardN_printer",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "msg.TranslateCards((*g.SideDeck())[:cardN], printer)"
+                }
+            ]
+        },
+        {
+            "id": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "message": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "translation": "Fine - Chiamanti: {ScoreTeam1}; Non chiamanti: {ScoreTeam2}",
+            "placeholders": [
+                {
+                    "id": "ScoreTeam1",
+                    "string": "%[1]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 1,
+                    "expr": "scoreTeam1"
+                },
+                {
+                    "id": "ScoreTeam2",
+                    "string": "%[2]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 2,
+                    "expr": "scoreTeam2"
+                }
+            ]
         },
         {
             "id": "Expecting player {Name} to play",
@@ -55,9 +103,9 @@
             ]
         },
         {
-            "id": "(Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
-            "message": "(Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
-            "translation": "(Nome: {Name}, Mano: {Hand_printer}, Carte prese: {Pile_printer}, Ha foldato? {Foldedpl})",
+            "id": "Player: (Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
+            "message": "Player: (Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
+            "translation": "Giocatore: (Nome: {Name}, Mano: {Hand_printer}, Carte prese: {Pile_printer}, Ha foldato? {Foldedpl})",
             "placeholders": [
                 {
                     "id": "Name",
@@ -202,6 +250,41 @@
                     "expr": "g.Phase()"
                 }
             ]
+        },
+        {
+            "id": "Join",
+            "message": "Join",
+            "translation": "Registrazione"
+        },
+        {
+            "id": "Auction",
+            "message": "Auction",
+            "translation": "Asta"
+        },
+        {
+            "id": "Exchange",
+            "message": "Exchange",
+            "translation": "Cambio con monte"
+        },
+        {
+            "id": "Companion",
+            "message": "Companion",
+            "translation": "Scelta compagno"
+        },
+        {
+            "id": "Card",
+            "message": "Card",
+            "translation": "Gioco carte"
+        },
+        {
+            "id": "End",
+            "message": "End",
+            "translation": "Fine"
+        },
+        {
+            "id": "Enter name and connect",
+            "message": "Enter name and connect",
+            "translation": "Inserisci il nome e collegati"
         }
     ]
 }

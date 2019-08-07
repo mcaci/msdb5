@@ -41,5 +41,14 @@ type statusProvider interface {
 // TranslateGameStatus func
 func TranslateGameStatus(g statusProvider, printer *message.Printer) string {
 	return printer.Sprintf("Game: (Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %s)",
-		g.CurrentPlayer().Name(), TranslateCard(g.Briscola(), printer), TranslateCards(*g.PlayedCards(), printer), *g.AuctionScore(), g.Phase())
+		g.CurrentPlayer().Name(), TranslateCard(g.Briscola(), printer),
+		TranslateCards(*g.PlayedCards(), printer), *g.AuctionScore(), TranslatePhase(g.Phase(), printer))
+}
+
+// TranslatePhase func
+func TranslatePhase(p phase.ID, printer *message.Printer) string {
+	phases := []string{printer.Sprintf("Join"), printer.Sprintf("Auction"),
+		printer.Sprintf("Exchange"), printer.Sprintf("Companion"),
+		printer.Sprintf("Card"), printer.Sprintf("End")}
+	return phases[p]
 }

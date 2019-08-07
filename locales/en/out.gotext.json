@@ -16,10 +16,62 @@
             "fuzzy": true
         },
         {
-            "id": "Enter name and connect",
-            "message": "Enter name and connect",
-            "translation": "Enter name and connect",
+            "id": "The end - {Team} team has all briscola cards",
+            "message": "The end - {Team} team has all briscola cards",
+            "translation": "The end - {Team} team has all briscola cards",
             "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "Team",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "team"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Side deck section: ({SideDeckcardN_printer})",
+            "message": "Side deck section: ({SideDeckcardN_printer})",
+            "translation": "Side deck section: ({SideDeckcardN_printer})",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "SideDeckcardN_printer",
+                    "string": "%[1]s",
+                    "type": "string",
+                    "underlyingType": "string",
+                    "argNum": 1,
+                    "expr": "msg.TranslateCards((*g.SideDeck())[:cardN], printer)"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "message": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "translation": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "ScoreTeam1",
+                    "string": "%[1]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 1,
+                    "expr": "scoreTeam1"
+                },
+                {
+                    "id": "ScoreTeam2",
+                    "string": "%[2]d",
+                    "type": "uint8",
+                    "underlyingType": "uint8",
+                    "argNum": 2,
+                    "expr": "scoreTeam2"
+                }
+            ],
             "fuzzy": true
         },
         {
@@ -65,9 +117,9 @@
             "fuzzy": true
         },
         {
-            "id": "(Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
-            "message": "(Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
-            "translation": "(Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
+            "id": "Player: (Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
+            "message": "Player: (Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
+            "translation": "Player: (Name: {Name}, Cards: {Hand_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
@@ -229,6 +281,55 @@
                     "expr": "g.Phase()"
                 }
             ],
+            "fuzzy": true
+        },
+        {
+            "id": "Join",
+            "message": "Join",
+            "translation": "Join",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Auction",
+            "message": "Auction",
+            "translation": "Auction",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Exchange",
+            "message": "Exchange",
+            "translation": "Exchange",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Companion",
+            "message": "Companion",
+            "translation": "Companion",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Card",
+            "message": "Card",
+            "translation": "Card",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "End",
+            "message": "End",
+            "translation": "End",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Enter name and connect",
+            "message": "Enter name and connect",
+            "translation": "Enter name and connect",
+            "translatorComment": "Copied from source.",
             "fuzzy": true
         }
     ]
