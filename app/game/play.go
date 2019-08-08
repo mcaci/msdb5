@@ -27,20 +27,19 @@ func (g *Game) play(rq *request.Req) error {
 		if err := data.CardErr(); err != nil {
 			return err
 		}
-		postExchangeCard(data, g)
+		postExchange(data, g)
 	case phase.ChoosingCompanion:
 		data := phase.CardAction(rq, g.Players())
 		if err := data.CardErr(); err != nil {
 			return err
 		}
-		postCompanionCard(data, g)
-		postCompanionPlayer(data, g)
+		postCompanion(data, g)
 	case phase.PlayingCards:
 		data := phase.CardAction(rq, g.Players())
 		if err := data.CardErr(); err != nil {
 			return err
 		}
-		postCardPlay(data, g)
+		postPlay(data, g)
 	default:
 		return fmt.Errorf("Action %s not valid", rq.Action())
 	}
