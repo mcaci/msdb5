@@ -1,7 +1,7 @@
 package game
 
 import (
-	"fmt"
+	"errors"
 
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/request"
@@ -29,6 +29,9 @@ func (g *Game) play(rq *request.Req) error {
 		}
 		postExchangeCard(data, g)
 	case phase.ChoosingCompanion:
+		if rq.Value() == "0" {
+			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
+		}
 		data := phase.CardAction(rq, g.Players())
 		if err := data.CardErr(); err != nil {
 			return err
@@ -36,13 +39,14 @@ func (g *Game) play(rq *request.Req) error {
 		postCompanionCard(data, g)
 		postCompanionPlayer(data, g)
 	case phase.PlayingCards:
+		if rq.Value() == "0" {
+			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
+		}
 		data := phase.CardAction(rq, g.Players())
 		if err := data.CardErr(); err != nil {
 			return err
 		}
 		postCardPlay(data, g)
-	default:
-		return fmt.Errorf("Action %s not valid", rq.Action())
 	}
 	return nil
 }
