@@ -15,7 +15,9 @@ type Data struct {
 
 	toFold bool
 	score  auction.Score
+}
 
+type CardData struct {
 	card    card.ID
 	plIdx   uint8
 	pl      *player.Player
@@ -27,7 +29,7 @@ func (d Data) Name() string { return d.name }
 func (d Data) ToFold() bool         { return d.toFold }
 func (d Data) Score() auction.Score { return d.score }
 
-func (d Data) Card() card.ID      { return d.card }
-func (d Data) Index() uint8       { return d.plIdx }
-func (d Data) Pl() *player.Player { return d.pl }
-func (d Data) CardErr() error     { return d.cardErr }
+func (d CardData) Card() card.ID      { return d.card }
+func (d CardData) Index() uint8       { return d.plIdx }
+func (d CardData) Pl() *player.Player { return d.pl }
+func (d CardData) CardErr() error     { return d.cardErr }
