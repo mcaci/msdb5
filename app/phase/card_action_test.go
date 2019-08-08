@@ -43,7 +43,7 @@ func (e errortest) Find(player.Predicate) (int, *player.Player) {
 
 func TestCardActionErr(t *testing.T) {
 	data := CardAction(fakeInput(11), errortest{})
-	if data.CardNotFound() != nil {
+	if data.CardErr() == nil {
 		t.Fatal("Error is expected")
 	}
 }
