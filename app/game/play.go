@@ -7,7 +7,7 @@ import (
 	"github.com/mcaci/msdb5/app/request"
 )
 
-func (g *Game) play(rq *request.Req) error {
+func (g *Game) play(rq *request.Req) {
 	switch g.Phase() {
 	case phase.Joining:
 		data := phase.Join(rq)
@@ -16,9 +16,14 @@ func (g *Game) play(rq *request.Req) error {
 		data := phase.Auction(rq, auctionData{g.CurrentPlayer(), g.AuctionScore()})
 		if data.ToFold() {
 			postAuctionFold(g.CurrentPlayer())
-			return nil
+			return
 		}
 		postAuctionScore(data, g)
+	}
+}
+
+func (g *Game) playCard(rq *request.Req) error {
+	switch g.Phase() {
 	case phase.ExchangingCards:
 		if rq.Value() == "0" {
 			return nil

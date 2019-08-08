@@ -41,6 +41,7 @@ func (g *Game) Process(inputRequest, origin string) {
 
 	// play step
 	g.play(rq)
+	g.playCard(rq)
 
 	cardN := auction.SideCards(*g.AuctionScore())
 	if phase.InsideAuction == g.Phase() && len(*g.SideDeck()) != 0 && cardN > 0 {
