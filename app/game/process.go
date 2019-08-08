@@ -27,14 +27,15 @@ func (g *Game) Process(inputRequest, origin string) {
 	// verify phase step
 	err := request.VerifyPhase(g, rq)
 	if err != nil {
-		report(err)
+		ph, _ := phase.ToID(rq)
+		report(msg.UnexpectedPhaseErr(ph, g.Phase(), g.Lang()))
 		return
 	}
 
 	// verify player step
 	err = request.VerifyPlayer(g, rq)
 	if err != nil {
-		report(err)
+		report(msg.UnexpectedPlayerErr(g.CurrentPlayer().Name(), g.Lang()))
 		return
 	}
 
