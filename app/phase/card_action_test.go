@@ -10,7 +10,7 @@ import (
 type cardactiontest string
 
 func (c cardactiontest) Find(player.Predicate) (int, *player.Player) {
-	return 1, nil
+	return 0, &player.Player{}
 }
 
 type fakeInput card.ID
@@ -23,7 +23,7 @@ func (c cardactiontest) Value() string { return string(c) }
 
 func TestCardActionIndex(t *testing.T) {
 	data := CardAction(fakeInput(1), cardactiontest("A"))
-	if data.Index() != 1 {
+	if data.Pl() == nil {
 		t.Fatal("Unexpected player")
 	}
 }

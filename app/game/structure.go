@@ -84,9 +84,9 @@ func (g *Game) SideDeck() *deck.Cards         { return &g.side }
 func (g *Game) Lang() language.Tag            { return g.lang }
 func (g *Game) IsRoundOngoing() bool          { return len(g.playedCards) < 5 }
 
-func (g *Game) SetAuction(s auction.Score) { g.auctionScore = s }
-func (g *Game) SetBriscola(c card.ID)      { g.briscolaCard = c }
-func (g *Game) SetCompanion(idx uint8)     { g.companion = g.players[idx] }
+func (g *Game) SetAuction(s auction.Score)     { g.auctionScore = s }
+func (g *Game) SetBriscola(c card.ID)          { g.briscolaCard = c }
+func (g *Game) SetCompanion(pl *player.Player) { g.companion = pl }
 
 func (g Game) String() string {
 	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %v, Auction score: %d, Phase: %s, Players: %v, Side Deck: %v, Last Players: %v)",

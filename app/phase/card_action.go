@@ -19,5 +19,5 @@ func CardAction(rq cardProvider, act cardActioner) Data {
 	if err == nil && idx < 0 {
 		err = ErrCardNotInHand
 	}
-	return Data{card: c, plIdx: uint8(idx), pl: p, cardErr: err}
+	return Data{card: c, pl: p, cardErr: err}
 }
