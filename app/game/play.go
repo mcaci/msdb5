@@ -1,9 +1,9 @@
 package game
 
 import (
-	"errors"
 	"fmt"
 
+	"github.com/mcaci/msdb5/app/cardaction"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/request"
 	"github.com/mcaci/msdb5/dom/auction"
@@ -34,36 +34,16 @@ func (g *Game) play(rq *request.Req) {
 }
 
 func (g *Game) playCard(rq *request.Req) error {
+	var a cardaction.Actioner
 	switch g.Phase() {
 	case phase.ExchangingCards:
-		if rq.Value() == "0" {
-			return nil
-		}
-		data := phase.CardAction(rq, g.Players())
-		if err := data.CardErr(); err != nil {
-			return err
-		}
-		postExchange(data, g)
+		a = cardaction.Exch{g.SideDeck()}
 	case phase.ChoosingCompanion:
-		if rq.Value() == "0" {
-			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
-		}
-		data := phase.CardAction(rq, g.Players())
-		if err := data.CardErr(); err != nil {
-			return err
-		}
-		postCompanion(data, g)
+		a = cardaction.Comp{g.SetBriscola, g.SetCompanion}
 	case phase.PlayingCards:
-		if rq.Value() == "0" {
-			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
-		}
-		data := phase.CardAction(rq, g.Players())
-		if err := data.CardErr(); err != nil {
-			return err
-		}
-		postPlay(data, g)
+		a = cardaction.Play{g.PlayedCards()}
 	default:
 		return fmt.Errorf("Action %s not valid", rq.Action())
 	}
-	return nil
+	return cardaction.CardAction(rq, g.Players(), a)
 }
