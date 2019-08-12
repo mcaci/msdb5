@@ -9,7 +9,6 @@ import (
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
-	"golang.org/x/text/language"
 )
 
 type roundInformer interface {
@@ -22,7 +21,6 @@ type roundInformer interface {
 	PlayedCards() *set.Cards
 	Phase() phase.ID
 	Briscola() card.Item
-	Lang() language.Tag
 	LastPlaying() *list.List
 	IsSideUsed() bool
 	SideDeck() *set.Cards

@@ -8,7 +8,6 @@ import (
 	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
-	"golang.org/x/text/language"
 )
 
 // ErrUnexpectedPlayer error
@@ -17,35 +16,30 @@ var ErrUnexpectedPlayer = errors.New("Unexpected player")
 // ErrUnexpectedPhase error
 var ErrUnexpectedPhase = errors.New("Unexpected phase")
 
-type expectedPlayerFinder interface {
-	CurrentPlayer() *player.Player
-}
-
 type requester interface {
 	From() string
 	Action() string
 }
 
-func FindCriteria(g expectedPlayerFinder, rq requester) player.Predicate {
-	var expectedPlayerFinder player.Predicate
+func findCriteria(g interface{ CurrentPlayer() *player.Player }, rq requester) player.Predicate {
+	var crit player.Predicate
 	switch rq.Action() {
 	case "Join":
-		expectedPlayerFinder = player.IsNameEmpty
+		crit = player.IsNameEmpty
 	default:
-		expectedPlayerFinder = func(p *player.Player) bool { return p == g.CurrentPlayer() && p.IsSameHost(rq.From()) }
+		crit = func(p *player.Player) bool { return p == g.CurrentPlayer() && p.IsSameHost(rq.From()) }
 	}
-	return expectedPlayerFinder
+	return crit
 }
 
 type expectedPlayerInterface interface {
 	CurrentPlayer() *player.Player
 	LastPlaying() *list.List
-	Lang() language.Tag
 	Players() team.Players
 }
 
 func VerifyPlayer(g expectedPlayerInterface, rq requester) error {
-	criteria := FindCriteria(g, rq)
+	criteria := findCriteria(g, rq)
 	_, actingPlayer := g.Players().Find(criteria)
 	if actingPlayer == nil {
 		return ErrUnexpectedPlayer
@@ -57,12 +51,7 @@ func VerifyPlayer(g expectedPlayerInterface, rq requester) error {
 	return nil
 }
 
-type expectedPhaseInterface interface {
-	Lang() language.Tag
-	Phase() phase.ID
-}
-
-func VerifyPhase(g expectedPhaseInterface, rq requester) error {
+func VerifyPhase(g interface{ Phase() phase.ID }, rq requester) error {
 	currentPhase := g.Phase()
 	inputPhase, err := phase.ToID(rq)
 	if err == nil && currentPhase == inputPhase {
