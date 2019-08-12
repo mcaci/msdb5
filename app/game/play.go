@@ -33,6 +33,20 @@ func (g *Game) play(rq *request.Req) {
 	}
 }
 
+func postJoin(nameProvider interface{ Name() string },
+	action interface{ RegisterAs(string) }) {
+	action.RegisterAs(nameProvider.Name())
+}
+
+func postAuctionFold(action interface{ Fold() }) {
+	action.Fold()
+}
+
+func postAuctionScore(scoreProvider interface{ Score() auction.Score },
+	action interface{ SetAuction(auction.Score) }) {
+	action.SetAuction(scoreProvider.Score())
+}
+
 func (g *Game) playCard(rq *request.Req) error {
 	var a cardaction.Actioner
 	switch g.Phase() {
