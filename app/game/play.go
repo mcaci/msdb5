@@ -35,6 +35,8 @@ func (g *Game) playCard(rq *request.Req) error {
 		a = cardaction.Comp{g.SetBriscola, g.SetCompanion}
 	case phase.PlayingCards:
 		a = cardaction.Play{g.PlayedCards()}
+	default:
+		return nil
 	}
 	return cardaction.CardAction(rq, g.Players(), a)
 }

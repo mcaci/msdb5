@@ -56,7 +56,9 @@ func (c Comp) exec(plCProv playerCardProvider) {
 	c.SetC(plCProv.Card())
 	c.SetP(plCProv.Pl())
 }
-func (c Comp) notAcceptedZeroErr() error { return nil }
+func (c Comp) notAcceptedZeroErr() error {
+	return errors.New("Value 0 for card allowed only for ExchangingCard phase")
+}
 
 type Exch struct {
 	Side *set.Cards
@@ -71,7 +73,7 @@ func (c Exch) exec(plCProv playerCardProvider) {
 	*toCards = append((*toCards)[1:], awayCard)
 }
 func (c Exch) notAcceptedZeroErr() error {
-	return errors.New("Value 0 for card allowed only for ExchangingCard phase")
+	return nil
 }
 
 type Play struct {
