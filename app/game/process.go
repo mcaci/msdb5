@@ -72,7 +72,7 @@ func (g *Game) Process(inputRequest, origin string) {
 	setCaller := func(p *player.Player) { g.caller = p }
 	ph := nextPhase(g, rq, setCaller)
 	// clean up
-	g.cleanUp(plIndex)
+	cleanUp(g, plIndex)
 	g.phase = ph
 	track.Player(g.LastPlaying(), g.Players()[plIndex])
 
