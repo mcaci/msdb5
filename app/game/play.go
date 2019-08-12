@@ -32,7 +32,7 @@ func (g *Game) playCard(rq *request.Req) error {
 		if err := data.CardErr(); err != nil {
 			return err
 		}
-		postExchangeCard(data, g)
+		postExchange(data, g)
 	case phase.ChoosingCompanion:
 		if rq.Value() == "0" {
 			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
@@ -41,8 +41,7 @@ func (g *Game) playCard(rq *request.Req) error {
 		if err := data.CardErr(); err != nil {
 			return err
 		}
-		postCompanionCard(data, g)
-		postCompanionPlayer(data, g)
+		postCompanion(data, g)
 	case phase.PlayingCards:
 		if rq.Value() == "0" {
 			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
@@ -51,7 +50,9 @@ func (g *Game) playCard(rq *request.Req) error {
 		if err := data.CardErr(); err != nil {
 			return err
 		}
-		postCardPlay(data, g)
+		postPlay(data, g)
+	default:
+		return fmt.Errorf("Action %s not valid", rq.Action())
 	}
 	return nil
 }
