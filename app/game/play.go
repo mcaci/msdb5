@@ -1,7 +1,7 @@
 package game
 
 import (
-	"fmt"
+	"strconv"
 
 	"github.com/mcaci/msdb5/app/cardaction"
 	"github.com/mcaci/msdb5/app/phase"
@@ -10,41 +10,20 @@ import (
 	"github.com/mcaci/msdb5/dom/player"
 )
 
-type auctionData struct {
-	pl    *player.Player
-	score *auction.Score
-}
-
-func (a auctionData) Folded() bool                 { return player.Folded(a.pl) }
-func (a auctionData) AuctionScore() *auction.Score { return a.score }
-
 func (g *Game) play(rq *request.Req) {
 	switch g.Phase() {
 	case phase.Joining:
-		data := phase.Join(rq)
-		postJoin(data, g.CurrentPlayer())
+		g.CurrentPlayer().RegisterAs(rq.Value())
 	case phase.InsideAuction:
-		data := phase.Auction(rq, auctionData{g.CurrentPlayer(), g.AuctionScore()})
-		if data.ToFold() {
-			postAuctionFold(g.CurrentPlayer())
+		score, err := strconv.Atoi(rq.Value())
+		toFold := player.Folded(g.CurrentPlayer()) || err != nil || !auction.CheckScores(*g.AuctionScore(), auction.Score(score))
+		if toFold {
+			g.CurrentPlayer().Fold()
 			return
 		}
-		postAuctionScore(data, g)
+		newScore := auction.Update(*g.AuctionScore(), auction.Score(score))
+		g.SetAuction(newScore)
 	}
-}
-
-func postJoin(nameProvider interface{ Name() string },
-	action interface{ RegisterAs(string) }) {
-	action.RegisterAs(nameProvider.Name())
-}
-
-func postAuctionFold(action interface{ Fold() }) {
-	action.Fold()
-}
-
-func postAuctionScore(scoreProvider interface{ Score() auction.Score },
-	action interface{ SetAuction(auction.Score) }) {
-	action.SetAuction(scoreProvider.Score())
 }
 
 func (g *Game) playCard(rq *request.Req) error {
@@ -56,8 +35,6 @@ func (g *Game) playCard(rq *request.Req) error {
 		a = cardaction.Comp{g.SetBriscola, g.SetCompanion}
 	case phase.PlayingCards:
 		a = cardaction.Play{g.PlayedCards()}
-	default:
-		return fmt.Errorf("Action %s not valid", rq.Action())
 	}
 	return cardaction.CardAction(rq, g.Players(), a)
 }
