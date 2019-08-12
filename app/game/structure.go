@@ -61,10 +61,10 @@ func distributeCards(g *Game) {
 	d := set.Deck()
 	for i := 0; i < set.DeckSize; i++ {
 		if g.withSide && i >= set.DeckSize-5 {
-			g.side.Add(d.Supply())
+			g.side.Add(d.Top())
 		} else {
 			track.Player(&g.lastPlaying, g.players[i%5])
-			g.CurrentPlayer().Hand().Add(d.Supply())
+			g.CurrentPlayer().Hand().Add(d.Top())
 		}
 	}
 }
