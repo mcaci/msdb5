@@ -15,7 +15,7 @@ type cardActioner interface {
 
 func CardAction(rq cardProvider, act cardActioner) CardData {
 	c, err := rq.Card()
-	idx, p := act.Find(player.IsCardInHand(c))
+	idx, p := act.Find(player.IsCardInHand(*c))
 	if err == nil && idx < 0 {
 		err = ErrCardNotInHand
 	}

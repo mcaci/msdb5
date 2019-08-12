@@ -3,17 +3,17 @@ package msg
 import (
 	"testing"
 
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
 	"golang.org/x/text/language"
 )
 
 type selfStruct struct{ ph phase.ID }
 
-func (selfStruct) Lang() language.Tag    { return language.English }
-func (s selfStruct) Phase() phase.ID     { return s.ph }
-func (selfStruct) SideDeck() *deck.Cards { return &deck.Cards{1} }
+func (selfStruct) Lang() language.Tag   { return language.English }
+func (s selfStruct) Phase() phase.ID    { return s.ph }
+func (selfStruct) SideDeck() *set.Cards { return set.NewMust(1) }
 
 func TestValidMessage(t *testing.T) {
 	str := CreateInGameMsg(selfStruct{0}, player.New())

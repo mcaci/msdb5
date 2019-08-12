@@ -1,7 +1,7 @@
 package briscola
 
 import "testing"
-import "github.com/mcaci/msdb5/dom/card"
+import "github.com/mcaci/ita-cards/card"
 
 type testSeeder card.Seed
 
@@ -44,8 +44,8 @@ func TestScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
 	verifyRoundScenario(t, 3, 22, testSeeder(card.Sword), true)
 }
 
-func verifyRoundScenario(t *testing.T, a, b card.ID, briscola testSeeder, expectedWinner bool) {
-	if index := doesOtherCardWin(a, b, briscola); index != expectedWinner {
+func verifyRoundScenario(t *testing.T, a, b uint8, briscola testSeeder, expectedWinner bool) {
+	if index := doesOtherCardWin(*card.MustID(a), *card.MustID(b), briscola); index != expectedWinner {
 		t.Fatal("Unexpected winner")
 	}
 }

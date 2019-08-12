@@ -3,7 +3,7 @@ package phase
 import (
 	"testing"
 
-	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/dom/player"
 )
 
@@ -12,26 +12,25 @@ type cardactiontest string
 func (c cardactiontest) Find(player.Predicate) (int, *player.Player) {
 	return 0, &player.Player{}
 }
-
-type fakeInput card.ID
-
-func (rq fakeInput) Card() (card.ID, error) {
-	return card.ID(rq), nil
-}
-
 func (c cardactiontest) Value() string { return string(c) }
 
+type fakeInput struct{ c *card.Item }
+
+func (rq fakeInput) Card() (*card.Item, error) {
+	return rq.c, nil
+}
+
 func TestCardActionIndex(t *testing.T) {
-	data := CardAction(fakeInput(1), cardactiontest("A"))
+	data := CardAction(fakeInput{card.MustID(1)}, cardactiontest("A"))
 	if data.Pl() == nil {
 		t.Fatal("Unexpected player")
 	}
 }
 
 func TestCardActionCard(t *testing.T) {
-	data := CardAction(fakeInput(11), cardactiontest("A"))
-	if data.Card() != 11 {
-		t.Fatal("Unexpected briscola")
+	data := CardAction(fakeInput{card.MustID(11)}, cardactiontest("A"))
+	if *data.Card() != *card.MustID(11) {
+		t.Fatalf("Unexpected briscola, found %v", *data.Card())
 	}
 }
 
@@ -42,7 +41,7 @@ func (e errortest) Find(player.Predicate) (int, *player.Player) {
 }
 
 func TestCardActionErr(t *testing.T) {
-	data := CardAction(fakeInput(11), errortest{})
+	data := CardAction(fakeInput{card.MustID(11)}, errortest{})
 	if data.CardErr() == nil {
 		t.Fatal("Error is expected")
 	}

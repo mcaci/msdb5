@@ -3,8 +3,8 @@ package game
 import (
 	"testing"
 
+	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/dom/card"
 )
 
 func fakeGameSetup(withSide bool) *Game {
@@ -18,11 +18,11 @@ func fakeGameSetup(withSide bool) *Game {
 	gameTest.Join("127.0.0.55", playerChannel)
 	if withSide {
 		gameTest.side.Clear()
-		gameTest.side.Add(card.ID(31))
+		gameTest.side.Add(*card.MustID(31))
 	}
 	for i, pl := range gameTest.players {
 		pl.Hand().Clear()
-		pl.Hand().Add(card.ID(2*i + 5))
+		pl.Hand().Add(*card.MustID(uint8(2*i + 5)))
 		if i > 1 {
 			pl.Fold()
 		}

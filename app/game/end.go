@@ -1,8 +1,8 @@
 package game
 
 import (
+	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/dom/briscola"
-	"github.com/mcaci/msdb5/dom/card"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -16,7 +16,7 @@ func check(g checker) bool {
 }
 
 type predictor interface {
-	Briscola() card.ID
+	Briscola() card.Item
 	Caller() *player.Player
 	Companion() *player.Player
 	IsRoundOngoing() bool

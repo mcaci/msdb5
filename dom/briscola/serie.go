@@ -1,8 +1,8 @@
 package briscola
 
 import (
-	"github.com/mcaci/msdb5/dom/card"
-	"github.com/mcaci/msdb5/dom/deck"
+	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
 )
 
 type seeder interface {
@@ -10,12 +10,11 @@ type seeder interface {
 }
 
 // Serie func
-func Serie(briscola seeder) deck.Cards {
-	set := deck.Cards{1, 3, 10, 9, 8, 7, 6, 5, 4, 2}
-	if briscola.Seed() != card.Coin {
-		for i := range set {
-			set[i] += card.ID(10 * briscola.Seed())
-		}
+func Serie(briscola seeder) set.Cards {
+	serie := []uint8{1, 3, 10, 9, 8, 7, 6, 5, 4, 2}
+	cards := make(set.Cards, len(serie))
+	for i, id := range serie {
+		cards[i] = *card.MustID(id + 10*uint8(briscola.Seed()))
 	}
-	return set
+	return cards
 }

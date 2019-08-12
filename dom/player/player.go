@@ -3,32 +3,32 @@ package player
 import (
 	"fmt"
 
-	"github.com/mcaci/msdb5/dom/deck"
+	"github.com/mcaci/ita-cards/set"
 )
 
 // Player struct
 type Player struct {
 	name, host string
-	hand, pile deck.Cards
+	hand, pile set.Cards
 	fold       bool
 	info       chan []byte
 }
 
 // New func
 func New() *Player {
-	player := new(Player)
-	player.hand = deck.Cards{}
-	return player
+	// player := new(Player)
+	// player.hand = set.NewMust(}
+	return new(Player)
 }
 
 // Name func
 func (player Player) Name() string { return player.name }
 
 // Hand func
-func (player *Player) Hand() *deck.Cards { return &player.hand }
+func (player *Player) Hand() *set.Cards { return &player.hand }
 
 // Pile func
-func (player *Player) Pile() *deck.Cards { return &player.pile }
+func (player *Player) Pile() *set.Cards { return &player.pile }
 
 // RegisterAs func
 func (player *Player) RegisterAs(name string) { player.name = name }

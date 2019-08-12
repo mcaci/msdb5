@@ -4,10 +4,10 @@ import (
 	"container/list"
 	"io"
 
+	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/briscola"
-	"github.com/mcaci/msdb5/dom/card"
-	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/language"
@@ -16,13 +16,13 @@ import (
 
 type collector interface {
 	Caller() *player.Player
-	Briscola() card.ID
+	Briscola() card.Item
 	Companion() *player.Player
 	Players() team.Players
 	LastPlaying() *list.List
 	Lang() language.Tag
 	IsSideUsed() bool
-	SideDeck() *deck.Cards
+	SideDeck() *set.Cards
 }
 
 func collect(g collector) {

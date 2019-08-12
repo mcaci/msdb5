@@ -3,7 +3,7 @@ package request
 import (
 	"strings"
 
-	"github.com/mcaci/msdb5/dom/card"
+	"github.com/mcaci/ita-cards/card"
 )
 
 type Req struct {
@@ -36,8 +36,8 @@ func (r *Req) From() string {
 	return r.origin
 }
 
-func (r *Req) Card() (card.ID, error) {
-	return card.Create(r.data1, r.data2)
+func (r *Req) Card() (*card.Item, error) {
+	return card.New(r.data1, r.data2)
 }
 
 func (r *Req) Value() string {

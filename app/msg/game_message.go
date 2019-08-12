@@ -1,8 +1,8 @@
 package msg
 
 import (
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -11,7 +11,7 @@ import (
 type selfInformer interface {
 	Lang() language.Tag
 	Phase() phase.ID
-	SideDeck() *deck.Cards
+	SideDeck() *set.Cards
 }
 
 // CreateInGameMsg func

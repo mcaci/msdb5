@@ -1,13 +1,13 @@
 package team
 
 import (
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/dom/briscola"
-	"github.com/mcaci/msdb5/dom/deck"
 )
 
 // Piler interface
 type Piler interface {
-	Pile() *deck.Cards
+	Pile() *set.Cards
 }
 
 // Score func

@@ -1,9 +1,9 @@
 package game
 
 import (
+	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/dom/auction"
-	"github.com/mcaci/msdb5/dom/card"
-	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
 )
 
@@ -22,30 +22,30 @@ func postAuctionScore(scoreProvider interface{ Score() auction.Score },
 }
 
 type playerCardProvider interface {
-	Card() card.ID
+	Card() *card.Item
 	Pl() *player.Player
 }
 
 func postCompanion(plCProv playerCardProvider, action interface {
-	SetBriscola(card.ID)
+	SetBriscola(*card.Item)
 	SetCompanion(*player.Player)
 }) {
 	action.SetBriscola(plCProv.Card())
 	action.SetCompanion(plCProv.Pl())
 }
 
-func postExchange(plCProv playerCardProvider, to interface{ SideDeck() *deck.Cards }) {
+func postExchange(plCProv playerCardProvider, to interface{ SideDeck() *set.Cards }) {
 	cards := plCProv.Pl().Hand()
-	index := cards.Find(plCProv.Card())
+	index := cards.Find(*plCProv.Card())
 	toCards := to.SideDeck()
 	awayCard := (*cards)[index]
 	(*cards)[index] = (*toCards)[0]
 	*toCards = append((*toCards)[1:], awayCard)
 }
 
-func postPlay(plCProv playerCardProvider, to interface{ PlayedCards() *deck.Cards }) {
+func postPlay(plCProv playerCardProvider, to interface{ PlayedCards() *set.Cards }) {
 	cards := plCProv.Pl().Hand()
-	index := cards.Find(plCProv.Card())
+	index := cards.Find(*plCProv.Card())
 	to.PlayedCards().Add((*cards)[index])
 	*cards = append((*cards)[:index], (*cards)[index+1:]...)
 }

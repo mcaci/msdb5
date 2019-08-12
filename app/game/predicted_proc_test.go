@@ -3,8 +3,8 @@ package game
 import (
 	"testing"
 
+	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/dom/card"
 )
 
 func fakeGameSetupWith2HandSizeAndPrediction() *Game {
@@ -17,11 +17,11 @@ func fakeGameSetupWith2HandSizeAndPrediction() *Game {
 	gameTest.Join("127.0.0.54", playerChannel)
 	gameTest.Join("127.0.0.55", playerChannel)
 	gameTest.side.Clear()
-	gameTest.side.Add(card.ID(31))
+	gameTest.side.Add(*card.MustID(31))
 	for i, pl := range gameTest.players {
 		pl.Hand().Clear()
-		pl.Hand().Add(card.ID(i + 1))
-		pl.Hand().Add(card.ID(2*i + 11))
+		pl.Hand().Add(*card.MustID(uint8(i + 1)))
+		pl.Hand().Add(*card.MustID(uint8(2*i + 11)))
 		if i > 1 {
 			pl.Fold()
 		}

@@ -3,13 +3,13 @@ package team
 import (
 	"testing"
 
-	"github.com/mcaci/msdb5/dom/deck"
+	"github.com/mcaci/ita-cards/set"
 )
 
 type mockPiler struct{}
 
-func (mockPiler) Pile() *deck.Cards {
-	return &deck.Cards{1}
+func (mockPiler) Pile() *set.Cards {
+	return set.NewMust(1)
 }
 
 func TestTeam1(t *testing.T) {

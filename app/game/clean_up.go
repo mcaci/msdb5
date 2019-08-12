@@ -1,8 +1,8 @@
 package game
 
 import (
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -20,7 +20,7 @@ func (g *Game) cleanUp(winnerIndex uint8) {
 	move(g.SideDeck(), pile)
 }
 
-func move(from, to *deck.Cards) {
+func move(from, to *set.Cards) {
 	to.Add(*from...)
 	from.Clear()
 }

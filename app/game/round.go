@@ -3,10 +3,10 @@ package game
 import (
 	"container/list"
 
+	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/auction"
-	"github.com/mcaci/msdb5/dom/card"
-	"github.com/mcaci/msdb5/dom/deck"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/language"
@@ -19,13 +19,13 @@ type roundInformer interface {
 	CurrentPlayer() *player.Player
 	LastPlayer() *player.Player
 	Players() team.Players
-	PlayedCards() *deck.Cards
+	PlayedCards() *set.Cards
 	Phase() phase.ID
-	Briscola() card.ID
+	Briscola() card.Item
 	Lang() language.Tag
 	LastPlaying() *list.List
 	IsSideUsed() bool
-	SideDeck() *deck.Cards
+	SideDeck() *set.Cards
 	IsRoundOngoing() bool
 }
 
