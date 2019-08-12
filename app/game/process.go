@@ -113,11 +113,3 @@ func sender(g *Game, rq requestInformer) *player.Player {
 	index, _ := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(rq.From()) })
 	return g.Players()[index]
 }
-
-type auctionData struct {
-	pl    *player.Player
-	score *auction.Score
-}
-
-func (a auctionData) Folded() bool                 { return player.Folded(a.pl) }
-func (a auctionData) AuctionScore() *auction.Score { return a.score }

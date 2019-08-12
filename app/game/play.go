@@ -6,7 +6,17 @@ import (
 
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/request"
+	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/player"
 )
+
+type auctionData struct {
+	pl    *player.Player
+	score *auction.Score
+}
+
+func (a auctionData) Folded() bool                 { return player.Folded(a.pl) }
+func (a auctionData) AuctionScore() *auction.Score { return a.score }
 
 func (g *Game) play(rq *request.Req) {
 	switch g.Phase() {
