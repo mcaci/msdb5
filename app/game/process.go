@@ -109,7 +109,7 @@ func (g *Game) Process(inputRequest, origin string) {
 	io.WriteString(f, fmt.Sprintf("%s\n", g.CurrentPlayer().Name()))
 }
 
-func sender(g *Game, rq requestInformer) *player.Player {
+func sender(g interface{ Players() team.Players }, rq requestInformer) *player.Player {
 	index, _ := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(rq.From()) })
 	return g.Players()[index]
 }

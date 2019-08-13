@@ -34,6 +34,15 @@ func ToID(rq requester) (ID, error) {
 	return ID(0), fmt.Errorf("Request %s not valid", phase)
 }
 
+// MustID func
+func MustID(rq requester) ID {
+	phase, err := ToID(rq)
+	if err != nil {
+		panic(err)
+	}
+	return phase
+}
+
 func (id ID) String() string {
 	return phases[id]
 }
