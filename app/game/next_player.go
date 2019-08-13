@@ -6,12 +6,7 @@ import (
 	"github.com/mcaci/msdb5/dom/player"
 )
 
-func senderIndex(g roundInformer, rq requestInformer) int {
-	index, _ := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(rq.From()) })
-	return index
-}
-
-func nextPlayer(g roundInformer, rq requestInformer) uint8 {
+func nextPlayer(g roundInformer, rq interface{ From() string }) uint8 {
 	current := g.Phase()
 	actingPlayerIndex := senderIndex(g, rq)
 	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }

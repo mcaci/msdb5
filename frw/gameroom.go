@@ -1,6 +1,7 @@
 package frw
 
 import (
+	"io"
 	"log"
 	"net/http"
 
@@ -14,13 +15,7 @@ import (
 // Action interface
 type Action interface {
 	Join(origin string, playerChannel chan []byte)
-	Process(request, origin string)
-}
-
-// Action2 interface
-type Action2 interface {
-	Join(origin string, playerChannel chan []byte)
-	Process2(request, origin string) []game.PlMsg
+	Process(request, origin string) []game.PlMsg
 }
 
 // GameRoom struct
@@ -64,11 +59,10 @@ func (r *GameRoom) Run() {
 			delete(r.players, player)
 		case msg := <-r.commandChan:
 			// commandChan message to all players
-			// var reps rep =
-			r.msdb5game.Process(msg.request, msg.origin)
-			// for _, r := range reps {
-			// 	io.WriteString(r.Dest(), r.Msg())
-			// }
+			plMsgs := r.msdb5game.Process(msg.request, msg.origin)
+			for _, m := range plMsgs {
+				io.WriteString(m.Dest(), m.Msg())
+			}
 		}
 	}
 }

@@ -6,7 +6,7 @@ import (
 	"github.com/mcaci/msdb5/dom/team"
 )
 
-func nextPhase(g roundInformer, rq requestInformer, setCaller func(*player.Player)) phase.ID {
+func nextPhase(g roundInformer, rq interface{ Value() string }, setCaller func(*player.Player)) phase.ID {
 	current := g.Phase()
 	nextPhase := current + 1
 	switch {

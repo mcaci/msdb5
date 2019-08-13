@@ -1,4 +1,4 @@
-package cardaction
+package action
 
 import (
 	"testing"

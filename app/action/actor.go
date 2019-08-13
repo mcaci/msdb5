@@ -1,8 +1,6 @@
-package game
+package action
 
 import (
-	"container/list"
-
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
@@ -11,18 +9,14 @@ import (
 	"github.com/mcaci/msdb5/dom/team"
 )
 
-type roundInformer interface {
+type actor interface {
 	AuctionScore() *auction.Score
-	Caller() *player.Player
-	Companion() *player.Player
 	CurrentPlayer() *player.Player
-	LastPlayer() *player.Player
 	Players() team.Players
 	PlayedCards() *set.Cards
 	Phase() phase.ID
-	Briscola() card.Item
-	LastPlaying() *list.List
-	IsSideUsed() bool
 	SideDeck() *set.Cards
-	IsRoundOngoing() bool
+	SetAuction(auction.Score)
+	SetBriscola(*card.Item)
+	SetCompanion(*player.Player)
 }

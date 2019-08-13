@@ -1,4 +1,4 @@
-package request
+package game
 
 import (
 	"strings"
@@ -12,7 +12,7 @@ type Req struct {
 	data1, data2 string
 }
 
-func New(request, origin string) *Req {
+func NewReq(request, origin string) *Req {
 	var req Req
 	fields := strings.Split(request, "#")
 	if len(fields) > 0 {
