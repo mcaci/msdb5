@@ -3,15 +3,19 @@ package player
 import "github.com/mcaci/ita-cards/card"
 
 // IsCardInHand func
-func IsCardInHand(c card.Item) Predicate {
-	return func(p *Player) bool { return p.Has(c) }
-}
+func IsCardInHand(c card.Item) Predicate { return func(p *Player) bool { return p.Has(c) } }
 
 // Has func
 func (player *Player) Has(id card.Item) bool { return player.hand.Find(id) != -1 }
 
+// MatchingHost func
+func MatchingHost(host string) Predicate { return func(p *Player) bool { return p.IsSameHost(host) } }
+
+// Matching func
+func Matching(o *Player) Predicate { return func(p *Player) bool { return p == o } }
+
 // IsSameHost func
-func (player Player) IsSameHost(origin string) bool { return player.host == origin }
+func (player Player) IsSameHost(host string) bool { return player.host == host }
 
 // Predicate type
 type Predicate func(p *Player) bool
