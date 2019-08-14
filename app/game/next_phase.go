@@ -6,15 +6,8 @@ import (
 	"github.com/mcaci/msdb5/dom/team"
 )
 
-func nextPhase(g roundInformer, rq interface{ Value() string }, setCaller func(*player.Player)) phase.ID {
+func nextPhase(g roundInformer, rq interface{ Value() string }) phase.ID {
 	current := g.Phase()
-	nextPhase := current + 1
-	switch {
-	case current == phase.InsideAuction && !g.IsSideUsed():
-		nextPhase = current + 2
-	default:
-		nextPhase = current + 1
-	}
 	isNext := true
 	switch current {
 	case phase.Joining:
@@ -25,14 +18,17 @@ func nextPhase(g roundInformer, rq interface{ Value() string }, setCaller func(*
 		isNext = rq.Value() == "0"
 	case phase.PlayingCards:
 		roundsBefore := uint8(len(*g.Players()[0].Hand()))
-		isNext = predict(g, roundsBefore, 3) || check(g)
-	}
-	if isNext && current == phase.InsideAuction {
-		_, p := g.Players().Find(func(p *player.Player) bool { return !player.Folded(p) })
-		setCaller(p)
+		isNext = predict(g, roundsBefore, 3) || checkAllWithEmptyHands(g)
 	}
 	if !isNext {
 		return current
 	}
-	return nextPhase
+	if current == phase.InsideAuction && !g.IsSideUsed() {
+		return current + 2
+	}
+	return current + 1
+}
+
+func checkAllWithEmptyHands(g interface{ Players() team.Players }) bool {
+	return team.Count(g.Players(), player.IsHandEmpty) == 5
 }
