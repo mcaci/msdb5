@@ -16,8 +16,6 @@ type Player struct {
 
 // New func
 func New() *Player {
-	// player := new(Player)
-	// player.hand = set.NewMust(}
 	return new(Player)
 }
 
