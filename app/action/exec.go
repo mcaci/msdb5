@@ -8,8 +8,8 @@ import (
 	"github.com/mcaci/msdb5/dom/player"
 )
 
-// Exec func
-func Exec(g actor, rq cardValueProvider) error {
+// Play func
+func Play(g actor, rq cardValueProvider) error {
 	switch g.Phase() {
 	case phase.Joining:
 		g.CurrentPlayer().RegisterAs(rq.Value())
@@ -25,16 +25,14 @@ func Exec(g actor, rq cardValueProvider) error {
 		g.SetAuction(newScore)
 		return nil
 	}
-	var a Actioner
+	var a actioner
 	switch g.Phase() {
 	case phase.ExchangingCards:
 		a = Exch{g.SideDeck()}
 	case phase.ChoosingCompanion:
 		a = Comp{g.SetBriscola, g.SetCompanion}
 	case phase.PlayingCards:
-		a = Play{g.PlayedCards()}
-	default:
-		return nil
+		a = PlayCard{g.PlayedCards()}
 	}
 	return CardAction(rq, g.Players(), a)
 }

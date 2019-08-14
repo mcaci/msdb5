@@ -11,11 +11,7 @@ import (
 // ErrCardNotInHand error
 var ErrCardNotInHand = errors.New("Card not in hand")
 
-type cardActioner interface {
-	Find(player.Predicate) (int, *player.Player)
-}
-
-type Actioner interface {
+type actioner interface {
 	exec(plCProv playerCardProvider)
 	notAcceptedZeroErr() error
 }
@@ -25,20 +21,22 @@ type cardValueProvider interface {
 	Value() string
 }
 
-func CardAction(rq cardValueProvider, act cardActioner, a Actioner) error {
+func CardAction(rq cardValueProvider, finder interface {
+	Find(player.Predicate) (int, *player.Player)
+}, a actioner) error {
 	if rq.Value() == "0" {
 		return a.notAcceptedZeroErr()
 	}
 	c, err := rq.Card()
-	idx, p := act.Find(player.IsCardInHand(*c))
+	idx, p := finder.Find(player.IsCardInHand(*c))
 	if err == nil && idx < 0 {
 		err = ErrCardNotInHand
 	}
-	data := CardData{card: c, pl: p, cardErr: err}
+	d := data{card: c, pl: p}
 	if err != nil {
 		return err
 	}
-	a.exec(data)
+	a.exec(d)
 	return nil
 }
 
@@ -56,6 +54,7 @@ func (c Comp) exec(plCProv playerCardProvider) {
 	c.SetC(plCProv.Card())
 	c.SetP(plCProv.Pl())
 }
+
 func (c Comp) notAcceptedZeroErr() error {
 	return errors.New("Value 0 for card allowed only for ExchangingCard phase")
 }
@@ -72,20 +71,22 @@ func (c Exch) exec(plCProv playerCardProvider) {
 	(*cards)[index] = (*toCards)[0]
 	*toCards = append((*toCards)[1:], awayCard)
 }
+
 func (c Exch) notAcceptedZeroErr() error {
 	return nil
 }
 
-type Play struct {
+type PlayCard struct {
 	PlCards *set.Cards
 }
 
-func (c Play) exec(plCProv playerCardProvider) {
+func (c PlayCard) exec(plCProv playerCardProvider) {
 	cards := plCProv.Pl().Hand()
 	index := cards.Find(*plCProv.Card())
 	c.PlCards.Add((*cards)[index])
 	*cards = append((*cards)[:index], (*cards)[index+1:]...)
 }
-func (c Play) notAcceptedZeroErr() error {
+
+func (c PlayCard) notAcceptedZeroErr() error {
 	return errors.New("Value 0 for card allowed only for ExchangingCard phase")
 }
