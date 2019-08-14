@@ -7,14 +7,6 @@ import (
 	"github.com/mcaci/msdb5/dom/team"
 )
 
-type checker interface {
-	Players() team.Players
-}
-
-func check(g checker) bool {
-	return team.Count(g.Players(), player.IsHandEmpty) == 5
-}
-
 type predictor interface {
 	Briscola() card.Item
 	Caller() *player.Player
