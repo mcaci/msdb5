@@ -5,12 +5,10 @@ import (
 	"github.com/mcaci/msdb5/dom/player"
 )
 
-type CardData struct {
-	card    *card.Item
-	pl      *player.Player
-	cardErr error
+type data struct {
+	card *card.Item
+	pl   *player.Player
 }
 
-func (d CardData) Card() *card.Item   { return d.card }
-func (d CardData) Pl() *player.Player { return d.pl }
-func (d CardData) CardErr() error     { return d.cardErr }
+func (d data) Card() *card.Item   { return d.card }
+func (d data) Pl() *player.Player { return d.pl }
