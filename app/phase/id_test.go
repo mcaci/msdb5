@@ -10,6 +10,13 @@ func (fr fakeRequester) Action() string {
 	return string(fr)
 }
 
+func TestIDCreationMustWithNoErr(t *testing.T) {
+	testID := MustID(fakeRequester("Card"))
+	if testID != PlayingCards {
+		t.Fatalf("Unexpected phase: %s", testID)
+	}
+}
+
 func TestIDCreationWithNoErr(t *testing.T) {
 	_, err := ToID(fakeRequester("Card"))
 	if err != nil {
