@@ -23,18 +23,18 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	// verify phase step
 	if pr.err == nil {
 		// err = msg.UnexpectedPhaseErr(phase.MustID(rq), g.Phase(), g.Lang())
-		pr.reportErr(g, rq, action.VerifyPhase(g, rq))
+		pr.reportErr(g, rq, phase.Check(g, rq))
 	}
 
 	// verify player step
 	if pr.err == nil {
 		// err = msg.UnexpectedPlayerErr(g.CurrentPlayer().Name(), g.Lang())
-		pr.reportErr(g, rq, action.VerifyPlayer(g, rq))
+		pr.reportErr(g, rq, team.CheckOrigin(g, rq))
 	}
 
 	// play step
 	if pr.err == nil {
-		pr.reportErr(g, rq, action.Exec(g, rq))
+		pr.reportErr(g, rq, action.Play(g, rq))
 	}
 
 	if pr.err == nil {
@@ -49,8 +49,12 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 		// end round: next player
 		plIndex := nextPlayer(g, rq)
 		// next phase
-		setCaller := func(p *player.Player) { g.caller = p }
-		ph := nextPhase(g, rq, setCaller)
+		ph := nextPhase(g, rq)
+		phNow := g.Phase()
+		if phNow == phase.InsideAuction && ph > phNow {
+			_, p := g.Players().Find(func(p *player.Player) bool { return !player.Folded(p) })
+			g.caller = p
+		}
 		// clean up
 		cleanUp(g, plIndex)
 		g.phase = ph
