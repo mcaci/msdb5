@@ -16,7 +16,6 @@ type roundInformer interface {
 	Caller() *player.Player
 	Companion() *player.Player
 	CurrentPlayer() *player.Player
-	LastPlayer() *player.Player
 	Players() team.Players
 	PlayedCards() *set.Cards
 	Phase() phase.ID
