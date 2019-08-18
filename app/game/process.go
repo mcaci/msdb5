@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/mcaci/msdb5/dom/briscola"
+
 	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/phase"
@@ -90,7 +92,7 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 		for _, p := range g.Players() {
 			pilers = append(pilers, p)
 		}
-		scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers)
+		scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers, briscola.Points)
 		for _, pl := range g.Players() {
 			pl, plMsg := pl, printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
 			pr.reports = append(pr.reports, PlMsg{pl, plMsg})
