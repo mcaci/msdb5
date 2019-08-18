@@ -1,28 +1,17 @@
 package action
 
 import (
-	"strconv"
-
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/dom/auction"
-	"github.com/mcaci/msdb5/dom/player"
 )
 
 // Play func
 func Play(g actor, rq cardValueProvider) error {
 	switch g.Phase() {
 	case phase.Joining:
-		g.CurrentPlayer().RegisterAs(rq.Value())
+		SingleValueAction(rq, Join(g.CurrentPlayer().RegisterAs))
 		return nil
 	case phase.InsideAuction:
-		score, err := strconv.Atoi(rq.Value())
-		toFold := player.Folded(g.CurrentPlayer()) || err != nil || !auction.CheckScores(*g.AuctionScore(), auction.Score(score))
-		if toFold {
-			g.CurrentPlayer().Fold()
-			return nil
-		}
-		newScore := auction.Update(*g.AuctionScore(), auction.Score(score))
-		g.SetAuction(newScore)
+		SingleValueAction(rq, Auction{g.CurrentPlayer(), *g.AuctionScore(), g.SetAuction})
 		return nil
 	}
 	var a actioner
