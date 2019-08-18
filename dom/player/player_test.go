@@ -28,7 +28,7 @@ func TestJoinPlayerName(t *testing.T) {
 }
 
 func TestJoinPlayerNameNotEmpty(t *testing.T) {
-	if p := initTest(); p.Name() != "" {
+	if p := initTest(); p.Name() == "" {
 		t.Fatal("Unexpected name being empty")
 	}
 }
