@@ -9,16 +9,16 @@ import (
 
 type auctionData struct {
 	currentPlayer *player.Player
-	score          auction.Score
-	update         func(auction.Score)
+	score         *auction.Score
+	update        func(auction.Score)
 }
 
 func (a auctionData) valueSet(val string) {
 	score, err := strconv.Atoi(val)
-	toFold := player.Folded(a.currentPlayer) || err != nil || !auction.CheckScores(a.score, auction.Score(score))
+	toFold := player.Folded(a.currentPlayer) || err != nil || !auction.CheckScores(*a.score, auction.Score(score))
 	if toFold {
 		a.currentPlayer.Fold()
 	}
-	newScore := auction.Update(a.score, auction.Score(score))
+	newScore := auction.Update(*a.score, auction.Score(score))
 	a.update(newScore)
 }
