@@ -2,21 +2,27 @@ package action
 
 import (
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
-type Exch struct {
-	Side *set.Cards
+type exchangeData struct {
+	side    *set.Cards
+	players team.Players
 }
 
-func (c Exch) exec(plCProv playerCardProvider) {
-	cards := plCProv.Pl().Hand()
-	index := cards.Find(*plCProv.Card())
-	toCards := c.Side
+func (e exchangeData) act(rq data) {
+	cards := rq.pl.Hand()
+	index := cards.Find(*rq.card)
+	toCards := e.side
 	awayCard := (*cards)[index]
 	(*cards)[index] = (*toCards)[0]
 	*toCards = append((*toCards)[1:], awayCard)
 }
 
-func (c Exch) notAcceptedZeroErr() error {
+func (e exchangeData) notAcceptedZeroErr() error {
 	return nil
+}
+
+func (e exchangeData) pls() team.Players {
+	return e.players
 }

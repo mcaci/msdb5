@@ -1,27 +1,40 @@
 package action
 
 import (
+	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 )
+
+type actor interface {
+	AuctionScore() *auction.Score
+	CurrentPlayer() *player.Player
+	Players() team.Players
+	PlayedCards() *set.Cards
+	Phase() phase.ID
+	SideDeck() *set.Cards
+	SetAuction(auction.Score)
+	SetBriscola(*card.Item)
+	SetCompanion(*player.Player)
+}
 
 // Play func
 func Play(g actor, rq cardValueProvider) error {
+	var err error
 	switch g.Phase() {
 	case phase.Joining:
-		SingleValueAction(rq, Join(g.CurrentPlayer().RegisterAs))
-		return nil
+		singleValueAction(rq, joinData{g.CurrentPlayer()})
 	case phase.InsideAuction:
-		SingleValueAction(rq, Auction{g.CurrentPlayer(), *g.AuctionScore(), g.SetAuction})
-		return nil
-	}
-	var a actioner
-	switch g.Phase() {
+		singleValueAction(rq, auctionData{g.CurrentPlayer(), *g.AuctionScore(), g.SetAuction})
 	case phase.ExchangingCards:
-		a = Exch{g.SideDeck()}
+		err = cardAction(rq, exchangeData{g.SideDeck(), g.Players()})
 	case phase.ChoosingCompanion:
-		a = Comp{g.SetBriscola, g.SetCompanion}
+		err = cardAction(rq, companionData{g.SetBriscola, g.SetCompanion, g.Players()})
 	case phase.PlayingCards:
-		a = PlayCard{g.PlayedCards()}
+		err = cardAction(rq, playCardData{g.PlayedCards(), g.Players()})
 	}
-	return CardAction(rq, g.Players(), a)
+	return err
 }

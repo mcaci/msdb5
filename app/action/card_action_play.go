@@ -4,19 +4,25 @@ import (
 	"errors"
 
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
-type PlayCard struct {
-	PlCards *set.Cards
+type playCardData struct {
+	playedCards *set.Cards
+	players     team.Players
 }
 
-func (c PlayCard) exec(plCProv playerCardProvider) {
-	cards := plCProv.Pl().Hand()
-	index := cards.Find(*plCProv.Card())
-	c.PlCards.Add((*cards)[index])
+func (pc playCardData) act(rq data) {
+	cards := rq.pl.Hand()
+	index := cards.Find(*rq.card)
+	pc.playedCards.Add((*cards)[index])
 	*cards = append((*cards)[:index], (*cards)[index+1:]...)
 }
 
-func (c PlayCard) notAcceptedZeroErr() error {
+func (pc playCardData) notAcceptedZeroErr() error {
 	return errors.New("Value 0 for card allowed only for ExchangingCard phase")
+}
+
+func (pc playCardData) pls() team.Players {
+	return pc.players
 }

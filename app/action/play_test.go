@@ -11,6 +11,14 @@ import (
 	"github.com/mcaci/msdb5/dom/team"
 )
 
+type fakeCardValueProv struct {
+	c   *card.Item
+	str string
+}
+
+func (rq fakeCardValueProv) Card() (*card.Item, error) { return rq.c, nil }
+func (rq fakeCardValueProv) Value() string             { return string(rq.str) }
+
 type fakeGameStructure struct {
 	auctionScore  auction.Score
 	currentPlayer *player.Player

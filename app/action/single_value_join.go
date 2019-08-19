@@ -1,7 +1,13 @@
 package action
 
-type Join func(string)
+import (
+	"github.com/mcaci/msdb5/dom/player"
+)
 
-func (j Join) ValueSet(val string) {
-	j(val)
+type joinData struct {
+	currentPlayer *player.Player
+}
+
+func (j joinData) valueSet(val string) {
+	j.currentPlayer.RegisterAs(val)
 }

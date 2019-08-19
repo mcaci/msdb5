@@ -5,41 +5,36 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
-// ErrCardNotInHand error
-var ErrCardNotInHand = errors.New("Card not in hand")
+var errCardNotInHand = errors.New("Card not in hand")
 
 type cardValueProvider interface {
 	Card() (*card.Item, error)
 	Value() string
 }
 
+type data struct {
+	card *card.Item
+	pl   *player.Player
+}
+
 type actioner interface {
-	exec(plCProv playerCardProvider)
+	act(data)
 	notAcceptedZeroErr() error
+	pls() team.Players
 }
 
-type playerCardProvider interface {
-	Card() *card.Item
-	Pl() *player.Player
-}
-
-func CardAction(rq cardValueProvider, finder interface {
-	Find(player.Predicate) (int, *player.Player)
-}, a actioner) error {
+func cardAction(rq cardValueProvider, a actioner) error {
 	if rq.Value() == "0" {
 		return a.notAcceptedZeroErr()
 	}
 	c, err := rq.Card()
-	idx, p := finder.Find(player.IsCardInHand(*c))
+	idx, pl := a.pls().Find(player.IsCardInHand(*c))
 	if err == nil && idx < 0 {
-		err = ErrCardNotInHand
+		return errCardNotInHand
 	}
-	d := data{card: c, pl: p}
-	if err != nil {
-		return err
-	}
-	a.exec(d)
+	a.act(data{c, pl})
 	return nil
 }
