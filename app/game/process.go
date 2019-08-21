@@ -51,7 +51,9 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 		// end round: next player
 		plIndex := nextPlayer(g, rq)
 		// next phase
-		ph := nextPhase(g, rq)
+		phInfo := phase.NewInfo(g.Players(), g.Caller(), g.Companion(), g.Briscola(),
+			len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, rq.Value())
+		ph := g.Phase().Next(phInfo)
 		phNow := g.Phase()
 		if phNow == phase.InsideAuction && ph > phNow {
 			_, p := g.Players().Find(func(p *player.Player) bool { return !player.Folded(p) })
