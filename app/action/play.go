@@ -28,7 +28,7 @@ func Play(g actor, rq cardValueProvider) error {
 	case phase.Joining:
 		singleValueAction(rq, joinData{g.CurrentPlayer()})
 	case phase.InsideAuction:
-		singleValueAction(rq, auctionData{g.CurrentPlayer(), g.AuctionScore(), g.SetAuction})
+		singleValueAction(rq, auctionData{g.CurrentPlayer(), g.Players(), g.AuctionScore(), g.SetAuction})
 	case phase.ExchangingCards:
 		err = cardAction(rq, exchangeData{g.SideDeck(), g.Players()})
 	case phase.ChoosingCompanion:

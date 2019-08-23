@@ -5,10 +5,12 @@ import (
 
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
 type auctionData struct {
 	currentPlayer *player.Player
+	players       team.Players
 	score         *auction.Score
 	update        func(auction.Score)
 }
@@ -21,4 +23,13 @@ func (a auctionData) valueSet(val string) {
 	}
 	newScore := auction.Update(*a.score, auction.Score(score))
 	a.update(newScore)
+	if newScore < 120 {
+		return
+	}
+	for _, p := range a.players {
+		if p == a.currentPlayer {
+			continue
+		}
+		p.Fold()
+	}
 }
