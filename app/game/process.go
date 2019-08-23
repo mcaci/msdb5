@@ -8,6 +8,7 @@ import (
 
 	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/msg"
+	"github.com/mcaci/msdb5/app/next"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/auction"
@@ -48,20 +49,29 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 			}
 		}
 
-		// end round: next player
-		plIndex := nextPlayer(g, rq)
-		// next phase
-		phInfo := phase.NewInfo(g.Players(), g.Caller(), g.Companion(), g.Briscola(),
+		// end round: next player and next phase
+		plInfo := next.NewPlInfo(g.Phase(), g.Players(), g.PlayedCards(), g.Briscola(),
+			len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, rq.From())
+		plIndex := next.Player(plInfo)
+
+		phInfo := next.NewPhInfo(g.Phase(), g.Players(), g.Caller(), g.Companion(), g.Briscola(),
 			len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, rq.Value())
-		ph := g.Phase().Next(phInfo)
-		phNow := g.Phase()
-		if phNow == phase.InsideAuction && ph > phNow {
-			_, p := g.Players().Find(func(p *player.Player) bool { return !player.Folded(p) })
+		nextPhase := next.Phase(phInfo)
+
+		current := g.Phase()
+		if current == phase.InsideAuction && nextPhase > current {
+			_, p := g.Players().Find(player.NotFolded)
 			g.caller = p
 		}
-		// clean up
-		cleanUp(g, plIndex)
-		g.phase = ph
+
+		if !(current != phase.PlayingCards || g.IsRoundOngoing()) {
+			pile := g.Players()[plIndex].Pile()
+			move(g.PlayedCards(), pile)
+			if team.Count(g.Players(), player.IsHandEmpty) == 5 && g.IsSideUsed() {
+				move(g.SideDeck(), pile)
+			}
+		}
+		g.setPhase(nextPhase)
 		track.Player(g.LastPlaying(), g.Players()[plIndex])
 
 		// log action to console
@@ -116,4 +126,9 @@ func (pr *proc) reportErr(g interface{ Players() team.Players }, rq interface{ F
 	pr.reports = append(pr.reports, PlMsg{cons, consMsg})
 	pr.reports = append(pr.reports, PlMsg{pl, plMsg})
 	pr.err = err
+}
+
+func sender(g interface{ Players() team.Players }, rq interface{ From() string }) *player.Player {
+	_, p := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(rq.From()) })
+	return p
 }
