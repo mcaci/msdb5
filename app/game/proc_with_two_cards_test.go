@@ -54,7 +54,7 @@ func fakeGamePlayWith2HandSize(gameTest *Game) {
 func TestCompletedGameWith2HandsCard(t *testing.T) {
 	gameTest := fakeGameSetupWith2HandSize()
 	fakeGamePlayWith2HandSize(gameTest)
-	if gameTest.phase != phase.End {
-		t.Fatal("Expecting transition to end game and scoring")
+	if gameTest.Phase() != phase.End {
+		t.Fatalf("Expecting transition to end game and scoring but current phase was: %s", gameTest.phase)
 	}
 }

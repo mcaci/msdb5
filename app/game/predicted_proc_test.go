@@ -50,6 +50,6 @@ func TestCompletedGameWithPrediction(t *testing.T) {
 	gameTest := fakeGameSetupWith2HandSizeAndPrediction()
 	fakeGamePlayWith2HandSizeAndPrediction(gameTest)
 	if gameTest.phase != phase.End {
-		t.Fatal("Expecting transition to end game and scoring")
+		t.Fatalf("Expecting transition to end game and scoring but current phase was: %s", gameTest.phase)
 	}
 }
