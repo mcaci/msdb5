@@ -87,6 +87,7 @@ func (g *Game) IsRoundOngoing() bool          { return len(g.playedCards) < 5 }
 func (g *Game) SetAuction(s auction.Score)     { g.auctionScore = s }
 func (g *Game) SetBriscola(c *card.Item)       { g.briscolaCard = *c }
 func (g *Game) SetCompanion(pl *player.Player) { g.companion = pl }
+func (g *Game) setPhase(ph phase.ID)           { g.phase = ph }
 
 func (g Game) String() string {
 	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %v, Auction score: %d, Phase: %s, Players: %v, Side Deck: %v, Last Players: %v)",
