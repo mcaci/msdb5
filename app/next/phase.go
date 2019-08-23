@@ -1,7 +1,8 @@
-package phase
+package next
 
 import (
 	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
@@ -13,31 +14,34 @@ type phaseInformationProvider interface {
 	Companion() *player.Player
 	IsRoundOngoing() bool
 	IsSideUsed() bool
+	Phase() phase.ID
 	Players() team.Players
 	ExchangeInput() string
 }
 
-// Next func
-func (current ID) Next(g phaseInformationProvider) ID {
-	if !current.phaseShouldChange(g) {
-		return current
+// Phase func
+func Phase(g phaseInformationProvider) phase.ID {
+	current := g.Phase()
+	shouldChange := phaseShouldChange(g)
+	if shouldChange && current == phase.InsideAuction && !g.IsSideUsed() {
+		current++
 	}
-	if current != InsideAuction || g.IsSideUsed() {
-		return current + 1
+	if shouldChange {
+		current++
 	}
-	return current + 2
+	return current
 }
 
-func (current ID) phaseShouldChange(g phaseInformationProvider) bool {
+func phaseShouldChange(g phaseInformationProvider) bool {
 	isNext := true
-	switch current {
-	case Joining:
+	switch g.Phase() {
+	case phase.Joining:
 		isNext = team.Count(g.Players(), player.IsNameEmpty) == 0
-	case InsideAuction:
+	case phase.InsideAuction:
 		isNext = team.Count(g.Players(), player.Folded) == 4
-	case ExchangingCards:
+	case phase.ExchangingCards:
 		isNext = g.ExchangeInput() == "0"
-	case PlayingCards:
+	case phase.PlayingCards:
 		roundsBefore := uint8(len(*g.Players()[0].Hand()))
 		const limit = 3
 		isNext = predict(g, roundsBefore, limit) || checkAllWithEmptyHands(g)
