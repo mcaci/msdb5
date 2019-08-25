@@ -20,7 +20,7 @@ type nextPlayerInformer interface {
 }
 
 // Player func
-func Player(g nextPlayerInformer) uint8 {
+func Player(g nextPlayerInformer) *player.Player {
 	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
 	index, _ := g.Players().Find(player.MatchingHost(g.FromInput()))
 	playerIndex := uint8(index)
@@ -39,5 +39,5 @@ func Player(g nextPlayerInformer) uint8 {
 		winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards(), g.Briscola())
 		nextPlayer = playersRoundRobin(playerIndex + winningCardIndex)
 	}
-	return nextPlayer
+	return g.Players()[nextPlayer]
 }
