@@ -82,7 +82,6 @@ func (g *Game) Players() team.Players         { return g.players }
 func (g *Game) PlayedCards() *set.Cards       { return &g.playedCards }
 func (g *Game) SideDeck() *set.Cards          { return &g.side }
 func (g *Game) Lang() language.Tag            { return g.lang }
-func (g *Game) IsRoundOngoing() bool          { return len(g.playedCards) < 5 }
 
 func (g *Game) SetAuction(s auction.Score)     { g.auctionScore = s }
 func (g *Game) SetBriscola(c *card.Item)       { g.briscolaCard = *c }
