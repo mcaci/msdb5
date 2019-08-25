@@ -2,8 +2,10 @@ package game
 
 import (
 	"fmt"
+	"io"
 	"os"
 
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/dom/briscola"
 
 	"github.com/mcaci/msdb5/app/action"
@@ -49,30 +51,28 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 			}
 		}
 
-		// end round: next player and next phase
+		// end round: next player
 		plInfo := next.NewPlInfo(g.Phase(), g.Players(), g.PlayedCards(), g.Briscola(),
 			len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, rq.From())
-		plIndex := next.Player(plInfo)
+		nextPlayer := next.Player(plInfo)
+		if g.Phase() == phase.PlayingCards && len(g.playedCards) == 5 {
+			pile := nextPlayer.Pile()
+			set.Move(g.PlayedCards(), pile)
+			if team.Count(g.Players(), player.IsHandEmpty) == 5 && g.IsSideUsed() {
+				set.Move(g.SideDeck(), pile)
+			}
+		}
+		track.Player(g.LastPlaying(), nextPlayer)
 
+		// end round: next phase
 		phInfo := next.NewPhInfo(g.Phase(), g.Players(), g.Caller(), g.Companion(), g.Briscola(),
-			len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, rq.Value())
+			len(*g.SideDeck()) > 0, len(*g.PlayedCards()) == 0, rq.Value())
 		nextPhase := next.Phase(phInfo)
-
-		current := g.Phase()
-		if current == phase.InsideAuction && nextPhase > current {
+		if g.Phase() == phase.InsideAuction && nextPhase > g.Phase() {
 			_, p := g.Players().Find(player.NotFolded)
 			g.caller = p
 		}
-
-		if !(current != phase.PlayingCards || g.IsRoundOngoing()) {
-			pile := g.Players()[plIndex].Pile()
-			move(g.PlayedCards(), pile)
-			if team.Count(g.Players(), player.IsHandEmpty) == 5 && g.IsSideUsed() {
-				move(g.SideDeck(), pile)
-			}
-		}
 		g.setPhase(nextPhase)
-		track.Player(g.LastPlaying(), g.Players()[plIndex])
 
 		// log action to console
 		cons, consMsg := os.Stdout, fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), *rq, sender(g, rq), g)
@@ -97,7 +97,29 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 		// process end phase
 		remainingCards := len(*g.Players()[0].Hand())
 		if remainingCards > 0 {
-			collect(g)
+			highbriscolaCard := briscola.Serie(g.Briscola())
+			for _, card := range highbriscolaCard {
+				_, p := g.Players().Find(player.IsCardInHand(card))
+				if p == nil { // no one has card
+					continue
+				}
+				for _, pl := range g.Players() {
+					set.Move(pl.Hand(), p.Pile())
+				}
+				if g.IsSideUsed() {
+					set.Move(g.SideDeck(), p.Pile())
+				}
+				track.Player(g.LastPlaying(), p)
+				printer := message.NewPrinter(g.Lang())
+				team := printer.Sprintf("Callers")
+				if p != g.Caller() && p != g.Companion() {
+					team = printer.Sprintf("Others")
+				}
+				for _, pl := range g.Players() {
+					io.WriteString(pl, printer.Sprintf("The end - %s team has all briscola cards", team))
+				}
+				break
+			}
 		}
 		// compute score
 		pilers := make([]team.Piler, 0)
