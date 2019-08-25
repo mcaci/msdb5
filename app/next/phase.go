@@ -12,7 +12,7 @@ type phaseInformationProvider interface {
 	Briscola() card.Item
 	Caller() *player.Player
 	Companion() *player.Player
-	IsRoundOngoing() bool
+	IsNewRoundToStart() bool
 	IsSideUsed() bool
 	Phase() phase.ID
 	Players() team.Players
@@ -73,5 +73,5 @@ func predict(g phaseInformationProvider, roundsBefore, limit uint8) bool {
 		}
 		roundsChecked++
 	}
-	return !g.IsRoundOngoing() && roundsBefore <= limit && callersHave != othersHave
+	return g.IsNewRoundToStart() && roundsBefore <= limit && callersHave != othersHave
 }
