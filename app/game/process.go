@@ -6,14 +6,13 @@ import (
 	"os"
 
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/dom/briscola"
-
 	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/next"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/message"
@@ -22,24 +21,26 @@ import (
 // Process func
 func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	printer := message.NewPrinter(g.Lang())
-	rq := NewReq(inputRequest, origin)
+	rq := NewReq(inputRequest)
+	s := senderInfo{g.Players(), origin}
 	pr := proc{}
 
 	// verify phase step
 	if pr.err == nil {
 		// err = msg.UnexpectedPhaseErr(phase.MustID(rq), g.Phase(), g.Lang())
-		pr.reportErr(g, rq, phase.Check(g, rq))
+		pr.reportErr(s, inputRequest, phase.Check(g, rq))
 	}
 
 	// verify player step
 	if pr.err == nil {
 		// err = msg.UnexpectedPlayerErr(g.CurrentPlayer().Name(), g.Lang())
-		pr.reportErr(g, rq, team.CheckOrigin(g, rq))
+		es := expectedSenderInfo{s, g.CurrentPlayer()}
+		pr.reportErr(es, inputRequest, team.CheckOrigin(es))
 	}
 
 	// play step
 	if pr.err == nil {
-		pr.reportErr(g, rq, action.Play(g, rq))
+		pr.reportErr(s, inputRequest, action.Play(g, rq))
 	}
 
 	if pr.err == nil {
@@ -53,7 +54,7 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 
 		// end round: next player
 		plInfo := next.NewPlInfo(g.Phase(), g.Players(), g.PlayedCards(), g.Briscola(),
-			len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, rq.From())
+			len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, origin)
 		nextPlayer := next.Player(plInfo)
 		if g.Phase() == phase.PlayingCards && len(g.playedCards) == 5 {
 			pile := nextPlayer.Pile()
@@ -75,7 +76,8 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 		g.setPhase(nextPhase)
 
 		// log action to console
-		cons, consMsg := os.Stdout, fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", sender(g, rq).Name(), *rq, sender(g, rq), g)
+		senderPlayer := team.Sender(s)
+		cons, consMsg := os.Stdout, fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", senderPlayer.Name(), inputRequest, senderPlayer, g)
 		pr.reports = append(pr.reports, PlMsg{cons, consMsg})
 		for _, pl := range g.Players() {
 			pl, plMsg := pl, "-----"
@@ -137,20 +139,29 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 }
 
 type proc struct {
-	rq      *Req
 	reports []PlMsg
 	err     error
 }
 
-func (pr *proc) reportErr(g interface{ Players() team.Players }, rq interface{ From() string }, err error) {
-	cons, consMsg := os.Stdout, fmt.Sprintf("New Action by %s: %s\nError raised: %+v\n", sender(g, rq).Name(), rq, err)
-	pl, plMsg := sender(g, rq), fmt.Sprintf("Error: %+v\n", err)
+func (pr *proc) reportErr(s team.SenderInformation, action string, err error) {
+	cons, consMsg := os.Stdout, fmt.Sprintf("New Action by %s: %s\nError raised: %+v\n", team.Sender(s).Name(), action, err)
 	pr.reports = append(pr.reports, PlMsg{cons, consMsg})
+	pl, plMsg := team.Sender(s), fmt.Sprintf("Error: %+v\n", err)
 	pr.reports = append(pr.reports, PlMsg{pl, plMsg})
 	pr.err = err
 }
 
-func sender(g interface{ Players() team.Players }, rq interface{ From() string }) *player.Player {
-	_, p := g.Players().Find(func(p *player.Player) bool { return p.IsSameHost(rq.From()) })
-	return p
+type expectedSenderInfo struct {
+	senderInfo
+	p *player.Player
 }
+
+func (s expectedSenderInfo) CurrentPlayer() *player.Player { return s.p }
+
+type senderInfo struct {
+	players team.Players
+	origin  string
+}
+
+func (s senderInfo) From() string          { return s.origin }
+func (s senderInfo) Players() team.Players { return s.players }

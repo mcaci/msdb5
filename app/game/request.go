@@ -8,11 +8,10 @@ import (
 
 type Req struct {
 	action       string
-	origin       string
 	data1, data2 string
 }
 
-func NewReq(request, origin string) *Req {
+func NewReq(request string) *Req {
 	var req Req
 	fields := strings.Split(request, "#")
 	if len(fields) > 0 {
@@ -24,16 +23,11 @@ func NewReq(request, origin string) *Req {
 	if len(fields) > 2 {
 		req.data2 = fields[2]
 	}
-	req.origin = origin
 	return &req
 }
 
 func (r *Req) Action() string {
 	return r.action
-}
-
-func (r *Req) From() string {
-	return r.origin
 }
 
 func (r *Req) Card() (*card.Item, error) {
