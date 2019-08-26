@@ -8,7 +8,7 @@ import (
 	"github.com/mcaci/msdb5/app/phase"
 )
 
-func (g *Game) handleMLData() PlMsg {
+func (g *Game) handleMLData() (io.Writer, string) {
 	// log action to file for ml (TODO: WHEN PUSHED OUTSIDE FUNC -> PROBLEM)
 	var dest io.Writer
 	var text string
@@ -29,5 +29,5 @@ func (g *Game) handleMLData() PlMsg {
 		// write to file who took all cards at last round
 		dest, text = f, fmt.Sprintf("%s\n", g.CurrentPlayer().Name())
 	}
-	return PlMsg{dest, text}
+	return dest, text
 }
