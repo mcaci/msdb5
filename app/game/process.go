@@ -23,32 +23,31 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	printer := message.NewPrinter(g.Lang())
 	rq := NewReq(inputRequest)
 	s := senderInfo{g.Players(), origin}
-	pr := proc{}
+	r := report{}
 
 	// verify phase step
-	if pr.err == nil {
+	if r.err == nil {
 		// err = msg.UnexpectedPhaseErr(phase.MustID(rq), g.Phase(), g.Lang())
-		pr.reportErr(s, inputRequest, phase.Check(g, rq))
+		r.error(s, inputRequest, phase.Check(g, rq))
 	}
 
 	// verify player step
-	if pr.err == nil {
+	if r.err == nil {
 		// err = msg.UnexpectedPlayerErr(g.CurrentPlayer().Name(), g.Lang())
 		es := expectedSenderInfo{s, g.CurrentPlayer()}
-		pr.reportErr(es, inputRequest, team.CheckOrigin(es))
+		r.error(es, inputRequest, team.CheckOrigin(es))
 	}
 
 	// play step
-	if pr.err == nil {
-		pr.reportErr(s, inputRequest, action.Play(g, rq))
+	if r.err == nil {
+		r.error(s, inputRequest, action.Play(g, rq))
 	}
 
-	if pr.err == nil {
+	if r.err == nil {
 		cardN := auction.SideCards(*g.AuctionScore())
 		if phase.InsideAuction == g.Phase() && len(*g.SideDeck()) != 0 && cardN > 0 {
 			for _, pl := range g.Players() {
-				pl, plMsg := pl, printer.Sprintf("Side deck section: (%s)\n", msg.TranslateCards((*g.SideDeck())[:cardN], printer))
-				pr.reports = append(pr.reports, PlMsg{pl, plMsg})
+				r.msg(pl, printer.Sprintf("Side deck section: (%s)\n", msg.TranslateCards((*g.SideDeck())[:cardN], printer)))
 			}
 		}
 
@@ -77,23 +76,18 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 
 		// log action to console
 		senderPlayer := team.Sender(s)
-		cons, consMsg := os.Stdout, fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", senderPlayer.Name(), inputRequest, senderPlayer, g)
-		pr.reports = append(pr.reports, PlMsg{cons, consMsg})
+		r.msg(os.Stdout, fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", senderPlayer.Name(), inputRequest, senderPlayer, g))
 		for _, pl := range g.Players() {
-			pl, plMsg := pl, "-----"
-			pr.reports = append(pr.reports, PlMsg{pl, plMsg})
+			r.msg(pl, "-----")
 		}
-		pl, plMsg := g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer())
-		pr.reports = append(pr.reports, PlMsg{pl, plMsg})
+		r.msg(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
 		for _, pl := range g.Players() {
-			pl, plMsg := pl, msg.TranslateGameStatus(g, printer)
-			pr.reports = append(pr.reports, PlMsg{pl, plMsg})
+			r.msg(pl, msg.TranslateGameStatus(g, printer))
 		}
-		pl, plMsg = g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer())
-		pr.reports = append(pr.reports, PlMsg{pl, plMsg})
+		r.msg(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 
 		if g.phase != phase.End {
-			return pr.reports
+			return r.reports
 		}
 
 		// process end phase
@@ -118,7 +112,7 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 					team = printer.Sprintf("Others")
 				}
 				for _, pl := range g.Players() {
-					io.WriteString(pl, printer.Sprintf("The end - %s team has all briscola cards", team))
+					r.msg(pl, printer.Sprintf("The end - %s team has all briscola cards", team))
 				}
 				break
 			}
@@ -130,25 +124,26 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 		}
 		scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers, briscola.Points)
 		for _, pl := range g.Players() {
-			pl, plMsg := pl, printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
-			pr.reports = append(pr.reports, PlMsg{pl, plMsg})
+			r.msg(pl, printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2))
 		}
 	}
-	pr.reports = append(pr.reports, g.handleMLData()) // placeholder for ml data
-	return pr.reports
+	r.msg(g.handleMLData()) // placeholder for ml data
+	return r.reports
 }
 
-type proc struct {
+type report struct {
 	reports []PlMsg
 	err     error
 }
 
-func (pr *proc) reportErr(s team.SenderInformation, action string, err error) {
-	cons, consMsg := os.Stdout, fmt.Sprintf("New Action by %s: %s\nError raised: %+v\n", team.Sender(s).Name(), action, err)
-	pr.reports = append(pr.reports, PlMsg{cons, consMsg})
-	pl, plMsg := team.Sender(s), fmt.Sprintf("Error: %+v\n", err)
-	pr.reports = append(pr.reports, PlMsg{pl, plMsg})
-	pr.err = err
+func (r *report) msg(writer io.Writer, msg string) {
+	r.reports = append(r.reports, PlMsg{writer, msg})
+}
+
+func (r *report) error(s team.SenderInformation, action string, err error) {
+	r.msg(os.Stdout, fmt.Sprintf("New Action by %s: %s\nError raised: %+v\n", team.Sender(s).Name(), action, err))
+	r.msg(team.Sender(s), fmt.Sprintf("Error: %+v\n", err))
+	r.err = err
 }
 
 type expectedSenderInfo struct {
