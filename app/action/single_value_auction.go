@@ -17,6 +17,7 @@ type auctionData struct {
 	update        func(auction.Score)
 	side          *set.Cards
 	setShowSide   func(bool, uint8)
+	setCaller     func(*player.Player)
 }
 
 func (a auctionData) valueSet(val string) {
@@ -27,17 +28,22 @@ func (a auctionData) valueSet(val string) {
 	}
 	newScore := auction.Update(*a.score, auction.Score(score))
 	a.update(newScore)
-	if newScore < 120 {
-		return
+
+	if len(*a.side) > 0 {
+		a.setShowSide(len(*a.side) > 0, auction.SideCards(newScore))
 	}
-	for _, p := range a.players {
-		if p == a.currentPlayer {
-			continue
+
+	if newScore >= 120 {
+		for _, p := range a.players {
+			if p == a.currentPlayer {
+				continue
+			}
+			p.Fold()
 		}
-		p.Fold()
 	}
-	if len(*a.side) == 0 {
-		return
+
+	if team.Count(a.players, player.NotFolded) == 1 {
+		_, p := a.players.Find(player.NotFolded)
+		a.setCaller(p)
 	}
-	a.setShowSide(len(*a.side) > 0, auction.SideCards(newScore))
 }

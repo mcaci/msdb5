@@ -68,12 +68,7 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	// end round: next phase
 	phInfo := next.NewPhInfo(g.Phase(), g.Players(), g.Caller(), g.Companion(), g.Briscola(),
 		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) == 0, rq.Value())
-	nextPhase := next.Phase(phInfo)
-	if g.Phase() == phase.InsideAuction && nextPhase > g.Phase() {
-		_, p := g.Players().Find(player.NotFolded)
-		g.caller = p
-	}
-	g.setPhase(nextPhase)
+	g.setPhase(next.Phase(phInfo))
 
 	// send logs
 	senderPlayer := team.Sender(senderInfo{g.Players(), origin})

@@ -18,6 +18,7 @@ type fakeGameStructure struct {
 	playedCards   *set.Cards
 	phase         phase.ID
 	sideDeck      *set.Cards
+	caller        *player.Player
 	companion     *player.Player
 	briscolaCard  card.Item
 	c             *card.Item
@@ -32,6 +33,7 @@ func (gs fakeGameStructure) Phase() phase.ID                  { return gs.phase 
 func (gs fakeGameStructure) SideDeck() *set.Cards             { return gs.sideDeck }
 func (gs fakeGameStructure) SetAuction(score auction.Score)   { gs.auctionScore = score }
 func (gs fakeGameStructure) SetBriscola(briscola *card.Item)  { gs.briscolaCard = *briscola }
+func (gs fakeGameStructure) SetCaller(call *player.Player)    { gs.caller = call }
 func (gs fakeGameStructure) SetCompanion(comp *player.Player) { gs.companion = comp }
 func (gs fakeGameStructure) SetShowSide(bool, uint8)          {}
 

@@ -18,6 +18,7 @@ type gamePlayer interface {
 	SideDeck() *set.Cards
 	SetAuction(auction.Score)
 	SetBriscola(*card.Item)
+	SetCaller(*player.Player)
 	SetCompanion(*player.Player)
 	SetShowSide(bool, uint8)
 	Card() (*card.Item, error)
@@ -31,7 +32,7 @@ func Play(g gamePlayer) error {
 	case phase.Joining:
 		singleValueAction(g, joinData{g.CurrentPlayer()})
 	case phase.InsideAuction:
-		singleValueAction(g, auctionData{g.CurrentPlayer(), g.Players(), g.AuctionScore(), g.SetAuction, g.SideDeck(), g.SetShowSide})
+		singleValueAction(g, auctionData{g.CurrentPlayer(), g.Players(), g.AuctionScore(), g.SetAuction, g.SideDeck(), g.SetShowSide, g.SetCaller})
 	case phase.ExchangingCards:
 		err = cardAction(g, exchangeData{g.SideDeck(), g.Players()})
 	case phase.ChoosingCompanion:

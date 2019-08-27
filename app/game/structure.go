@@ -91,6 +91,7 @@ func (g *Game) SetShowSide(isToShow bool, quantity uint8) {
 	g.sideSubset = g.side[:quantity]
 }
 func (g *Game) SetBriscola(c *card.Item)       { g.briscolaCard = *c }
+func (g *Game) SetCaller(pl *player.Player)    { g.caller = pl }
 func (g *Game) SetCompanion(pl *player.Player) { g.companion = pl }
 func (g *Game) setPhase(ph phase.ID)           { g.phase = ph }
 
