@@ -7,8 +7,13 @@ import (
 // ErrUnexpectedPhase error
 var ErrUnexpectedPhase = errors.New("Unexpected phase")
 
-func Check(g interface{ Phase() ID }, rq interface{ Action() string }) error {
-	inputPhase, err := ToID(rq)
+type phaseChecker interface {
+	Phase() ID
+	Action() string
+}
+
+func Check(g phaseChecker) error {
+	inputPhase, err := ToID(g.Action())
 	if err == nil && g.Phase() != inputPhase {
 		err = ErrUnexpectedPhase
 	}

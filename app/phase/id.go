@@ -19,8 +19,7 @@ const (
 var phases = []string{"Join", "Auction", "Exchange", "Companion", "Card", "End"}
 
 // ToID func
-func ToID(rq interface{ Action() string }) (ID, error) {
-	phase := rq.Action()
+func ToID(phase string) (ID, error) {
 	for i := range phases {
 		if phases[i] != phase {
 			continue
@@ -31,12 +30,12 @@ func ToID(rq interface{ Action() string }) (ID, error) {
 }
 
 // MustID func
-func MustID(rq interface{ Action() string }) ID {
-	phase, err := ToID(rq)
+func MustID(phase string) ID {
+	id, err := ToID(phase)
 	if err != nil {
 		panic(err)
 	}
-	return phase
+	return id
 }
 
 func (id ID) String() string {

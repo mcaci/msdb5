@@ -27,7 +27,8 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	// verify phase step
 	if r.err == nil {
 		// err = msg.UnexpectedPhaseErr(phase.MustID(rq), g.Phase(), g.Lang())
-		r.error(s, inputRequest, phase.Check(g, rq))
+		phInfo := phaseInfo{g.Phase(), rq.Action()}
+		r.error(s, inputRequest, phase.Check(phInfo))
 	}
 
 	// verify player step
@@ -145,6 +146,14 @@ func (r *report) error(s team.SenderInformation, action string, err error) {
 	r.msg(team.Sender(s), fmt.Sprintf("Error: %+v\n", err))
 	r.err = err
 }
+
+type phaseInfo struct {
+	phase  phase.ID
+	action string
+}
+
+func (s phaseInfo) Action() string  { return s.action }
+func (s phaseInfo) Phase() phase.ID { return s.phase }
 
 type expectedSenderInfo struct {
 	senderInfo
