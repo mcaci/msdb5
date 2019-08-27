@@ -2,15 +2,14 @@ package game
 
 import (
 	"fmt"
-	"io"
 	"os"
 
-	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/next"
 	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/app/score"
 	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/player"
@@ -123,62 +122,14 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 		}
 	}
 	// compute score
-	pilers := make([]team.Piler, 0)
+	pilers := make([]score.Piler, 0)
 	for _, p := range g.Players() {
 		pilers = append(pilers, p)
 	}
-	scoreTeam1, scoreTeam2 := team.Score(g.Caller(), g.Companion(), pilers, briscola.Points)
+	scoreTeam1, scoreTeam2 := score.Calc(g.Caller(), g.Companion(), pilers, briscola.Points)
 	for _, pl := range g.Players() {
 		r.msg(pl, printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2))
 	}
 	r.msg(g.handleMLData()) // placeholder for ml data
 	return r.reports
 }
-
-type report struct {
-	reports []PlMsg
-	err     error
-}
-
-func (r *report) msg(writer io.Writer, msg string) {
-	r.reports = append(r.reports, PlMsg{writer, msg})
-}
-
-func (r *report) error(s team.SenderInformation, action string, err error) {
-	r.msg(os.Stdout, fmt.Sprintf("New Action by %s: %s\nError raised: %+v\n", team.Sender(s).Name(), action, err))
-	r.msg(team.Sender(s), fmt.Sprintf("Error: %+v\n", err))
-	r.err = err
-}
-
-type phaseInfo struct {
-	phase  phase.ID
-	action string
-}
-
-func (s phaseInfo) Action() string  { return s.action }
-func (s phaseInfo) Phase() phase.ID { return s.phase }
-
-type expectedSenderInfo struct {
-	senderInfo
-	p *player.Player
-}
-
-func (s expectedSenderInfo) CurrentPlayer() *player.Player { return s.p }
-
-type senderInfo struct {
-	players team.Players
-	origin  string
-}
-
-func (s senderInfo) From() string          { return s.origin }
-func (s senderInfo) Players() team.Players { return s.players }
-
-type gameRound struct {
-	*Game
-	c    *card.Item
-	cErr error
-	val  string
-}
-
-func (g gameRound) Card() (*card.Item, error) { return g.c, g.cErr }
-func (g gameRound) Value() string             { return g.val }
