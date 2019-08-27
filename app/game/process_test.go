@@ -63,6 +63,14 @@ func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
 	}
 }
 
+func TestCompletedGameHasSideDeckEmpty(t *testing.T) {
+	gameTest := fakeGameSetup(true)
+	fakeGamePlay(gameTest)
+	if len(gameTest.side) != 0 {
+		t.Fatalf("Expecting side deck to be empty but is: %v", gameTest.side)
+	}
+}
+
 func TestCompletedGameReturningScoreInfoWithNoSide(t *testing.T) {
 	gameTest := fakeGameSetup(false)
 	fakeGamePlay(gameTest)

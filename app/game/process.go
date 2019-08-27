@@ -21,12 +21,12 @@ import (
 func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	printer := message.NewPrinter(g.Lang())
 	rq := NewReq(inputRequest)
-	s := senderInfo{g.Players(), origin}
 	r := report{}
 
 	// verify phase step
 	if r.err == nil {
 		// err = msg.UnexpectedPhaseErr(phase.MustID(rq), g.Phase(), g.Lang())
+		s := senderInfo{g.Players(), origin}
 		phInfo := phaseInfo{g.Phase(), rq.Action()}
 		r.error(s, inputRequest, phase.Check(phInfo))
 	}
@@ -34,6 +34,7 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	// verify player step
 	if r.err == nil {
 		// err = msg.UnexpectedPlayerErr(g.CurrentPlayer().Name(), g.Lang())
+		s := senderInfo{g.Players(), origin}
 		es := expectedSenderInfo{s, g.CurrentPlayer()}
 		r.error(es, inputRequest, team.CheckOrigin(es))
 	}
@@ -42,6 +43,7 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	if r.err == nil {
 		c, cerr := rq.Card()
 		gInfo := gameRound{g, c, cerr, rq.Value()}
+		s := senderInfo{g.Players(), origin}
 		r.error(s, inputRequest, action.Play(gInfo))
 	}
 
@@ -58,15 +60,10 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	// end round: next player
 	plInfo := next.NewPlInfo(g.Phase(), g.Players(), g.PlayedCards(), g.Briscola(),
 		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, origin)
-	nextPlayer := next.Player(plInfo)
+	track.Player(g.LastPlaying(), next.Player(plInfo))
 	if g.Phase() == phase.PlayingCards && len(g.playedCards) == 5 {
-		pile := nextPlayer.Pile()
-		set.Move(g.PlayedCards(), pile)
-		if team.Count(g.Players(), player.IsHandEmpty) == 5 && g.IsSideUsed() {
-			set.Move(g.SideDeck(), pile)
-		}
+		set.Move(g.PlayedCards(), g.CurrentPlayer().Pile())
 	}
-	track.Player(g.LastPlaying(), nextPlayer)
 
 	// end round: next phase
 	phInfo := next.NewPhInfo(g.Phase(), g.Players(), g.Caller(), g.Companion(), g.Briscola(),
@@ -78,15 +75,16 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	}
 	g.setPhase(nextPhase)
 
-	// log action to console
-	senderPlayer := team.Sender(s)
+	// send logs
+	senderPlayer := team.Sender(senderInfo{g.Players(), origin})
 	r.msg(os.Stdout, fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", senderPlayer.Name(), inputRequest, senderPlayer, g))
 	for _, pl := range g.Players() {
 		r.msg(pl, "-----")
 	}
 	r.msg(g.LastPlayer(), msg.CreateInGameMsg(g, g.LastPlayer()))
+	gameStatusMsg := msg.TranslateGameStatus(g, printer)
 	for _, pl := range g.Players() {
-		r.msg(pl, msg.TranslateGameStatus(g, printer))
+		r.msg(pl, gameStatusMsg)
 	}
 	r.msg(g.CurrentPlayer(), msg.CreateInGameMsg(g, g.CurrentPlayer()))
 
@@ -94,41 +92,44 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 		return r.reports
 	}
 
-	// process end phase
-	remainingCards := len(*g.Players()[0].Hand())
-	if remainingCards > 0 {
-		highbriscolaCard := briscola.Serie(g.Briscola())
-		for _, card := range highbriscolaCard {
-			_, p := g.Players().Find(player.IsCardInHand(card))
-			if p == nil { // no one has card
-				continue
-			}
-			for _, pl := range g.Players() {
-				set.Move(pl.Hand(), p.Pile())
-			}
-			if g.IsSideUsed() {
-				set.Move(g.SideDeck(), p.Pile())
-			}
-			track.Player(g.LastPlaying(), p)
-			printer := message.NewPrinter(g.Lang())
-			team := printer.Sprintf("Callers")
-			if p != g.Caller() && p != g.Companion() {
-				team = printer.Sprintf("Others")
-			}
-			for _, pl := range g.Players() {
-				r.msg(pl, printer.Sprintf("The end - %s team has all briscola cards", team))
-			}
-			break
+	// process end game
+	for _, card := range briscola.Serie(g.Briscola()) {
+		_, p := g.Players().Find(player.IsCardInHand(card))
+		if p == nil { // no one has card
+			continue
+		}
+		team := printer.Sprintf("Callers")
+		if p != g.Caller() && p != g.Companion() {
+			team = printer.Sprintf("Others")
+		}
+		endMsg := printer.Sprintf("The end - %s team has all briscola cards", team)
+		for _, pl := range g.Players() {
+			r.msg(pl, endMsg)
+		}
+		track.Player(g.LastPlaying(), p)
+		break
+	}
+
+	// last round winner collects all cards
+	lastPlayerPile := g.CurrentPlayer().Pile()
+	if len(*g.CurrentPlayer().Hand()) > 0 {
+		for _, pl := range g.Players() {
+			set.Move(pl.Hand(), lastPlayerPile)
 		}
 	}
+	if g.IsSideUsed() {
+		set.Move(g.SideDeck(), lastPlayerPile)
+	}
+
 	// compute score
-	pilers := make([]score.Piler, 0)
-	for _, p := range g.Players() {
-		pilers = append(pilers, p)
+	pilers := make([]score.Piler, len(g.Players()))
+	for i, p := range g.Players() {
+		pilers[i] = p
 	}
 	scoreTeam1, scoreTeam2 := score.Calc(g.Caller(), g.Companion(), pilers, briscola.Points)
+	scoreMsg := printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
 	for _, pl := range g.Players() {
-		r.msg(pl, printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2))
+		r.msg(pl, scoreMsg)
 	}
 	r.msg(g.handleMLData()) // placeholder for ml data
 	return r.reports

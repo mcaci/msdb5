@@ -53,3 +53,11 @@ func TestCompletedGameWithPrediction(t *testing.T) {
 		t.Fatalf("Expecting transition to end game and scoring but current phase was: %s", gameTest.phase)
 	}
 }
+
+func TestCompletedGameWithPredictionHasSideDeckEmpty(t *testing.T) {
+	gameTest := fakeGameSetupWith2HandSizeAndPrediction()
+	fakeGamePlayWith2HandSizeAndPrediction(gameTest)
+	if len(gameTest.side) != 0 {
+		t.Fatalf("Expecting side deck to be empty but is: %v", gameTest.side)
+	}
+}
