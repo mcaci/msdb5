@@ -39,6 +39,7 @@ func (gs fakeGameStructure) SideDeck() *set.Cards             { return gs.sideDe
 func (gs fakeGameStructure) SetAuction(score auction.Score)   { gs.auctionScore = score }
 func (gs fakeGameStructure) SetBriscola(briscola *card.Item)  { gs.briscolaCard = *briscola }
 func (gs fakeGameStructure) SetCompanion(comp *player.Player) { gs.companion = comp }
+func (gs fakeGameStructure) SetShowSide(bool, uint8)          {}
 
 func TestExecJoin(t *testing.T) {
 	gs := fakeGameStructure{

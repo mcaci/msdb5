@@ -3,6 +3,8 @@ package action
 import (
 	"strconv"
 
+	"github.com/mcaci/ita-cards/set"
+
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
@@ -13,6 +15,8 @@ type auctionData struct {
 	players       team.Players
 	score         *auction.Score
 	update        func(auction.Score)
+	side          *set.Cards
+	setShowSide   func(bool, uint8)
 }
 
 func (a auctionData) valueSet(val string) {
@@ -32,4 +36,8 @@ func (a auctionData) valueSet(val string) {
 		}
 		p.Fold()
 	}
+	if len(*a.side) == 0 {
+		return
+	}
+	a.setShowSide(len(*a.side) > 0, auction.SideCards(newScore))
 }

@@ -19,6 +19,7 @@ type actor interface {
 	SetAuction(auction.Score)
 	SetBriscola(*card.Item)
 	SetCompanion(*player.Player)
+	SetShowSide(bool, uint8)
 }
 
 // Play func
@@ -28,7 +29,7 @@ func Play(g actor, rq cardValueProvider) error {
 	case phase.Joining:
 		singleValueAction(rq, joinData{g.CurrentPlayer()})
 	case phase.InsideAuction:
-		singleValueAction(rq, auctionData{g.CurrentPlayer(), g.Players(), g.AuctionScore(), g.SetAuction})
+		singleValueAction(rq, auctionData{g.CurrentPlayer(), g.Players(), g.AuctionScore(), g.SetAuction, g.SideDeck(), g.SetShowSide})
 	case phase.ExchangingCards:
 		err = cardAction(rq, exchangeData{g.SideDeck(), g.Players()})
 	case phase.ChoosingCompanion:

@@ -27,6 +27,8 @@ type Game struct {
 	auctionScore auction.Score
 	phase        phase.ID
 	lang         language.Tag
+	isToShow     bool
+	sideSubset   set.Cards
 }
 
 // NewGame func
@@ -83,7 +85,11 @@ func (g *Game) PlayedCards() *set.Cards       { return &g.playedCards }
 func (g *Game) SideDeck() *set.Cards          { return &g.side }
 func (g *Game) Lang() language.Tag            { return g.lang }
 
-func (g *Game) SetAuction(s auction.Score)     { g.auctionScore = s }
+func (g *Game) SetAuction(s auction.Score) { g.auctionScore = s }
+func (g *Game) SetShowSide(isToShow bool, quantity uint8) {
+	g.isToShow = isToShow
+	g.sideSubset = g.side[:quantity]
+}
 func (g *Game) SetBriscola(c *card.Item)       { g.briscolaCard = *c }
 func (g *Game) SetCompanion(pl *player.Player) { g.companion = pl }
 func (g *Game) setPhase(ph phase.ID)           { g.phase = ph }
