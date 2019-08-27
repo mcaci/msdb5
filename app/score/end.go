@@ -1,4 +1,4 @@
-package team
+package score
 
 import (
 	"github.com/mcaci/ita-cards/card"
@@ -10,8 +10,8 @@ type Piler interface {
 	Pile() *set.Cards
 }
 
-// Score func
-func Score(caller, companion Piler, players []Piler, cardValuer func(id card.Item) uint8) (totalTeam1, totalTeam2 uint8) {
+// Calc func
+func Calc(caller, companion Piler, players []Piler, cardValuer func(id card.Item) uint8) (totalTeam1, totalTeam2 uint8) {
 	for _, pl := range players {
 		score := pl.Pile().Sum(cardValuer)
 		if pl == caller || pl == companion {
