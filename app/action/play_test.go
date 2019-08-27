@@ -11,14 +11,6 @@ import (
 	"github.com/mcaci/msdb5/dom/team"
 )
 
-type fakeCardValueProv struct {
-	c   *card.Item
-	str string
-}
-
-func (rq fakeCardValueProv) Card() (*card.Item, error) { return rq.c, nil }
-func (rq fakeCardValueProv) Value() string             { return string(rq.str) }
-
 type fakeGameStructure struct {
 	auctionScore  auction.Score
 	currentPlayer *player.Player
@@ -28,6 +20,8 @@ type fakeGameStructure struct {
 	sideDeck      *set.Cards
 	companion     *player.Player
 	briscolaCard  card.Item
+	c             *card.Item
+	str           string
 }
 
 func (gs fakeGameStructure) AuctionScore() *auction.Score     { return &gs.auctionScore }
@@ -41,6 +35,9 @@ func (gs fakeGameStructure) SetBriscola(briscola *card.Item)  { gs.briscolaCard 
 func (gs fakeGameStructure) SetCompanion(comp *player.Player) { gs.companion = comp }
 func (gs fakeGameStructure) SetShowSide(bool, uint8)          {}
 
+func (gs fakeGameStructure) Card() (*card.Item, error) { return gs.c, nil }
+func (gs fakeGameStructure) Value() string             { return gs.str }
+
 func TestExecJoin(t *testing.T) {
 	gs := fakeGameStructure{
 		auctionScore:  auction.Score(80),
@@ -49,9 +46,10 @@ func TestExecJoin(t *testing.T) {
 		playedCards:   &set.Cards{},
 		phase:         phase.Joining,
 		sideDeck:      &set.Cards{},
+		c:             card.MustID(11),
+		str:           "1",
 	}
-	rq := fakeCardValueProv{card.MustID(11), "1"}
-	err := Play(gs, rq)
+	err := Play(gs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -65,9 +63,10 @@ func TestExecAuction(t *testing.T) {
 		playedCards:   &set.Cards{},
 		phase:         phase.InsideAuction,
 		sideDeck:      &set.Cards{},
+		c:             card.MustID(11),
+		str:           "81",
 	}
-	rq := fakeCardValueProv{card.MustID(11), "81"}
-	err := Play(gs, rq)
+	err := Play(gs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -81,9 +80,10 @@ func TestExecAuctionFold(t *testing.T) {
 		playedCards:   &set.Cards{},
 		phase:         phase.InsideAuction,
 		sideDeck:      &set.Cards{},
+		c:             card.MustID(11),
+		str:           "79",
 	}
-	rq := fakeCardValueProv{card.MustID(11), "79"}
-	err := Play(gs, rq)
+	err := Play(gs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -99,9 +99,10 @@ func TestExecExchange(t *testing.T) {
 		playedCards:   &set.Cards{},
 		phase:         phase.ExchangingCards,
 		sideDeck:      &set.Cards{*card.MustID(1)},
+		c:             card.MustID(11),
+		str:           "1",
 	}
-	rq := fakeCardValueProv{card.MustID(11), "1"}
-	err := Play(gs, rq)
+	err := Play(gs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -117,9 +118,10 @@ func TestExecEndExchange(t *testing.T) {
 		playedCards:   &set.Cards{},
 		phase:         phase.ExchangingCards,
 		sideDeck:      &set.Cards{*card.MustID(1)},
+		c:             card.MustID(11),
+		str:           "0",
 	}
-	rq := fakeCardValueProv{card.MustID(11), "0"}
-	err := Play(gs, rq)
+	err := Play(gs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -135,9 +137,10 @@ func TestExecCompanion(t *testing.T) {
 		playedCards:   &set.Cards{},
 		phase:         phase.ChoosingCompanion,
 		sideDeck:      &set.Cards{},
+		c:             card.MustID(11),
+		str:           "1",
 	}
-	rq := fakeCardValueProv{card.MustID(11), "1"}
-	err := Play(gs, rq)
+	err := Play(gs)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -153,9 +156,10 @@ func TestExecPlayCard(t *testing.T) {
 		playedCards:   &set.Cards{},
 		phase:         phase.PlayingCards,
 		sideDeck:      &set.Cards{},
+		c:             card.MustID(11),
+		str:           "1",
 	}
-	rq := fakeCardValueProv{card.MustID(11), "1"}
-	err := Play(gs, rq)
+	err := Play(gs)
 	if err != nil {
 		t.Fatal(err)
 	}

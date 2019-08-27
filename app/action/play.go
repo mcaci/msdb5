@@ -9,7 +9,7 @@ import (
 	"github.com/mcaci/msdb5/dom/team"
 )
 
-type actor interface {
+type gamePlayer interface {
 	AuctionScore() *auction.Score
 	CurrentPlayer() *player.Player
 	Players() team.Players
@@ -20,22 +20,24 @@ type actor interface {
 	SetBriscola(*card.Item)
 	SetCompanion(*player.Player)
 	SetShowSide(bool, uint8)
+	Card() (*card.Item, error)
+	Value() string
 }
 
 // Play func
-func Play(g actor, rq cardValueProvider) error {
+func Play(g gamePlayer) error {
 	var err error
 	switch g.Phase() {
 	case phase.Joining:
-		singleValueAction(rq, joinData{g.CurrentPlayer()})
+		singleValueAction(g, joinData{g.CurrentPlayer()})
 	case phase.InsideAuction:
-		singleValueAction(rq, auctionData{g.CurrentPlayer(), g.Players(), g.AuctionScore(), g.SetAuction, g.SideDeck(), g.SetShowSide})
+		singleValueAction(g, auctionData{g.CurrentPlayer(), g.Players(), g.AuctionScore(), g.SetAuction, g.SideDeck(), g.SetShowSide})
 	case phase.ExchangingCards:
-		err = cardAction(rq, exchangeData{g.SideDeck(), g.Players()})
+		err = cardAction(g, exchangeData{g.SideDeck(), g.Players()})
 	case phase.ChoosingCompanion:
-		err = cardAction(rq, companionData{g.SetBriscola, g.SetCompanion, g.Players()})
+		err = cardAction(g, companionData{g.SetBriscola, g.SetCompanion, g.Players()})
 	case phase.PlayingCards:
-		err = cardAction(rq, playCardData{g.PlayedCards(), g.Players()})
+		err = cardAction(g, playCardData{g.PlayedCards(), g.Players()})
 	}
 	return err
 }

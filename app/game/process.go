@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 
+	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/msg"
@@ -40,7 +41,9 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 
 	// play step
 	if r.err == nil {
-		r.error(s, inputRequest, action.Play(g, rq))
+		c, cerr := rq.Card()
+		gInfo := gameRound{g, c, cerr, rq.Value()}
+		r.error(s, inputRequest, action.Play(gInfo))
 	}
 
 	if r.err != nil {
@@ -169,3 +172,13 @@ type senderInfo struct {
 
 func (s senderInfo) From() string          { return s.origin }
 func (s senderInfo) Players() team.Players { return s.players }
+
+type gameRound struct {
+	*Game
+	c    *card.Item
+	cErr error
+	val  string
+}
+
+func (g gameRound) Card() (*card.Item, error) { return g.c, g.cErr }
+func (g gameRound) Value() string             { return g.val }
