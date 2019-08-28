@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/action"
+	"github.com/mcaci/msdb5/app/action/collect"
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/next"
 	"github.com/mcaci/msdb5/app/phase"
@@ -25,7 +25,6 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 
 	// verify phase step
 	if r.err == nil {
-		// err = msg.UnexpectedPhaseErr(phase.MustID(rq), g.Phase(), g.Lang())
 		s := senderInfo{g.Players(), origin}
 		phInfo := phaseInfo{g.Phase(), rq.Action()}
 		r.error(s, inputRequest, phase.Check(phInfo))
@@ -33,7 +32,6 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 
 	// verify player step
 	if r.err == nil {
-		// err = msg.UnexpectedPlayerErr(g.CurrentPlayer().Name(), g.Lang())
 		s := senderInfo{g.Players(), origin}
 		es := expectedSenderInfo{s, g.CurrentPlayer()}
 		r.error(es, inputRequest, team.CheckOrigin(es))
@@ -61,8 +59,8 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	plInfo := next.NewPlInfo(g.Phase(), g.Players(), g.PlayedCards(), g.Briscola(),
 		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, origin)
 	track.Player(g.LastPlaying(), next.Player(plInfo))
-	if g.Phase() == phase.PlayingCards && len(g.playedCards) == 5 {
-		set.Move(g.PlayedCards(), g.CurrentPlayer().Pile())
+	if g.Phase() == phase.PlayingCards {
+		collect.Played(collect.NewInfo(g.CurrentPlayer(), g.PlayedCards()))
 	}
 
 	// end round: next phase
@@ -106,15 +104,7 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	}
 
 	// last round winner collects all cards
-	lastPlayerPile := g.CurrentPlayer().Pile()
-	if len(*g.CurrentPlayer().Hand()) > 0 {
-		for _, pl := range g.Players() {
-			set.Move(pl.Hand(), lastPlayerPile)
-		}
-	}
-	if g.IsSideUsed() {
-		set.Move(g.SideDeck(), lastPlayerPile)
-	}
+	collect.All(collect.NewAllInfo(g.CurrentPlayer(), g.SideDeck(), g.Players()))
 
 	// compute score
 	pilers := make([]score.Piler, len(g.Players()))
