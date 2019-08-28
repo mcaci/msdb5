@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/mcaci/ita-cards/card"
+
 	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/action/collect"
 	"github.com/mcaci/msdb5/app/input"
@@ -86,23 +88,10 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	}
 
 	// process end game
-	for _, card := range briscola.Serie(g.Briscola()) {
-		_, p := g.Players().Find(player.IsCardInHand(card))
-		if p == nil { // no one has card
-			continue
-		}
-		team := printer.Sprintf("Callers")
-		if p != g.Caller() && p != g.Companion() {
-			team = printer.Sprintf("Others")
-		}
-		endMsg := printer.Sprintf("The end - %s team has all briscola cards", team)
-		for _, pl := range g.Players() {
-			r.msg(pl, endMsg)
-		}
-		track.Player(g.LastPlaying(), p)
-		break
+	endMsg := msg.TranslateTeam(lastPlayer(g), g, printer)
+	for _, pl := range g.Players() {
+		r.msg(pl, endMsg)
 	}
-
 	// last round winner collects all cards
 	collect.All(collect.NewAllInfo(g.CurrentPlayer(), g.SideDeck(), g.Players()))
 
@@ -118,4 +107,23 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	}
 	r.msg(g.handleMLData()) // placeholder for ml data
 	return r.reports
+}
+
+type currentPlayerProvider interface {
+	CurrentPlayer() *player.Player
+	Players() team.Players
+	Briscola() card.Item
+}
+
+func lastPlayer(g currentPlayerProvider) *player.Player {
+	lastPl := g.CurrentPlayer()
+	for _, card := range briscola.Serie(g.Briscola()) {
+		_, p := g.Players().Find(player.IsCardInHand(card))
+		if p == nil { // no one has card
+			continue
+		}
+		lastPl = p
+		break
+	}
+	return lastPl
 }
