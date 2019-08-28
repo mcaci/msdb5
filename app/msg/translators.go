@@ -52,3 +52,17 @@ func TranslatePhase(p phase.ID, printer *message.Printer) string {
 		printer.Sprintf("Card"), printer.Sprintf("End")}
 	return phases[p]
 }
+
+type callersProvider interface {
+	Caller() *player.Player
+	Companion() *player.Player
+}
+
+// TranslateTeam func
+func TranslateTeam(p *player.Player, g callersProvider, printer *message.Printer) string {
+	team := printer.Sprintf("Callers")
+	if p != g.Caller() && p != g.Companion() {
+		team = printer.Sprintf("Others")
+	}
+	return printer.Sprintf("The end - %s team has all briscola cards", team)
+}
