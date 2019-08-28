@@ -6,6 +6,7 @@ import (
 
 	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/action/collect"
+	"github.com/mcaci/msdb5/app/input"
 	"github.com/mcaci/msdb5/app/msg"
 	"github.com/mcaci/msdb5/app/next"
 	"github.com/mcaci/msdb5/app/phase"
@@ -20,13 +21,12 @@ import (
 // Process func
 func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	printer := message.NewPrinter(g.Lang())
-	rq := NewReq(inputRequest)
 	r := report{}
 
 	// verify phase step
 	if r.err == nil {
 		s := senderInfo{g.Players(), origin}
-		phInfo := phaseInfo{g.Phase(), rq.Action()}
+		phInfo := phaseInfo{g.Phase(), input.Command(inputRequest)}
 		r.error(s, inputRequest, phase.Check(phInfo))
 	}
 
@@ -39,8 +39,8 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 
 	// play step
 	if r.err == nil {
-		c, cerr := rq.Card()
-		gInfo := gameRound{g, c, cerr, rq.Value()}
+		c, cerr := input.Card(inputRequest)
+		gInfo := gameRound{g, c, cerr, input.Value(inputRequest)}
 		s := senderInfo{g.Players(), origin}
 		r.error(s, inputRequest, action.Play(gInfo))
 	}
@@ -65,7 +65,7 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 
 	// end round: next phase
 	phInfo := next.NewPhInfo(g.Phase(), g.Players(), g.Caller(), g.Companion(), g.Briscola(),
-		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) == 0, rq.Value())
+		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) == 0, input.Value(inputRequest))
 	g.setPhase(next.Phase(phInfo))
 
 	// send logs

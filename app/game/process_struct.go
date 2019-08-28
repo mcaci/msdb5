@@ -21,8 +21,13 @@ func (r *report) msg(writer io.Writer, msg string) {
 }
 
 func (r *report) error(s team.SenderInformation, action string, err error) {
-	r.msg(os.Stdout, fmt.Sprintf("New Action by %s: %s\nError raised: %+v\n", team.Sender(s).Name(), action, err))
-	r.msg(team.Sender(s), fmt.Sprintf("Error: %+v\n", err))
+	r.msg(os.Stdout, fmt.Sprintf("New Action by %s: %s\n", team.Sender(s).Name(), action))
+	if err == nil {
+		return
+	}
+	errMsg := fmt.Sprintf("Error: %+v\n", err)
+	r.msg(os.Stdout, errMsg)
+	r.msg(team.Sender(s), errMsg)
 	r.err = err
 }
 
