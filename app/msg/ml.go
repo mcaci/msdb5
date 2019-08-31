@@ -1,4 +1,4 @@
-package game
+package msg
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"github.com/mcaci/msdb5/app/phase"
 )
 
-func (g *Game) handleMLData() (io.Writer, string) {
+func HandleMLData(g roundInformer) (io.Writer, string) {
 	// log action to file for ml (TODO: WHEN PUSHED OUTSIDE FUNC -> PROBLEM)
 	var dest io.Writer
 	var text string
@@ -17,13 +17,13 @@ func (g *Game) handleMLData() (io.Writer, string) {
 		dest, text = os.Stdout, err.Error()
 	}
 	// TODO: put back absolutely
-	// defer f.Close()
+	defer f.Close()
 	// write to file for ml
 	switch g.Phase() {
 	case phase.ChoosingCompanion:
 		dest, text = f, fmt.Sprintf("%s, %s, %d\n", g.CurrentPlayer().Name(), g.Companion().Name(), *(g.AuctionScore()))
 	case phase.PlayingCards:
-		lastPlayed := g.playedCards[len(g.playedCards)-1]
+		lastPlayed := (*g.PlayedCards())[len(*g.PlayedCards())-1]
 		dest, text = f, fmt.Sprintf("%s, %d\n", g.CurrentPlayer().Name(), lastPlayed)
 	case phase.End:
 		// write to file who took all cards at last round

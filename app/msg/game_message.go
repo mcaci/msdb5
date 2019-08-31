@@ -9,14 +9,13 @@ import (
 )
 
 type selfInformer interface {
-	Lang() language.Tag
 	Phase() phase.ID
 	SideDeck() *set.Cards
 }
 
 // CreateInGameMsg func
-func CreateInGameMsg(gameInfo selfInformer, pl *player.Player) string {
-	printer := message.NewPrinter(gameInfo.Lang())
+func CreateInGameMsg(gameInfo selfInformer, pl *player.Player, l language.Tag) string {
+	printer := message.NewPrinter(l)
 	me := printer.Sprintf("Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)",
 		pl.Name(), TranslateCards(*pl.Hand(), printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
 	if gameInfo.Phase() == phase.ExchangingCards {

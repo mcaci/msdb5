@@ -11,28 +11,27 @@ import (
 )
 
 // Process func
-func (g *Game) Process(inputRequest, origin string) (err error) {
+func (g *Game) Process(inputRequest, origin string) Round {
 	// verify phase step
-	s := senderInfo{g.Players(), origin}
 	phInfo := phaseInfo{g.Phase(), input.Command(inputRequest)}
-	err = phase.Check(phInfo)
+	err := phase.Check(phInfo)
 	if err != nil {
-		return err
+		return Round{Game: g, rErr: err}
 	}
 
 	// verify player step
-	es := expectedSenderInfo{s, g.CurrentPlayer()}
+	es := expectedSenderInfo{g.Players(), origin, g.CurrentPlayer()}
 	err = team.CheckOrigin(es)
 	if err != nil {
-		return err
+		return Round{Game: g, rErr: err}
 	}
 
 	// play step
 	c, cerr := input.Card(inputRequest)
-	gInfo := gameRound{g, c, cerr, input.Value(inputRequest)}
+	gInfo := Round{Game: g, c: c, cErr: cerr, val: input.Value(inputRequest)}
 	err = action.Play(gInfo)
 	if err != nil {
-		return err
+		return Round{Game: g, rErr: err}
 	}
 
 	// end round: next player
@@ -50,7 +49,7 @@ func (g *Game) Process(inputRequest, origin string) (err error) {
 	g.setPhase(next.Phase(nextPhInfo))
 
 	if g.phase != phase.End {
-		return err
+		return Round{Game: g, c: c, cErr: cerr, val: input.Value(inputRequest)}
 	}
 
 	// process end game
@@ -64,5 +63,5 @@ func (g *Game) Process(inputRequest, origin string) (err error) {
 	// }
 	// scoreTeam1, scoreTeam2 := score.Calc(g.Caller(), g.Companion(), pilers, briscola.Points)
 
-	return err
+	return Round{Game: g, c: c, cErr: cerr, val: input.Value(inputRequest)}
 }

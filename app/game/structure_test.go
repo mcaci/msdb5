@@ -2,12 +2,10 @@ package game
 
 import (
 	"testing"
-
-	"golang.org/x/text/language"
 )
 
 func fakeGame(hasSide bool) *Game {
-	return NewGame(hasSide, language.English)
+	return NewGame(hasSide)
 }
 
 func TestRegisterPlayerHasLocalhostOrigin(t *testing.T) {

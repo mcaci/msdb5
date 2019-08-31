@@ -11,7 +11,6 @@ import (
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
-	"golang.org/x/text/language"
 )
 
 // Game struct
@@ -26,19 +25,17 @@ type Game struct {
 	playedCards  set.Cards
 	auctionScore auction.Score
 	phase        phase.ID
-	lang         language.Tag
 	isToShow     bool
 	sideSubset   set.Cards
 }
 
 // NewGame func
-func NewGame(withSide bool, lang language.Tag) *Game {
+func NewGame(withSide bool) *Game {
 	g := new(Game)
 	g.withSide = withSide
 	makePlayers(g)
 	distributeCards(g)
 	track.Player(&g.lastPlaying, g.players[0])
-	g.lang = lang
 	return g
 }
 
@@ -83,7 +80,8 @@ func (g *Game) Phase() phase.ID               { return g.phase }
 func (g *Game) Players() team.Players         { return g.players }
 func (g *Game) PlayedCards() *set.Cards       { return &g.playedCards }
 func (g *Game) SideDeck() *set.Cards          { return &g.side }
-func (g *Game) Lang() language.Tag            { return g.lang }
+func (g *Game) IsSideToShow() bool            { return g.isToShow && g.phase == phase.InsideAuction }
+func (g *Game) SideSubset() *set.Cards        { return &g.sideSubset }
 
 func (g *Game) SetAuction(s auction.Score) { g.auctionScore = s }
 func (g *Game) SetShowSide(isToShow bool, quantity uint8) {
