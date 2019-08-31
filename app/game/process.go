@@ -20,6 +20,12 @@ import (
 	"golang.org/x/text/message"
 )
 
+func (r *report) noErrExec(s senderInfo, inputRequest string, err error) {
+	if r.err == nil {
+		r.error(s, inputRequest, err)
+	}
+}
+
 // Process func
 func (g *Game) Process(inputRequest, origin string) []PlMsg {
 	printer := message.NewPrinter(g.Lang())
@@ -87,7 +93,7 @@ func (g *Game) Process(inputRequest, origin string) []PlMsg {
 		return r.reports
 	}
 
-	// process end game
+	// process end gamell
 	endMsg := msg.TranslateTeam(lastPlayer(g), g, printer)
 	for _, pl := range g.Players() {
 		r.msg(pl, endMsg)
