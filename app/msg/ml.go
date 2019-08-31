@@ -16,17 +16,14 @@ func HandleMLData(g roundInformer) (io.Writer, string) {
 	if err != nil {
 		dest, text = os.Stdout, err.Error()
 	}
-	// TODO: put back absolutely
 	defer f.Close()
 	// write to file for ml
 	switch g.Phase() {
 	case phase.ChoosingCompanion:
 		dest, text = f, fmt.Sprintf("%s, %s, %d\n", g.CurrentPlayer().Name(), g.Companion().Name(), *(g.AuctionScore()))
 	case phase.PlayingCards:
-		lastPlayed := (*g.PlayedCards())[len(*g.PlayedCards())-1]
-		dest, text = f, fmt.Sprintf("%s, %d\n", g.CurrentPlayer().Name(), lastPlayed)
+		dest, text = f, fmt.Sprintf("%s, %d\n", g.CurrentPlayer().Name(), g.PlayedCard())
 	case phase.End:
-		// write to file who took all cards at last round
 		dest, text = f, fmt.Sprintf("%s\n", g.CurrentPlayer().Name())
 	}
 	return dest, text

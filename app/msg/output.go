@@ -1,47 +1,23 @@
 package msg
 
 import (
-	"container/list"
 	"fmt"
 	"io"
 	"os"
 
-	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/app/input"
 
-	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/app/action/end"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/score"
-	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/briscola"
-	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
 )
 
-type roundInformer interface {
-	AuctionScore() *auction.Score
-	Caller() *player.Player
-	Companion() *player.Player
-	CurrentPlayer() *player.Player
-	LastPlayer() *player.Player
-	Players() team.Players
-	PlayedCards() *set.Cards
-	Phase() phase.ID
-	Briscola() card.Item
-	LastPlaying() *list.List
-
-	RoundError() error
-	IsSideUsed() bool
-	IsSideToShow() bool
-	SideDeck() *set.Cards
-	SideSubset() *set.Cards
-}
-
 // Notify func
 func Notify(g roundInformer, l language.Tag, inputRequest, origin string) {
-
 	for _, pl := range g.Players() {
 		io.WriteString(pl, "-----")
 		io.WriteString(os.Stdout, inputRequest)
@@ -52,6 +28,13 @@ func Notify(g roundInformer, l language.Tag, inputRequest, origin string) {
 	if rErr != nil {
 		s := senderInfo{g.Players(), origin}
 		errMsg := fmt.Sprintf("Error: %+v\n", rErr)
+		if rErr == phase.ErrUnexpectedPhase {
+			_, id := phase.ToID(input.Value(inputRequest))
+			errMsg = printer.Sprintf("Phase is not %d but %d", id, g.Phase())
+		}
+		if rErr == team.ErrUnexpectedPlayer {
+			errMsg = printer.Sprintf("Expecting player %s to play", g.CurrentPlayer().Name())
+		}
 		io.WriteString(os.Stdout, errMsg)
 		sender := team.Sender(s)
 		io.WriteString(sender, TranslateGameStatus(g, printer))
@@ -78,6 +61,8 @@ func Notify(g roundInformer, l language.Tag, inputRequest, origin string) {
 	}
 	io.WriteString(g.CurrentPlayer(), CreateInGameMsg(g, g.CurrentPlayer(), l))
 
+	io.WriteString(HandleMLData(g))
+
 	if g.Phase() != phase.End {
 		return
 	}
@@ -98,5 +83,6 @@ func Notify(g roundInformer, l language.Tag, inputRequest, origin string) {
 	for _, pl := range g.Players() {
 		io.WriteString(pl, scoreMsg)
 	}
-	io.WriteString(HandleMLData(g)) // placeholder for ml data
+
+	io.WriteString(HandleMLData(g))
 }
