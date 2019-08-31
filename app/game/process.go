@@ -48,20 +48,9 @@ func (g *Game) Process(inputRequest, origin string) Round {
 		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) == 0, input.Value(inputRequest))
 	g.setPhase(next.Phase(nextPhInfo))
 
-	if g.phase != phase.End {
-		return Round{Game: g, c: c, cErr: cerr, val: input.Value(inputRequest)}
-	}
-
-	// process end game
 	// last round winner collects all cards
-	collect.All(collect.NewAllInfo(g.CurrentPlayer(), g.SideDeck(), g.Players()))
-
-	// compute score (output data)
-	// pilers := make([]score.Piler, len(g.Players()))
-	// for i, p := range g.Players() {
-	// 	pilers[i] = p
-	// }
-	// scoreTeam1, scoreTeam2 := score.Calc(g.Caller(), g.Companion(), pilers, briscola.Points)
-
+	if g.phase == phase.End {
+		collect.All(collect.NewAllInfo(g.CurrentPlayer(), g.SideDeck(), g.Players()))
+	}
 	return Round{Game: g, c: c, cErr: cerr, val: input.Value(inputRequest)}
 }
