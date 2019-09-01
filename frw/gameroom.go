@@ -8,14 +8,9 @@ import (
 	"golang.org/x/text/message"
 
 	"github.com/gorilla/websocket"
-	"github.com/nikiforosFreespirit/msdb5/app/game"
+	"github.com/mcaci/msdb5/app/game"
+	"github.com/mcaci/msdb5/app/msg"
 )
-
-// Action interface
-type Action interface {
-	Process(request, origin string)
-	Join(origin string, playerChannel chan []byte)
-}
 
 // GameRoom struct
 type GameRoom struct {
@@ -41,7 +36,7 @@ func NewGameRoom(side bool, lang language.Tag) *GameRoom {
 		join:        make(chan *playerClient),
 		leave:       make(chan *playerClient),
 		players:     make(map[*playerClient]bool),
-		msdb5game:   game.NewGame(side, lang),
+		msdb5game:   game.NewGame(side),
 		lang:        lang,
 	}
 }
@@ -56,9 +51,10 @@ func (r *GameRoom) Run() {
 		case player := <-r.leave:
 			// leaving
 			delete(r.players, player)
-		case msg := <-r.commandChan:
+		case m := <-r.commandChan:
 			// commandChan message to all players
-			r.msdb5game.Process(msg.request, msg.origin)
+			data := r.msdb5game.Process(m.request, m.origin)
+			msg.Notify(data, r.lang, m.request, m.origin)
 		}
 	}
 }

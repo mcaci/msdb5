@@ -1,64 +1,67 @@
 package game
 
 import (
-	"os"
-
-	"github.com/nikiforosFreespirit/msdb5/app/end"
-	"github.com/nikiforosFreespirit/msdb5/app/notify"
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
-	"github.com/nikiforosFreespirit/msdb5/app/play"
-	"github.com/nikiforosFreespirit/msdb5/app/request"
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/mcaci/msdb5/app/action"
+	"github.com/mcaci/msdb5/app/action/collect"
+	"github.com/mcaci/msdb5/app/input"
+	"github.com/mcaci/msdb5/app/next"
+	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/app/track"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
 // Process func
-func (g *Game) Process(inputRequest, origin string) {
-	sendMsg := func(p *player.Player, msg string) { p.Write([]byte(msg)) }
-	rq := request.New(inputRequest, origin)
-
+func (g *Game) Process(inputRequest, origin string) Round {
 	// verify phase step
-	err := request.VerifyPhase(g, rq, sendMsg)
+	phInfo := phaseInfo{g.Phase(), input.Command(inputRequest)}
+	err := phase.Check(phInfo)
 	if err != nil {
-		notify.Err(os.Stdout, err, g, rq)
-		return
+		return Round{Game: g, rErr: err}
 	}
 
 	// verify player step
-	err = request.VerifyPlayer(g, rq, sendMsg)
+	es := expectedSenderInfo{g.Players(), origin, g.CurrentPlayer()}
+	err = team.CheckOrigin(es)
 	if err != nil {
-		notify.Err(os.Stdout, err, g, rq)
-		return
+		return Round{Game: g, rErr: err}
 	}
 
 	// play step
-	setCompanion := func(p *player.Player) { g.companion = p }
-	setBriscolaCard := func(c card.ID) { g.briscolaCard = c }
-	err = play.Request(g, rq, setCompanion, setBriscolaCard, sendMsg)
+	c, cerr := input.Card(inputRequest)
+	gInfo := Round{Game: g, c: c, cErr: cerr, val: input.Value(inputRequest)}
+	err = action.Play(gInfo)
 	if err != nil {
-		notify.Err(os.Stdout, err, g, rq)
-		return
+		return Round{Game: g, rErr: err}
 	}
 
-	// log action to file
-	f, err := notify.OpenFile()
-	if err != nil {
-		notify.ErrToConsole(os.Stdout, err, g, rq)
-		return
+	// end round: next player
+	plInfo := next.NewPlInfo(g.Phase(), g.Players(), g.PlayedCards(), g.Briscola(),
+		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, origin)
+	nextPl := next.Player(plInfo)
+	track.Player(g.LastPlaying(), nextPl)
+	if g.Phase() == phase.PlayingCards {
+		collect.Played(collect.NewInfo(g.CurrentPlayer(), g.PlayedCards()))
 	}
-	defer f.Close()
-	notify.ToFile(g, f)
 
-	// end round
-	setCaller := func(p *player.Player) { g.caller = p }
-	setPhase := func(p phase.ID) { g.phase = p }
-	end.Round(g, rq, setCaller, setPhase, sendMsg)
+	// end round: next phase
+	nextPhInfo := next.NewPhInfo(g.Phase(), g.Players(), g.Caller(), g.Companion(), g.Briscola(),
+		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) == 0, input.Value(inputRequest))
+	g.setPhase(next.Phase(nextPhInfo))
 
-	// log action to console
-	notify.ToConsole(os.Stdout, g, rq)
+	if g.phase != phase.End {
+		return Round{Game: g, c: c, cErr: cerr, val: input.Value(inputRequest)}
+	}
 
 	// process end game
-	if g.phase == phase.End {
-		end.Process(g, f, sendMsg)
-	}
+	// last round winner collects all cards
+	collect.All(collect.NewAllInfo(g.CurrentPlayer(), g.SideDeck(), g.Players()))
+
+	// compute score (output data)
+	// pilers := make([]score.Piler, len(g.Players()))
+	// for i, p := range g.Players() {
+	// 	pilers[i] = p
+	// }
+	// scoreTeam1, scoreTeam2 := score.Calc(g.Caller(), g.Companion(), pilers, briscola.Points)
+
+	return Round{Game: g, c: c, cErr: cerr, val: input.Value(inputRequest)}
 }

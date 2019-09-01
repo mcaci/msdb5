@@ -2,7 +2,6 @@ package phase
 
 import (
 	"fmt"
-	"strings"
 )
 
 // ID type
@@ -17,24 +16,28 @@ const (
 	End
 )
 
+var phases = []string{"Join", "Auction", "Exchange", "Companion", "Card", "End"}
+
 // ToID func
-func ToID(request string) (ID, error) {
-	phase := strings.Split(request, "#")[0]
-	var id ID
-	var err error
-	switch phase {
-	case "Join":
-		id = Joining
-	case "Auction":
-		id = InsideAuction
-	case "Exchange":
-		id = ExchangingCards
-	case "Companion":
-		id = ChoosingCompanion
-	case "Card":
-		id = PlayingCards
-	default:
-		err = fmt.Errorf("Request %s not valid", phase)
+func ToID(phase string) (ID, error) {
+	for i := range phases {
+		if phases[i] != phase {
+			continue
+		}
+		return ID(i), nil
 	}
-	return id, err
+	return ID(0), fmt.Errorf("Request %s not valid", phase)
+}
+
+// MustID func
+func MustID(phase string) ID {
+	id, err := ToID(phase)
+	if err != nil {
+		panic(err)
+	}
+	return id
+}
+
+func (id ID) String() string {
+	return phases[id]
 }

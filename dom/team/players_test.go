@@ -3,9 +3,8 @@ package team
 import (
 	"testing"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/msdb5/dom/player"
 )
 
 var testPlayers Players
@@ -16,19 +15,19 @@ func init() {
 	testPlayers.Add(&a)
 	var b player.Player
 	b.RegisterAs("B")
-	b.Draw(func() card.ID { return 33 })
+	b.Hand().Add(*card.MustID(33))
 	testPlayers.Add(&b)
 }
 
 func TestSuccessfulFindNoErr(t *testing.T) {
-	if _, p := testPlayers.Find(func(p *player.Player) bool { return p.Has(33) }); p == nil {
-		t.Fatal("Player not found with criteria p.Has(33)")
+	if _, p := testPlayers.Find(player.IsCardInHand(*card.MustID(33))); p == nil {
+		t.Fatal("Player not found with criteria player.Has(33)")
 	}
 }
 
 func TestSuccessfulFindIndex(t *testing.T) {
-	if index, _ := testPlayers.Find(func(p *player.Player) bool { return p.Has(33) }); index != 1 {
-		t.Fatal("Player not found with criteria p.Has(33)")
+	if index, _ := testPlayers.Find(player.IsCardInHand(*card.MustID(33))); index != 1 {
+		t.Fatal("Player not found with criteria player.Has(33)")
 	}
 }
 
@@ -40,7 +39,7 @@ func TestSuccessfulFindDataCorresponds(t *testing.T) {
 }
 
 func TestUnsuccessfulFind(t *testing.T) {
-	if _, p := testPlayers.Find(func(p *player.Player) bool { return p.Has(24) }); p != nil {
+	if _, p := testPlayers.Find(player.IsCardInHand(*card.MustID(24))); p != nil {
 		t.Fatal("Player should not be found")
 	}
 }

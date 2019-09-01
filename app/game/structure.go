@@ -2,18 +2,15 @@ package game
 
 import (
 	"container/list"
+	"fmt"
 
-	"github.com/nikiforosFreespirit/msdb5/app/notify"
-	"github.com/nikiforosFreespirit/msdb5/app/phase"
-	"github.com/nikiforosFreespirit/msdb5/app/request"
-	"github.com/nikiforosFreespirit/msdb5/app/track"
-	"github.com/nikiforosFreespirit/msdb5/dom/auction"
-	"github.com/nikiforosFreespirit/msdb5/dom/card"
-	"github.com/nikiforosFreespirit/msdb5/dom/deck"
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
-	"github.com/nikiforosFreespirit/msdb5/dom/team"
-	"golang.org/x/text/language"
-	"golang.org/x/text/message"
+	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/app/track"
+	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
 // Game struct
@@ -22,23 +19,23 @@ type Game struct {
 	players      team.Players
 	caller       *player.Player
 	companion    *player.Player
-	briscolaCard card.ID
+	briscolaCard card.Item
 	withSide     bool
-	side         deck.Cards
-	playedCards  deck.Cards
+	side         set.Cards
+	playedCards  set.Cards
 	auctionScore auction.Score
 	phase        phase.ID
-	lang         language.Tag
+	isToShow     bool
+	sideSubset   set.Cards
 }
 
 // NewGame func
-func NewGame(withSide bool, lang language.Tag) *Game {
+func NewGame(withSide bool) *Game {
 	g := new(Game)
 	g.withSide = withSide
 	makePlayers(g)
 	distributeCards(g)
 	track.Player(&g.lastPlaying, g.players[0])
-	g.lang = lang
 	return g
 }
 
@@ -50,53 +47,53 @@ func makePlayers(g *Game) {
 
 // Join func
 func (g *Game) Join(origin string, channel chan []byte) {
-	for _, player := range g.players {
-		if player.IsSameHost("") {
-			player.Join(origin)
-			player.Attach(channel)
+	for _, p := range g.players {
+		if p.IsSameHost("") {
+			p.Join(origin)
+			p.Attach(channel)
 			break
 		}
 	}
 }
 
 func distributeCards(g *Game) {
-	d := deck.New()
-	for i := 0; i < deck.DeckSize; i++ {
-		if g.withSide && i >= deck.DeckSize-5 {
-			g.side.Add(d.Supply())
+	d := set.Deck()
+	for i := 0; i < set.DeckSize; i++ {
+		if g.withSide && i >= set.DeckSize-5 {
+			g.side.Add(d.Top())
 		} else {
 			track.Player(&g.lastPlaying, g.players[i%5])
-			g.CurrentPlayer().Draw(d.Supply)
+			g.CurrentPlayer().Hand().Add(d.Top())
 		}
 	}
 }
 
-func (g *Game) AuctionScore() *auction.Score        { return &g.auctionScore }
-func (g *Game) Briscola() card.Seed                 { return g.briscolaCard.Seed() }
-func (g *Game) Caller() *player.Player              { return g.caller }
-func (g *Game) Companion() *player.Player           { return g.companion }
-func (g *Game) CurrentPlayer() *player.Player       { return g.lastPlaying.Front().Value.(*player.Player) }
-func (g *Game) IsSideUsed() bool                    { return g.withSide }
-func (g *Game) LastCardPlayed() card.ID             { return g.playedCards[len(g.playedCards)-1] }
-func (g *Game) LastPlayer() *player.Player          { return g.lastPlaying.Back().Value.(*player.Player) }
-func (g *Game) LastPlaying() *list.List             { return &g.lastPlaying }
-func (g *Game) Phase() phase.ID                     { return g.phase }
-func (g *Game) Players() team.Players               { return g.players }
-func (g *Game) PlayedCards() *deck.Cards            { return &g.playedCards }
-func (g *Game) Sender(origin string) *player.Player { return g.players[g.SenderIndex(origin)] }
-func (g *Game) SideDeck() *deck.Cards               { return &g.side }
-func (g *Game) Lang() language.Tag                  { return g.lang }
-func (g *Game) CardsOnTheBoard() int                { return len(g.playedCards) }
-func (g *Game) SenderIndex(origin string) int {
-	rq := request.New("Origin", origin)
-	criteria := request.FindCriteria(g, rq)
-	index, _ := g.players.Find(criteria)
-	return index
+func (g *Game) AuctionScore() *auction.Score  { return &g.auctionScore }
+func (g *Game) Briscola() card.Item           { return g.briscolaCard }
+func (g *Game) Caller() *player.Player        { return g.caller }
+func (g *Game) Companion() *player.Player     { return g.companion }
+func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }
+func (g *Game) IsSideUsed() bool              { return g.withSide }
+func (g *Game) LastPlayer() *player.Player    { return g.lastPlaying.Back().Value.(*player.Player) }
+func (g *Game) LastPlaying() *list.List       { return &g.lastPlaying }
+func (g *Game) Phase() phase.ID               { return g.phase }
+func (g *Game) Players() team.Players         { return g.players }
+func (g *Game) PlayedCards() *set.Cards       { return &g.playedCards }
+func (g *Game) SideDeck() *set.Cards          { return &g.side }
+func (g *Game) IsSideToShow() bool            { return g.isToShow && g.phase == phase.InsideAuction }
+func (g *Game) SideSubset() *set.Cards        { return &g.sideSubset }
+
+func (g *Game) SetAuction(s auction.Score) { g.auctionScore = s }
+func (g *Game) SetShowSide(isToShow bool, quantity uint8) {
+	g.isToShow = isToShow
+	g.sideSubset = g.side[:quantity]
 }
+func (g *Game) SetBriscola(c *card.Item)       { g.briscolaCard = *c }
+func (g *Game) SetCaller(pl *player.Player)    { g.caller = pl }
+func (g *Game) SetCompanion(pl *player.Player) { g.companion = pl }
+func (g *Game) setPhase(ph phase.ID)           { g.phase = ph }
 
-func (g Game) String() (str string) {
-	printer := message.NewPrinter(g.lang)
-
-	return printer.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %d)",
-		g.CurrentPlayer().Name(), notify.TranslateCard(g.briscolaCard, printer), notify.TranslateCards(g.playedCards, printer), g.auctionScore, g.phase)
+func (g Game) String() string {
+	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %v, Auction score: %d, Phase: %s, Players: %v, Side Deck: %v, Last Players: %v)",
+		g.CurrentPlayer().Name(), g.briscolaCard, g.playedCards, g.auctionScore, g.phase, g.players, g.side, g.lastPlaying)
 }

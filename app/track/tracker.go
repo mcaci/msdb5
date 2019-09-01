@@ -3,7 +3,7 @@ package track
 import (
 	"container/list"
 
-	"github.com/nikiforosFreespirit/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/player"
 )
 
 // Player func

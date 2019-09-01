@@ -5,15 +5,9 @@ import (
 	"log"
 	"net/http"
 
+	_ "github.com/mcaci/msdb5/catalog"
+	"github.com/mcaci/msdb5/frw"
 	"golang.org/x/text/language"
-
-	"github.com/nikiforosFreespirit/msdb5/frw"
-)
-
-type contextKey int
-
-const (
-	messagePrinterKey contextKey = 1
 )
 
 func main() {
@@ -35,5 +29,4 @@ func main() {
 	if err := http.ListenAndServe(*addr, nil); err != nil {
 		log.Fatal("ListenAndServe:", err)
 	}
-
 }
