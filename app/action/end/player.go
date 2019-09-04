@@ -13,7 +13,7 @@ type currentPlayerProvider interface {
 	Briscola() card.Item
 }
 
-func Player(g currentPlayerProvider) *player.Player {
+func LastPlayer(g currentPlayerProvider) *player.Player {
 	lastPl := g.CurrentPlayer()
 	for _, card := range briscola.Serie(g.Briscola()) {
 		_, p := g.Players().Find(player.IsCardInHand(card))

@@ -83,7 +83,7 @@ func Notify(g roundInformer, l language.Tag, inputRequest, origin string) {
 	}
 
 	// process end game
-	endMsg := TranslateTeam(end.Player(g), g, printer)
+	endMsg := TranslateTeam(end.LastPlayer(g), g, printer)
 	for _, pl := range g.Players() {
 		io.WriteString(pl, endMsg)
 	}
