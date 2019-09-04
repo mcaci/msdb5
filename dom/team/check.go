@@ -6,13 +6,14 @@ import (
 	"github.com/mcaci/msdb5/dom/player"
 )
 
+var ErrUnexpectedPlayer = errors.New("Unexpected player")
+
 type expectedPlayerInterface interface {
 	CurrentPlayer() *player.Player
 	SenderInformation
 }
 
 func CheckOrigin(g expectedPlayerInterface) error {
-	var ErrUnexpectedPlayer = errors.New("Unexpected player")
 	matchHost := player.MatchingHost(g.From())
 	matchPl := player.Matching(g.CurrentPlayer())
 	criteria := func(p *player.Player) bool { return matchPl(p) && matchHost(p) }
