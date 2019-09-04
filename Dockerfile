@@ -1,4 +1,4 @@
-#/welcome-app/Dockerfile
+#/msdb5/Dockerfile
 FROM golang
 # Here the FROM clause states which base image we are intending to work with. If the image does not exist, locally, Docker automatically fetches it from Dockerhub. If you supplied a URI for the image, Docker will download it from there too. Here we begin with the golang:alpine image
 LABEL author="Michele Caci <michele.caci@gmail.com>"
