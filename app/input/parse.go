@@ -9,8 +9,16 @@ import (
 
 func Command(request string) string {
 	fields := strings.Split(request, "#")
-	if len(fields) > 0 {
+	if fields[0] != "" {
 		return fields[0]
+	}
+	return ""
+}
+
+func Value(request string) string {
+	fields := strings.Split(request, "#")
+	if len(fields) > 1 {
+		return fields[1]
 	}
 	return ""
 }
@@ -23,10 +31,3 @@ func Card(request string) (*card.Item, error) {
 	return nil, fmt.Errorf("not enough data to make a card: %s", request)
 }
 
-func Value(request string) string {
-	fields := strings.Split(request, "#")
-	if len(fields) > 1 {
-		return fields[1]
-	}
-	return ""
-}
