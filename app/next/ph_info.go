@@ -17,8 +17,8 @@ type PhInfo struct {
 	exchInput         string
 }
 
-func NewPhInfo(ph phase.ID, pls team.Players, call, comp *player.Player, briscola card.Item,
-	isSide, isNewRound bool, exchVal string) *PhInfo {
+func NewPhInfo(ph phase.ID, pls team.Players, briscola card.Item, isSide bool, call, comp *player.Player,
+	isNewRound bool, exchVal string) *PhInfo {
 	return &PhInfo{phase: ph, players: pls, caller: call, companion: comp, exchInput: exchVal,
 		briscolaCard: briscola, side: isSide, newRound: isNewRound}
 }

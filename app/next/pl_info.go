@@ -17,8 +17,8 @@ type PlInfo struct {
 	fromInput          string
 }
 
-func NewPlInfo(ph phase.ID, pls team.Players, plCards *set.Cards,
-	briscola card.Item, isSide, isRound bool, frInput string) *PlInfo {
+func NewPlInfo(ph phase.ID, pls team.Players, briscola card.Item, isSide bool, plCards *set.Cards,
+	isRound bool, frInput string) *PlInfo {
 	return &PlInfo{phase: ph, players: pls, playedCards: plCards, fromInput: frInput,
 		briscolaCard: briscola, side: isSide, roundOngoing: isRound}
 }

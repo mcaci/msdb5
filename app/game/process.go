@@ -34,19 +34,20 @@ func (g *Game) Process(inputRequest, origin string) Round {
 		return Round{Game: g, rErr: err}
 	}
 
+	// end round: next phase
+	turnBeforeChange := g.Phase()
+	nextPhInfo := next.NewPhInfo(turnBeforeChange, g.Players(), g.Briscola(), len(*g.SideDeck()) > 0,
+		g.Caller(), g.Companion(), len(*g.PlayedCards()) == 5, input.Value(inputRequest))
+	g.setPhase(next.Phase(nextPhInfo))
+
 	// end round: next player
-	plInfo := next.NewPlInfo(g.Phase(), g.Players(), g.PlayedCards(), g.Briscola(),
-		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) < 5, origin)
+	plInfo := next.NewPlInfo(turnBeforeChange, g.Players(), g.Briscola(), len(*g.SideDeck()) > 0,
+		g.PlayedCards(), len(*g.PlayedCards()) < 5, origin)
 	nextPl := next.Player(plInfo)
 	track.Player(g.LastPlaying(), nextPl)
 	if g.Phase() == phase.PlayingCards {
 		collect.Played(collect.NewInfo(g.CurrentPlayer(), g.PlayedCards()))
 	}
-
-	// end round: next phase
-	nextPhInfo := next.NewPhInfo(g.Phase(), g.Players(), g.Caller(), g.Companion(), g.Briscola(),
-		len(*g.SideDeck()) > 0, len(*g.PlayedCards()) == 0, input.Value(inputRequest))
-	g.setPhase(next.Phase(nextPhInfo))
 
 	// end game: last round winner collects all cards
 	if g.phase == phase.End {
