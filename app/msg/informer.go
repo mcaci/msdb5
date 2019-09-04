@@ -1,8 +1,6 @@
 package msg
 
 import (
-	"container/list"
-
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
@@ -22,7 +20,6 @@ type roundInformer interface {
 	PlayedCards() *set.Cards
 	Phase() phase.ID
 	Briscola() card.Item
-	LastPlaying() *list.List
 
 	RoundError() error
 	IsSideUsed() bool
