@@ -28,13 +28,13 @@ func TestJoinPlayerName(t *testing.T) {
 }
 
 func TestJoinPlayerNameNotEmpty(t *testing.T) {
-	if p := initTest(); p.Name() == "" {
+	if IsNameEmpty(initTest()) {
 		t.Fatal("Unexpected name being empty")
 	}
 }
 
 func TestJoinPlayerHost(t *testing.T) {
-	if p := initTest(); !p.IsSameHost("127.0.0.1") {
+	if !MatchingHost("127.0.0.1")(initTest()) {
 		t.Fatal("Unexpected host")
 	}
 }
