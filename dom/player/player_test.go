@@ -13,14 +13,6 @@ func initTest() *Player {
 	return p
 }
 
-func initTestWithName(name string) *Player {
-	p := New()
-	p.RegisterAs(name)
-	p.Join("127.0.0.1")
-	p.Attach(make(chan []byte))
-	return p
-}
-
 func TestJoinPlayerName(t *testing.T) {
 	if p := initTest(); p.Name() != "Michi" {
 		t.Fatal("Unexpected name")
