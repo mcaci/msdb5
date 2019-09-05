@@ -66,3 +66,18 @@ func TranslateTeam(p *player.Player, g callersProvider, printer *message.Printer
 	}
 	return printer.Sprintf("The end - %s team has all briscola cards", team)
 }
+
+type selfInformer interface {
+	Phase() phase.ID
+	SideDeck() *set.Cards
+}
+
+// TranslatePlayer func
+func TranslatePlayer(gameInfo selfInformer, pl *player.Player, printer *message.Printer) string {
+	me := printer.Sprintf("Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)",
+		pl.Name(), TranslateCards(*pl.Hand(), printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
+	if gameInfo.Phase() == phase.ExchangingCards {
+		me += " " + printer.Sprintf("Side deck: %s\n", TranslateCards(*gameInfo.SideDeck(), printer))
+	}
+	return me
+}
