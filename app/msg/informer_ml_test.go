@@ -23,7 +23,7 @@ func (mlInformerFake) Players() team.Players {
 	p.Join("127.0.0.1")
 	return team.Players{p}
 }
-func (mlInformerFake) PlayedCard() card.Item   { return *card.MustID(1) }
+func (mlInformerFake) PlayedCard() *card.Item  { return card.MustID(1) }
 func (mlInformerFake) PlayedCards() *set.Cards { return &set.Cards{*card.MustID(2)} }
 func (mlInformerFake) Phase() phase.ID         { return phase.PlayingCards }
 func (mlInformerFake) Briscola() card.Item     { return *card.MustID(1) }

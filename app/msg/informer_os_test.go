@@ -23,7 +23,7 @@ func (roundInformerFake) Players() team.Players {
 	p.Join("127.0.0.1")
 	return team.Players{p}
 }
-func (roundInformerFake) PlayedCard() card.Item   { return *card.MustID(1) }
+func (roundInformerFake) PlayedCard() *card.Item   { return card.MustID(1) }
 func (roundInformerFake) PlayedCards() *set.Cards { return &set.Cards{*card.MustID(2)} }
 func (roundInformerFake) Phase() phase.ID         { return phase.PlayingCards }
 func (roundInformerFake) Briscola() card.Item     { return *card.MustID(1) }

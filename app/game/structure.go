@@ -80,7 +80,7 @@ func (g *Game) LastPlaying() *list.List       { return &g.lastPlaying }
 func (g *Game) Phase() phase.ID               { return g.phase }
 func (g *Game) Players() team.Players         { return g.players }
 func (g *Game) PlayedCards() *set.Cards       { return &g.playedCards }
-func (g *Game) PlayedCard() card.Item         { return g.playedCard }
+func (g *Game) PlayedCard() *card.Item        { return &g.playedCard }
 func (g *Game) SideDeck() *set.Cards          { return &g.side }
 func (g *Game) IsSideToShow() bool            { return g.isToShow && g.phase == phase.InsideAuction }
 func (g *Game) SideSubset() *set.Cards        { return &g.sideSubset }

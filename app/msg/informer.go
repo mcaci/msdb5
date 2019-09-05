@@ -18,7 +18,7 @@ type roundInformer interface {
 	CurrentPlayer() *player.Player
 	LastPlayer() *player.Player
 	Players() team.Players
-	PlayedCard() card.Item
+	PlayedCard() *card.Item
 	PlayedCards() *set.Cards
 	Phase() phase.ID
 	Briscola() card.Item
