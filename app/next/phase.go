@@ -42,23 +42,20 @@ func phaseShouldChange(g phaseInformationProvider) bool {
 	case phase.ExchangingCards:
 		isNext = g.ExchangeInput() == "0"
 	case phase.PlayingCards:
+		const limit = 5
 		roundsBefore := uint8(len(*g.Players()[0].Hand()))
-		const limit = 3
-		isNext = predict(g, roundsBefore, limit) || checkAllWithEmptyHands(g)
+		playedAllCards := team.Count(g.Players(), player.Folded) == 4
+		isNext = (g.IsNewRoundToStart() && predict(g, roundsBefore, limit)) || playedAllCards
 	}
 	return isNext
-}
-
-func checkAllWithEmptyHands(g interface{ Players() team.Players }) bool {
-	return team.Count(g.Players(), player.IsHandEmpty) == 5
 }
 
 func predict(g phaseInformationProvider, roundsBefore, limit uint8) bool {
 	highbriscolaCard := briscola.Serie(g.Briscola())
 	var callersHave, othersHave bool
-	var roundsChecked uint8
+	var cardsChecked uint8
 	for _, card := range highbriscolaCard {
-		if roundsChecked == limit {
+		if cardsChecked == limit {
 			break
 		}
 		_, p := g.Players().Find(player.IsCardInHand(card))
@@ -71,7 +68,7 @@ func predict(g phaseInformationProvider, roundsBefore, limit uint8) bool {
 		if callersHave == othersHave {
 			break
 		}
-		roundsChecked++
+		cardsChecked++
 	}
-	return g.IsNewRoundToStart() && roundsBefore <= limit && callersHave != othersHave
+	return cardsChecked == limit && callersHave != othersHave
 }
