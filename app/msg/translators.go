@@ -74,10 +74,11 @@ type selfInformer interface {
 
 // TranslatePlayer func
 func TranslatePlayer(gameInfo selfInformer, pl *player.Player, printer *message.Printer) string {
-	me := printer.Sprintf("Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)",
+	return printer.Sprintf("Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)",
 		pl.Name(), TranslateCards(*pl.Hand(), printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
-	if gameInfo.Phase() == phase.ExchangingCards {
-		me += " " + printer.Sprintf("Side deck: %s\n", TranslateCards(*gameInfo.SideDeck(), printer))
-	}
-	return me
+}
+
+// TranslateSideDeck func
+func TranslateSideDeck(gameInfo selfInformer, pl *player.Player, printer *message.Printer) string {
+	return printer.Sprintf("Side deck: %s\n", TranslateCards(*gameInfo.SideDeck(), printer))
 }
