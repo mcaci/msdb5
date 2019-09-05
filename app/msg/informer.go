@@ -7,6 +7,8 @@ import (
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
+	"golang.org/x/text/language"
+	"golang.org/x/text/message"
 )
 
 type roundInformer interface {
@@ -35,3 +37,14 @@ type senderInfo struct {
 
 func (s senderInfo) From() string          { return s.origin }
 func (s senderInfo) Players() team.Players { return s.players }
+
+// Notify func
+func Notify(g roundInformer, l language.Tag, inputRequest, origin string) {
+	go toOS(g, inputRequest, origin)
+	go toML(g)
+
+	printer := message.NewPrinter(l)
+	toPls(g, printer, inputRequest, origin)
+	toLastPl(g, printer)
+	toNewPl(g, printer)
+}
