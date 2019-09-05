@@ -17,12 +17,10 @@ func toML(g roundInformer) {
 	switch g.Phase() {
 	case phase.PlayingCards:
 		if g.PlayedCard() != nil {
-			io.WriteString(f, fmt.Sprintf("%s\n", g.CurrentPlayer().Name()))
-			io.WriteString(f, fmt.Sprintf("%d\n", g.PlayedCard()))
+			io.WriteString(f, fmt.Sprintf("%s:%d\n", g.CurrentPlayer().Name(), g.PlayedCard()))
 		}
 	case phase.End:
-		io.WriteString(f, fmt.Sprintf("%s\n", g.CurrentPlayer().Name()))
-		io.WriteString(f, fmt.Sprintf("%d\n", g.PlayedCard()))
+		io.WriteString(f, fmt.Sprintf("%s:%d\n", g.CurrentPlayer().Name(), g.PlayedCard()))
 		io.WriteString(f, fmt.Sprintf("%s\n", g.Caller().Name()))
 		io.WriteString(f, fmt.Sprintf("%s\n", g.Companion().Name()))
 		io.WriteString(f, fmt.Sprintf("%d\n", *(g.AuctionScore())))
