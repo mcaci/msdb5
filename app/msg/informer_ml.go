@@ -8,8 +8,7 @@ import (
 	"github.com/mcaci/msdb5/app/phase"
 )
 
-func HandleMLData(g roundInformer) (io.Writer, string) {
-	// log action to file for ml (TODO: WHEN PUSHED OUTSIDE FUNC -> PROBLEM)
+func toML(g roundInformer) {
 	var dest io.Writer
 	var text string
 	f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
@@ -17,7 +16,6 @@ func HandleMLData(g roundInformer) (io.Writer, string) {
 		dest, text = os.Stdout, err.Error()
 	}
 	defer f.Close()
-	// write to file for ml
 	switch g.Phase() {
 	case phase.ChoosingCompanion:
 		dest, text = f, fmt.Sprintf("%s, %s, %d\n", g.CurrentPlayer().Name(), g.Companion().Name(), *(g.AuctionScore()))
@@ -26,5 +24,5 @@ func HandleMLData(g roundInformer) (io.Writer, string) {
 	case phase.End:
 		dest, text = f, fmt.Sprintf("%s\n", g.CurrentPlayer().Name())
 	}
-	return dest, text
+	io.WriteString(dest, text)
 }
