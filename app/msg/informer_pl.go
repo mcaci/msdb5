@@ -61,6 +61,9 @@ func toLastPl(g roundInformer, printer *message.Printer) {
 }
 
 func toNewPl(g roundInformer, printer *message.Printer) {
+	if g.Phase() == phase.ExchangingCards {
+		io.WriteString(g.CurrentPlayer(), TranslateSideDeck(g, g.CurrentPlayer(), printer))
+	}
 	io.WriteString(g.CurrentPlayer(), TranslatePlayer(g, g.CurrentPlayer(), printer))
 }
 
