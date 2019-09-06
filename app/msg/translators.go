@@ -89,9 +89,14 @@ type selfInformer interface {
 }
 
 // TranslatePlayer func
-func TranslatePlayer(pl *player.Player, printer *message.Printer) string {
+func TranslatePlayer(pl *player.Player, g interface{ Briscola() card.Item }, printer *message.Printer) string {
+	var seed *card.Seed
+	if g.Briscola().Number() > 0 {
+		s := g.Briscola().Seed()
+		seed = &s
+	}
 	return printer.Sprintf("Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)",
-		pl.Name(), TranslateHand(*pl.Hand(), nil, printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
+		pl.Name(), TranslateHand(*pl.Hand(), seed, printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
 }
 
 // TranslateSideDeck func

@@ -22,7 +22,7 @@ func toPls(g roundInformer, printer *message.Printer, inputRequest, origin strin
 		s := senderInfo{g.Players(), origin}
 		sender := team.Sender(s)
 		io.WriteString(sender, TranslateGameStatus(g, printer))
-		io.WriteString(sender, TranslatePlayer(g.CurrentPlayer(), printer))
+		io.WriteString(sender, TranslatePlayer(g.CurrentPlayer(), g, printer))
 		errMsg := translateErr(g, printer, inputRequest, rErr)
 		io.WriteString(sender, errMsg)
 		return
@@ -56,7 +56,7 @@ func toPls(g roundInformer, printer *message.Printer, inputRequest, origin strin
 
 func toLastPl(g roundInformer, printer *message.Printer) {
 	if g.LastPlayer() != g.CurrentPlayer() {
-		io.WriteString(g.LastPlayer(), TranslatePlayer(g.LastPlayer(), printer))
+		io.WriteString(g.LastPlayer(), TranslatePlayer(g.LastPlayer(), g, printer))
 	}
 }
 
@@ -64,7 +64,7 @@ func toNewPl(g roundInformer, printer *message.Printer) {
 	if g.Phase() == phase.ExchangingCards {
 		io.WriteString(g.CurrentPlayer(), TranslateSideDeck(g, g.CurrentPlayer(), printer))
 	}
-	io.WriteString(g.CurrentPlayer(), TranslatePlayer(g.CurrentPlayer(), printer))
+	io.WriteString(g.CurrentPlayer(), TranslatePlayer(g.CurrentPlayer(), g, printer))
 }
 
 func translateErr(g roundInformer, printer *message.Printer, inputRequest string, rErr error) string {
