@@ -7,47 +7,39 @@ import (
 	"github.com/mcaci/ita-cards/set"
 )
 
-func TestSortScenarioWithAceOfCoinWinning(t *testing.T) {
+func TestBriscolaScenarioWithAceOfCoinWinning(t *testing.T) {
 	// testing 1 and 2 of Coin, briscola is Coin
 	b := card.Coin
-	s := sortedCard{*set.NewMust(1, 2), &b}
-	if s.Less(0, 1) {
-		t.Fatal("Expecting 1 of Coin to be bigger")
-	}
+	verifySortingWithBriscola(t, 1, 2, &b)
 }
 
-// func TestSortScenarioWithTwoOfCoinLosing(t *testing.T) {
-// 	// 2 and 3 of Coin, briscola is Coin
-// 	verifyRoundScenario(t, 2, 3, testSeeder(card.Coin), true)
-// }
+func TestBriscolaScenarioWithTwoOfCoinLosing(t *testing.T) {
+	// 2 and 3 of Coin, briscola is Coin
+	b := card.Coin
+	verifySortingWithBriscola(t, 3, 2, &b)
+}
 
-// func TestSortScenarioWithSixOfCoinWinningBecauseHigher(t *testing.T) {
-// 	// 5 and 6 of Coin, briscola is Coin
-// 	verifyRoundScenario(t, 5, 6, testSeeder(card.Coin), true)
-// }
+func TestBriscolaScenarioWithSixOfCoinWinningBecauseHigher(t *testing.T) {
+	// 5 and 6 of Coin, briscola is Coin
+	b := card.Coin
+	verifySortingWithBriscola(t, 6, 5, &b)
+}
 
-// func TestSortScenarioWithSixOfCoinWinningBecausePlayedFirst(t *testing.T) {
-// 	// 6 and 5 of Coin, briscola is Coin
-// 	verifyRoundScenario(t, 6, 5, testSeeder(card.Coin), false)
-// }
+func TestBriscolaScenarioWithTenOfCoinWinning(t *testing.T) {
+	// 10 and 4 of Coin, briscola is Cup
+	b := card.Cup
+	verifySortingWithBriscola(t, 10, 4, &b)
+}
 
-// func TestSortScenarioWithTenOfCoinWinning(t *testing.T) {
-// 	// 10 and 4 of Coin, briscola is Cup
-// 	verifyRoundScenario(t, 10, 4, testSeeder(card.Cup), false)
-// }
+func TestBriscolaScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
+	// 3 of Coin and 2 of Sword, briscola is Sword
+	b := card.Sword
+	verifySortingWithBriscola(t, 22, 3, &b)
+}
 
-// func TestSortScenarioWithTenOfCoinLosing(t *testing.T) {
-// 	// 10 and 4 of Coin, briscola is Cup
-// 	verifyRoundScenario(t, 10, 3, testSeeder(card.Coin), true)
-// }
-
-// func TestSortScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
-// 	// 3 of Coin and 2 of Sword, briscola is Sword
-// 	verifyRoundScenario(t, 3, 22, testSeeder(card.Sword), true)
-// }
-
-// func verifyRoundScenario(t *testing.T, a, b uint8, briscola testSeeder, expectedWinner bool) {
-// 	if index := doesOtherCardWin(*card.MustID(a), *card.MustID(b), briscola); index != expectedWinner {
-// 		t.Fatal("Unexpected winner")
-// 	}
-// }
+func verifySortingWithBriscola(t *testing.T, a, b uint8, br *card.Seed) {
+	s := sortedCard{*set.NewMust(a, b), br}
+	if s.Less(0, 1) {
+		t.Fatalf("Expecting %d to be bigger than %d with briscola %v", a, b, br)
+	}
+}
