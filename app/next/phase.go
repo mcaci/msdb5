@@ -44,8 +44,8 @@ func phaseShouldChange(g phaseInformationProvider) bool {
 	case phase.PlayingCards:
 		const limit = 5
 		roundsBefore := uint8(len(*g.Players()[0].Hand()))
-		playedAllCards := team.Count(g.Players(), player.Folded) == 4
-		isNext = (g.IsNewRoundToStart() && predict(g, roundsBefore, limit)) || playedAllCards
+		allCardsPlayed := team.Count(g.Players(), player.IsHandEmpty) == 5
+		isNext = (g.IsNewRoundToStart() && predict(g, roundsBefore, limit)) || allCardsPlayed
 	}
 	return isNext
 }
