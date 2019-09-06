@@ -55,7 +55,7 @@ func predict(g phaseInformationProvider, roundsBefore, limit uint8) bool {
 	var callersHave, othersHave bool
 	var cardsChecked uint8
 	for _, card := range highbriscolaCard {
-		if cardsChecked == limit {
+		if cardsChecked == limit || cardsChecked == roundsBefore {
 			break
 		}
 		_, p := g.Players().Find(player.IsCardInHand(card))
@@ -70,5 +70,5 @@ func predict(g phaseInformationProvider, roundsBefore, limit uint8) bool {
 		}
 		cardsChecked++
 	}
-	return cardsChecked == limit && callersHave != othersHave
+	return cardsChecked == roundsBefore && callersHave != othersHave
 }
