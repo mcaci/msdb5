@@ -21,7 +21,8 @@ type nextPlayerInformer interface {
 
 // Player func
 func Player(g nextPlayerInformer) *player.Player {
-	var playersRoundRobin = func(playerIndex uint8) uint8 { return (playerIndex + 1) % 5 }
+	numberOfPlayers := uint8(len(g.Players()))
+	playersRoundRobin := func(playerIndex uint8) uint8 { return (playerIndex + 1) % numberOfPlayers }
 	index, _ := g.Players().Find(player.MatchingHost(g.FromInput()))
 	playerIndex := uint8(index)
 	nextPlayer := playersRoundRobin(playerIndex)
