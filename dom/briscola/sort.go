@@ -5,18 +5,22 @@ import (
 	"github.com/mcaci/ita-cards/set"
 )
 
-type sortedCard struct {
+type SortedCard struct {
 	cards    set.Cards
 	briscola *card.Seed
 }
 
-func (ids sortedCard) Len() int { return len(ids.cards) }
+func NewSorted(cards set.Cards, briscola *card.Seed) *SortedCard {
+	return &SortedCard{cards, briscola}
+}
 
-func (ids sortedCard) Less(i, j int) bool {
+func (ids SortedCard) Len() int { return len(ids.cards) }
+
+func (ids SortedCard) Less(i, j int) bool {
 	if ids.briscola == nil {
 		return isOtherHigher(ids.cards[i], ids.cards[j])
 	}
 	return doesOtherCardWin(ids.cards[i], ids.cards[j], *ids.briscola)
 }
 
-func (ids sortedCard) Swap(i, j int) { ids.cards[i], ids.cards[j] = ids.cards[j], ids.cards[i] }
+func (ids SortedCard) Swap(i, j int) { ids.cards[i], ids.cards[j] = ids.cards[j], ids.cards[i] }

@@ -3,6 +3,7 @@ package msg
 import (
 	"testing"
 
+	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/player"
@@ -13,6 +14,7 @@ import (
 type selfStruct struct{ ph phase.ID }
 
 func (s selfStruct) Phase() phase.ID    { return s.ph }
+func (selfStruct) Briscola() *card.Seed { return nil }
 func (selfStruct) SideDeck() *set.Cards { return set.NewMust(1) }
 
 func TestValidMessage(t *testing.T) {

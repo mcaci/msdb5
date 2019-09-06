@@ -1,12 +1,14 @@
 package msg
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/player"
 	"golang.org/x/text/message"
 )
@@ -21,13 +23,24 @@ func TranslateCard(c card.Item, printer *message.Printer) string {
 	return printer.Sprintf("(%d of %s)", c.Number(), seeds[c.Seed()])
 }
 
+func mappedCards(cards set.Cards, printer *message.Printer) []string {
+	mCards := make([]string, 0, len(cards))
+	for _, c := range cards {
+		mCards = append(mCards, TranslateCard(c, printer))
+	}
+}
+
 // TranslateCards func
 func TranslateCards(cards set.Cards, printer *message.Printer) string {
-	mappedCards := make([]string, 0, len(cards))
-	for _, c := range cards {
-		mappedCards = append(mappedCards, TranslateCard(c, printer))
-	}
-	return strings.Join(mappedCards, ",")
+	mCards := mappedCards(cards, printer)
+	return strings.Join(mCards, ",")
+}
+
+// TranslateHand func
+func TranslateHand(cards set.Cards, br *card.Seed, printer *message.Printer) string {
+	mCards := mappedCards(cards, printer)
+	sort.Sort(briscola.NewSorted(cards, br))
+	return strings.Join(mCards, ",")
 }
 
 type statusProvider interface {
@@ -70,6 +83,7 @@ func TranslateTeam(p *player.Player, g callersProvider, printer *message.Printer
 }
 
 type selfInformer interface {
+	Briscola() *card.Seed
 	Phase() phase.ID
 	SideDeck() *set.Cards
 }
@@ -77,7 +91,7 @@ type selfInformer interface {
 // TranslatePlayer func
 func TranslatePlayer(gameInfo selfInformer, pl *player.Player, printer *message.Printer) string {
 	return printer.Sprintf("Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)",
-		pl.Name(), TranslateCards(*pl.Hand(), printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
+		pl.Name(), TranslateHand(*pl.Hand(), &gameInfo.Briscola(), printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
 }
 
 // TranslateSideDeck func
