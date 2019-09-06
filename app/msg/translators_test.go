@@ -45,6 +45,7 @@ func (g fakeGameStatus) AuctionScore() *auction.Score  { v := auction.Score(1); 
 func (g fakeGameStatus) Briscola() card.Item           { return *card.MustID(1) }
 func (g fakeGameStatus) CurrentPlayer() *player.Player { return player.New() }
 func (g fakeGameStatus) Phase() phase.ID               { return 1 }
+func (g fakeGameStatus) PlayedCard() *card.Item        { return card.MustID(2) }
 func (g fakeGameStatus) PlayedCards() *set.Cards       { return set.NewMust(1) }
 
 func TestValidGameStatusTranslation(t *testing.T) {

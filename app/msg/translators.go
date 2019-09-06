@@ -35,14 +35,16 @@ type statusProvider interface {
 	Briscola() card.Item
 	CurrentPlayer() *player.Player
 	Phase() phase.ID
+	PlayedCard() *card.Item
 	PlayedCards() *set.Cards
 }
 
 // TranslateGameStatus func
 func TranslateGameStatus(g statusProvider, printer *message.Printer) string {
-	return printer.Sprintf("Game: (Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %s)",
+	return printer.Sprintf("Game: (Turn of: %s, Companion is: %s, Played cards: %s, Last card: %s, Auction score: %d, Phase: %s)",
 		g.CurrentPlayer().Name(), TranslateCard(g.Briscola(), printer),
-		TranslateCards(*g.PlayedCards(), printer), *g.AuctionScore(), TranslatePhase(g.Phase(), printer))
+		TranslateCards(*g.PlayedCards(), printer), TranslateCard(*g.PlayedCard(), printer),
+		*g.AuctionScore(), TranslatePhase(g.Phase(), printer))
 }
 
 // TranslatePhase func
