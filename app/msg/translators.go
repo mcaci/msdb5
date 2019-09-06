@@ -28,6 +28,7 @@ func mappedCards(cards set.Cards, printer *message.Printer) []string {
 	for _, c := range cards {
 		mCards = append(mCards, TranslateCard(c, printer))
 	}
+	return mCards
 }
 
 // TranslateCards func
@@ -83,15 +84,14 @@ func TranslateTeam(p *player.Player, g callersProvider, printer *message.Printer
 }
 
 type selfInformer interface {
-	Briscola() *card.Seed
 	Phase() phase.ID
 	SideDeck() *set.Cards
 }
 
 // TranslatePlayer func
-func TranslatePlayer(gameInfo selfInformer, pl *player.Player, printer *message.Printer) string {
+func TranslatePlayer(pl *player.Player, printer *message.Printer) string {
 	return printer.Sprintf("Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)",
-		pl.Name(), TranslateHand(*pl.Hand(), &gameInfo.Briscola(), printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
+		pl.Name(), TranslateHand(*pl.Hand(), nil, printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
 }
 
 // TranslateSideDeck func
