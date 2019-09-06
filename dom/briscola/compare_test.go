@@ -7,6 +7,12 @@ import (
 	"github.com/mcaci/ita-cards/set"
 )
 
+type testSeeder card.Seed
+
+func (t testSeeder) Seed() card.Seed {
+	return card.Seed(t)
+}
+
 func TestScenarioWithAceOfCoinWinningIndex(t *testing.T) {
 	// testing 1 to 5 of Coin
 	verifyIndexScenario(t, set.NewMust(1, 2, 3, 4, 5), testSeeder(card.Coin), 0)

@@ -2,14 +2,21 @@ package briscola
 
 import (
 	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
 )
 
-type cardIds []uint8
-
-func (ids cardIds) Len() int { return len(ids) }
-
-func (ids cardIds) Less(i, j int) bool {
-	return isOtherHigher(*card.MustID(ids[i]), *card.MustID(ids[j]))
+type sortedCard struct {
+	cards    set.Cards
+	briscola *card.Seed
 }
 
-func (ids cardIds) Swap(i, j int) { ids[i], ids[j] = ids[j], ids[i] }
+func (ids sortedCard) Len() int { return len(ids.cards) }
+
+func (ids sortedCard) Less(i, j int) bool {
+	if ids.briscola == nil {
+		return isOtherHigher(ids.cards[i], ids.cards[j])
+	}
+	return doesOtherCardWin(ids.cards[i], ids.cards[j], *ids.briscola)
+}
+
+func (ids sortedCard) Swap(i, j int) { ids.cards[i], ids.cards[j] = ids.cards[j], ids.cards[i] }

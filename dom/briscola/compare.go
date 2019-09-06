@@ -10,7 +10,7 @@ func IndexOfWinningCard(cardsOnTheTable set.Cards, briscola seeder) uint8 {
 	base := cardsOnTheTable[0]
 	max := 0
 	for i, other := range cardsOnTheTable {
-		if winningCard(base, other, briscola) == other {
+		if winningCard(base, other, briscola.Seed()) == other {
 			base = other
 			max = i
 		}
@@ -18,15 +18,15 @@ func IndexOfWinningCard(cardsOnTheTable set.Cards, briscola seeder) uint8 {
 	return uint8(max)
 }
 
-func winningCard(base, other card.Item, briscola seeder) card.Item {
+func winningCard(base, other card.Item, briscola card.Seed) card.Item {
 	if &base == nil || doesOtherCardWin(base, other, briscola) {
 		base = other
 	}
 	return base
 }
 
-func doesOtherCardWin(first, other card.Item, briscola seeder) bool {
-	otherIsBriscola := other.Seed() == briscola.Seed()
+func doesOtherCardWin(first, other card.Item, briscola card.Seed) bool {
+	otherIsBriscola := other.Seed() == briscola
 	isSameSeed := first.Seed() == other.Seed()
 	return (!isSameSeed && otherIsBriscola) || isOtherHigher(first, other)
 }
