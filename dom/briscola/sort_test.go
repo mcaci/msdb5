@@ -23,8 +23,3 @@ func TestScenarioWithTenOfCoinWinning(t *testing.T) {
 	// 10 and 4 of Coin
 	verifySortingWithBriscola(t, 10, 4, nil)
 }
-
-func TestScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
-	// 3 of Coin and 2 of Sword
-	verifySortingWithBriscola(t, 22, 3, nil)
-}

@@ -3,6 +3,7 @@ package game
 import (
 	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/action/collect"
+	"github.com/mcaci/msdb5/app/action/end"
 	"github.com/mcaci/msdb5/app/input"
 	"github.com/mcaci/msdb5/app/next"
 	"github.com/mcaci/msdb5/app/phase"
@@ -34,22 +35,25 @@ func (g *Game) Process(inputRequest, origin string) Round {
 	}
 
 	// end round: next phase
-	turnBeforeChange := g.Phase()
-	nextPhInfo := next.NewPhInfo(turnBeforeChange, g.Players(), g.Briscola(), len(*g.SideDeck()) > 0,
+	startPhase := g.Phase()
+	nextPhInfo := next.NewPhInfo(startPhase, g.Players(), g.Briscola(), len(*g.SideDeck()) > 0,
 		g.Caller(), g.Companion(), len(*g.PlayedCards()) == 5, input.Value(inputRequest))
 	g.setPhase(next.Phase(nextPhInfo))
 
 	// end round: next player
-	plInfo := next.NewPlInfo(turnBeforeChange, g.Players(), g.Briscola(), len(*g.SideDeck()) > 0,
+	plInfo := next.NewPlInfo(startPhase, g.Players(), g.Briscola(), len(*g.SideDeck()) > 0,
 		g.PlayedCards(), len(*g.PlayedCards()) < 5, origin)
 	nextPl := next.Player(plInfo)
 	track.Player(g.LastPlaying(), nextPl)
-	if g.Phase() >= phase.PlayingCards {
+	if g.Phase() == phase.PlayingCards {
 		collect.Played(collect.NewInfo(g.CurrentPlayer(), g.PlayedCards()))
 	}
 
 	// end game: last round winner collects all cards
 	if g.phase == phase.End {
+		lastPl := end.LastPlayer(g)
+		track.Player(g.LastPlaying(), lastPl)
+		collect.Played(collect.NewInfo(g.CurrentPlayer(), g.PlayedCards()))
 		collect.All(collect.NewAllInfo(g.CurrentPlayer(), g.SideDeck(), g.Players()))
 	}
 	return Round{Game: g, req: inputRequest}

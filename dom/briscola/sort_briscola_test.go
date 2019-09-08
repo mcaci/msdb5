@@ -39,7 +39,7 @@ func TestBriscolaScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
 
 func verifySortingWithBriscola(t *testing.T, a, b uint8, br *card.Seed) {
 	s := SortedCard{*set.NewMust(a, b), br}
-	if s.Less(0, 1) {
+	if s.Less(1, 0) {
 		t.Fatalf("Expecting %d to be bigger than %d with briscola %v", a, b, br)
 	}
 }

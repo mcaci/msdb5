@@ -6,7 +6,6 @@ import (
 
 	"github.com/mcaci/msdb5/app/input"
 
-	"github.com/mcaci/msdb5/app/action/end"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/score"
 	"github.com/mcaci/msdb5/dom/briscola"
@@ -42,7 +41,7 @@ func toPls(g roundInformer, printer *message.Printer, inputRequest, origin strin
 	}
 
 	// process end game
-	endMsg := TranslateTeam(end.LastPlayer(g), g, printer)
+	endMsg := TranslateTeam(g.CurrentPlayer(), g, printer)
 	sendToPlayers(g, endMsg)
 	// compute score
 	pilers := make([]score.Piler, len(g.Players()))

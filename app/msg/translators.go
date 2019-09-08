@@ -49,15 +49,19 @@ type statusProvider interface {
 	Briscola() card.Item
 	CurrentPlayer() *player.Player
 	Phase() phase.ID
-	PlayedCard() *card.Item
+	PlayedCard() card.Item
 	PlayedCards() *set.Cards
 }
 
 // TranslateGameStatus func
 func TranslateGameStatus(g statusProvider, printer *message.Printer) string {
-	return printer.Sprintf("Game: (Turn of: %s, Companion is: %s, Played cards: %s, Last card: %s, Auction score: %d, Phase: %s)",
+	var c card.Item
+	if g.Phase() == phase.PlayingCards {
+		c = g.PlayedCard()
+	}
+	return printer.Sprintf("Game: (Turn of: %s, Companion is: %s, Played cards: %s, Last card: %s, Auction score: %d, Phase: %s)\n",
 		g.CurrentPlayer().Name(), TranslateCard(g.Briscola(), printer),
-		TranslateCards(*g.PlayedCards(), printer), TranslateCard(*g.PlayedCard(), printer),
+		TranslateCards(*g.PlayedCards(), printer), TranslateCard(c, printer),
 		*g.AuctionScore(), TranslatePhase(g.Phase(), printer))
 }
 
@@ -80,7 +84,7 @@ func TranslateTeam(p *player.Player, g callersProvider, printer *message.Printer
 	if p != g.Caller() && p != g.Companion() {
 		team = printer.Sprintf("Others")
 	}
-	return printer.Sprintf("The end - %s team has all briscola cards", team)
+	return printer.Sprintf("The end - %s team has all briscola cards\n", team)
 }
 
 type selfInformer interface {
@@ -95,7 +99,7 @@ func TranslatePlayer(pl *player.Player, g interface{ Briscola() card.Item }, pri
 		s := g.Briscola().Seed()
 		seed = &s
 	}
-	return printer.Sprintf("Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)",
+	return printer.Sprintf("Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)\n",
 		pl.Name(), TranslateHand(*pl.Hand(), seed, printer), TranslateCards(*pl.Pile(), printer), player.Folded(pl))
 }
 

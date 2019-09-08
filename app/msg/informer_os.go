@@ -13,8 +13,6 @@ import (
 )
 
 func toOS(g roundInformer, inputRequest, origin string) {
-	io.WriteString(os.Stdout, inputRequest)
-
 	rErr := g.RoundError()
 	if rErr != nil {
 		errMsg := fmtErr(g, inputRequest, rErr)
@@ -31,7 +29,7 @@ func toOS(g roundInformer, inputRequest, origin string) {
 		pilers[i] = p
 	}
 	scoreTeam1, scoreTeam2 := score.Calc(g.Caller(), g.Companion(), pilers, briscola.Points)
-	scoreMsg := fmt.Sprintf("Scores -> Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
+	scoreMsg := fmt.Sprintf("Scores -> Callers: %d; Others: %d\n", scoreTeam1, scoreTeam2)
 	io.WriteString(os.Stdout, scoreMsg)
 }
 
@@ -39,10 +37,10 @@ func fmtErr(g roundInformer, inputRequest string, rErr error) string {
 	errMsg := fmt.Sprintf("Error: %+v\n", rErr)
 	if rErr == phase.ErrUnexpectedPhase {
 		_, id := phase.ToID(input.Value(inputRequest))
-		errMsg = fmt.Sprintf("Phase is not %d but %d", id, g.Phase())
+		errMsg = fmt.Sprintf("Phase is not %d but %d\n", id, g.Phase())
 	}
 	if rErr == team.ErrUnexpectedPlayer {
-		errMsg = fmt.Sprintf("Expecting player %s to play", g.CurrentPlayer().Name())
+		errMsg = fmt.Sprintf("Expecting player %s to play\n", g.CurrentPlayer().Name())
 	}
 	return errMsg
 }

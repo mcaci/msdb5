@@ -36,70 +36,72 @@ func init() {
 }
 
 var messageKeyToIndex = map[string]int{
-	"(%d of %s)":                  14,
-	"(Undefined card)":            9,
-	"Auction":                     17,
-	"Callers":                     0,
-	"Card":                        20,
-	"Coin":                        10,
-	"Companion":                   19,
-	"Cudgel":                      13,
-	"Cup":                         11,
-	"End":                         21,
+	"(%d of %s)":                  9,
+	"(Undefined card)":            4,
+	"Auction":                     12,
+	"Callers":                     17,
+	"Card":                        15,
+	"Coin":                        5,
+	"Companion":                   14,
+	"Cudgel":                      8,
+	"Cup":                         6,
+	"End":                         16,
 	"Enter name and connect":      22,
-	"Exchange":                    18,
-	"Expecting player %s to play": 5,
-	"Game: (Turn of: %s, Companion is: %s, Played cards: %s, Auction score: %d, Phase: %s)": 15,
-	"Join":                   16,
-	"Others":                 1,
-	"Phase is not %d but %d": 6,
-	"Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)": 7,
-	"Side deck section: (%s)\n":                                 3,
-	"Side deck: %s\n":                                           8,
-	"Sword":                                                     12,
-	"The end - %s team has all briscola cards":                  2,
-	"The end - Callers: %d; Others: %d":                         4,
+	"Exchange":                    13,
+	"Expecting player %s to play": 3,
+	"Game: (Turn of: %s, Companion is: %s, Played cards: %s, Last card: %s, Auction score: %d, Phase: %s)\n": 10,
+	"Join":                   11,
+	"Others":                 18,
+	"Phase is not %d but %d": 2,
+	"Player: (Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)\n": 20,
+	"Side deck section: (%s)\n":                                   0,
+	"Side deck: %s\n":                                             21,
+	"Sword":                                                       7,
+	"The end - %s team has all briscola cards\n":                  19,
+	"The end - Callers: %d; Others: %d":                           1,
 }
 
 var enIndex = []uint32{ // 24 elements
-	0x00000000, 0x00000008, 0x0000000f, 0x0000003b,
-	0x0000005b, 0x00000083, 0x000000a2, 0x000000bf,
-	0x00000105, 0x0000011b, 0x0000012c, 0x00000131,
-	0x00000135, 0x0000013b, 0x00000142, 0x00000153,
-	0x000001b8, 0x000001bd, 0x000001c5, 0x000001ce,
-	0x000001d8, 0x000001dd, 0x000001e1, 0x000001f8,
+	0x00000000, 0x00000020, 0x00000048, 0x00000065,
+	0x00000084, 0x00000095, 0x0000009a, 0x0000009e,
+	0x000000a4, 0x000000ab, 0x000000bc, 0x00000138,
+	0x0000013d, 0x00000145, 0x0000014e, 0x00000158,
+	0x0000015d, 0x00000161, 0x00000169, 0x00000170,
+	0x000001a1, 0x000001ec, 0x00000202, 0x00000219,
 } // Size: 120 bytes
 
-const enData string = "" + // Size: 504 bytes
-	"\x02Callers\x02Others\x02The end - %[1]s team has all briscola cards\x04" +
-	"\x00\x01\x0a\x1b\x02Side deck section: (%[1]s)\x02The end - Callers: %[1" +
-	"]d; Others: %[2]d\x02Expecting player %[1]s to play\x02Phase is not %[1]" +
-	"d but %[2]d\x02Player: (Name: %[1]s, Cards: %+[2]v, Pile: %+[3]v, Has fo" +
-	"lded? %[4]t)\x04\x00\x01\x0a\x11\x02Side deck: %[1]s\x02(Undefined card)" +
-	"\x02Coin\x02Cup\x02Sword\x02Cudgel\x02(%[1]d of %[2]s)\x02Game: (Turn of" +
-	": %[1]s, Companion is: %[2]s, Played cards: %[3]s, Auction score: %[4]d," +
-	" Phase: %[5]s)\x02Join\x02Auction\x02Exchange\x02Companion\x02Card\x02En" +
-	"d\x02Enter name and connect"
+const enData string = "" + // Size: 537 bytes
+	"\x04\x00\x01\x0a\x1b\x02Side deck section: (%[1]s)\x02The end - Callers:" +
+	" %[1]d; Others: %[2]d\x02Phase is not %[1]d but %[2]d\x02Expecting playe" +
+	"r %[1]s to play\x02(Undefined card)\x02Coin\x02Cup\x02Sword\x02Cudgel" +
+	"\x02(%[1]d of %[2]s)\x04\x00\x01\x0aw\x02Game: (Turn of: %[1]s, Companio" +
+	"n is: %[2]s, Played cards: %[3]s, Last card: %[4]s, Auction score: %[5]d" +
+	", Phase: %[6]s)\x02Join\x02Auction\x02Exchange\x02Companion\x02Card\x02E" +
+	"nd\x02Callers\x02Others\x04\x00\x01\x0a,\x02The end - %[1]s team has all" +
+	" briscola cards\x04\x00\x01\x0aF\x02Player: (Name: %[1]s, Cards: %+[2]v," +
+	" Pile: %+[3]v, Has folded? %[4]t)\x04\x00\x01\x0a\x11\x02Side deck: %[1]" +
+	"s\x02Enter name and connect"
 
 var itIndex = []uint32{ // 24 elements
-	0x00000000, 0x0000000a, 0x00000018, 0x0000003f,
-	0x0000005f, 0x0000008d, 0x000000b0, 0x000000ce,
-	0x0000011d, 0x0000012f, 0x0000013f, 0x00000143,
-	0x00000149, 0x0000014f, 0x00000157, 0x00000168,
-	0x000001ce, 0x000001dc, 0x000001e1, 0x000001f2,
-	0x00000202, 0x0000020e, 0x00000213, 0x00000231,
+	0x00000000, 0x00000020, 0x0000004e, 0x0000006c,
+	0x0000008f, 0x0000009f, 0x000000a3, 0x000000a9,
+	0x000000af, 0x000000b7, 0x000000c8, 0x00000151,
+	0x0000015f, 0x00000164, 0x00000175, 0x00000185,
+	0x00000191, 0x00000196, 0x000001a0, 0x000001ae,
+	0x000001da, 0x0000022e, 0x00000240, 0x0000025e,
 } // Size: 120 bytes
 
-const itData string = "" + // Size: 561 bytes
-	"\x02Chiamanti\x02Non chiamanti\x02Fine - I %[1]s hanno tutte le briscole" +
+const itData string = "" + // Size: 606 bytes
 	"\x04\x00\x01\x0a\x1b\x02Sezione del monte: (%[1]s)\x02Fine - Chiamanti: " +
-	"%[1]d; Non chiamanti: %[2]d\x02Mi aspetto che sia %[1]s a giocare\x02La " +
-	"fase non e' %[1]d ma %[2]d\x02Giocatore: (Nome: %[1]s, Mano: %+[2]v, Car" +
-	"te prese: %+[3]v, Ha foldato? %[4]t)\x04\x00\x01\x0a\x0d\x02Monte: %[1]s" +
-	"\x02(Carta assente)\x02Oro\x02Coppe\x02Spade\x02Bastoni\x02(%[1]d di %[2" +
-	"]s)\x02Gioco: (Turno di: %[1]s, Compagno: %[2]s, Carte giocate: %[3]s, P" +
-	"unteggio d'asta: %[4]d, Fase: %[5]s)\x02Registrazione\x02Asta\x02Cambio " +
-	"con monte\x02Scelta compagno\x02Gioco carte\x02Fine\x02Inserisci il nome" +
-	" e collegati"
+	"%[1]d; Non chiamanti: %[2]d\x02La fase non e' %[1]d ma %[2]d\x02Mi aspet" +
+	"to che sia %[1]s a giocare\x02(Carta assente)\x02Oro\x02Coppe\x02Spade" +
+	"\x02Bastoni\x02(%[1]d di %[2]s)\x04\x00\x01\x0a\x83\x01\x02Gioco: (Turno" +
+	" di: %[1]s, Compagno: %[2]s, Carte giocate: %[3]s, Ultima carta giocata:" +
+	" %[4]s, Punteggio d'asta: %[5]d, Fase: %[6]s)\x02Registrazione\x02Asta" +
+	"\x02Cambio con monte\x02Scelta compagno\x02Gioco carte\x02Fine\x02Chiama" +
+	"nti\x02Non chiamanti\x04\x00\x01\x0a'\x02Fine - I %[1]s hanno tutte le b" +
+	"riscole\x04\x00\x01\x0aO\x02Giocatore: (Nome: %[1]s, Mano: %+[2]v, Carte" +
+	" prese: %+[3]v, Ha foldato? %[4]t)\x04\x00\x01\x0a\x0d\x02Monte: %[1]s" +
+	"\x02Inserisci il nome e collegati"
 
-	// Total table size 1305 bytes (1KiB); checksum: 958B285E
+	// Total table size 1383 bytes (1KiB); checksum: 840FA000
