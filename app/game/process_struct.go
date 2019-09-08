@@ -33,6 +33,12 @@ type Round struct {
 }
 
 func (g Round) Card() (*card.Item, error) { return input.Card(g.req) }
-func (g Round) PlayedCard() *card.Item    { c, _ := input.Card(g.req); return c }
 func (g Round) Value() string             { return input.Value(g.req) }
 func (g Round) RoundError() error         { return g.rErr }
+func (g Round) PlayedCard() card.Item {
+	c, err := input.Card(g.req)
+	if err != nil {
+		return card.Item{}
+	}
+	return *c
+}
