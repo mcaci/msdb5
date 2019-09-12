@@ -21,3 +21,23 @@ func (playerSet Players) Find(predicate player.Predicate) (int, *player.Player) 
 	}
 	return -1, nil
 }
+
+// All func
+func (playerSet Players) All(predicate player.Predicate) bool {
+	for _, p := range playerSet {
+		if !predicate(p) {
+			return false
+		}
+	}
+	return true
+}
+
+// None func
+func (playerSet Players) None(predicate player.Predicate) bool {
+	for _, p := range playerSet {
+		if predicate(p) {
+			return false
+		}
+	}
+	return true
+}

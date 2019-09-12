@@ -6,7 +6,7 @@ import (
 
 func TestPlayerHasFolded(t *testing.T) {
 	p := New()
-	if p.Fold(); NotFolded(p) {
+	if p.Fold(); !Folded(p) {
 		t.Fatal("Player should have folded")
 	}
 }

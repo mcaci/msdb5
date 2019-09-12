@@ -25,6 +25,3 @@ var IsHandEmpty Predicate = func(p *Player) bool { return len(p.hand) == 0 }
 
 // Folded var
 var Folded Predicate = func(p *Player) bool { return p.fold }
-
-// NotFolded var
-var NotFolded Predicate = func(p *Player) bool { return !p.fold }

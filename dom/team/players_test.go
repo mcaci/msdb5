@@ -25,8 +25,8 @@ func TestSuccessfulFindNoErr(t *testing.T) {
 	}
 }
 
-func TestSuccessfulFindIndex(t *testing.T) {
-	if index, _ := testPlayers.Find(player.IsCardInHand(*card.MustID(33))); index != 1 {
+func TestSuccessfulFindWithNone(t *testing.T) {
+	if testPlayers.None(player.IsCardInHand(*card.MustID(33))) {
 		t.Fatal("Player not found with criteria player.IsCardInHand(33)")
 	}
 }
@@ -38,8 +38,20 @@ func TestSuccessfulFindDataCorresponds(t *testing.T) {
 	}
 }
 
+func TestUnsuccessfulFindWithNone(t *testing.T) {
+	if !testPlayers.None(player.IsCardInHand(*card.MustID(24))) {
+		t.Fatal("Player should not be found")
+	}
+}
+
+func TestUnsuccessfulFindWithAll(t *testing.T) {
+	if testPlayers.All(player.IsCardInHand(*card.MustID(24))) {
+		t.Fatal("Player should not be found")
+	}
+}
+
 func TestUnsuccessfulFind(t *testing.T) {
-	if _, p := testPlayers.Find(player.IsCardInHand(*card.MustID(24))); p != nil {
+	if _, p := testPlayers.Find(player.IsCardInHand(*card.MustID(8))); p != nil {
 		t.Fatal("Player should not be found")
 	}
 }
