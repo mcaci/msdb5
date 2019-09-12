@@ -1,20 +1,21 @@
-package team
+package action
 
 import (
 	"testing"
 
 	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
 type fakeGame struct {
 	current *player.Player
-	players Players
+	players team.Players
 	rq      string
 }
 
 func newTestGame(rq string) fakeGame {
 	f := fakeGame{}
-	t := Players{}
+	t := team.Players{}
 	p := player.New()
 	p.Join("127.0.0.51")
 	p.RegisterAs("A")
@@ -26,7 +27,7 @@ func newTestGame(rq string) fakeGame {
 }
 
 func (g fakeGame) CurrentPlayer() *player.Player { return g.current }
-func (g fakeGame) Players() Players              { return g.players }
+func (g fakeGame) Players() team.Players         { return g.players }
 func (g fakeGame) From() string                  { return g.rq }
 
 func TestVerifyPlayerWithNoErr(t *testing.T) {

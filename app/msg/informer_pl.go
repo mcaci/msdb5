@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/input"
 
 	"github.com/mcaci/msdb5/app/phase"
@@ -71,7 +72,7 @@ func translateErr(g roundInformer, printer *message.Printer, inputRequest string
 		_, id := phase.ToID(input.Value(inputRequest))
 		errMsg = printer.Sprintf("Phase is not %d but %d", id, g.Phase())
 	}
-	if rErr == team.ErrUnexpectedPlayer {
+	if rErr == action.ErrUnexpectedPlayer {
 		errMsg = printer.Sprintf("Expecting player %s to play", g.CurrentPlayer().Name())
 	}
 	return errMsg

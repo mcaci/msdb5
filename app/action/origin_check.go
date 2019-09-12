@@ -1,16 +1,18 @@
-package team
+package action
 
 import (
 	"errors"
 
 	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
 var ErrUnexpectedPlayer = errors.New("Unexpected player")
 
 type expectedPlayerInterface interface {
 	CurrentPlayer() *player.Player
-	senderInformer
+	Players() team.Players
+	From() string
 }
 
 func CheckOrigin(g expectedPlayerInterface) error {
