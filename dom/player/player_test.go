@@ -13,6 +13,12 @@ func initTest() *Player {
 	return p
 }
 
+func TestNewPlayersAreNotSame(t *testing.T) {
+	if Matching(initTest())(initTest()) {
+		t.Fatal("Unexpected players being equal")
+	}
+}
+
 func TestJoinPlayerName(t *testing.T) {
 	if p := initTest(); p.Name() != "Michi" {
 		t.Fatal("Unexpected name")
@@ -27,6 +33,12 @@ func TestJoinPlayerNameNotEmpty(t *testing.T) {
 
 func TestJoinPlayerHost(t *testing.T) {
 	if !MatchingHost("127.0.0.1")(initTest()) {
+		t.Fatal("Unexpected host")
+	}
+}
+
+func TestJoinPlayerHostNotEmpty(t *testing.T) {
+	if IsHostEmpty(initTest()) {
 		t.Fatal("Unexpected host")
 	}
 }
