@@ -36,8 +36,27 @@ func Player(g nextPlayerInformer) *player.Player {
 		if g.IsRoundOngoing() {
 			break
 		}
-		winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards(), g.Briscola().Seed())
+		winningCardIndex := indexOfWinningCard(*g.PlayedCards(), g.Briscola().Seed())
 		nextPlayer = playersRoundRobin(playerIndex + winningCardIndex)
 	}
 	return g.Players()[nextPlayer]
+}
+
+func indexOfWinningCard(cardsOnTheTable set.Cards, b card.Seed) uint8 {
+	base := cardsOnTheTable[0]
+	max := 0
+	for i, other := range cardsOnTheTable {
+		if winningCard(base, other, b) == other {
+			base = other
+			max = i
+		}
+	}
+	return uint8(max)
+}
+
+func winningCard(base, other card.Item, b card.Seed) card.Item {
+	if &base == nil || briscola.DoesOtherCardWin(base, other, b) {
+		base = other
+	}
+	return base
 }

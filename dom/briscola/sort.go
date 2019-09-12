@@ -18,9 +18,9 @@ func (ids SortedCard) Len() int { return len(ids.cards) }
 
 func (ids SortedCard) Less(i, j int) bool {
 	if ids.briscola == nil {
-		return !isOtherHigher(ids.cards[i], ids.cards[j])
+		return !IsOtherHigher(ids.cards[i], ids.cards[j])
 	}
-	return !doesOtherCardWin(ids.cards[i], ids.cards[j], *ids.briscola)
+	return !DoesOtherCardWin(ids.cards[i], ids.cards[j], *ids.briscola)
 }
 
 func (ids SortedCard) Swap(i, j int) { ids.cards[i], ids.cards[j] = ids.cards[j], ids.cards[i] }
