@@ -19,7 +19,7 @@ func CheckOrigin(g expectedPlayerInterface) error {
 	matchHost := player.MatchingHost(g.From())
 	matchPl := player.Matching(g.CurrentPlayer())
 	criteria := func(p *player.Player) bool { return matchPl(p) && matchHost(p) }
-	if i, _ := g.Players().Find(criteria); i == -1 {
+	if g.Players().None(criteria) {
 		return ErrUnexpectedPlayer
 	}
 	return nil

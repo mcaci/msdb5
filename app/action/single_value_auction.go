@@ -17,7 +17,7 @@ type auctionData struct {
 	update        func(auction.Score)
 	side          *set.Cards
 	setShowSide   func(bool, uint8)
-	setCaller     func(*player.Player)
+	setCaller     func(player.Predicate)
 }
 
 func (a auctionData) valueSet(val string) {
@@ -42,8 +42,8 @@ func (a auctionData) valueSet(val string) {
 		}
 	}
 
-	if team.Count(a.players, player.NotFolded) == 1 {
-		_, p := a.players.Find(player.NotFolded)
-		a.setCaller(p)
+	notFolded := func(p *player.Player) bool { return !player.Folded(p) }
+	if team.Count(a.players, notFolded) == 1 {
+		a.setCaller(notFolded)
 	}
 }

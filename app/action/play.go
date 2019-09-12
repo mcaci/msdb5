@@ -18,7 +18,7 @@ type gamePlayer interface {
 	SideDeck() *set.Cards
 	SetAuction(auction.Score)
 	SetBriscola(*card.Item)
-	SetCaller(*player.Player)
+	SetCaller(player.Predicate)
 	SetCompanion(*player.Player)
 	SetShowSide(bool, uint8)
 	Card() (*card.Item, error)

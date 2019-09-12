@@ -13,15 +13,12 @@ type currentPlayerProvider interface {
 	Briscola() card.Item
 }
 
+// LastPlayer func
 func LastPlayer(g currentPlayerProvider) *player.Player {
-	lastPl := g.CurrentPlayer()
-	for _, card := range briscola.Serie(g.Briscola()) {
-		_, p := g.Players().Find(player.IsCardInHand(card))
-		if p == nil { // no one has card
-			continue
+	for _, c := range briscola.Serie(g.Briscola()) {
+		if _, p := g.Players().Find(player.IsCardInHand(c)); p != nil {
+			return p
 		}
-		lastPl = p
-		break
 	}
-	return lastPl
+	return g.CurrentPlayer()
 }

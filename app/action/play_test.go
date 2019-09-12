@@ -25,15 +25,18 @@ type fakeGameStructure struct {
 	str           string
 }
 
-func (gs fakeGameStructure) AuctionScore() *auction.Score     { return &gs.auctionScore }
-func (gs fakeGameStructure) CurrentPlayer() *player.Player    { return gs.currentPlayer }
-func (gs fakeGameStructure) Players() team.Players            { return gs.players }
-func (gs fakeGameStructure) PlayedCards() *set.Cards          { return gs.playedCards }
-func (gs fakeGameStructure) Phase() phase.ID                  { return gs.phase }
-func (gs fakeGameStructure) SideDeck() *set.Cards             { return gs.sideDeck }
-func (gs fakeGameStructure) SetAuction(score auction.Score)   { gs.auctionScore = score }
-func (gs fakeGameStructure) SetBriscola(briscola *card.Item)  { gs.briscolaCard = *briscola }
-func (gs fakeGameStructure) SetCaller(call *player.Player)    { gs.caller = call }
+func (gs fakeGameStructure) AuctionScore() *auction.Score    { return &gs.auctionScore }
+func (gs fakeGameStructure) CurrentPlayer() *player.Player   { return gs.currentPlayer }
+func (gs fakeGameStructure) Players() team.Players           { return gs.players }
+func (gs fakeGameStructure) PlayedCards() *set.Cards         { return gs.playedCards }
+func (gs fakeGameStructure) Phase() phase.ID                 { return gs.phase }
+func (gs fakeGameStructure) SideDeck() *set.Cards            { return gs.sideDeck }
+func (gs fakeGameStructure) SetAuction(score auction.Score)  { gs.auctionScore = score }
+func (gs fakeGameStructure) SetBriscola(briscola *card.Item) { gs.briscolaCard = *briscola }
+func (gs fakeGameStructure) SetCaller(pred player.Predicate) {
+	_, call := gs.players.Find(pred)
+	gs.caller = call
+}
 func (gs fakeGameStructure) SetCompanion(comp *player.Player) { gs.companion = comp }
 func (gs fakeGameStructure) SetShowSide(bool, uint8)          {}
 
