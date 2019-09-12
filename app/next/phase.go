@@ -58,7 +58,7 @@ func isAnticipatedEnd(g phaseInformationProvider) bool {
 }
 
 func predict(g phaseInformationProvider, roundsBefore uint8) bool {
-	highbriscolaCard := briscola.Serie(g.Briscola())
+	highbriscolaCard := briscola.Serie(g.Briscola().Seed())
 	var teams [2]bool
 	var cardsChecked uint8
 	for _, card := range highbriscolaCard {

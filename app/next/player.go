@@ -36,7 +36,7 @@ func Player(g nextPlayerInformer) *player.Player {
 		if g.IsRoundOngoing() {
 			break
 		}
-		winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards(), g.Briscola())
+		winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards(), g.Briscola().Seed())
 		nextPlayer = playersRoundRobin(playerIndex + winningCardIndex)
 	}
 	return g.Players()[nextPlayer]

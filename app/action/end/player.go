@@ -15,7 +15,7 @@ type currentPlayerProvider interface {
 
 // LastPlayer func
 func LastPlayer(g currentPlayerProvider) *player.Player {
-	for _, c := range briscola.Serie(g.Briscola()) {
+	for _, c := range briscola.Serie(g.Briscola().Seed()) {
 		if _, p := g.Players().Find(player.IsCardInHand(c)); p != nil {
 			return p
 		}
