@@ -18,7 +18,7 @@ func testPlayers() team.Players {
 }
 
 func TestNextPlayer(t *testing.T) {
-	testObj := NewPlInfo(phase.PlayingCards, testPlayers(), *card.MustID(1), true, &set.Cards{*card.MustID(2)}, true, "127.0.0.1")
+	testObj := NewPlInfo(phase.PlayingCards, testPlayers(), *card.MustID(1), &set.Cards{*card.MustID(2)}, true, "127.0.0.1")
 	next := Player(testObj)
 	if next.Name() != "A" {
 		t.Fatal(next)

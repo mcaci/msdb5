@@ -78,3 +78,30 @@ func TestNextPhaseToStayInPlay(t *testing.T) {
 		t.Fatalf("Expecting %s, found %s", expected, next)
 	}
 }
+
+func TestNextPhaseToStayInJoin(t *testing.T) {
+	pls := make(team.Players, 5)
+	for i := range pls {
+		pls[i] = player.New()
+	}
+	testObj := NewPhInfo(phase.Joining, pls, card.Item{}, true, pls[0], pls[1], true, "0")
+	next := Phase(testObj)
+	expected := phase.Joining
+	if next != expected {
+		t.Fatalf("Expecting %s, found %s", expected, next)
+	}
+}
+
+func TestNextPhaseToMoveFromJoin(t *testing.T) {
+	pls := make(team.Players, 5)
+	for i := range pls {
+		pls[i] = player.New()
+		pls[i].RegisterAs("Hello")
+	}
+	testObj := NewPhInfo(phase.Joining, pls, card.Item{}, true, pls[0], pls[1], true, "0")
+	next := Phase(testObj)
+	expected := phase.InsideAuction
+	if next != expected {
+		t.Fatalf("Expecting %s, found %s", expected, next)
+	}
+}

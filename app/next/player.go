@@ -14,7 +14,6 @@ type nextPlayerInformer interface {
 	PlayedCards() *set.Cards
 	Phase() phase.ID
 	Briscola() card.Item
-	IsSideUsed() bool
 	IsRoundOngoing() bool
 	FromInput() string
 }
