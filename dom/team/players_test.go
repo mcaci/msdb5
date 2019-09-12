@@ -21,13 +21,13 @@ func init() {
 
 func TestSuccessfulFindNoErr(t *testing.T) {
 	if _, p := testPlayers.Find(player.IsCardInHand(*card.MustID(33))); p == nil {
-		t.Fatal("Player not found with criteria player.Has(33)")
+		t.Fatal("Player not found with criteria player.IsCardInHand(33)")
 	}
 }
 
 func TestSuccessfulFindIndex(t *testing.T) {
 	if index, _ := testPlayers.Find(player.IsCardInHand(*card.MustID(33))); index != 1 {
-		t.Fatal("Player not found with criteria player.Has(33)")
+		t.Fatal("Player not found with criteria player.IsCardInHand(33)")
 	}
 }
 

@@ -48,7 +48,7 @@ func makePlayers(g *Game) {
 // Join func
 func (g *Game) Join(origin string, channel chan []byte) {
 	for _, p := range g.players {
-		if p.IsSameHost("") {
+		if player.IsHostEmpty(p) {
 			p.Join(origin)
 			p.Attach(channel)
 			break
