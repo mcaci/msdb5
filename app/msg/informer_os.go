@@ -19,7 +19,7 @@ func toOS(g roundInformer, inputRequest, origin string) {
 		io.WriteString(os.Stdout, errMsg)
 		return
 	}
-	s := team.Sender(senderInfo{g.Players(), origin})
+	s := sender(senderInfo{g.Players(), origin})
 	senderInfo := fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", s.Name(), inputRequest, s, g)
 	io.WriteString(os.Stdout, senderInfo)
 

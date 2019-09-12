@@ -18,12 +18,11 @@ func toPls(g roundInformer, printer *message.Printer, inputRequest, origin strin
 
 	rErr := g.RoundError()
 	if rErr != nil {
-		s := senderInfo{g.Players(), origin}
-		sender := team.Sender(s)
-		io.WriteString(sender, TranslateGameStatus(g, printer))
-		io.WriteString(sender, TranslatePlayer(g.CurrentPlayer(), g, printer))
+		s := sender(senderInfo{g.Players(), origin})
+		io.WriteString(s, TranslateGameStatus(g, printer))
+		io.WriteString(s, TranslatePlayer(g.CurrentPlayer(), g, printer))
 		errMsg := translateErr(g, printer, inputRequest, rErr)
-		io.WriteString(sender, errMsg)
+		io.WriteString(s, errMsg)
 		return
 	}
 
