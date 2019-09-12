@@ -20,7 +20,6 @@ type Game struct {
 	caller       *player.Player
 	companion    *player.Player
 	briscolaCard card.Item
-	withSide     bool
 	side         set.Cards
 	playedCards  set.Cards
 	auctionScore auction.Score
@@ -32,40 +31,10 @@ type Game struct {
 // NewGame func
 func NewGame(withSide bool) *Game {
 	g := new(Game)
-	g.withSide = withSide
 	makePlayers(g)
-	distributeCards(g)
+	distributeCards(g, withSide)
 	track.Player(&g.lastPlaying, g.players[0])
 	return g
-}
-
-func makePlayers(g *Game) {
-	for i := 0; i < 5; i++ {
-		g.players.Add(player.New())
-	}
-}
-
-// Join func
-func (g *Game) Join(origin string, channel chan []byte) {
-	for _, p := range g.players {
-		if player.IsHostEmpty(p) {
-			p.Join(origin)
-			p.Attach(channel)
-			break
-		}
-	}
-}
-
-func distributeCards(g *Game) {
-	d := set.Deck()
-	for i := 0; i < set.DeckSize; i++ {
-		if g.withSide && i >= set.DeckSize-5 {
-			g.side.Add(d.Top())
-		} else {
-			track.Player(&g.lastPlaying, g.players[i%5])
-			g.CurrentPlayer().Hand().Add(d.Top())
-		}
-	}
 }
 
 func (g *Game) AuctionScore() *auction.Score  { return &g.auctionScore }
@@ -73,7 +42,7 @@ func (g *Game) Briscola() card.Item           { return g.briscolaCard }
 func (g *Game) Caller() *player.Player        { return g.caller }
 func (g *Game) Companion() *player.Player     { return g.companion }
 func (g *Game) CurrentPlayer() *player.Player { return g.lastPlaying.Front().Value.(*player.Player) }
-func (g *Game) IsSideUsed() bool              { return g.withSide }
+func (g *Game) IsSideUsed() bool              { return len(g.side) > 0 }
 func (g *Game) LastPlayer() *player.Player    { return g.lastPlaying.Back().Value.(*player.Player) }
 func (g *Game) LastPlaying() *list.List       { return &g.lastPlaying }
 func (g *Game) Phase() phase.ID               { return g.phase }
@@ -88,8 +57,11 @@ func (g *Game) SetShowSide(isToShow bool, quantity uint8) {
 	g.isToShow = isToShow
 	g.sideSubset = g.side[:quantity]
 }
-func (g *Game) SetBriscola(c *card.Item)       { g.briscolaCard = *c }
-func (g *Game) SetCaller(pl *player.Player)    { g.caller = pl }
+func (g *Game) SetBriscola(c *card.Item) { g.briscolaCard = *c }
+func (g *Game) SetCaller(pred player.Predicate) {
+	_, pl := g.players.Find(pred)
+	g.caller = pl
+}
 func (g *Game) SetCompanion(pl *player.Player) { g.companion = pl }
 func (g *Game) setPhase(ph phase.ID)           { g.phase = ph }
 

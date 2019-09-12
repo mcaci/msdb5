@@ -35,12 +35,12 @@ func (g *Game) Process(inputRequest, origin string) Round {
 
 	// end round: next phase
 	startPhase := g.Phase()
-	nextPhInfo := next.NewPhInfo(startPhase, g.Players(), g.Briscola(), len(*g.SideDeck()) > 0,
+	nextPhInfo := next.NewPhInfo(startPhase, g.Players(), g.Briscola(), g.IsSideUsed(),
 		g.Caller(), g.Companion(), len(*g.PlayedCards()) == 5, input.Value(inputRequest))
 	g.setPhase(next.Phase(nextPhInfo))
 
 	// end round: next player
-	plInfo := next.NewPlInfo(startPhase, g.Players(), g.Briscola(), len(*g.SideDeck()) > 0,
+	plInfo := next.NewPlInfo(startPhase, g.Players(), g.Briscola(),
 		g.PlayedCards(), len(*g.PlayedCards()) < 5, origin)
 	nextPl := next.Player(plInfo)
 	track.Player(g.LastPlaying(), nextPl)

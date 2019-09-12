@@ -38,13 +38,13 @@ func fakeGamePlay(gameTest *Game) {
 	gameTest.Process("Join#E", "127.0.0.55")
 	gameTest.Process("Auction#80", "127.0.0.51")
 	gameTest.Process("Auction#79", "127.0.0.52")
-	if gameTest.withSide {
+	if gameTest.IsSideUsed() {
 		gameTest.Process("Exchange#5#Coin", "127.0.0.51")
 		gameTest.Process("Exchange#0#Coin", "127.0.0.51")
 	}
 	gameTest.Process("Companion#7#Coin", "127.0.0.51")
 
-	if gameTest.withSide {
+	if gameTest.IsSideUsed() {
 		gameTest.Process("Card#1#Cudgel", "127.0.0.51")
 	} else {
 		gameTest.Process("Card#5#Coin", "127.0.0.51")
