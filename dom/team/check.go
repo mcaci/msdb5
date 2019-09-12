@@ -10,7 +10,7 @@ var ErrUnexpectedPlayer = errors.New("Unexpected player")
 
 type expectedPlayerInterface interface {
 	CurrentPlayer() *player.Player
-	SenderInformation
+	senderInformer
 }
 
 func CheckOrigin(g expectedPlayerInterface) error {
