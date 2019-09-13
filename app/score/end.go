@@ -2,19 +2,14 @@ package score
 
 import (
 	"github.com/mcaci/ita-cards/card"
-	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
-// Piler interface
-type Piler interface {
-	Pile() *set.Cards
-}
-
 // Calc func
-func Calc(caller, companion Piler, players []Piler, cardValuer func(id card.Item) uint8) (totalTeam1, totalTeam2 uint8) {
-	for _, pl := range players {
-		score := pl.Pile().Sum(cardValuer)
-		if pl == caller || pl == companion {
+func Calc(g team.Callers, players team.Players, cardValuer func(id card.Item) uint8) (totalTeam1, totalTeam2 uint8) {
+	for _, p := range players {
+		score := p.Pile().Sum(cardValuer)
+		if team.IsInCallers(g, p) {
 			totalTeam1 += score
 			continue
 		}

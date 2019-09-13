@@ -5,21 +5,17 @@ import (
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/message"
 )
 
-type callersProvider interface {
-	Caller() *player.Player
-	Companion() *player.Player
-}
-
 // TranslateTeam func
-func TranslateTeam(p *player.Player, g callersProvider, printer *message.Printer) string {
-	team := printer.Sprintf("Callers")
-	if p != g.Caller() && p != g.Companion() {
-		team = printer.Sprintf("Others")
+func TranslateTeam(p *player.Player, g team.Callers, printer *message.Printer) string {
+	t := printer.Sprintf("Callers")
+	if !team.IsInCallers(g, p) {
+		t = printer.Sprintf("Others")
 	}
-	return printer.Sprintf("The end - %s team has all briscola cards\n", team)
+	return printer.Sprintf("The end - %s team has all briscola cards\n", t)
 }
 
 type selfInformer interface {
