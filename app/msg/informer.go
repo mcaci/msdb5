@@ -12,12 +12,13 @@ import (
 )
 
 type roundInformer interface {
+	CurrentPlayer() *player.Player
+	Players() team.Players
+	
 	AuctionScore() *auction.Score
 	Caller() *player.Player
 	Companion() *player.Player
-	CurrentPlayer() *player.Player
 	LastPlayer() *player.Player
-	Players() team.Players
 	PlayedCard() card.Item
 	PlayedCards() *set.Cards
 	Phase() phase.ID

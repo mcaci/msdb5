@@ -10,9 +10,10 @@ import (
 )
 
 type gamePlayer interface {
-	AuctionScore() *auction.Score
 	CurrentPlayer() *player.Player
 	Players() team.Players
+	
+	AuctionScore() *auction.Score
 	PlayedCards() *set.Cards
 	Phase() phase.ID
 	SideDeck() *set.Cards

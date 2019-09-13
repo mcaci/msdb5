@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -16,7 +17,7 @@ type lastPlayerTestStr struct {
 }
 
 func (lp lastPlayerTestStr) CurrentPlayer() *player.Player { return lp.currentPlayer }
-func (lp lastPlayerTestStr) Players() team.Players         { return lp.players }
+func (lp lastPlayerTestStr) Cards() *set.Cards             { return lp.players[2].Hand() }
 func (lp lastPlayerTestStr) Briscola() card.Item           { return lp.briscola }
 
 func fakeGameSetup() *lastPlayerTestStr {
@@ -35,7 +36,7 @@ func fakeGameSetup() *lastPlayerTestStr {
 
 func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
 	gameTest := fakeGameSetup()
-	lastPl := LastPlayer(gameTest)
+	lastPl := LastPlayer(gameTest, gameTest.players)
 	if lastPl.Name() != "2" {
 		t.Fatalf("Last player should be: %v", lastPl)
 	}

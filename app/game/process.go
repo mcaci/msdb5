@@ -2,7 +2,6 @@ package game
 
 import (
 	"github.com/mcaci/msdb5/app/action"
-	"github.com/mcaci/msdb5/app/action/collect"
 	"github.com/mcaci/msdb5/app/action/end"
 	"github.com/mcaci/msdb5/app/input"
 	"github.com/mcaci/msdb5/app/next"
@@ -44,16 +43,19 @@ func (g *Game) Process(inputRequest, origin string) Round {
 		g.PlayedCards(), len(*g.PlayedCards()) < 5, origin)
 	nextPl := next.Player(plInfo)
 	track.Player(g.LastPlaying(), nextPl)
-	if g.Phase() == phase.PlayingCards {
-		collect.Played(collect.NewInfo(g.CurrentPlayer(), g.PlayedCards()))
+	if g.Phase() == phase.PlayingCards && len(*g.PlayedCards()) == 5 {
+		end.Collect(end.NewCollectInfo(g.CurrentPlayer(), g.PlayedCards()))
 	}
 
 	// end game: last round winner collects all cards
 	if g.phase == phase.End {
-		lastPl := end.LastPlayer(g)
+		lastPl := end.LastPlayer(end.NewCollectInfo(g.CurrentPlayer(), g.PlayedCards()), g.Players())
 		track.Player(g.LastPlaying(), lastPl)
-		collect.Played(collect.NewInfo(g.CurrentPlayer(), g.PlayedCards()))
-		collect.All(collect.NewAllInfo(g.CurrentPlayer(), g.SideDeck(), g.Players()))
+		end.Collect(end.NewCollectInfo(g.CurrentPlayer(), g.PlayedCards()))
+		end.Collect(end.NewCollectInfo(g.CurrentPlayer(), g.SideDeck()))
+		for _, p := range g.Players() {
+			end.Collect(end.NewCollectInfo(g.CurrentPlayer(), p.Hand()))
+		}
 	}
 	return Round{Game: g, req: inputRequest}
 }
