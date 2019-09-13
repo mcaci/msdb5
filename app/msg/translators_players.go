@@ -2,8 +2,6 @@ package msg
 
 import (
 	"github.com/mcaci/ita-cards/card"
-	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/message"
@@ -16,11 +14,6 @@ func TranslateTeam(p *player.Player, g team.Callers, printer *message.Printer) s
 		t = printer.Sprintf("Others")
 	}
 	return printer.Sprintf("The end - %s team has all briscola cards\n", t)
-}
-
-type selfInformer interface {
-	Phase() phase.ID
-	SideDeck() *set.Cards
 }
 
 // TranslatePlayer func
