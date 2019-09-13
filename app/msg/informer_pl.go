@@ -44,11 +44,7 @@ func toPls(g roundInformer, printer *message.Printer, inputRequest, origin strin
 	endMsg := TranslateTeam(g.CurrentPlayer(), g, printer)
 	sendToPlayers(g, endMsg)
 	// compute score
-	pilers := make([]score.Piler, len(g.Players()))
-	for i, p := range g.Players() {
-		pilers[i] = p
-	}
-	scoreTeam1, scoreTeam2 := score.Calc(g.Caller(), g.Companion(), pilers, briscola.Points)
+	scoreTeam1, scoreTeam2 := score.Calc(g, g.Players(), briscola.Points)
 	scoreMsg := printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
 	sendToPlayers(g, scoreMsg)
 }

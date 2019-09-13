@@ -24,11 +24,7 @@ func toOS(g roundInformer, inputRequest, origin string) {
 	io.WriteString(os.Stdout, senderInfo)
 
 	// compute score
-	pilers := make([]score.Piler, len(g.Players()))
-	for i, p := range g.Players() {
-		pilers[i] = p
-	}
-	scoreTeam1, scoreTeam2 := score.Calc(g.Caller(), g.Companion(), pilers, briscola.Points)
+	scoreTeam1, scoreTeam2 := score.Calc(g, g.Players(), briscola.Points)
 	scoreMsg := fmt.Sprintf("Scores -> Callers: %d; Others: %d\n", scoreTeam1, scoreTeam2)
 	io.WriteString(os.Stdout, scoreMsg)
 }
