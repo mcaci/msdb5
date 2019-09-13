@@ -23,8 +23,7 @@ type infoProvider interface {
 }
 
 func Played(g infoProvider) {
-	lastPlayerPile := g.CurrentPlayer().Pile()
 	if len(*g.Cards()) == 5 {
-		set.Move(g.Cards(), lastPlayerPile)
+		set.Move(g.Cards(), g.CurrentPlayer().Pile())
 	}
 }
