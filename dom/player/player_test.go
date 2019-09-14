@@ -37,12 +37,6 @@ func TestJoinPlayerHost(t *testing.T) {
 	}
 }
 
-func TestJoinPlayerHostNotEmpty(t *testing.T) {
-	if IsHostEmpty(initTest()) {
-		t.Fatal("Unexpected host")
-	}
-}
-
 func TestJoinPlayerPileIsEmpty(t *testing.T) {
 	if p := initTest(); len(*p.Pile()) != 0 {
 		t.Fatal("Pile should be empty")

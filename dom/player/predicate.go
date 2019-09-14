@@ -14,9 +14,6 @@ func MatchingHost(host string) Predicate { return func(p *Player) bool { return 
 // Matching func
 func Matching(o *Player) Predicate { return func(p *Player) bool { return p == o } }
 
-// IsHostEmpty var
-var IsHostEmpty Predicate = func(p *Player) bool { return p.host == "" }
-
 // IsNameEmpty var
 var IsNameEmpty Predicate = func(p *Player) bool { return p.name == "" }
 
