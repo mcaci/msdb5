@@ -2,57 +2,44 @@ package auction
 
 import "testing"
 
-func TestCardsWith80(t *testing.T) {
-	number := SideCards(80)
-	if number != 0 {
-		t.Fatalf("Expected 0 but found %d cards to display", number)
+func sideCardsTest(t *testing.T, score Score, expected uint8) {
+	if actual := SideCards(score); actual != expected {
+		t.Fatalf("Expected %d but found %d cards to display", expected, actual)
 	}
+}
+
+func TestCardsWith80(t *testing.T) {
+	sideCardsTest(t, 80, 0)
 }
 
 func TestCardsWith90(t *testing.T) {
-	if number := SideCards(90); number != 1 {
-		t.Fatalf("Expected 1 but found %d cards to display", number)
-	}
+	sideCardsTest(t, 90, 1)
 }
 
 func TestCardsWith93(t *testing.T) {
-	if number := SideCards(93); number != 1 {
-		t.Fatalf("Expected 1 but found %d cards to display", number)
-	}
+	sideCardsTest(t, 93, 1)
 }
 
 func TestCardsWith99(t *testing.T) {
-	if number := SideCards(99); number != 1 {
-		t.Fatalf("Expected 1 but found %d cards to display", number)
-	}
+	sideCardsTest(t, 99, 1)
 }
 
 func TestCardsWith100(t *testing.T) {
-	if number := SideCards(100); number != 2 {
-		t.Fatalf("Expected 2 but found %d cards to display", number)
-	}
+	sideCardsTest(t, 100, 2)
 }
 
 func TestCardsWith101(t *testing.T) {
-	if number := SideCards(101); number != 2 {
-		t.Fatalf("Expected 2 but found %d cards to display", number)
-	}
+	sideCardsTest(t, 101, 2)
 }
 
 func TestCardsWith110(t *testing.T) {
-	if number := SideCards(110); number != 3 {
-		t.Fatalf("Expected 3 but found %d cards to display", number)
-	}
+	sideCardsTest(t, 110, 3)
 }
 
 func TestCardsWith119(t *testing.T) {
-	if number := SideCards(119); number != 3 {
-		t.Fatalf("Expected 3 but found %d cards to display", number)
-	}
+	sideCardsTest(t, 119, 3)
 }
 
 func TestCardsWith120(t *testing.T) {
-	if number := SideCards(120); number != 5 {
-		t.Fatalf("Expected 5 but found %d cards to display", number)
-	}
+	sideCardsTest(t, 120, 5)
 }
