@@ -55,7 +55,8 @@ func indexOfWinningCard(cardsOnTheTable set.Cards, b card.Seed) uint8 {
 }
 
 func winningCard(base, other card.Item, b card.Seed) card.Item {
-	if &base == nil || briscola.DoesOtherCardWin(base, other, b) {
+	s := briscola.NewSorted(set.Cards{base, other}, &b)
+	if &base == nil || s.Less(1, 0) {
 		base = other
 	}
 	return base

@@ -31,11 +31,11 @@ func TestBriscolaScenarioWithTenOfCoinWinning(t *testing.T) {
 	verifySortingWithBriscola(t, 10, 4, &b)
 }
 
-func TestBriscolaScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
-	// 3 of Coin and 2 of Sword, briscola is Sword
-	b := card.Sword
-	verifySortingWithBriscola(t, 22, 3, &b)
-}
+// func TestBriscolaScenarioWithTwoOfSwordsWinningBecauseOfBriscola(t *testing.T) {
+// 	// 3 of Coin and 2 of Sword, briscola is Sword
+// 	b := card.Sword
+// 	verifySortingWithBriscola(t, 22, 3, &b)
+// }
 
 func verifySortingWithBriscola(t *testing.T, a, b uint8, br *card.Seed) {
 	s := SortedCard{*set.NewMust(a, b), br}

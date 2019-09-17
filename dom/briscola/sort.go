@@ -17,10 +17,18 @@ func NewSorted(cards set.Cards, briscola *card.Seed) *SortedCard {
 func (ids SortedCard) Len() int { return len(ids.cards) }
 
 func (ids SortedCard) Less(i, j int) bool {
+	first, other := ids.cards[i], ids.cards[j]
+	isSameSeed := first.Seed() == other.Seed()
 	if ids.briscola == nil {
-		return !IsOtherHigher(ids.cards[i], ids.cards[j])
+		isOtherGreaterOnPoints := Points(first) < Points(other)
+		isSamePoints := Points(first) == Points(other)
+		isOtherGreaterOnNumber := first.Number() < other.Number()
+		return !(isSameSeed && ((isSamePoints && isOtherGreaterOnNumber) || isOtherGreaterOnPoints))
 	}
-	return !DoesOtherCardWin(ids.cards[i], ids.cards[j], *ids.briscola)
+	isOtherGreaterOnPoints := Points(first) < Points(other)
+	isSamePoints := Points(first) == Points(other)
+	isOtherGreaterOnNumber := first.Number() < other.Number()
+	return !(isSameSeed && ((isSamePoints && isOtherGreaterOnNumber) || isOtherGreaterOnPoints))
 }
 
 func (ids SortedCard) Swap(i, j int) { ids.cards[i], ids.cards[j] = ids.cards[j], ids.cards[i] }
