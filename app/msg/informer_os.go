@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/mcaci/msdb5/app/action"
-	"github.com/mcaci/msdb5/app/input"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/score"
 	"github.com/mcaci/msdb5/dom/briscola"
@@ -32,8 +31,7 @@ func toOS(g roundInformer, inputRequest, origin string) {
 func fmtErr(g roundInformer, inputRequest string, rErr error) string {
 	errMsg := fmt.Sprintf("Error: %+v\n", rErr)
 	if rErr == phase.ErrUnexpectedPhase {
-		_, id := phase.ToID(input.Value(inputRequest))
-		errMsg = fmt.Sprintf("Phase is not %d but %d\n", id, g.Phase())
+		errMsg = fmt.Sprintf("Phase is not %s but %s\n", inputRequest, g.Phase())
 	}
 	if rErr == action.ErrUnexpectedPlayer {
 		errMsg = fmt.Sprintf("Expecting player %s to play\n", g.CurrentPlayer().Name())

@@ -5,7 +5,6 @@ import (
 	"io"
 
 	"github.com/mcaci/msdb5/app/action"
-	"github.com/mcaci/msdb5/app/input"
 
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/score"
@@ -65,8 +64,7 @@ func toNewPl(g roundInformer, printer *message.Printer) {
 func translateErr(g roundInformer, printer *message.Printer, inputRequest string, rErr error) string {
 	errMsg := fmt.Sprintf("Error: %+v\n", rErr)
 	if rErr == phase.ErrUnexpectedPhase {
-		_, id := phase.ToID(input.Value(inputRequest))
-		errMsg = printer.Sprintf("Phase is not %d but %d", id, g.Phase())
+		errMsg = printer.Sprintf("Phase is not %s but %s", inputRequest, g.Phase())
 	}
 	if rErr == action.ErrUnexpectedPlayer {
 		errMsg = printer.Sprintf("Expecting player %s to play", g.CurrentPlayer().Name())
