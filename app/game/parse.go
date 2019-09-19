@@ -4,18 +4,17 @@ import (
 	"strings"
 )
 
-func command(request string) string {
-	fields := strings.Split(request, "#")
-	if fields[0] != "" {
-		return fields[0]
-	}
-	return ""
-}
+type act uint8
 
-func value(request string) string {
+const (
+	com act = iota
+	val
+)
+
+func parse(request string, a act) (parsed string) {
 	fields := strings.Split(request, "#")
-	if len(fields) > 1 {
-		return fields[1]
+	if len(fields) > int(a) {
+		parsed = fields[a]
 	}
-	return ""
+	return
 }

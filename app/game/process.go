@@ -11,7 +11,7 @@ import (
 // Process func
 func (g *Game) Process(inputRequest, origin string) Round {
 	// verify phase step
-	phInfo := phaseInfo{g.Phase(), command(inputRequest)}
+	phInfo := phaseInfo{g.Phase(), parse(inputRequest, com)}
 	err := phase.Check(phInfo)
 	if err != nil {
 		return Round{Game: g, req: inputRequest, rErr: err}
@@ -34,7 +34,7 @@ func (g *Game) Process(inputRequest, origin string) Round {
 	// end round: next phase
 	startPhase := g.Phase()
 	nextPhInfo := next.NewPhInfo(startPhase, g.Players(), g.Briscola(), g.IsSideUsed(),
-		g.Caller(), g.Companion(), len(*g.PlayedCards()) == 5, value(inputRequest))
+		g.Caller(), g.Companion(), len(*g.PlayedCards()) == 5, parse(inputRequest, val))
 	g.setPhase(next.Phase(nextPhInfo))
 
 	// end round: next player

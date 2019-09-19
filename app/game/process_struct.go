@@ -41,7 +41,7 @@ func (g Round) Card() (*card.Item, error) {
 	}
 	return nil, fmt.Errorf("not enough data to make a card: %s", g.req)
 }
-func (g Round) Value() string     { return value(g.req) }
+func (g Round) Value() string     { return parse(g.req, val) }
 func (g Round) RoundError() error { return g.rErr }
 func (g Round) PlayedCard() card.Item {
 	c, err := g.Card()
