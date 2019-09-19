@@ -1,8 +1,10 @@
 package game
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/mcaci/ita-cards/card"
-	"github.com/mcaci/msdb5/app/input"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
@@ -32,11 +34,17 @@ type Round struct {
 	rErr error
 }
 
-func (g Round) Card() (*card.Item, error) { return input.Card(g.req) }
-func (g Round) Value() string             { return input.Value(g.req) }
-func (g Round) RoundError() error         { return g.rErr }
+func (g Round) Card() (*card.Item, error) {
+	fields := strings.Split(g.req, "#")
+	if len(fields) > 2 {
+		return card.New(fields[1], fields[2])
+	}
+	return nil, fmt.Errorf("not enough data to make a card: %s", g.req)
+}
+func (g Round) Value() string     { return value(g.req) }
+func (g Round) RoundError() error { return g.rErr }
 func (g Round) PlayedCard() card.Item {
-	c, err := input.Card(g.req)
+	c, err := g.Card()
 	if err != nil {
 		return card.Item{}
 	}

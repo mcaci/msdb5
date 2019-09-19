@@ -3,7 +3,6 @@ package game
 import (
 	"github.com/mcaci/msdb5/app/action"
 	"github.com/mcaci/msdb5/app/action/end"
-	"github.com/mcaci/msdb5/app/input"
 	"github.com/mcaci/msdb5/app/next"
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/track"
@@ -12,7 +11,7 @@ import (
 // Process func
 func (g *Game) Process(inputRequest, origin string) Round {
 	// verify phase step
-	phInfo := phaseInfo{g.Phase(), input.Command(inputRequest)}
+	phInfo := phaseInfo{g.Phase(), command(inputRequest)}
 	err := phase.Check(phInfo)
 	if err != nil {
 		return Round{Game: g, req: inputRequest, rErr: err}
@@ -35,7 +34,7 @@ func (g *Game) Process(inputRequest, origin string) Round {
 	// end round: next phase
 	startPhase := g.Phase()
 	nextPhInfo := next.NewPhInfo(startPhase, g.Players(), g.Briscola(), g.IsSideUsed(),
-		g.Caller(), g.Companion(), len(*g.PlayedCards()) == 5, input.Value(inputRequest))
+		g.Caller(), g.Companion(), len(*g.PlayedCards()) == 5, value(inputRequest))
 	g.setPhase(next.Phase(nextPhInfo))
 
 	// end round: next player
