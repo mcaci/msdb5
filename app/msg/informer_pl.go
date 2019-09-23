@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/mcaci/msdb5/app/action"
-
 	"github.com/mcaci/msdb5/app/phase"
 	"github.com/mcaci/msdb5/app/score"
 	"github.com/mcaci/msdb5/dom/briscola"
+	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/message"
 )
@@ -66,7 +65,7 @@ func translateErr(g roundInformer, printer *message.Printer, inputRequest string
 	if rErr == phase.ErrUnexpectedPhase {
 		errMsg = printer.Sprintf("Phase is not %s but %s", inputRequest, g.Phase())
 	}
-	if rErr == action.ErrUnexpectedPlayer {
+	if rErr == player.ErrUnexpectedPlayer {
 		errMsg = printer.Sprintf("Expecting player %s to play", g.CurrentPlayer().Name())
 	}
 	return errMsg

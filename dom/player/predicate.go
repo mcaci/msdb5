@@ -1,6 +1,10 @@
 package player
 
-import "github.com/mcaci/ita-cards/card"
+import (
+	"errors"
+
+	"github.com/mcaci/ita-cards/card"
+)
 
 // Predicate type
 type Predicate func(p *Player) bool
@@ -13,6 +17,9 @@ func MatchingHost(host string) Predicate { return func(p *Player) bool { return 
 
 // Matching func
 func Matching(o *Player) Predicate { return func(p *Player) bool { return p == o } }
+
+// ErrUnexpectedPlayer error
+var ErrUnexpectedPlayer = errors.New("Unexpected player")
 
 // IsNameEmpty var
 var IsNameEmpty Predicate = func(p *Player) bool { return p.name == "" }
