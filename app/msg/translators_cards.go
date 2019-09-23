@@ -37,9 +37,8 @@ func TranslateCards(cards set.Cards, printer *message.Printer) string {
 
 // TranslateHand func
 func TranslateHand(cards set.Cards, br *card.Seed, printer *message.Printer) string {
-	mCards := mappedCards(cards, printer)
 	sort.Sort(briscola.NewSorted(cards, br))
-	return strings.Join(mCards, ",")
+	return TranslateCards(cards, printer)
 }
 
 // TranslateSideDeck func
