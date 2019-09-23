@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/mcaci/msdb5/app/msg/score"
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/app/score"
 	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"

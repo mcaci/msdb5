@@ -2,7 +2,8 @@ package game
 
 import (
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/app/track"
+
+	"github.com/mcaci/msdb5/app/game/track"
 	"github.com/mcaci/msdb5/dom/player"
 )
 

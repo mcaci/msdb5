@@ -6,8 +6,8 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/app/game/track"
 	"github.com/mcaci/msdb5/app/phase"
-	"github.com/mcaci/msdb5/app/track"
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
