@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/dom/phase"
 )
 
 func toML(g roundInformer) {

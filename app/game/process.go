@@ -5,7 +5,7 @@ import (
 	"github.com/mcaci/msdb5/app/game/end"
 	"github.com/mcaci/msdb5/app/game/next"
 	"github.com/mcaci/msdb5/app/game/track"
-	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/dom/phase"
 )
 
 // Process func

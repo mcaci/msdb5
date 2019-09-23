@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/mcaci/ita-cards/card"
-	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/dom/phase"
 )
 
 func fakeGameSetup(withSide bool) *Game {
