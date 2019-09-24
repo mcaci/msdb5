@@ -1,9 +1,11 @@
-package auction
+package action
 
-import "testing"
+import (
+	"testing"
+)
 
-func sideCardsTest(t *testing.T, score Score, expected uint8) {
-	if actual := SideCards(score); actual != expected {
+func sideCardsTest(t *testing.T, score, expected uint8) {
+	if actual := sideCards(score); actual != expected {
 		t.Fatalf("Expected %d but found %d cards to display", expected, actual)
 	}
 }

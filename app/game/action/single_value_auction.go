@@ -30,7 +30,7 @@ func (a auctionData) valueSet(val string) {
 	a.update(newScore)
 
 	if len(*a.side) > 0 {
-		a.setShowSide(len(*a.side) > 0, auction.SideCards(newScore))
+		a.setShowSide(len(*a.side) > 0, sideCards(uint8(newScore)))
 	}
 
 	if newScore >= 120 {
@@ -46,4 +46,8 @@ func (a auctionData) valueSet(val string) {
 	if team.Count(a.players, notFolded) == 1 {
 		a.setCaller(notFolded)
 	}
+}
+
+func sideCards(score uint8) uint8 {
+	return score/90 + score/100 + score/110 + score/120 + score/120
 }
