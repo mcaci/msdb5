@@ -2,8 +2,8 @@ package next
 
 import (
 	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/dom/phase"
-	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -58,7 +58,7 @@ func isAnticipatedEnd(g phaseInformationProvider) bool {
 }
 
 func predict(g phaseInformationProvider, roundsBefore uint8) bool {
-	highbriscolaCard := briscola.Serie(g.Briscola().Seed())
+	highbriscolaCard := serie(g.Briscola().Seed())
 	var teams [2]bool
 	var cardsChecked uint8
 	for _, card := range highbriscolaCard {
@@ -79,4 +79,13 @@ func predict(g phaseInformationProvider, roundsBefore uint8) bool {
 		}
 	}
 	return false
+}
+
+func serie(briscola card.Seed) set.Cards {
+	serie := []uint8{1, 3, 10, 9, 8, 7, 6, 5, 4, 2}
+	cards := make(set.Cards, len(serie))
+	for i, id := range serie {
+		cards[i] = *card.MustID(id + 10*uint8(briscola))
+	}
+	return cards
 }

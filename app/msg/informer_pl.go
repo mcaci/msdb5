@@ -6,7 +6,6 @@ import (
 
 	"github.com/mcaci/msdb5/app/msg/score"
 	"github.com/mcaci/msdb5/dom/phase"
-	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/message"
@@ -42,7 +41,7 @@ func toPls(g roundInformer, printer *message.Printer, inputRequest, origin strin
 	endMsg := TranslateTeam(g.CurrentPlayer(), g, printer)
 	sendToPlayers(g, endMsg)
 	// compute score
-	scoreTeam1, scoreTeam2 := score.Calc(g, g.Players(), briscola.Points)
+	scoreTeam1, scoreTeam2 := score.Calc(g, g.Players())
 	scoreMsg := printer.Sprintf("The end - Callers: %d; Others: %d", scoreTeam1, scoreTeam2)
 	sendToPlayers(g, scoreMsg)
 }

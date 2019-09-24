@@ -3,8 +3,8 @@ package next
 import (
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/briscola"
+	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -55,9 +55,22 @@ func indexOfWinningCard(cardsOnTheTable set.Cards, b card.Seed) uint8 {
 }
 
 func winningCard(base, other card.Item, b card.Seed) card.Item {
-	s := briscola.NewSorted(set.Cards{base, other}, &b)
-	if &base == nil || s.Less(1, 0) {
+	if &base == nil || doesOtherCardWin(base, other, b) {
 		base = other
 	}
 	return base
+}
+
+func doesOtherCardWin(first, other card.Item, briscola card.Seed) bool {
+	otherIsBriscola := other.Seed() == briscola
+	isSameSeed := first.Seed() == other.Seed()
+	return (!isSameSeed && otherIsBriscola) || isOtherHigher(first, other)
+}
+
+func isOtherHigher(first, other card.Item) bool {
+	isSameSeed := first.Seed() == other.Seed()
+	isOtherGreaterOnPoints := briscola.Points(first) < briscola.Points(other)
+	isSamePoints := briscola.Points(first) == briscola.Points(other)
+	isOtherGreaterOnNumber := first.Number() < other.Number()
+	return isSameSeed && ((isSamePoints && isOtherGreaterOnNumber) || isOtherGreaterOnPoints)
 }

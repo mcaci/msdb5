@@ -32,3 +32,9 @@ func (ids SortedCard) Less(i, j int) bool {
 }
 
 func (ids SortedCard) Swap(i, j int) { ids.cards[i], ids.cards[j] = ids.cards[j], ids.cards[i] }
+
+// Points func
+func Points(id card.Item) uint8 {
+	var points = map[uint8]uint8{1: 11, 3: 10, 8: 2, 9: 3, 10: 4}
+	return points[id.Number()]
+}

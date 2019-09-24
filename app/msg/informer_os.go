@@ -7,7 +7,6 @@ import (
 
 	"github.com/mcaci/msdb5/app/msg/score"
 	"github.com/mcaci/msdb5/dom/phase"
-	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/player"
 )
 
@@ -23,7 +22,7 @@ func toOS(g roundInformer, inputRequest, origin string) {
 	io.WriteString(os.Stdout, senderInfo)
 
 	// compute score
-	scoreTeam1, scoreTeam2 := score.Calc(g, g.Players(), briscola.Points)
+	scoreTeam1, scoreTeam2 := score.Calc(g, g.Players())
 	scoreMsg := fmt.Sprintf("Scores -> Callers: %d; Others: %d\n", scoreTeam1, scoreTeam2)
 	io.WriteString(os.Stdout, scoreMsg)
 }
