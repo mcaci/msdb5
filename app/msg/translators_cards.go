@@ -6,7 +6,7 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/dom/briscola"
+	"github.com/mcaci/msdb5/app/msg/cardsort"
 	"github.com/mcaci/msdb5/dom/player"
 	"golang.org/x/text/message"
 )
@@ -37,7 +37,7 @@ func TranslateCards(cards set.Cards, printer *message.Printer) string {
 
 // TranslateHand func
 func TranslateHand(cards set.Cards, br *card.Seed, printer *message.Printer) string {
-	sort.Sort(briscola.NewSorted(cards, br))
+	sort.Sort(cardsort.NewSorted(cards, br))
 	return TranslateCards(cards, printer)
 }
 

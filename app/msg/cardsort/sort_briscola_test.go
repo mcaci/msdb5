@@ -1,4 +1,4 @@
-package briscola
+package cardsort
 
 import (
 	"testing"

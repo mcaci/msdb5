@@ -1,9 +1,7 @@
-package briscola
+package cardsort
 
 import (
 	"testing"
-
-	"github.com/mcaci/ita-cards/card"
 )
 
 func TestScenarioWithAceOfCoinWinning(t *testing.T) {
@@ -24,10 +22,4 @@ func TestScenarioWithSixOfCoinWinningBecauseHigher(t *testing.T) {
 func TestScenarioWithTenOfCoinWinning(t *testing.T) {
 	// 10 and 4 of Coin
 	verifySortingWithBriscola(t, 10, 4, nil)
-}
-
-func TestPoints(t *testing.T) {
-	if Points(*card.MustID(1)) != Points(*card.MustID(21)) {
-		t.Fatal("unexpected result")
-	}
 }
