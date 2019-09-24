@@ -12,3 +12,9 @@ func TestSerie(t *testing.T) {
 		t.Fatal("unexpected card")
 	}
 }
+
+func TestPoints(t *testing.T) {
+	if Points(*card.MustID(1)) != Points(*card.MustID(21)) {
+		t.Fatal("unexpected result")
+	}
+}
