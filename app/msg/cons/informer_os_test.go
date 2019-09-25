@@ -1,12 +1,12 @@
-package msg
+package cons
 
 import (
 	"testing"
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -36,6 +36,6 @@ func (roundInformerFake) SideSubset() *set.Cards { return &set.Cards{*card.MustI
 
 func TestOutputMessage(t *testing.T) {
 	testObj := roundInformerFake{}
-	toOS(testObj, "Play#1#Coin", "127.0.0.1")
+	Write(testObj, "Play#1#Coin", "127.0.0.1")
 	t.Log(testObj)
 }

@@ -3,8 +3,11 @@ package msg
 import (
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/dom/phase"
+	"github.com/mcaci/msdb5/app/msg/cons"
+	"github.com/mcaci/msdb5/app/msg/ml"
+	"github.com/mcaci/msdb5/app/msg/pl"
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/language"
@@ -14,7 +17,7 @@ import (
 type roundInformer interface {
 	CurrentPlayer() *player.Player
 	Players() team.Players
-	
+
 	AuctionScore() *auction.Score
 	Caller() *player.Player
 	Companion() *player.Player
@@ -31,21 +34,13 @@ type roundInformer interface {
 	SideSubset() *set.Cards
 }
 
-type senderInfo struct {
-	players team.Players
-	origin  string
-}
-
-func (s senderInfo) From() string          { return s.origin }
-func (s senderInfo) Players() team.Players { return s.players }
-
 // Notify func
 func Notify(g roundInformer, l language.Tag, inputRequest, origin string) {
-	go toOS(g, inputRequest, origin)
-	go toML(g)
+	go cons.Write(g, inputRequest, origin)
+	go ml.Write(g)
 
 	printer := message.NewPrinter(l)
-	toPls(g, printer, inputRequest, origin)
-	toLastPl(g, printer)
-	toNewPl(g, printer)
+	pl.ToPls(g, printer, inputRequest, origin)
+	pl.ToLastPl(g, printer)
+	pl.ToNewPl(g, printer)
 }

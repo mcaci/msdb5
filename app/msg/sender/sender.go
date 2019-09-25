@@ -1,4 +1,4 @@
-package msg
+package sender
 
 import (
 	"github.com/mcaci/msdb5/dom/player"
@@ -10,7 +10,7 @@ type senderInformer interface {
 	From() string
 }
 
-func sender(s senderInformer) *player.Player {
+func Info(s senderInformer) *player.Player {
 	_, p := s.Players().Find(player.MatchingHost(s.From()))
 	return p
 }

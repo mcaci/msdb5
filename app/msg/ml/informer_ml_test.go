@@ -1,12 +1,12 @@
-package msg
+package ml
 
 import (
 	"testing"
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -36,6 +36,6 @@ func (mlInformerFake) SideSubset() *set.Cards { return &set.Cards{*card.MustID(2
 
 func TestMLMessage(t *testing.T) {
 	testObj := mlInformerFake{}
-	toML(testObj)
+	Write(testObj)
 	t.Log(testObj)
 }

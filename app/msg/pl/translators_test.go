@@ -1,12 +1,12 @@
-package msg
+package pl
 
 import (
 	"testing"
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -15,7 +15,7 @@ import (
 func TestValidCardTranslation(t *testing.T) {
 	printer := message.NewPrinter(language.English)
 	c := *card.MustID(1)
-	str := TranslateCard(c, printer)
+	str := translateCard(c, printer)
 	if str == "(Undefined card)" {
 		t.Fatal("Expecting the translation of the card")
 	}
@@ -24,16 +24,16 @@ func TestValidCardTranslation(t *testing.T) {
 func TestInvalidCardTranslation(t *testing.T) {
 	printer := message.NewPrinter(language.English)
 	var c card.Item
-	str := TranslateCard(c, printer)
-	if str != "(Undefined card)" {
-		t.Fatal("Expecting the translation of the card")
+	str := translateCard(c, printer)
+	if str == "" {
+		t.Fatal("Expecting the translation of the undefined card")
 	}
 }
 
 func TestValidCardsTranslation(t *testing.T) {
 	printer := message.NewPrinter(language.English)
 	c := set.NewMust(1, 2, 3, 4, 7)
-	str := TranslateCards(*c, printer)
+	str := translateCards(*c, printer)
 	if str == "" {
 		t.Fatal("Expecting the translation of the set of card")
 	}
@@ -57,11 +57,10 @@ func TestValidGameStatusTranslation(t *testing.T) {
 	}
 }
 
-func TestValidPhaseTranslation(t *testing.T) {
+func TestValidMessage(t *testing.T) {
 	printer := message.NewPrinter(language.English)
-	p := phase.Joining
-	str := TranslatePhase(p, printer)
+	str := translatePlayer(player.New(), *card.MustID(1), printer)
 	if str == "" {
-		t.Fatal("Expecting the translation of the phase")
+		t.Fatal("Expecting a message")
 	}
 }
