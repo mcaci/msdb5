@@ -10,6 +10,7 @@ import (
 	"golang.org/x/text/language"
 )
 
+//go:generate gotext -srclang=en update -out=catalog/catalog.go -lang=en,it
 func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
 	var noSide = flag.Bool("no-side", false, "Add flag to specify no side deck is to be used.")
