@@ -2,87 +2,17 @@
     "language": "en",
     "messages": [
         {
-            "id": "Side deck section: ({SideSubset_printer})",
-            "message": "Side deck section: ({SideSubset_printer})",
-            "translation": "Side deck section: ({SideSubset_printer})",
+            "id": "Enter name and connect",
+            "message": "Enter name and connect",
+            "translation": "Enter name and connect",
             "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "SideSubset_printer",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "TranslateCards(*g.SideSubset(), printer)"
-                }
-            ],
             "fuzzy": true
         },
         {
-            "id": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "message": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
-            "translation": "The end - Callers: {ScoreTeam1}; Others: {ScoreTeam2}",
+            "id": "Side deck",
+            "message": "Side deck",
+            "translation": "Side deck",
             "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "ScoreTeam1",
-                    "string": "%[1]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 1,
-                    "expr": "scoreTeam1"
-                },
-                {
-                    "id": "ScoreTeam2",
-                    "string": "%[2]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 2,
-                    "expr": "scoreTeam2"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "Phase is not {Error} but {Phase}",
-            "message": "Phase is not {Error} but {Phase}",
-            "translation": "Phase is not {Error} but {Phase}",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Error",
-                    "string": "%[1]d",
-                    "type": "error",
-                    "underlyingType": "interface{Error() string}",
-                    "argNum": 1,
-                    "expr": "id"
-                },
-                {
-                    "id": "Phase",
-                    "string": "%[2]d",
-                    "type": "github.com/mcaci/msdb5/app/phase.ID",
-                    "underlyingType": "uint8",
-                    "argNum": 2,
-                    "expr": "g.Phase()"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "Expecting player {Name} to play",
-            "message": "Expecting player {Name} to play",
-            "translation": "Expecting player {Name} to play",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Name",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "g.CurrentPlayer().Name()"
-                }
-            ],
             "fuzzy": true
         },
         {
@@ -121,83 +51,33 @@
             "fuzzy": true
         },
         {
-            "id": "({Number} of {Seed})",
-            "message": "({Number} of {Seed})",
-            "translation": "({Number} of {Seed})",
+            "id": "Error",
+            "message": "Error",
+            "translation": "Error",
             "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Number",
-                    "string": "%[1]d",
-                    "type": "uint8",
-                    "underlyingType": "uint8",
-                    "argNum": 1,
-                    "expr": "c.Number()"
-                },
-                {
-                    "id": "Seed",
-                    "string": "%[2]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 2,
-                    "expr": "seeds[c.Seed()]"
-                }
-            ],
             "fuzzy": true
         },
         {
-            "id": "Game: (Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Last card: {TranslateCardc_printer}, Auction score: {AuctionScore}, Phase: {Phase_printer})",
-            "message": "Game: (Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Last card: {TranslateCardc_printer}, Auction score: {AuctionScore}, Phase: {Phase_printer})",
-            "translation": "Game: (Turn of: {Name}, Companion is: {Briscola_printer}, Played cards: {PlayedCards_printer}, Last card: {TranslateCardc_printer}, Auction score: {AuctionScore}, Phase: {Phase_printer})",
+            "id": "Expecting {Exp}, but found {Act}",
+            "message": "Expecting {Exp}, but found {Act}",
+            "translation": "Expecting {Exp}, but found {Act}",
             "translatorComment": "Copied from source.",
             "placeholders": [
                 {
-                    "id": "Name",
+                    "id": "Exp",
                     "string": "%[1]s",
                     "type": "string",
                     "underlyingType": "string",
                     "argNum": 1,
-                    "expr": "g.CurrentPlayer().Name()"
+                    "expr": "exp"
                 },
                 {
-                    "id": "Briscola_printer",
+                    "id": "Act",
                     "string": "%[2]s",
                     "type": "string",
                     "underlyingType": "string",
                     "argNum": 2,
-                    "expr": "TranslateCard(g.Briscola(), printer)"
-                },
-                {
-                    "id": "PlayedCards_printer",
-                    "string": "%[3]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 3,
-                    "expr": "TranslateCards(*g.PlayedCards(), printer)"
-                },
-                {
-                    "id": "TranslateCardc_printer",
-                    "string": "%[4]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 4,
-                    "expr": "TranslateCard(c, printer)"
-                },
-                {
-                    "id": "AuctionScore",
-                    "string": "%[5]d",
-                    "type": "github.com/mcaci/msdb5/dom/auction.Score",
-                    "underlyingType": "uint8",
-                    "argNum": 5,
-                    "expr": "*g.AuctionScore()"
-                },
-                {
-                    "id": "Phase_printer",
-                    "string": "%[6]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 6,
-                    "expr": "TranslatePhase(g.Phase(), printer)"
+                    "expr": "act"
                 }
             ],
             "fuzzy": true
@@ -245,6 +125,48 @@
             "fuzzy": true
         },
         {
+            "id": "Game",
+            "message": "Game",
+            "translation": "Game",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Turn of",
+            "message": "Turn of",
+            "translation": "Turn of",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Phase",
+            "message": "Phase",
+            "translation": "Phase",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Played cards",
+            "message": "Played cards",
+            "translation": "Played cards",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Last card",
+            "message": "Last card",
+            "translation": "Last card",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Auction score",
+            "message": "Auction score",
+            "translation": "Auction score",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Callers",
             "message": "Callers",
             "translation": "Callers",
@@ -259,84 +181,65 @@
             "fuzzy": true
         },
         {
-            "id": "The end - {Team} team has all briscola cards",
-            "message": "The end - {Team} team has all briscola cards",
-            "translation": "The end - {Team} team has all briscola cards",
+            "id": "The end",
+            "message": "The end",
+            "translation": "The end",
             "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Team",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "team"
-                }
-            ],
             "fuzzy": true
         },
         {
-            "id": "Player: (Name: {Name}, Cards: {Hand_seed_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
-            "message": "Player: (Name: {Name}, Cards: {Hand_seed_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
-            "translation": "Player: (Name: {Name}, Cards: {Hand_seed_printer}, Pile: {Pile_printer}, Has folded? {Foldedpl})",
+            "id": "have all briscola cards",
+            "message": "have all briscola cards",
+            "translation": "have all briscola cards",
             "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "Name",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "pl.Name()"
-                },
-                {
-                    "id": "Hand_seed_printer",
-                    "string": "%+[2]v",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 2,
-                    "expr": "TranslateHand(*pl.Hand(), seed, printer)"
-                },
-                {
-                    "id": "Pile_printer",
-                    "string": "%+[3]v",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 3,
-                    "expr": "TranslateCards(*pl.Pile(), printer)"
-                },
-                {
-                    "id": "Foldedpl",
-                    "string": "%[4]t",
-                    "type": "bool",
-                    "underlyingType": "bool",
-                    "argNum": 4,
-                    "expr": "player.Folded(pl)"
-                }
-            ],
             "fuzzy": true
         },
         {
-            "id": "Side deck: {SideDeck_printer}",
-            "message": "Side deck: {SideDeck_printer}",
-            "translation": "Side deck: {SideDeck_printer}",
+            "id": "Player",
+            "message": "Player",
+            "translation": "Player",
             "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "SideDeck_printer",
-                    "string": "%[1]s",
-                    "type": "string",
-                    "underlyingType": "string",
-                    "argNum": 1,
-                    "expr": "TranslateCards(*gameInfo.SideDeck(), printer)"
-                }
-            ],
             "fuzzy": true
         },
         {
-            "id": "Enter name and connect",
-            "message": "Enter name and connect",
-            "translation": "Enter name and connect",
+            "id": "Name",
+            "message": "Name",
+            "translation": "Name",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Cards",
+            "message": "Cards",
+            "translation": "Cards",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Pile",
+            "message": "Pile",
+            "translation": "Pile",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Has folded",
+            "message": "Has folded",
+            "translation": "Has folded",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Yes",
+            "message": "Yes",
+            "translation": "Yes",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "No",
+            "message": "No",
+            "translation": "No",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         }

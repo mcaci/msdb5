@@ -88,7 +88,7 @@ func (r *GameRoom) joinWith(socket *websocket.Conn) *playerClient {
 		room:        r,
 	}
 	r.join <- player
-	printer := message.NewPrinter(r.lang)
-	player.infoChannel <- []byte(printer.Sprintf("Enter name and connect"))
+	p := message.NewPrinter(r.lang)
+	player.infoChannel <- []byte(p.Sprintf("Enter name and connect"))
 	return player
 }
