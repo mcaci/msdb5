@@ -6,9 +6,10 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/app/game/start"
 	"github.com/mcaci/msdb5/app/game/track"
-	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -31,8 +32,8 @@ type Game struct {
 // NewGame func
 func NewGame(withSide bool) *Game {
 	g := new(Game)
-	makePlayers(g)
-	distributeCards(g, withSide)
+	start.Players(&g.players)
+	start.Distribute(g, withSide)
 	track.Player(&g.lastPlaying, g.players[0])
 	return g
 }

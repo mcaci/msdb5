@@ -36,8 +36,8 @@ func fakeGameSetup() *lastPlayerTestStr {
 
 func TestCompletedGameReturningScoreInfoWithSide(t *testing.T) {
 	gameTest := fakeGameSetup()
-	lastPl := LastPlayer(gameTest, gameTest.players)
-	if lastPl.Name() != "2" {
+	lastPl := LastPlayer(*set.NewMust(1), gameTest.players, gameTest.players[0])
+	if lastPl.Name() != "0" {
 		t.Fatalf("Last player should be: %v", lastPl)
 	}
 }

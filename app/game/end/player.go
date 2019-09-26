@@ -12,11 +12,11 @@ type currentPlayerCardsProvider interface {
 }
 
 // LastPlayer func
-func LastPlayer(g currentPlayerCardsProvider, players team.Players) *player.Player {
-	for _, c := range *g.Cards() {
+func LastPlayer(cards set.Cards, players team.Players, curr *player.Player) *player.Player {
+	for _, c := range cards {
 		if _, p := players.Find(player.IsCardInHand(c)); p != nil {
 			return p
 		}
 	}
-	return g.CurrentPlayer()
+	return curr
 }

@@ -43,17 +43,16 @@ func (g *Game) Process(inputRequest, origin string) Round {
 	nextPl := next.Player(plInfo)
 	track.Player(g.LastPlaying(), nextPl)
 	if g.Phase() == phase.PlayingCards && len(*g.PlayedCards()) == 5 {
-		end.Collect(end.NewCollectInfo(g.CurrentPlayer(), g.PlayedCards()))
+		end.Collect(g.CurrentPlayer(), g.PlayedCards())
 	}
 
 	// end game: last round winner collects all cards
 	if g.phase == phase.End {
-		lastPl := end.LastPlayer(end.NewCollectInfo(g.CurrentPlayer(), g.PlayedCards()), g.Players())
+		lastPl := end.LastPlayer(*g.PlayedCards(), g.Players(), g.CurrentPlayer())
 		track.Player(g.LastPlaying(), lastPl)
-		end.Collect(end.NewCollectInfo(g.CurrentPlayer(), g.PlayedCards()))
-		end.Collect(end.NewCollectInfo(g.CurrentPlayer(), g.SideDeck()))
+		end.Collect(g.CurrentPlayer(), g.PlayedCards(), g.SideDeck())
 		for _, p := range g.Players() {
-			end.Collect(end.NewCollectInfo(g.CurrentPlayer(), p.Hand()))
+			end.Collect(g.CurrentPlayer(), p.Hand())
 		}
 	}
 	return Round{Game: g, req: inputRequest}
