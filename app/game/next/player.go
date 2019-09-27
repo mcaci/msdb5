@@ -38,6 +38,22 @@ func Player(g nextPlayerInformer) *player.Player {
 		}
 		winningCardIndex := indexOfWinningCard(*g.PlayedCards(), g.Briscola().Seed())
 		nextPlayer = playersRoundRobin(playerIndex + winningCardIndex)
+	case phase.End:
+		if g.IsRoundOngoing() {
+			break
+		}
+		if !player.IsHandEmpty(g.Players()[nextPlayer]) {
+			highbriscolaCard := serie(g.Briscola().Seed())
+			for _, card := range highbriscolaCard {
+				if g.Players().None(player.IsCardInHand(card)) { // no one has card
+					continue
+				}
+				lastPlayerIndex, _ := g.Players().Find(player.IsCardInHand(card))
+				nextPlayer = uint8(lastPlayerIndex)
+			}
+		}
+		winningCardIndex := indexOfWinningCard(*g.PlayedCards(), g.Briscola().Seed())
+		nextPlayer = playersRoundRobin(playerIndex + winningCardIndex)
 	}
 	return g.Players()[nextPlayer]
 }
