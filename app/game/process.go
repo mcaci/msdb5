@@ -1,6 +1,7 @@
 package game
 
 import (
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/game/action"
 	"github.com/mcaci/msdb5/app/game/end"
 	"github.com/mcaci/msdb5/app/game/next"
@@ -10,50 +11,40 @@ import (
 
 // Process func
 func (g *Game) Process(inputRequest, origin string) Round {
-	// verify phase step
+	// verify phase
 	phInfo := phase.NewInfo(g.Phase(), parse(inputRequest, com))
 	err := phase.Check(phInfo)
 	if err != nil {
 		return Round{Game: g, req: inputRequest, rErr: err}
 	}
 
-	// verify player step
+	// verify player
 	es := action.NewExpectedSender(g.Players(), origin, g.CurrentPlayer())
 	err = action.CheckOrigin(es)
 	if err != nil {
 		return Round{Game: g, req: inputRequest, rErr: err}
 	}
 
-	// play step
+	// play
 	gInfo := Round{Game: g, req: inputRequest}
 	err = action.Play(gInfo)
 	if err != nil {
 		return Round{Game: g, req: inputRequest, rErr: err}
 	}
 
-	// end round: next phase
+	// next phase
 	startPhase := g.Phase()
 	nextPhInfo := next.NewPhInfo(startPhase, g.Players(), g.Briscola(), g.IsSideUsed(),
 		g.Caller(), g.Companion(), len(*g.PlayedCards()) == 5, parse(inputRequest, val))
 	g.setPhase(next.Phase(nextPhInfo))
 
-	// end round: next player
-	plInfo := next.NewPlInfo(startPhase, g.Players(), g.Briscola(),
-		g.PlayedCards(), len(*g.PlayedCards()) < 5, origin)
+	// next player
+	plInfo := next.NewPlInfo(startPhase, g.Players(), g.Briscola(), g.PlayedCards(), origin)
 	nextPl := next.Player(plInfo)
 	track.Player(g.LastPlaying(), nextPl)
-	if g.Phase() == phase.PlayingCards && len(*g.PlayedCards()) == 5 {
-		end.Collect(g.CurrentPlayer(), g.PlayedCards())
-	}
 
-	// end game: last round winner collects all cards
-	if g.phase == phase.End {
-		lastPl := end.LastPlayer(*g.PlayedCards(), g.Players(), g.CurrentPlayer())
-		track.Player(g.LastPlaying(), lastPl)
-		end.Collect(g.CurrentPlayer(), g.PlayedCards(), g.SideDeck())
-		for _, p := range g.Players() {
-			end.Collect(g.CurrentPlayer(), p.Hand())
-		}
-	}
+	// collect cards
+	cardToCollect := end.Collector(g.Phase(), g.Players(), g.SideDeck(), g.PlayedCards())
+	set.Move(cardToCollect(), g.CurrentPlayer().Pile())
 	return Round{Game: g, req: inputRequest}
 }

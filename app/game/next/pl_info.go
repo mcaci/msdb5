@@ -13,18 +13,15 @@ type PlInfo struct {
 	briscolaCard card.Item
 	players      team.Players
 	playedCards  *set.Cards
-	roundOngoing bool
 	fromInput    string
 }
 
-func NewPlInfo(ph phase.ID, pls team.Players, briscola card.Item, plCards *set.Cards,
-	isRound bool, frInput string) *PlInfo {
-	return &PlInfo{phase: ph, players: pls, playedCards: plCards, fromInput: frInput,
-		briscolaCard: briscola, roundOngoing: isRound}
+func NewPlInfo(ph phase.ID, pls team.Players, briscola card.Item, plCards *set.Cards, frInput string) *PlInfo {
+	return &PlInfo{phase: ph, players: pls, playedCards: plCards, fromInput: frInput, briscolaCard: briscola}
 }
 
 func (nx PlInfo) Briscola() card.Item     { return nx.briscolaCard }
-func (nx PlInfo) IsRoundOngoing() bool    { return nx.roundOngoing }
+func (nx PlInfo) IsRoundOngoing() bool    { return len(*nx.playedCards) < 5 }
 func (nx PlInfo) Phase() phase.ID         { return nx.phase }
 func (nx PlInfo) PlayedCards() *set.Cards { return nx.playedCards }
 func (nx PlInfo) Players() team.Players   { return nx.players }
