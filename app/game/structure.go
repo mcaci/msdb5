@@ -33,7 +33,7 @@ type Game struct {
 func NewGame(withSide bool) *Game {
 	g := new(Game)
 	start.Players(&g.players)
-	start.Distribute(g, withSide)
+	start.DistributeAll(g, withSide)
 	track.Player(&g.lastPlaying, g.players[0])
 	return g
 }

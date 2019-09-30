@@ -1,10 +1,7 @@
 package start
 
 import (
-	"container/list"
-
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/app/game/track"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -15,19 +12,14 @@ func Players(pls *team.Players) {
 	}
 }
 
-func Distribute(g interface {
-	CurrentPlayer() *player.Player
-	LastPlaying() *list.List
-	Players() team.Players
-	SideDeck() *set.Cards
-}, withSide bool) {
+func DistributeAll(g interface{ Players() team.Players }, withSide bool) *set.Cards {
 	d := set.Deck()
 	for i := 0; i < set.DeckSize; i++ {
 		if withSide && i >= set.DeckSize-5 {
-			g.SideDeck().Add(d.Top())
+			break
 		} else {
-			track.Player(g.LastPlaying(), g.Players()[i%5])
-			g.CurrentPlayer().Hand().Add(d.Top())
+			g.Players()[i%5].Hand().Add(d.Top())
 		}
 	}
+	return &d
 }
