@@ -5,8 +5,8 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
@@ -38,7 +38,7 @@ func (gs fakeGameStructure) SetCaller(pred player.Predicate) {
 	gs.caller = call
 }
 func (gs fakeGameStructure) SetCompanion(comp *player.Player) { gs.companion = comp }
-func (gs fakeGameStructure) SetShowSide(bool, uint8)          {}
+func (gs fakeGameStructure) SetShowSide(uint8)                {}
 
 func (gs fakeGameStructure) Card() (*card.Item, error) { return gs.c, nil }
 func (gs fakeGameStructure) Value() string             { return gs.str }

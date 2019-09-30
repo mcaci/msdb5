@@ -16,7 +16,7 @@ type auctionData struct {
 	score         *auction.Score
 	update        func(auction.Score)
 	side          *set.Cards
-	setShowSide   func(bool, uint8)
+	setShowSide   func(uint8)
 	setCaller     func(player.Predicate)
 }
 
@@ -30,7 +30,7 @@ func (a auctionData) valueSet(val string) {
 	a.update(newScore)
 
 	if len(*a.side) > 0 {
-		a.setShowSide(len(*a.side) > 0, sideCards(uint8(newScore)))
+		a.setShowSide(sideCards(uint8(newScore)))
 	}
 
 	if newScore >= 120 {

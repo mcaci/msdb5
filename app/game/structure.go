@@ -54,8 +54,8 @@ func (g *Game) IsSideToShow() bool            { return g.isToShow && g.phase == 
 func (g *Game) SideSubset() *set.Cards        { return &g.sideSubset }
 
 func (g *Game) SetAuction(s auction.Score) { g.auctionScore = s }
-func (g *Game) SetShowSide(isToShow bool, quantity uint8) {
-	g.isToShow = isToShow
+func (g *Game) SetShowSide(quantity uint8) {
+	g.isToShow = quantity > 0
 	g.sideSubset = g.side[:quantity]
 }
 func (g *Game) SetBriscola(c *card.Item) { g.briscolaCard = *c }
