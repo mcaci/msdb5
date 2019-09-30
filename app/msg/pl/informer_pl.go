@@ -7,7 +7,6 @@ import (
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/msg/score"
-	"github.com/mcaci/msdb5/app/msg/sender"
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
@@ -39,7 +38,8 @@ func ToPls(g plInformer, printer *message.Printer, inputRequest, origin string) 
 
 	rErr := g.RoundError()
 	if rErr != nil {
-		s := sender.Info(sender.New(origin, g.Players()))
+		senderPred := player.MatchingHost(origin)
+		_, s := g.Players().Find(senderPred)
 		io.WriteString(s, TranslateGameStatus(g, printer))
 		io.WriteString(s, translatePlayer(g.CurrentPlayer(), g.Briscola(), printer))
 		errMsg := translateErr(g, printer, inputRequest, rErr)
