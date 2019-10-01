@@ -19,8 +19,7 @@ type roundInformer interface {
 	Players() team.Players
 
 	AuctionScore() *auction.Score
-	Caller() *player.Player
-	Companion() *player.Player
+	team.Callers
 	LastPlayer() *player.Player
 	PlayedCard() card.Item
 	PlayedCards() *set.Cards

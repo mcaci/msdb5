@@ -9,12 +9,12 @@ import (
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 )
 
 type mlInformer interface {
 	AuctionScore() *auction.Score
-	Caller() *player.Player
-	Companion() *player.Player
+	team.Callers
 	CurrentPlayer() *player.Player
 	LastPlayer() *player.Player
 	PlayedCard() card.Item

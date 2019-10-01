@@ -15,12 +15,12 @@ import (
 )
 
 type plInformer interface {
+	team.Callers
+
 	CurrentPlayer() *player.Player
 	Players() team.Players
 
 	AuctionScore() *auction.Score
-	Caller() *player.Player
-	Companion() *player.Player
 	LastPlayer() *player.Player
 	PlayedCard() card.Item
 	PlayedCards() *set.Cards

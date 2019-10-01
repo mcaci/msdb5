@@ -10,12 +10,11 @@ import (
 
 type phaseInformationProvider interface {
 	Briscola() card.Item
-	Caller() *player.Player
-	Companion() *player.Player
 	IsNewRoundToStart() bool
 	IsSideUsed() bool
 	Phase() phase.ID
 	Players() team.Players
+	team.Callers
 	ExchangeInput() string
 }
 

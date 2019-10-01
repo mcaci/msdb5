@@ -14,10 +14,9 @@ import (
 type osInformer interface {
 	CurrentPlayer() *player.Player
 	Players() team.Players
-
-	Caller() *player.Player
-	Companion() *player.Player
 	Phase() phase.ID
+
+	team.Callers
 
 	RoundError() error
 }
