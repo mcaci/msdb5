@@ -66,8 +66,7 @@ func predict(g phaseInformationProvider, roundsBefore uint8) bool {
 			continue
 		}
 		_, p := g.Players().Find(player.IsCardInHand(card))
-		matching := player.Matching(p)
-		isPlayerInTeam1 := matching(g.Caller()) || matching(g.Companion())
+		isPlayerInTeam1 := team.IsInCallers(g, p)
 		teams[0] = teams[0] || isPlayerInTeam1
 		teams[1] = teams[1] || !isPlayerInTeam1
 		if teams[0] == teams[1] {
