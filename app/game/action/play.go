@@ -1,45 +1,88 @@
 package action
 
 import (
-	"github.com/mcaci/ita-cards/card"
-	"github.com/mcaci/ita-cards/set"
+	"errors"
+	"strconv"
+
 	"github.com/mcaci/msdb5/dom/auction"
 	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
 )
 
-type gamePlayer interface {
-	CurrentPlayer() *player.Player
-	Players() team.Players
-
-	AuctionScore() *auction.Score
-	PlayedCards() *set.Cards
-	Phase() phase.ID
-	SideDeck() *set.Cards
-	SetAuction(auction.Score)
-	SetBriscola(*card.Item)
-	SetCaller(player.Predicate)
-	SetCompanion(*player.Player)
-	SetShowSide(uint8)
-	Card() (*card.Item, error)
-	Value() string
-}
-
 // Play func
 func Play(g gamePlayer) error {
+	var errCardNotInHand = errors.New("Card not in hand")
 	var err error
 	switch g.Phase() {
 	case phase.Joining:
-		singleValueAction(g, joinData{g.CurrentPlayer()})
+		g.CurrentPlayer().RegisterAs(g.Value())
 	case phase.InsideAuction:
-		singleValueAction(g, auctionData{g.CurrentPlayer(), g.Players(), g.AuctionScore(), g.SetAuction, g.SideDeck(), g.SetShowSide, g.SetCaller})
+		score, err := strconv.Atoi(g.Value())
+		toFold := player.Folded(g.CurrentPlayer()) || err != nil || !auction.CheckScores(*g.AuctionScore(), auction.Score(score))
+		if toFold {
+			g.CurrentPlayer().Fold()
+		}
+		newScore := auction.Update(*g.AuctionScore(), auction.Score(score))
+		g.SetAuction(newScore)
+		if len(*g.SideDeck()) > 0 {
+			quantity := uint8(newScore/90 + newScore/100 + newScore/110 + newScore/120 + newScore/120)
+			g.SetShowSide(quantity)
+		}
+		if newScore >= 120 {
+			for _, p := range g.Players() {
+				if p == g.CurrentPlayer() {
+					continue
+				}
+				p.Fold()
+			}
+		}
+		notFolded := func(p *player.Player) bool { return !player.Folded(p) }
+		if team.Count(g.Players(), notFolded) == 1 {
+			g.SetCaller(notFolded)
+		}
 	case phase.ExchangingCards:
-		err = cardAction(g, exchangeData{g.SideDeck(), g.Players()})
+		if g.Value() == "0" {
+			return nil
+		}
+		c, err := g.Card()
+		idx, pl := g.Players().Find(player.IsCardInHand(*c))
+		if err == nil && idx < 0 {
+			return errCardNotInHand
+		}
+		cards := pl.Hand()
+		index := cards.Find(*c)
+		toCards := g.SideDeck()
+		awayCard := (*cards)[index]
+		(*cards)[index] = (*toCards)[0]
+		*toCards = append((*toCards)[1:], awayCard)
+		return nil
 	case phase.ChoosingCompanion:
-		err = cardAction(g, companionData{g.SetBriscola, g.SetCompanion, g.Players()})
+		if g.Value() == "0" {
+			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
+		}
+		c, err := g.Card()
+		idx, pl := g.Players().Find(player.IsCardInHand(*c))
+		if err == nil && idx < 0 {
+			return errCardNotInHand
+		}
+		g.SetBriscola(c)
+		g.SetCompanion(pl)
+		return nil
 	case phase.PlayingCards:
-		err = cardAction(g, playCardData{g.PlayedCards(), g.Players()})
+		if g.Value() == "0" {
+			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
+		}
+		c, err := g.Card()
+		idx, pl := g.Players().Find(player.IsCardInHand(*c))
+		if err == nil && idx < 0 {
+			return errCardNotInHand
+		}
+		cards := pl.Hand()
+		index := cards.Find(*c)
+		g.PlayedCards().Add((*cards)[index])
+		*cards = append((*cards)[:index], (*cards)[index+1:]...)
+		return nil
 	}
 	return err
 }
