@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/msdb5/app/game/input"
 )
 
 type Round struct {
@@ -20,7 +21,7 @@ func (g Round) Card() (*card.Item, error) {
 	}
 	return nil, fmt.Errorf("not enough data to make a card: %s", g.req)
 }
-func (g Round) Value() string     { return parse(g.req, val) }
+func (g Round) Value() string     { return input.Parse(g.req, input.Val) }
 func (g Round) RoundError() error { return g.rErr }
 func (g Round) PlayedCard() card.Item {
 	c, err := g.Card()

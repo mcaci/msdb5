@@ -1,4 +1,4 @@
-package game
+package input
 
 import (
 	"strings"
@@ -7,11 +7,11 @@ import (
 type act uint8
 
 const (
-	com act = iota
-	val
+	Com act = iota
+	Val
 )
 
-func parse(request string, a act) (parsed string) {
+func Parse(request string, a act) (parsed string) {
 	fields := strings.Split(request, "#")
 	if len(fields) > int(a) {
 		parsed = fields[a]
