@@ -64,8 +64,7 @@ func ToPls(g plInformer, printer *message.Printer, inputRequest, origin string) 
 	endMsg := translateTeam(g.CurrentPlayer(), g, printer)
 	sendToPlayers(g, endMsg)
 	// compute score
-	t1, t2 := team.Part(g.Players(), team.IsInCallersPred(g))
-
+	t1, t2 := g.Players().Part(team.IsInCallersPred(g))
 	scoreMsg := fmt.Sprintf("%s: [%s: %d], [%s: %d]", endRef(printer),
 		teams(printer, 0), score.Sum(team.CommonPile(t1)),
 		teams(printer, 1), score.Sum(team.CommonPile(t2)))

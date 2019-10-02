@@ -41,3 +41,15 @@ func (playerSet Players) None(predicate player.Predicate) bool {
 	}
 	return true
 }
+
+// Part func
+func (playerSet Players) Part(pred player.Predicate) (t1, t2 Players) {
+	for _, p := range playerSet {
+		if pred(p) {
+			t1.Add(p)
+			continue
+		}
+		t2.Add(p)
+	}
+	return
+}
