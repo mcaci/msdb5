@@ -7,17 +7,10 @@ import (
 	"github.com/mcaci/msdb5/dom/player"
 )
 
-type mockCallers struct {
-	call *player.Player
-}
-
-func (m mockCallers) Caller() *player.Player  { return m.call }
-func (mockCallers) Companion() *player.Player { return player.New() }
-
 func TestTeamCallers(t *testing.T) {
 	fakePlayer := player.New()
 	fakePlayer.Pile().Add(*set.NewMust(1)...)
-	if !IsInCallers(mockCallers{fakePlayer}, fakePlayer) {
+	if !IsInCallers(NewCallers(fakePlayer), fakePlayer) {
 		t.Fatal("Player should be in Callers")
 	}
 }
@@ -25,7 +18,7 @@ func TestTeamCallers(t *testing.T) {
 func TestTeamOthers(t *testing.T) {
 	fakePlayer := player.New()
 	fakePlayer.Pile().Add(*set.NewMust(1)...)
-	if IsInCallers(mockCallers{}, fakePlayer) {
+	if IsInCallers(NewEmptyCallers(), fakePlayer) {
 		t.Fatal("Player should be in Others")
 	}
 }
