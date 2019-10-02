@@ -23,3 +23,8 @@ func IsInCallers(g Callers, p *player.Player) bool {
 	matching := player.Matching(p)
 	return matching(g.Caller()) || matching(g.Companion())
 }
+
+// IsInCallersPred func
+func IsInCallersPred(g Callers) player.Predicate {
+	return func(p *player.Player) bool { return IsInCallers(g, p) }
+}

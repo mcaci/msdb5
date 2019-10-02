@@ -35,8 +35,8 @@ func Write(g osInformer, inputRequest, origin string) {
 	io.WriteString(os.Stdout, senderInfo)
 
 	// compute score
-	scoreTeam1, scoreTeam2 := score.Calc(g, g.Players())
-	scoreMsg := fmt.Sprintf("Scores -> Callers: %d; Others: %d\n", scoreTeam1, scoreTeam2)
+	t1, t2 := team.Part(g.Players(), team.IsInCallersPred(g))
+	scoreMsg := fmt.Sprintf("Scores -> Callers: %d; Others: %d\n", score.Sum(team.CommonPile(t1)), score.Sum(team.CommonPile(t2)))
 	io.WriteString(os.Stdout, scoreMsg)
 }
 

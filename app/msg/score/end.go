@@ -1,19 +1,14 @@
 package score
 
 import (
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/dom/briscola"
-	"github.com/mcaci/msdb5/dom/team"
 )
 
-// Calc func
-func Calc(g team.Callers, players team.Players) (totalTeam1, totalTeam2 uint8) {
-	for _, p := range players {
-		score := p.Pile().Sum(briscola.Points)
-		if team.IsInCallers(g, p) {
-			totalTeam1 += score
-			continue
-		}
-		totalTeam2 += score
+// Sum func
+func Sum(hand set.Cards) (sum uint8) {
+	for _, c := range hand {
+		sum += briscola.Points(c)
 	}
 	return
 }
