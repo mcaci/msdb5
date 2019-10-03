@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/msdb5/app/game/start"
 	"github.com/mcaci/msdb5/dom/phase"
 )
 
@@ -11,11 +12,11 @@ func fakeGameSetup(withSide bool) *Game {
 	gameTest := fakeGame(withSide)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
-	gameTest.Join("127.0.0.51", playerChannel)
-	gameTest.Join("127.0.0.52", playerChannel)
-	gameTest.Join("127.0.0.53", playerChannel)
-	gameTest.Join("127.0.0.54", playerChannel)
-	gameTest.Join("127.0.0.55", playerChannel)
+	start.Join(gameTest, "127.0.0.51", playerChannel)
+	start.Join(gameTest, "127.0.0.52", playerChannel)
+	start.Join(gameTest, "127.0.0.53", playerChannel)
+	start.Join(gameTest, "127.0.0.54", playerChannel)
+	start.Join(gameTest, "127.0.0.55", playerChannel)
 	if withSide {
 		gameTest.side.Clear()
 		gameTest.side.Add(*card.MustID(31))

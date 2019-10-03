@@ -9,6 +9,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/mcaci/msdb5/app/game"
+	"github.com/mcaci/msdb5/app/game/start"
 	"github.com/mcaci/msdb5/app/msg"
 )
 
@@ -24,7 +25,7 @@ type GameRoom struct {
 	// players holds all current players in this room.
 	players map[*playerClient]bool
 	// msdb5 game instance
-	msdb5game Action
+	msdb5game *game.Game
 	// lang language tag
 	lang language.Tag
 }
@@ -81,7 +82,7 @@ func (r *GameRoom) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 func (r *GameRoom) joinWith(socket *websocket.Conn) *playerClient {
 	playerChannel := make(chan []byte, messageBufferSize)
-	r.msdb5game.Join(socket.RemoteAddr().String(), playerChannel)
+	start.Join(r.msdb5game, socket.RemoteAddr().String(), playerChannel)
 	player := &playerClient{
 		socket:      socket,
 		infoChannel: playerChannel,
