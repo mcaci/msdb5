@@ -45,7 +45,7 @@ func (g *Game) Process(inputRequest, origin string) Round {
 	track.Player(g.LastPlaying(), nextPl)
 
 	// collect cards
-	cardToCollect := end.Collector(g.Phase(), g.Players(), g.SideDeck(), g.PlayedCards())
+	cardToCollect := end.Collector(g, g.Players(), g.SideDeck(), g.PlayedCards())
 	set.Move(cardToCollect(), g.CurrentPlayer().Pile())
 	return Round{Game: g, req: inputRequest}
 }
