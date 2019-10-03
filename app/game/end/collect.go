@@ -7,14 +7,17 @@ import (
 )
 
 // Collector func
-func Collector(ph phase.ID, all team.Players, side *set.Cards, played *set.Cards) func() *set.Cards {
-	if ph == phase.PlayingCards && len(*played) == 5 {
-		return func() *set.Cards { return played }
+func Collector(g interface{ Phase() phase.ID }, all team.Players, side *set.Cards, played *set.Cards) (collector func() *set.Cards) {
+	collector = func() *set.Cards { return &set.Cards{} }
+	switch g.Phase() {
+	case phase.PlayingCards:
+		if len(*played) == 5 {
+			collector = func() *set.Cards { return played }
+		}
+	case phase.End:
+		collector = allCards{all, side, played}.leftInGame
 	}
-	if ph == phase.End {
-		return allCards{all, side, played}.leftInGame
-	}
-	return func() *set.Cards { return &set.Cards{} }
+	return
 }
 
 type allCards struct {
