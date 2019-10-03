@@ -3,9 +3,9 @@ package team
 import "github.com/mcaci/ita-cards/set"
 
 // CommonPile func
-func CommonPile(pls Players) set.Cards {
+func CommonPile(players Players) set.Cards {
 	pile := make(set.Cards, 0)
-	for _, p := range pls {
+	for _, p := range players {
 		pile.Add(*p.Pile()...)
 	}
 	return pile
