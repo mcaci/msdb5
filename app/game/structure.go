@@ -16,17 +16,15 @@ import (
 
 // Game struct
 type Game struct {
-	lastPlaying  list.List
-	players      team.Players
-	caller       *player.Player
-	companion    *player.Player
-	briscolaCard card.Item
-	side         set.Cards
-	playedCards  set.Cards
-	auctionScore auction.Score
-	phase        phase.ID
-	isToShow     bool
-	sideSubset   set.Cards
+	lastPlaying       list.List
+	players           team.Players
+	caller, companion *player.Player
+	briscolaCard      card.Item
+	side, playedCards set.Cards
+	auctionScore      auction.Score
+	phase             phase.ID
+	isToShow          bool
+	sideSubset        set.Cards
 }
 
 // NewGame func

@@ -3,7 +3,6 @@ package game
 import (
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/app/game/action"
-	"github.com/mcaci/msdb5/app/game/end"
 	"github.com/mcaci/msdb5/app/game/input"
 	"github.com/mcaci/msdb5/app/game/track"
 	"github.com/mcaci/msdb5/dom/phase"
