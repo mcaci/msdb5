@@ -1,4 +1,4 @@
-package next
+package action
 
 import (
 	"fmt"

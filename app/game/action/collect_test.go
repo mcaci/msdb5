@@ -1,4 +1,4 @@
-package end
+package action
 
 import (
 	"testing"

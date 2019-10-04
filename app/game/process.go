@@ -5,7 +5,6 @@ import (
 	"github.com/mcaci/msdb5/app/game/action"
 	"github.com/mcaci/msdb5/app/game/end"
 	"github.com/mcaci/msdb5/app/game/input"
-	"github.com/mcaci/msdb5/app/game/next"
 	"github.com/mcaci/msdb5/app/game/track"
 	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/team"
@@ -35,17 +34,17 @@ func (g *Game) Process(inputRequest, origin string) Round {
 
 	// next phase
 	startPhase := g.Phase()
-	nextPhInfo := next.NewPhInfo(startPhase, g.Players(), g.Briscola(), g.IsSideUsed(),
+	nextPhInfo := action.NewPhInfo(startPhase, g.Players(), g.Briscola(), g.IsSideUsed(),
 		g.Caller(), g.Companion(), len(*g.PlayedCards()) == 5, input.Parse(inputRequest, input.Val))
-	g.setPhase(next.Phase(nextPhInfo))
+	g.setPhase(action.Phase(nextPhInfo))
 
 	// next player
-	plInfo := next.NewPlInfo(startPhase, g.Players(), g.Briscola(), g.PlayedCards(), origin)
-	nextPl := next.Player(plInfo)
+	plInfo := action.NewPlInfo(startPhase, g.Players(), g.Briscola(), g.PlayedCards(), origin)
+	nextPl := action.Player(plInfo)
 	track.Player(g.LastPlaying(), nextPl)
 
 	// collect cards
-	cardToCollect := end.Collector(g, g.Players(), g.SideDeck(), g.PlayedCards())
+	cardToCollect := action.Collector(g, g.Players(), g.SideDeck(), g.PlayedCards())
 	set.Move(cardToCollect(), g.CurrentPlayer().Pile())
 	return Round{Game: g, req: inputRequest}
 }

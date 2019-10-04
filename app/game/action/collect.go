@@ -1,4 +1,4 @@
-package end
+package action
 
 import (
 	"github.com/mcaci/ita-cards/set"
