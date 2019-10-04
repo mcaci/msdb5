@@ -39,7 +39,7 @@ func ToPls(g plInformer, printer *message.Printer, inputRequest, origin string) 
 	rErr := g.RoundError()
 	if rErr != nil {
 		senderPred := player.MatchingHost(origin)
-		_, s := g.Players().Find(senderPred)
+		s := g.Players().At(g.Players().MustFind(senderPred))
 		io.WriteString(s, TranslateGameStatus(g, printer))
 		io.WriteString(s, translatePlayer(g.CurrentPlayer(), g.Briscola(), printer))
 		errMsg := translateErr(g, printer, inputRequest, rErr)

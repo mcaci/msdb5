@@ -30,7 +30,7 @@ func Write(g osInformer, inputRequest, origin string) {
 		return
 	}
 	senderPred := player.MatchingHost(origin)
-	_, s := g.Players().Find(senderPred)
+	s := g.Players().At(g.Players().MustFind(senderPred))
 	senderInfo := fmt.Sprintf("New Action by %s: %s\nSender info: %+v\nGame info: %+v\n", s.Name(), inputRequest, s, g)
 	io.WriteString(os.Stdout, senderInfo)
 

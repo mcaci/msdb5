@@ -22,22 +22,21 @@ type nextPlayerInformer interface {
 func Player(g nextPlayerInformer) *player.Player {
 	numberOfPlayers := uint8(len(g.Players()))
 	playersRoundRobin := func(playerIndex uint8) uint8 { return (playerIndex + 1) % numberOfPlayers }
-	index, _ := g.Players().Find(player.MatchingHost(g.FromInput()))
-	playerIndex := uint8(index)
-	nextPlayer := playersRoundRobin(playerIndex)
+	index, _ := g.Players().Index(player.MatchingHost(g.FromInput()))
+	nextPlayer := playersRoundRobin(index)
 	switch g.Phase() {
 	case phase.InsideAuction:
 		for player.Folded(g.Players()[nextPlayer]) {
 			nextPlayer = playersRoundRobin(nextPlayer)
 		}
 	case phase.ChoosingCompanion, phase.ExchangingCards:
-		nextPlayer = playerIndex
+		nextPlayer = index
 	case phase.PlayingCards:
 		if g.IsRoundOngoing() {
 			break
 		}
 		winningCardIndex := indexOfWinningCard(*g.PlayedCards(), g.Briscola().Seed())
-		nextPlayer = playersRoundRobin(playerIndex + winningCardIndex)
+		nextPlayer = playersRoundRobin(nextPlayer + winningCardIndex)
 	case phase.End:
 		if g.IsRoundOngoing() {
 			break
@@ -45,15 +44,15 @@ func Player(g nextPlayerInformer) *player.Player {
 		if !player.IsHandEmpty(g.Players()[nextPlayer]) {
 			highbriscolaCard := serie(g.Briscola().Seed())
 			for _, card := range highbriscolaCard {
-				if g.Players().None(player.IsCardInHand(card)) { // no one has card
+				i, err := g.Players().Index(player.IsCardInHand(card))
+				if err != nil { // no one has card
 					continue
 				}
-				lastPlayerIndex, _ := g.Players().Find(player.IsCardInHand(card))
-				nextPlayer = uint8(lastPlayerIndex)
+				nextPlayer = i
 			}
 		}
 		winningCardIndex := indexOfWinningCard(*g.PlayedCards(), g.Briscola().Seed())
-		nextPlayer = playersRoundRobin(playerIndex + winningCardIndex)
+		nextPlayer = playersRoundRobin(nextPlayer + winningCardIndex)
 	}
 	return g.Players()[nextPlayer]
 }

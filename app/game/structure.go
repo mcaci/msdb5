@@ -58,13 +58,10 @@ func (g *Game) SetShowSide(quantity uint8) {
 	g.isToShow = quantity > 0
 	g.sideSubset = g.side[:quantity]
 }
-func (g *Game) SetBriscola(c *card.Item) { g.briscolaCard = *c }
-func (g *Game) SetCaller(pred player.Predicate) {
-	_, pl := g.players.Find(pred)
-	g.caller = pl
-}
-func (g *Game) SetCompanion(pl *player.Player) { g.companion = pl }
-func (g *Game) setPhase(ph phase.ID)           { g.phase = ph }
+func (g *Game) SetBriscola(c *card.Item)        { g.briscolaCard = *c }
+func (g *Game) SetCaller(pred player.Predicate) { g.caller = g.players.At(g.players.MustFind(pred)) }
+func (g *Game) SetCompanion(pl *player.Player)  { g.companion = pl }
+func (g *Game) setPhase(ph phase.ID)            { g.phase = ph }
 
 func (g Game) String() string {
 	return fmt.Sprintf("(Turn of: %s, Companion is: %s, Played cards: %v, Auction score: %d, Phase: %s, Players: %v, Side Deck: %v, Last Players: %v)",

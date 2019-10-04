@@ -61,10 +61,11 @@ func predict(g phaseInformationProvider, roundsBefore uint8) bool {
 	var teams [2]bool
 	var cardsChecked uint8
 	for _, card := range highbriscolaCard {
-		if g.Players().None(player.IsCardInHand(card)) { // no one has card
+		i, err := g.Players().Index(player.IsCardInHand(card))
+		if err != nil { // no one has card
 			continue
 		}
-		_, p := g.Players().Find(player.IsCardInHand(card))
+		p := g.Players().At(i)
 		isPlayerInTeam1 := team.IsInCallers(g, p)
 		teams[0] = teams[0] || isPlayerInTeam1
 		teams[1] = teams[1] || !isPlayerInTeam1
