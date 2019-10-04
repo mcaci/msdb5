@@ -20,7 +20,7 @@ func init() {
 }
 
 func TestSuccessfulFindNoErr(t *testing.T) {
-	if _, p := testPlayers.Find(player.IsCardInHand(*card.MustID(33))); p == nil {
+	if _, err := testPlayers.Index(player.IsCardInHand(*card.MustID(33))); err != nil {
 		t.Fatal("Player not found with criteria player.IsCardInHand(33)")
 	}
 }
@@ -33,8 +33,8 @@ func TestSuccessfulFindWithNone(t *testing.T) {
 
 func TestSuccessfulFindDataCorresponds(t *testing.T) {
 	isPlayerACheck := func(p *player.Player) bool { return p.Name() == "A" }
-	if _, player := testPlayers.Find(isPlayerACheck); !isPlayerACheck(player) {
-		t.Fatalf("%s and %v are expected to be the same player", "A", player)
+	if p := testPlayers.At(testPlayers.MustFind(isPlayerACheck)); !isPlayerACheck(p) {
+		t.Fatalf("%s and %v are expected to be the same player", "A", p)
 	}
 }
 
@@ -51,7 +51,7 @@ func TestUnsuccessfulFindWithAll(t *testing.T) {
 }
 
 func TestUnsuccessfulFind(t *testing.T) {
-	if _, p := testPlayers.Find(player.IsCardInHand(*card.MustID(8))); p != nil {
+	if _, err := testPlayers.Index(player.IsCardInHand(*card.MustID(8))); err == nil {
 		t.Fatal("Player should not be found")
 	}
 }
