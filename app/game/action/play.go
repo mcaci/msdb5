@@ -12,7 +12,6 @@ import (
 
 // Play func
 func Play(g gamePlayer) error {
-	var errCardNotInHand = errors.New("Card not in hand")
 	var err error
 	switch g.Phase() {
 	case phase.Joining:
@@ -46,10 +45,14 @@ func Play(g gamePlayer) error {
 			return nil
 		}
 		c, err := g.Card()
-		idx, pl := g.Players().Find(player.IsCardInHand(*c))
-		if err == nil && idx < 0 {
-			return errCardNotInHand
+		if err != nil {
+			return err
 		}
+		idx, err := g.Players().Index(player.IsCardInHand(*c))
+		if err != nil {
+			return err
+		}
+		pl := g.Players().At(idx)
 		cards := pl.Hand()
 		index := cards.Find(*c)
 		toCards := g.SideDeck()
@@ -62,10 +65,14 @@ func Play(g gamePlayer) error {
 			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
 		}
 		c, err := g.Card()
-		idx, pl := g.Players().Find(player.IsCardInHand(*c))
-		if err == nil && idx < 0 {
-			return errCardNotInHand
+		if err != nil {
+			return err
 		}
+		idx, err := g.Players().Index(player.IsCardInHand(*c))
+		if err != nil {
+			return err
+		}
+		pl := g.Players().At(idx)
 		g.SetBriscola(c)
 		g.SetCompanion(pl)
 		return nil
@@ -74,10 +81,14 @@ func Play(g gamePlayer) error {
 			return errors.New("Value 0 for card allowed only for ExchangingCard phase")
 		}
 		c, err := g.Card()
-		idx, pl := g.Players().Find(player.IsCardInHand(*c))
-		if err == nil && idx < 0 {
-			return errCardNotInHand
+		if err != nil {
+			return err
 		}
+		idx, err := g.Players().Index(player.IsCardInHand(*c))
+		if err != nil {
+			return err
+		}
+		pl := g.Players().At(idx)
 		cards := pl.Hand()
 		index := cards.Find(*c)
 		g.PlayedCards().Add((*cards)[index])
