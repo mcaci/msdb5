@@ -27,7 +27,8 @@ func translatePlayer(pl *player.Player, br card.Item, printer *message.Printer) 
 		translateBool(printer, player.Folded(pl), yesNoRef),
 	}
 	for i := range plElems {
-		plElems[i] = plElemRef(printer, uint8(i))
+		val := plElems[i]
+		plElems[i] = plElemRef(printer, uint8(i)) + ": " + val
 	}
 	return fmt.Sprintf("%s: %s\n", plRef(printer), strings.Join(plElems, ", "))
 }

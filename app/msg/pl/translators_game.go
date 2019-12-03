@@ -37,7 +37,8 @@ func TranslateGameStatus(g statusProvider, printer *message.Printer) string {
 		strconv.Itoa(int(*g.AuctionScore())),
 	}
 	for i := range gameElems {
-		gameElems[i] = gameElemRef(printer, uint8(i))
+		val := gameElems[i]
+		gameElems[i] = gameElemRef(printer, uint8(i)) + ": " + val
 	}
 	return fmt.Sprintf("%s: %s\n", gameRef(printer), strings.Join(gameElems, ", "))
 }
