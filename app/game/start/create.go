@@ -12,7 +12,7 @@ func Players(pls *team.Players) {
 	}
 }
 
-func DistributeAll(g interface{ Players() team.Players }, withSide bool) *set.Cards {
+func DistributeCards(g interface{ Players() team.Players }, withSide bool) set.Cards {
 	d := set.Deck()
 	for i := 0; i < set.DeckSize; i++ {
 		if withSide && i >= set.DeckSize-5 {
@@ -21,5 +21,5 @@ func DistributeAll(g interface{ Players() team.Players }, withSide bool) *set.Ca
 			g.Players()[i%5].Hand().Add(d.Top())
 		}
 	}
-	return &d
+	return d
 }
