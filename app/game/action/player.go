@@ -18,16 +18,19 @@ type nextPlayerInformer interface {
 	FromInput() string
 }
 
+func roundRobin(idx, off, size uint8) uint8 {
+	return (idx + off) % size
+}
+
 // Player func
 func Player(g nextPlayerInformer) *player.Player {
 	numberOfPlayers := uint8(len(g.Players()))
-	playersRoundRobin := func(playerIndex uint8) uint8 { return (playerIndex + 1) % numberOfPlayers }
 	index, _ := g.Players().Index(player.MatchingHost(g.FromInput()))
-	nextPlayer := playersRoundRobin(index)
+	nextPlayer := roundRobin(index, 1, numberOfPlayers)
 	switch g.Phase() {
 	case phase.InsideAuction:
 		for player.Folded(g.Players()[nextPlayer]) {
-			nextPlayer = playersRoundRobin(nextPlayer)
+			nextPlayer = roundRobin(nextPlayer, 1, numberOfPlayers)
 		}
 	case phase.ChoosingCompanion, phase.ExchangingCards:
 		nextPlayer = index
@@ -36,7 +39,7 @@ func Player(g nextPlayerInformer) *player.Player {
 			break
 		}
 		winningCardIndex := indexOfWinningCard(*g.PlayedCards(), g.Briscola().Seed())
-		nextPlayer = playersRoundRobin(nextPlayer + winningCardIndex)
+		nextPlayer = roundRobin(nextPlayer, winningCardIndex, numberOfPlayers)
 	case phase.End:
 		if g.IsRoundOngoing() {
 			break
@@ -52,7 +55,7 @@ func Player(g nextPlayerInformer) *player.Player {
 			}
 		}
 		winningCardIndex := indexOfWinningCard(*g.PlayedCards(), g.Briscola().Seed())
-		nextPlayer = playersRoundRobin(nextPlayer + winningCardIndex)
+		nextPlayer = roundRobin(nextPlayer, winningCardIndex, numberOfPlayers)
 	}
 	return g.Players()[nextPlayer]
 }
