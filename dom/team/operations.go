@@ -39,3 +39,13 @@ func (playerSet Players) None(predicate player.Predicate) bool {
 	_, err := playerSet.Index(predicate)
 	return err != nil
 }
+
+// Count func
+func Count(players Players, predicate player.Predicate) (count uint8) {
+	for _, p := range players {
+		if predicate(p) {
+			count++
+		}
+	}
+	return
+}
