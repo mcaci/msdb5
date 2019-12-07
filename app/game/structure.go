@@ -23,8 +23,6 @@ type Game struct {
 	side, playedCards set.Cards
 	auctionScore      auction.Score
 	phase             phase.ID
-	isToShow          bool
-	sideSubset        set.Cards
 }
 
 // NewGame func
@@ -48,14 +46,17 @@ func (g *Game) Phase() phase.ID               { return g.phase }
 func (g *Game) Players() team.Players         { return g.players }
 func (g *Game) PlayedCards() *set.Cards       { return &g.playedCards }
 func (g *Game) SideDeck() *set.Cards          { return &g.side }
-func (g *Game) IsSideToShow() bool            { return g.isToShow && g.phase == phase.InsideAuction }
-func (g *Game) SideSubset() *set.Cards        { return &g.sideSubset }
-
-func (g *Game) SetAuction(s auction.Score) { g.auctionScore = s }
-func (g *Game) SetShowSide(quantity uint8) {
-	g.isToShow = quantity > 0
-	g.sideSubset = g.side[:quantity]
+func (g *Game) IsSideToShow() bool            { return len(g.SideSubset()) > 0 && g.phase == phase.InsideAuction }
+func (g *Game) SideSubset() set.Cards {
+	var quantity uint8
+	if g.IsSideUsed() {
+		newScore := uint8(*g.AuctionScore())
+		quantity = uint8(newScore/90 + newScore/100 + newScore/110 + newScore/120 + newScore/120)
+	}
+	return g.side[:quantity]
 }
+
+func (g *Game) SetAuction(s auction.Score)      { g.auctionScore = s }
 func (g *Game) SetBriscola(c *card.Item)        { g.briscolaCard = *c }
 func (g *Game) SetCaller(pred player.Predicate) { g.caller = g.players.At(g.players.MustIndex(pred)) }
 func (g *Game) SetCompanion(pl *player.Player)  { g.companion = pl }

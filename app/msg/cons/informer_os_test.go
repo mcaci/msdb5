@@ -32,7 +32,7 @@ func (roundInformerFake) RoundError() error      { return nil }
 func (roundInformerFake) IsSideUsed() bool       { return true }
 func (roundInformerFake) IsSideToShow() bool     { return true }
 func (roundInformerFake) SideDeck() *set.Cards   { return &set.Cards{*card.MustID(2)} }
-func (roundInformerFake) SideSubset() *set.Cards { return &set.Cards{*card.MustID(2)} }
+func (roundInformerFake) SideSubset() set.Cards { return set.Cards{*card.MustID(2)} }
 
 func TestOutputMessage(t *testing.T) {
 	testObj := roundInformerFake{}

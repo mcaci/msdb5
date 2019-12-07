@@ -21,7 +21,6 @@ type gamePlayer interface {
 	SetBriscola(*card.Item)
 	SetCaller(player.Predicate)
 	SetCompanion(*player.Player)
-	SetShowSide(uint8)
 	Card() (*card.Item, error)
 	Value() string
 }

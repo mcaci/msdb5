@@ -57,3 +57,11 @@ func TestGameWithSideHasNoPlayerInTurnAtStart(t *testing.T) {
 		t.Fatal("There are no Player in turn")
 	}
 }
+
+func TestGameWithSideAndAuctionOf101Shows2SideDeckCards(t *testing.T) {
+	gameTest := fakeGame(true)
+	gameTest.SetAuction(101)
+	if len(gameTest.SideSubset()) != 2 {
+		t.Fatal("Expecting two cards to show")
+	}
+}

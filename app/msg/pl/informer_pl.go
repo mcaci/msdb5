@@ -30,7 +30,7 @@ type plInformer interface {
 	RoundError() error
 	IsSideToShow() bool
 	SideDeck() *set.Cards
-	SideSubset() *set.Cards
+	SideSubset() set.Cards
 }
 
 func ToPls(g plInformer, printer *message.Printer, inputRequest, origin string) {
@@ -48,7 +48,7 @@ func ToPls(g plInformer, printer *message.Printer, inputRequest, origin string) 
 	}
 
 	if g.IsSideToShow() {
-		sideDeckMsg := fmt.Sprintf("%s: %s\n", sideDeckRef(printer), translateCards(*g.SideSubset(), printer))
+		sideDeckMsg := fmt.Sprintf("%s: %s\n", sideDeckRef(printer), translateCards(g.SideSubset(), printer))
 		sendToPlayers(g, sideDeckMsg)
 	}
 

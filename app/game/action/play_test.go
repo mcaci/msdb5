@@ -37,7 +37,6 @@ func (gs fakeGS) SetCaller(pred player.Predicate) {
 	gs.caller = gs.players.At(gs.players.MustIndex(pred))
 }
 func (gs fakeGS) SetCompanion(comp *player.Player) { gs.companion = comp }
-func (gs fakeGS) SetShowSide(uint8)                {}
 
 func (gs fakeGS) Card() (*card.Item, error) { return gs.c, nil }
 func (gs fakeGS) Value() string             { return gs.str }

@@ -30,7 +30,7 @@ type roundInformer interface {
 	IsSideUsed() bool
 	IsSideToShow() bool
 	SideDeck() *set.Cards
-	SideSubset() *set.Cards
+	SideSubset() set.Cards
 }
 
 // Notify func

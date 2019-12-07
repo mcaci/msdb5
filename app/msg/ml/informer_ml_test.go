@@ -32,7 +32,7 @@ func (mlInformerFake) RoundError() error      { return nil }
 func (mlInformerFake) IsSideUsed() bool       { return true }
 func (mlInformerFake) IsSideToShow() bool     { return true }
 func (mlInformerFake) SideDeck() *set.Cards   { return &set.Cards{*card.MustID(2)} }
-func (mlInformerFake) SideSubset() *set.Cards { return &set.Cards{*card.MustID(2)} }
+func (mlInformerFake) SideSubset() set.Cards { return set.Cards{*card.MustID(2)} }
 
 func TestMLMessage(t *testing.T) {
 	testObj := mlInformerFake{}

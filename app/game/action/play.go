@@ -24,10 +24,6 @@ func Play(g gamePlayer) error {
 		}
 		newScore := auction.Update(*g.AuctionScore(), auction.Score(score))
 		g.SetAuction(newScore)
-		if len(*g.SideDeck()) > 0 {
-			quantity := uint8(newScore/90 + newScore/100 + newScore/110 + newScore/120 + newScore/120)
-			g.SetShowSide(quantity)
-		}
 		if newScore >= 120 {
 			for _, p := range g.Players() {
 				if p == g.CurrentPlayer() {
