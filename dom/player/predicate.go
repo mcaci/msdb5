@@ -1,8 +1,6 @@
 package player
 
 import (
-	"errors"
-
 	"github.com/mcaci/ita-cards/card"
 )
 
@@ -17,9 +15,6 @@ func MatchingHost(host string) Predicate { return func(p *Player) bool { return 
 
 // Matching func
 func Matching(o *Player) Predicate { return func(p *Player) bool { return p == o } }
-
-// ErrUnexpectedPlayer error
-var ErrUnexpectedPlayer = errors.New("Unexpected player")
 
 // IsNameEmpty var
 var IsNameEmpty Predicate = func(p *Player) bool { return p.name == "" }

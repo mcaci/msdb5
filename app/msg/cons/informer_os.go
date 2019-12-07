@@ -45,7 +45,7 @@ func fmtErr(g osInformer, inputRequest string, rErr error) string {
 	if rErr == phase.ErrUnexpectedPhase {
 		errMsg = fmt.Sprintf("Phase is not %s but %s\n", inputRequest, g.Phase())
 	}
-	if rErr == player.ErrUnexpectedPlayer {
+	if rErr == team.ErrPlayerNotFound {
 		errMsg = fmt.Sprintf("Expecting player %s to play\n", g.CurrentPlayer().Name())
 	}
 	return errMsg

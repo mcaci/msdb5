@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/mcaci/msdb5/dom/phase"
-	"github.com/mcaci/msdb5/dom/player"
+	"github.com/mcaci/msdb5/dom/team"
 	"golang.org/x/text/message"
 )
 
@@ -14,7 +14,7 @@ func translateErr(g plInformer, printer *message.Printer, inputRequest string, r
 	if rErr == phase.ErrUnexpectedPhase {
 		errMsg = errMsgRef(printer, strconv.Itoa(int(g.Phase())), inputRequest)
 	}
-	if rErr == player.ErrUnexpectedPlayer {
+	if rErr == team.ErrPlayerNotFound {
 		errMsg = errMsgRef(printer, g.CurrentPlayer().Name(), inputRequest)
 	}
 	return errMsg
