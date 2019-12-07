@@ -6,7 +6,6 @@ import (
 	"github.com/mcaci/msdb5/app/game/input"
 	"github.com/mcaci/msdb5/app/game/track"
 	"github.com/mcaci/msdb5/dom/phase"
-	"github.com/mcaci/msdb5/dom/team"
 )
 
 // Process func
@@ -19,7 +18,7 @@ func (g *Game) Process(inputRequest, origin string) Round {
 	}
 
 	// verify player
-	err = team.CheckOrigin(g.Players(), origin, g.CurrentPlayer())
+	err = input.CheckOrigin(g.Players(), origin, g.CurrentPlayer())
 	if err != nil {
 		return Round{Game: g, req: inputRequest, rErr: err}
 	}
