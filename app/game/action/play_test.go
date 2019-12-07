@@ -34,7 +34,7 @@ func (gs fakeGS) SideDeck() *set.Cards            { return gs.sideDeck }
 func (gs fakeGS) SetAuction(score auction.Score)  { gs.auctionScore = score }
 func (gs fakeGS) SetBriscola(briscola *card.Item) { gs.briscolaCard = *briscola }
 func (gs fakeGS) SetCaller(pred player.Predicate) {
-	gs.caller = gs.players.At(gs.players.MustFind(pred))
+	gs.caller = gs.players.At(gs.players.MustIndex(pred))
 }
 func (gs fakeGS) SetCompanion(comp *player.Player) { gs.companion = comp }
 func (gs fakeGS) SetShowSide(uint8)                {}

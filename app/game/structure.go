@@ -57,7 +57,7 @@ func (g *Game) SetShowSide(quantity uint8) {
 	g.sideSubset = g.side[:quantity]
 }
 func (g *Game) SetBriscola(c *card.Item)        { g.briscolaCard = *c }
-func (g *Game) SetCaller(pred player.Predicate) { g.caller = g.players.At(g.players.MustFind(pred)) }
+func (g *Game) SetCaller(pred player.Predicate) { g.caller = g.players.At(g.players.MustIndex(pred)) }
 func (g *Game) SetCompanion(pl *player.Player)  { g.companion = pl }
 func (g *Game) setPhase(ph phase.ID)            { g.phase = ph }
 

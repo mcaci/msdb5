@@ -26,22 +26,6 @@ func newTestGame(origin string) fakeGame {
 	return f
 }
 
-func TestVerifyPlayerWithNoErr(t *testing.T) {
-	g := newTestGame("127.0.0.51")
-	err := CheckOrigin(g.players, g.origin, g.current)
-	if err != nil {
-		t.Fatal(err)
-	}
-}
-
-func TestVerifyPlayerWithErr(t *testing.T) {
-	g := newTestGame("127.0.0.52")
-	err := CheckOrigin(g.players, g.origin, g.current)
-	if err == nil {
-		t.Fatal("Error was expected")
-	}
-}
-
 func TestUnsuccessfulFind(t *testing.T) {
 	if _, err := testPlayers.Index(player.IsCardInHand(*card.MustID(8))); err == nil {
 		t.Fatal("Player should not be found")
@@ -69,5 +53,11 @@ func TestUnsuccessfulFindWithNone(t *testing.T) {
 func TestUnsuccessfulFindWithAll(t *testing.T) {
 	if testPlayers.All(player.IsCardInHand(*card.MustID(24))) {
 		t.Fatal("Player should not be found")
+	}
+}
+
+func TestSuccessfulFindWithAll(t *testing.T) {
+	if !testPlayers.All(player.IsCardInHand(*card.MustID(34))) {
+		t.Fatal("All players have the 4 of Cudgel")
 	}
 }
