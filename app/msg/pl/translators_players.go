@@ -11,7 +11,7 @@ import (
 )
 
 func translateTeam(p *player.Player, g team.Callers, printer *message.Printer) string {
-	return fmt.Sprintf("%s: %s %s", endRef(printer), translateBool(printer, team.IsInCallers(g, p), teams), allBriscolaRef(printer))
+	return fmt.Sprintf("%s: %s %s", endRef(printer), translateBool(printer, team.IsInCallers(g)(p), teams), allBriscolaRef(printer))
 }
 
 func translatePlayer(pl *player.Player, br card.Item, printer *message.Printer) string {
