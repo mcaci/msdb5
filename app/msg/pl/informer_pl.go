@@ -41,6 +41,7 @@ func ToPls(g plInformer, printer *message.Printer, inputRequest, origin string) 
 		senderPred := player.MatchingHost(origin)
 		s := g.Players().At(g.Players().MustIndex(senderPred))
 		io.WriteString(s, TranslateGameStatus(g, printer))
+		io.WriteString(s, "\n")
 		io.WriteString(s, translatePlayer(g.CurrentPlayer(), g.Briscola(), printer))
 		errMsg := translateErr(g, printer, inputRequest, rErr)
 		io.WriteString(s, errMsg)
@@ -53,16 +54,15 @@ func ToPls(g plInformer, printer *message.Printer, inputRequest, origin string) 
 	}
 
 	// send logs
-	gameStatusMsg := TranslateGameStatus(g, printer)
-	sendToPlayers(g, gameStatusMsg)
+	sendToPlayers(g, "\n")
+	sendToPlayers(g, TranslateGameStatus(g, printer))
 
 	if g.Phase() != phase.End {
 		return
 	}
 
 	// process end game
-	endMsg := translateTeam(g.CurrentPlayer(), g, printer)
-	sendToPlayers(g, endMsg)
+ 	sendToPlayers(g, translateTeam(g.CurrentPlayer(), g, printer))
 	// compute score
 	t1, t2 := g.Players().Part(team.IsInCallers(g))
 	scoreMsg := fmt.Sprintf("%s: [%s: %d], [%s: %d]", endRef(printer),
