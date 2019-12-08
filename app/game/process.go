@@ -18,7 +18,7 @@ func (g *Game) Process(inputRequest, origin string) Round {
 	}
 
 	// verify player
-	err = input.CheckOrigin(g.Players(), origin, g.CurrentPlayer())
+	err = CheckOrigin(g.Players(), origin, g.CurrentPlayer())
 	if err != nil {
 		return Round{Game: g, req: inputRequest, rErr: err}
 	}
