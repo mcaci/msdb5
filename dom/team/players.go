@@ -12,12 +12,17 @@ func (playerSet *Players) Add(p *player.Player) {
 	*playerSet = append(*playerSet, p)
 }
 
-// Find func
-func (playerSet Players) Find(predicate player.Predicate) (int, *player.Player) {
-	for i, p := range playerSet {
+// At func
+func (playerSet Players) At(i uint8) *player.Player { return playerSet[i] }
+
+// Part func
+func (playerSet Players) Part(predicate player.Predicate) (t1, t2 Players) {
+	for _, p := range playerSet {
 		if predicate(p) {
-			return i, p
+			t1.Add(p)
+			continue
 		}
+		t2.Add(p)
 	}
-	return -1, nil
+	return
 }

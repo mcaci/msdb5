@@ -4,18 +4,19 @@ import (
 	"testing"
 
 	"github.com/mcaci/ita-cards/card"
-	"github.com/mcaci/msdb5/app/phase"
+	"github.com/mcaci/msdb5/app/game/start"
+	"github.com/mcaci/msdb5/dom/phase"
 )
 
 func fakeGameSetup(withSide bool) *Game {
 	gameTest := fakeGame(withSide)
 	messageBufferSize := 256
 	playerChannel := make(chan []byte, messageBufferSize)
-	gameTest.Join("127.0.0.51", playerChannel)
-	gameTest.Join("127.0.0.52", playerChannel)
-	gameTest.Join("127.0.0.53", playerChannel)
-	gameTest.Join("127.0.0.54", playerChannel)
-	gameTest.Join("127.0.0.55", playerChannel)
+	start.Join(gameTest, "127.0.0.51", playerChannel)
+	start.Join(gameTest, "127.0.0.52", playerChannel)
+	start.Join(gameTest, "127.0.0.53", playerChannel)
+	start.Join(gameTest, "127.0.0.54", playerChannel)
+	start.Join(gameTest, "127.0.0.55", playerChannel)
 	if withSide {
 		gameTest.side.Clear()
 		gameTest.side.Add(*card.MustID(31))
@@ -38,13 +39,13 @@ func fakeGamePlay(gameTest *Game) {
 	gameTest.Process("Join#E", "127.0.0.55")
 	gameTest.Process("Auction#80", "127.0.0.51")
 	gameTest.Process("Auction#79", "127.0.0.52")
-	if gameTest.withSide {
+	if gameTest.IsSideUsed() {
 		gameTest.Process("Exchange#5#Coin", "127.0.0.51")
 		gameTest.Process("Exchange#0#Coin", "127.0.0.51")
 	}
 	gameTest.Process("Companion#7#Coin", "127.0.0.51")
 
-	if gameTest.withSide {
+	if gameTest.IsSideUsed() {
 		gameTest.Process("Card#1#Cudgel", "127.0.0.51")
 	} else {
 		gameTest.Process("Card#5#Coin", "127.0.0.51")

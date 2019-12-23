@@ -1,24 +1,20 @@
 package player
 
-import "github.com/mcaci/ita-cards/card"
-
-// IsCardInHand func
-func IsCardInHand(c card.Item) Predicate { return func(p *Player) bool { return p.Has(c) } }
-
-// Has func
-func (player *Player) Has(id card.Item) bool { return player.hand.Find(id) != -1 }
-
-// MatchingHost func
-func MatchingHost(host string) Predicate { return func(p *Player) bool { return p.IsSameHost(host) } }
-
-// Matching func
-func Matching(o *Player) Predicate { return func(p *Player) bool { return p == o } }
-
-// IsSameHost func
-func (player Player) IsSameHost(host string) bool { return player.host == host }
+import (
+	"github.com/mcaci/ita-cards/card"
+)
 
 // Predicate type
 type Predicate func(p *Player) bool
+
+// IsCardInHand func
+func IsCardInHand(c card.Item) Predicate { return func(p *Player) bool { return p.hand.Find(c) != -1 } }
+
+// MatchingHost func
+func MatchingHost(host string) Predicate { return func(p *Player) bool { return p.host == host } }
+
+// Matching func
+func Matching(o *Player) Predicate { return func(p *Player) bool { return p == o } }
 
 // IsNameEmpty var
 var IsNameEmpty Predicate = func(p *Player) bool { return p.name == "" }
@@ -28,6 +24,3 @@ var IsHandEmpty Predicate = func(p *Player) bool { return len(p.hand) == 0 }
 
 // Folded var
 var Folded Predicate = func(p *Player) bool { return p.fold }
-
-// NotFolded var
-var NotFolded Predicate = func(p *Player) bool { return !p.fold }

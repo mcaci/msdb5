@@ -13,12 +13,10 @@ func initTest() *Player {
 	return p
 }
 
-func initTestWithName(name string) *Player {
-	p := New()
-	p.RegisterAs(name)
-	p.Join("127.0.0.1")
-	p.Attach(make(chan []byte))
-	return p
+func TestNewPlayersAreNotSame(t *testing.T) {
+	if Matching(initTest())(initTest()) {
+		t.Fatal("Unexpected players being equal")
+	}
 }
 
 func TestJoinPlayerName(t *testing.T) {
@@ -28,13 +26,13 @@ func TestJoinPlayerName(t *testing.T) {
 }
 
 func TestJoinPlayerNameNotEmpty(t *testing.T) {
-	if p := initTest(); p.Name() == "" {
+	if IsNameEmpty(initTest()) {
 		t.Fatal("Unexpected name being empty")
 	}
 }
 
 func TestJoinPlayerHost(t *testing.T) {
-	if p := initTest(); !p.IsSameHost("127.0.0.1") {
+	if !MatchingHost("127.0.0.1")(initTest()) {
 		t.Fatal("Unexpected host")
 	}
 }

@@ -12,34 +12,18 @@ var testPlayers Players
 func init() {
 	var a player.Player
 	a.RegisterAs("A")
+	a.Hand().Add(*card.MustID(34))
 	testPlayers.Add(&a)
 	var b player.Player
 	b.RegisterAs("B")
 	b.Hand().Add(*card.MustID(33))
+	b.Hand().Add(*card.MustID(34))
 	testPlayers.Add(&b)
-}
-
-func TestSuccessfulFindNoErr(t *testing.T) {
-	if _, p := testPlayers.Find(player.IsCardInHand(*card.MustID(33))); p == nil {
-		t.Fatal("Player not found with criteria player.Has(33)")
-	}
-}
-
-func TestSuccessfulFindIndex(t *testing.T) {
-	if index, _ := testPlayers.Find(player.IsCardInHand(*card.MustID(33))); index != 1 {
-		t.Fatal("Player not found with criteria player.Has(33)")
-	}
 }
 
 func TestSuccessfulFindDataCorresponds(t *testing.T) {
 	isPlayerACheck := func(p *player.Player) bool { return p.Name() == "A" }
-	if _, player := testPlayers.Find(isPlayerACheck); !isPlayerACheck(player) {
-		t.Fatalf("%s and %v are expected to be the same player", "A", player)
-	}
-}
-
-func TestUnsuccessfulFind(t *testing.T) {
-	if _, p := testPlayers.Find(player.IsCardInHand(*card.MustID(24))); p != nil {
-		t.Fatal("Player should not be found")
+	if p := testPlayers.At(testPlayers.MustIndex(isPlayerACheck)); !isPlayerACheck(p) {
+		t.Fatalf("%s and %v are expected to be the same player", "A", p)
 	}
 }
