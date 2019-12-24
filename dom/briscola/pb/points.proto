@@ -1,0 +1,14 @@
+syntax = "proto3";
+package pb;
+
+service Points {
+    rpc Points(PointsRequest) returns (PointsResponse) {}
+}
+
+message PointsRequest {
+    uint32 number = 1;
+}
+
+message PointsResponse {
+    uint32 points = 1;
+}
