@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/mcaci/msdb5/app/msg/score"
+	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
@@ -36,7 +36,7 @@ func Write(g osInformer, inputRequest, origin string) {
 
 	// compute score
 	t1, t2 := g.Players().Part(team.IsInCallers(g))
-	scoreMsg := fmt.Sprintf("Scores -> Callers: %d; Others: %d\n", score.Sum(team.CommonPile(t1)), score.Sum(team.CommonPile(t2)))
+	scoreMsg := fmt.Sprintf("Scores -> Callers: %d; Others: %d\n", briscola.Count(team.CommonPile(t1)), briscola.Count(team.CommonPile(t2)))
 	io.WriteString(os.Stdout, scoreMsg)
 }
 

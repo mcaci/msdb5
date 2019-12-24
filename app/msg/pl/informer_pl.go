@@ -6,8 +6,8 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/app/msg/score"
 	"github.com/mcaci/msdb5/dom/auction"
+	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/phase"
 	"github.com/mcaci/msdb5/dom/player"
 	"github.com/mcaci/msdb5/dom/team"
@@ -66,8 +66,8 @@ func ToPls(g plInformer, printer *message.Printer, inputRequest, origin string) 
 	// compute score
 	t1, t2 := g.Players().Part(team.IsInCallers(g))
 	scoreMsg := fmt.Sprintf("%s: [%s: %d], [%s: %d]", endRef(printer),
-		teams(printer, 0), score.Sum(team.CommonPile(t1)),
-		teams(printer, 1), score.Sum(team.CommonPile(t2)))
+		teams(printer, 0), briscola.Count(team.CommonPile(t1)),
+		teams(printer, 1), briscola.Count(team.CommonPile(t2)))
 	sendToPlayers(g, "+\n")
 	sendToPlayers(g, scoreMsg)
 }
