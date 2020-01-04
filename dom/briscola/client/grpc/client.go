@@ -9,7 +9,7 @@ import (
 
 func New(conn *grpc.ClientConn) briscola.Service {
 	var pointsEndpoint = grpctransport.NewClient(
-		conn, "Briscola", "Points",
+		conn, "pb.Points", "Points",
 		briscola.EncodeGRPCPointsRequest,
 		briscola.DecodeGRPCPointsResponse,
 		pb.PointsResponse{},
