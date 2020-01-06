@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/mcaci/msdb5/dom/briscola"
 	grpcclient "github.com/mcaci/msdb5/dom/briscola/client/grpc"
+	briscola "github.com/mcaci/msdb5/dom/briscola/server"
 	"google.golang.org/grpc"
 )
 

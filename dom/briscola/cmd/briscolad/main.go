@@ -11,8 +11,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/briscola/pb"
+	briscola "github.com/mcaci/msdb5/dom/briscola/server"
 	"google.golang.org/grpc"
 )
 

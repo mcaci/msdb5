@@ -2,8 +2,8 @@ package grpcclient
 
 import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
-	"github.com/mcaci/msdb5/dom/briscola"
 	"github.com/mcaci/msdb5/dom/briscola/pb"
+	briscola "github.com/mcaci/msdb5/dom/briscola/server"
 	"google.golang.org/grpc"
 )
 
