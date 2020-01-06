@@ -17,3 +17,6 @@ pkg
 
 # Logs
 log
+
+# Generated go protobuf files
+*.pb.go
