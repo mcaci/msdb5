@@ -1,7 +1,7 @@
 language: go
 
 install:
-    - go get -v -d google.golang.org/grpc
+    - go get -v -d -u -t ./...
     - go get -v -d -u -t github.com/golang/protobuf/{proto,protoc-gen-go}
     - go install google.golang.org/grpc
     - go install github.com/golang/protobuf/{proto,protoc-gen-go}
