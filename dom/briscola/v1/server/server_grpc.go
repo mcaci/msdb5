@@ -7,15 +7,25 @@ import (
 )
 
 type grpcServer struct {
-	points grpctransport.Handler
+	points  grpctransport.Handler
+	count   grpctransport.Handler
+	compare grpctransport.Handler
 }
 
 func NewGRPCServer(ctx context.Context, endpoints Endpoints) pb.BriscolaServer {
 	return &grpcServer{
 		points: grpctransport.NewServer(
-			endpoints.PointsEndpoint,
+			endpoints.CardPointsEndpoint,
 			DecodeGRPCPointsRequest,
 			EncodeGRPCPointsResponse),
+		count: grpctransport.NewServer(
+			endpoints.PointCountEndpoint,
+			DecodeGRPCCountRequest,
+			EncodeGRPCCountResponse),
+		compare: grpctransport.NewServer(
+			endpoints.CardCompareEndpoint,
+			DecodeGRPCCompareRequest,
+			EncodeGRPCCompareResponse),
 	}
 }
 
@@ -59,6 +69,46 @@ func EncodeGRPCPointsResponse(ctx context.Context, r interface{}) (interface{}, 
 }
 
 func DecodeGRPCPointsResponse(ctx context.Context, r interface{}) (interface{}, error) {
+	res := r.(*pb.CardPointsResponse)
+	return pointsResponse{Points: uint8(res.Points), Err: ""}, nil
+}
+
+func EncodeGRPCCountRequest(ctx context.Context, r interface{}) (interface{}, error) {
+	req := r.(pointsRequest)
+	return &pb.CardPointsRequest{CardNumber: uint32(req.CardNumber)}, nil
+}
+
+func DecodeGRPCCountRequest(ctx context.Context, r interface{}) (interface{}, error) {
+	req := r.(*pb.CardPointsRequest)
+	return pointsRequest{CardNumber: uint8(req.CardNumber)}, nil
+}
+
+func EncodeGRPCCountResponse(ctx context.Context, r interface{}) (interface{}, error) {
+	res := r.(pointsResponse)
+	return &pb.CardPointsResponse{Points: uint32(res.Points)}, nil
+}
+
+func DecodeGRPCCountResponse(ctx context.Context, r interface{}) (interface{}, error) {
+	res := r.(*pb.CardPointsResponse)
+	return pointsResponse{Points: uint8(res.Points), Err: ""}, nil
+}
+
+func EncodeGRPCCompareRequest(ctx context.Context, r interface{}) (interface{}, error) {
+	req := r.(pointsRequest)
+	return &pb.CardPointsRequest{CardNumber: uint32(req.CardNumber)}, nil
+}
+
+func DecodeGRPCCompareRequest(ctx context.Context, r interface{}) (interface{}, error) {
+	req := r.(*pb.CardPointsRequest)
+	return pointsRequest{CardNumber: uint8(req.CardNumber)}, nil
+}
+
+func EncodeGRPCCompareResponse(ctx context.Context, r interface{}) (interface{}, error) {
+	res := r.(pointsResponse)
+	return &pb.CardPointsResponse{Points: uint32(res.Points)}, nil
+}
+
+func DecodeGRPCCompareResponse(ctx context.Context, r interface{}) (interface{}, error) {
 	res := r.(*pb.CardPointsResponse)
 	return pointsResponse{Points: uint8(res.Points), Err: ""}, nil
 }

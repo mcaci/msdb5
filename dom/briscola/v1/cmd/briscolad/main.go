@@ -34,8 +34,12 @@ func main() {
 	}()
 
 	pointsEndpoint := briscola.MakePointsEndpoint(srv)
+	countEndpoint := briscola.MakePointsEndpoint(srv)
+	compareEndpoint := briscola.MakePointsEndpoint(srv)
 	endpoints := briscola.Endpoints{
-		PointsEndpoint: pointsEndpoint,
+		CardPointsEndpoint:  pointsEndpoint,
+		PointCountEndpoint:  countEndpoint,
+		CardCompareEndpoint: compareEndpoint,
 	}
 
 	// start HTTP server

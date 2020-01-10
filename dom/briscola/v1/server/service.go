@@ -52,12 +52,14 @@ func MakePointsEndpoint(srv Service) endpoint.Endpoint {
 }
 
 type Endpoints struct {
-	PointsEndpoint endpoint.Endpoint
+	CardPointsEndpoint  endpoint.Endpoint
+	PointCountEndpoint  endpoint.Endpoint
+	CardCompareEndpoint endpoint.Endpoint
 }
 
 func (e Endpoints) CardPoints(ctx context.Context, number uint8) (uint8, error) {
 	req := pointsRequest{CardNumber: number}
-	resp, err := e.PointsEndpoint(ctx, req)
+	resp, err := e.CardPointsEndpoint(ctx, req)
 	if err != nil {
 		return 0, err
 	}
@@ -70,7 +72,7 @@ func (e Endpoints) CardPoints(ctx context.Context, number uint8) (uint8, error) 
 
 func (e Endpoints) PointCount(ctx context.Context, number uint8) (uint8, error) {
 	req := pointsRequest{CardNumber: number}
-	resp, err := e.PointsEndpoint(ctx, req)
+	resp, err := e.PointCountEndpoint(ctx, req)
 	if err != nil {
 		return 0, err
 	}
@@ -83,7 +85,7 @@ func (e Endpoints) PointCount(ctx context.Context, number uint8) (uint8, error) 
 
 func (e Endpoints) CardCompare(ctx context.Context, number uint8) (uint8, error) {
 	req := pointsRequest{CardNumber: number}
-	resp, err := e.PointsEndpoint(ctx, req)
+	resp, err := e.CardCompareEndpoint(ctx, req)
 	if err != nil {
 		return 0, err
 	}

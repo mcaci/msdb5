@@ -14,8 +14,22 @@ func New(conn *grpc.ClientConn) briscola.Service {
 		briscola.DecodeGRPCPointsResponse,
 		pb.CardPointsResponse{},
 	).Endpoint()
+	var countEndpoint = grpctransport.NewClient(
+		conn, "pb.Briscola", "Count",
+		briscola.EncodeGRPCPointsRequest,
+		briscola.DecodeGRPCPointsResponse,
+		pb.CardPointsResponse{},
+	).Endpoint()
+	var compareEndpoint = grpctransport.NewClient(
+		conn, "pb.Briscola", "Compare",
+		briscola.EncodeGRPCPointsRequest,
+		briscola.DecodeGRPCPointsResponse,
+		pb.CardPointsResponse{},
+	).Endpoint()
 
 	return briscola.Endpoints{
-		PointsEndpoint: pointsEndpoint,
+		CardPointsEndpoint:  pointsEndpoint,
+		PointCountEndpoint:  countEndpoint,
+		CardCompareEndpoint: compareEndpoint,
 	}
 }
