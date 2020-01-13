@@ -15,21 +15,24 @@ func (s *grpcServer) CardCompare(ctx context.Context, r *pb.CardCompareRequest) 
 }
 
 func EncodeGRPCCompareRequest(ctx context.Context, r interface{}) (interface{}, error) {
-	req := r.(serv.PointsRequest)
-	return &pb.CardPointsRequest{CardNumber: req.CardNumber}, nil
+	req := r.(serv.CompareRequest)
+	first := &pb.ItalianCard{Number: req.FirstCardNumber, Seed: pb.Seed(req.FirstCardSeed)}
+	second := &pb.ItalianCard{Number: req.SecondCardNumber, Seed: pb.Seed(req.SecondCardSeed)}
+	return &pb.CardCompareRequest{FirstCard: first, SecondCard: second, Briscola: pb.Seed(req.BriscolaSeed)}, nil
 }
 
 func DecodeGRPCCompareRequest(ctx context.Context, r interface{}) (interface{}, error) {
-	req := r.(*pb.CardPointsRequest)
-	return serv.PointsRequest{CardNumber: req.CardNumber}, nil
+	req := r.(*pb.CardCompareRequest)
+	return serv.CompareRequest{req.FirstCard.GetNumber(), uint32(req.FirstCard.GetSeed()),
+		req.SecondCard.GetNumber(), uint32(req.SecondCard.GetSeed()), uint32(req.Briscola)}, nil
 }
 
 func EncodeGRPCCompareResponse(ctx context.Context, r interface{}) (interface{}, error) {
-	res := r.(serv.PointsResponse)
-	return &pb.CardPointsResponse{Points: res.Points}, nil
+	res := r.(serv.CompareResponse)
+	return &pb.CardCompareResponse{SecondCardWinsOverFirstOne: res.SecondCardWins}, nil
 }
 
 func DecodeGRPCCompareResponse(ctx context.Context, r interface{}) (interface{}, error) {
-	res := r.(*pb.CardPointsResponse)
-	return serv.PointsResponse{Points: res.Points, Err: ""}, nil
+	res := r.(*pb.CardCompareResponse)
+	return serv.CompareResponse{SecondCardWins: res.SecondCardWinsOverFirstOne, Err: ""}, nil
 }

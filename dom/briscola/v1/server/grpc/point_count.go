@@ -15,21 +15,21 @@ func (s *grpcServer) PointCount(ctx context.Context, r *pb.PointCountRequest) (*
 }
 
 func EncodeGRPCCountRequest(ctx context.Context, r interface{}) (interface{}, error) {
-	req := r.(serv.PointsRequest)
-	return &pb.CardPointsRequest{CardNumber: req.CardNumber}, nil
+	req := r.(serv.CountRequest)
+	return &pb.PointCountRequest{CardNumber: req.CardNumbers}, nil
 }
 
 func DecodeGRPCCountRequest(ctx context.Context, r interface{}) (interface{}, error) {
-	req := r.(*pb.CardPointsRequest)
-	return serv.PointsRequest{CardNumber: req.CardNumber}, nil
+	req := r.(*pb.PointCountRequest)
+	return serv.CountRequest{CardNumbers: req.CardNumber}, nil
 }
 
 func EncodeGRPCCountResponse(ctx context.Context, r interface{}) (interface{}, error) {
-	res := r.(serv.PointsResponse)
-	return &pb.CardPointsResponse{Points: res.Points}, nil
+	res := r.(serv.CountResponse)
+	return &pb.PointCountResponse{Count: res.Points}, nil
 }
 
 func DecodeGRPCCountResponse(ctx context.Context, r interface{}) (interface{}, error) {
-	res := r.(*pb.CardPointsResponse)
-	return serv.PointsResponse{Points: res.Points, Err: ""}, nil
+	res := r.(*pb.PointCountResponse)
+	return serv.CountResponse{Points: res.Count, Err: ""}, nil
 }

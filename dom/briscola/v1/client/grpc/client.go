@@ -3,8 +3,8 @@ package grpcclient
 import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/mcaci/msdb5/dom/briscola/v1/pb"
-	serv "github.com/mcaci/msdb5/dom/briscola/v1/service"
 	grpcserv "github.com/mcaci/msdb5/dom/briscola/v1/server/grpc"
+	serv "github.com/mcaci/msdb5/dom/briscola/v1/service"
 	"google.golang.org/grpc"
 )
 
@@ -19,7 +19,7 @@ func New(conn *grpc.ClientConn) serv.Service {
 		conn, "pb.Briscola", "Count",
 		grpcserv.EncodeGRPCPointsRequest,
 		grpcserv.DecodeGRPCPointsResponse,
-		pb.CardPointsResponse{},
+		pb.PointCountResponse{},
 	).Endpoint()
 	var compareEndpoint = grpctransport.NewClient(
 		conn, "pb.Briscola", "Compare",

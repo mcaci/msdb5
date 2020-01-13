@@ -36,8 +36,8 @@ func main() {
 	}()
 
 	pointsEndpoint := serv.MakePointsEndpoint(srv)
-	countEndpoint := serv.MakePointsEndpoint(srv)
-	compareEndpoint := serv.MakePointsEndpoint(srv)
+	countEndpoint := serv.MakeCountEndpoint(srv)
+	compareEndpoint := serv.MakeCompareEndpoint(srv)
 	endpoints := serv.Endpoints{
 		CardPointsEndpoint:  pointsEndpoint,
 		PointCountEndpoint:  countEndpoint,
