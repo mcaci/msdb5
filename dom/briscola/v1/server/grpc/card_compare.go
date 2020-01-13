@@ -23,8 +23,12 @@ func EncodeGRPCCompareRequest(ctx context.Context, r interface{}) (interface{}, 
 
 func DecodeGRPCCompareRequest(ctx context.Context, r interface{}) (interface{}, error) {
 	req := r.(*pb.CardCompareRequest)
-	return serv.CompareRequest{req.FirstCard.GetNumber(), uint32(req.FirstCard.GetSeed()),
-		req.SecondCard.GetNumber(), uint32(req.SecondCard.GetSeed()), uint32(req.Briscola)}, nil
+	return serv.CompareRequest{
+		FirstCardNumber:  req.FirstCard.GetNumber(),
+		FirstCardSeed:    uint32(req.FirstCard.GetSeed()),
+		SecondCardNumber: req.SecondCard.GetNumber(),
+		SecondCardSeed:   uint32(req.SecondCard.GetSeed()),
+		BriscolaSeed:     uint32(req.Briscola)}, nil
 }
 
 func EncodeGRPCCompareResponse(ctx context.Context, r interface{}) (interface{}, error) {

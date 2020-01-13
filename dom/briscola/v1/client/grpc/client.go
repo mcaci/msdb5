@@ -25,7 +25,7 @@ func New(conn *grpc.ClientConn) serv.Service {
 		conn, "pb.Briscola", "CardCompare",
 		grpcserv.EncodeGRPCCompareRequest,
 		grpcserv.DecodeGRPCCompareResponse,
-		pb.CardPointsResponse{},
+		pb.CardCompareResponse{},
 	).Endpoint()
 
 	return serv.Endpoints{
