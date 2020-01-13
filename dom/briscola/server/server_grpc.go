@@ -3,6 +3,7 @@ package briscola
 import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/mcaci/msdb5/dom/briscola/pb"
+	serv "github.com/mcaci/msdb5/dom/briscola/v1/service"
 	"golang.org/x/net/context"
 )
 
@@ -28,21 +29,21 @@ func (s *grpcServer) Points(ctx context.Context, r *pb.PointsRequest) (*pb.Point
 }
 
 func EncodeGRPCPointsRequest(ctx context.Context, r interface{}) (interface{}, error) {
-	req := r.(pointsRequest)
-	return &pb.PointsRequest{Number: uint32(req.Number)}, nil
+	req := r.(serv.PointsRequest)
+	return &pb.PointsRequest{Number: uint32(req.CardNumber)}, nil
 }
 
 func DecodeGRPCPointsRequest(ctx context.Context, r interface{}) (interface{}, error) {
 	req := r.(*pb.PointsRequest)
-	return pointsRequest{Number: uint8(req.Number)}, nil
+	return serv.PointsRequest{CardNumber: uint8(req.Number)}, nil
 }
 
 func EncodeGRPCPointsResponse(ctx context.Context, r interface{}) (interface{}, error) {
-	res := r.(pointsResponse)
+	res := r.(serv.PointsResponse)
 	return &pb.PointsResponse{Points: uint32(res.Points)}, nil
 }
 
 func DecodeGRPCPointsResponse(ctx context.Context, r interface{}) (interface{}, error) {
 	res := r.(*pb.PointsResponse)
-	return pointsResponse{Points: uint8(res.Points), Err: ""}, nil
+	return serv.PointsResponse{Points: uint8(res.Points), Err: ""}, nil
 }

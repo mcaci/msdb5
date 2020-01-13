@@ -3,31 +3,32 @@ package grpcclient
 import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
 	"github.com/mcaci/msdb5/dom/briscola/v1/pb"
-	briscola "github.com/mcaci/msdb5/dom/briscola/v1/server"
+	serv "github.com/mcaci/msdb5/dom/briscola/v1/service"
+	grpcserv "github.com/mcaci/msdb5/dom/briscola/v1/server/grpc"
 	"google.golang.org/grpc"
 )
 
-func New(conn *grpc.ClientConn) briscola.Service {
+func New(conn *grpc.ClientConn) serv.Service {
 	var pointsEndpoint = grpctransport.NewClient(
 		conn, "pb.Briscola", "Points",
-		briscola.EncodeGRPCPointsRequest,
-		briscola.DecodeGRPCPointsResponse,
+		grpcserv.EncodeGRPCPointsRequest,
+		grpcserv.DecodeGRPCPointsResponse,
 		pb.CardPointsResponse{},
 	).Endpoint()
 	var countEndpoint = grpctransport.NewClient(
 		conn, "pb.Briscola", "Count",
-		briscola.EncodeGRPCPointsRequest,
-		briscola.DecodeGRPCPointsResponse,
+		grpcserv.EncodeGRPCPointsRequest,
+		grpcserv.DecodeGRPCPointsResponse,
 		pb.CardPointsResponse{},
 	).Endpoint()
 	var compareEndpoint = grpctransport.NewClient(
 		conn, "pb.Briscola", "Compare",
-		briscola.EncodeGRPCPointsRequest,
-		briscola.DecodeGRPCPointsResponse,
+		grpcserv.EncodeGRPCPointsRequest,
+		grpcserv.DecodeGRPCPointsResponse,
 		pb.CardPointsResponse{},
 	).Endpoint()
 
-	return briscola.Endpoints{
+	return serv.Endpoints{
 		CardPointsEndpoint:  pointsEndpoint,
 		PointCountEndpoint:  countEndpoint,
 		CardCompareEndpoint: compareEndpoint,

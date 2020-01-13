@@ -1,4 +1,4 @@
-package briscola
+package serv
 
 import (
 	"context"
@@ -31,23 +31,23 @@ func NewService() Service {
 	return briscolaService{}
 }
 
-type pointsRequest struct {
+type PointsRequest struct {
 	CardNumber uint8 `json:"number"`
 }
 
-type pointsResponse struct {
+type PointsResponse struct {
 	Points uint8  `json:"points"`
 	Err    string `json:"err,omitempty"`
 }
 
 func MakePointsEndpoint(srv Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
-		req := request.(pointsRequest)
+		req := request.(PointsRequest)
 		v, err := srv.CardPoints(ctx, req.CardNumber)
 		if err != nil {
-			return pointsResponse{v, err.Error()}, nil
+			return PointsResponse{v, err.Error()}, nil
 		}
-		return pointsResponse{v, ""}, nil
+		return PointsResponse{v, ""}, nil
 	}
 }
 
@@ -58,12 +58,12 @@ type Endpoints struct {
 }
 
 func (e Endpoints) CardPoints(ctx context.Context, number uint8) (uint8, error) {
-	req := pointsRequest{CardNumber: number}
+	req := PointsRequest{CardNumber: number}
 	resp, err := e.CardPointsEndpoint(ctx, req)
 	if err != nil {
 		return 0, err
 	}
-	pointsResp := resp.(pointsResponse)
+	pointsResp := resp.(PointsResponse)
 	if pointsResp.Err != "" {
 		return 0, errors.New(pointsResp.Err)
 	}
@@ -71,12 +71,12 @@ func (e Endpoints) CardPoints(ctx context.Context, number uint8) (uint8, error) 
 }
 
 func (e Endpoints) PointCount(ctx context.Context, number uint8) (uint8, error) {
-	req := pointsRequest{CardNumber: number}
+	req := PointsRequest{CardNumber: number}
 	resp, err := e.PointCountEndpoint(ctx, req)
 	if err != nil {
 		return 0, err
 	}
-	pointsResp := resp.(pointsResponse)
+	pointsResp := resp.(PointsResponse)
 	if pointsResp.Err != "" {
 		return 0, errors.New(pointsResp.Err)
 	}
@@ -84,12 +84,12 @@ func (e Endpoints) PointCount(ctx context.Context, number uint8) (uint8, error) 
 }
 
 func (e Endpoints) CardCompare(ctx context.Context, number uint8) (uint8, error) {
-	req := pointsRequest{CardNumber: number}
+	req := PointsRequest{CardNumber: number}
 	resp, err := e.CardCompareEndpoint(ctx, req)
 	if err != nil {
 		return 0, err
 	}
-	pointsResp := resp.(pointsResponse)
+	pointsResp := resp.(PointsResponse)
 	if pointsResp.Err != "" {
 		return 0, errors.New(pointsResp.Err)
 	}

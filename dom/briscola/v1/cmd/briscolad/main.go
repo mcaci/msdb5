@@ -12,7 +12,9 @@ import (
 	"syscall"
 
 	"github.com/mcaci/msdb5/dom/briscola/v1/pb"
-	briscola "github.com/mcaci/msdb5/dom/briscola/v1/server"
+	briscola "github.com/mcaci/msdb5/dom/briscola/v1/server/grpc"
+	briscolahttp "github.com/mcaci/msdb5/dom/briscola/v1/server/http"
+	serv "github.com/mcaci/msdb5/dom/briscola/v1/service"
 	"google.golang.org/grpc"
 )
 
@@ -24,7 +26,7 @@ func main() {
 	)
 	flag.Parse()
 	ctx := context.Background()
-	srv := briscola.NewService()
+	srv := serv.NewService()
 	errChan := make(chan error)
 
 	go func() {
@@ -33,10 +35,10 @@ func main() {
 		errChan <- fmt.Errorf("%s", <-c)
 	}()
 
-	pointsEndpoint := briscola.MakePointsEndpoint(srv)
-	countEndpoint := briscola.MakePointsEndpoint(srv)
-	compareEndpoint := briscola.MakePointsEndpoint(srv)
-	endpoints := briscola.Endpoints{
+	pointsEndpoint := serv.MakePointsEndpoint(srv)
+	countEndpoint := serv.MakePointsEndpoint(srv)
+	compareEndpoint := serv.MakePointsEndpoint(srv)
+	endpoints := serv.Endpoints{
 		CardPointsEndpoint:  pointsEndpoint,
 		PointCountEndpoint:  countEndpoint,
 		CardCompareEndpoint: compareEndpoint,
@@ -45,7 +47,7 @@ func main() {
 	// start HTTP server
 	go func() {
 		log.Println("http:", *httpAddr)
-		handler := briscola.NewHTTPServer(ctx, endpoints)
+		handler := briscolahttp.NewHTTPServer(ctx, endpoints)
 		errChan <- http.ListenAndServe(*httpAddr, handler)
 	}()
 

@@ -9,7 +9,7 @@ import (
 	"time"
 
 	grpcclient "github.com/mcaci/msdb5/dom/briscola/v1/client/grpc"
-	briscola "github.com/mcaci/msdb5/dom/briscola/v1/server"
+	serv "github.com/mcaci/msdb5/dom/briscola/v1/service"
 	"google.golang.org/grpc"
 )
 
@@ -39,7 +39,7 @@ func main() {
 	}
 }
 
-func points(ctx context.Context, service briscola.Service, number uint8) {
+func points(ctx context.Context, service serv.Service, number uint8) {
 	h, err := service.CardPoints(ctx, number)
 	if err != nil {
 		log.Fatalln(err.Error())

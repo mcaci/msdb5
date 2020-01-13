@@ -1,4 +1,4 @@
-package briscola
+package serv
 
 import (
 	"context"
