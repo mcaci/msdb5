@@ -33,13 +33,13 @@ func main() {
 		var number string
 		number, args = pop(args)
 		n, _ := strconv.Atoi(number)
-		points(ctx, pointsService, uint8(n))
+		points(ctx, pointsService, uint32(n))
 	default:
 		log.Fatalln("unknown command", cmd)
 	}
 }
 
-func points(ctx context.Context, service serv.Service, number uint8) {
+func points(ctx context.Context, service serv.Service, number uint32) {
 	h, err := service.CardPoints(ctx, number)
 	if err != nil {
 		log.Fatalln(err.Error())
