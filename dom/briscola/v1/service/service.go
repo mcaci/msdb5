@@ -17,10 +17,13 @@ func (b briscolaService) CardPoints(ctx context.Context, number uint32) (uint32,
 }
 
 func (b briscolaService) PointCount(ctx context.Context, number []uint32) (uint32, error) {
-	return 15, nil
+	return 100, nil
 }
 
 func (b briscolaService) CardCompare(ctx context.Context, firstCardNumber, firstCardSeed, secondCardNumber, secondCardSeed, briscolaSeed uint32) (bool, error) {
+	if briscolaSeed > 1 {
+		return false, nil
+	}
 	return true, nil
 }
 

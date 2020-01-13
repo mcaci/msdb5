@@ -7,7 +7,7 @@ import (
 )
 
 func (s *grpcServer) CardCompare(ctx context.Context, r *pb.CardCompareRequest) (*pb.CardCompareResponse, error) {
-	_, resp, err := s.points.ServeGRPC(ctx, r)
+	_, resp, err := s.compare.ServeGRPC(ctx, r)
 	if err != nil {
 		return nil, err
 	}

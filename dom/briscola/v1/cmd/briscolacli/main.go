@@ -34,17 +34,32 @@ func main() {
 		number, args = pop(args)
 		n, _ := strconv.Atoi(number)
 		points(ctx, pointsService, uint32(n))
+	case "count":
+		var numbers []uint32
+		for _, arg := range args {
+			n, _ := strconv.Atoi(arg)
+			numbers = append(numbers, uint32(n))
+		}
+		count(ctx, pointsService, numbers)
 	default:
 		log.Fatalln("unknown command", cmd)
 	}
 }
 
 func points(ctx context.Context, service serv.Service, number uint32) {
-	h, err := service.CardPoints(ctx, number)
+	res, err := service.CardPoints(ctx, number)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	fmt.Println(h)
+	fmt.Println(res)
+}
+
+func count(ctx context.Context, service serv.Service, numbers []uint32) {
+	res, err := service.PointCount(ctx, numbers)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	fmt.Println(res)
 }
 
 func pop(s []string) (string, []string) {

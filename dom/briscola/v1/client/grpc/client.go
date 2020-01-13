@@ -10,21 +10,21 @@ import (
 
 func New(conn *grpc.ClientConn) serv.Service {
 	var pointsEndpoint = grpctransport.NewClient(
-		conn, "pb.Briscola", "Points",
+		conn, "pb.Briscola", "CardPoints",
 		grpcserv.EncodeGRPCPointsRequest,
 		grpcserv.DecodeGRPCPointsResponse,
 		pb.CardPointsResponse{},
 	).Endpoint()
 	var countEndpoint = grpctransport.NewClient(
-		conn, "pb.Briscola", "Count",
-		grpcserv.EncodeGRPCPointsRequest,
-		grpcserv.DecodeGRPCPointsResponse,
+		conn, "pb.Briscola", "PointCount",
+		grpcserv.EncodeGRPCCountRequest,
+		grpcserv.DecodeGRPCCountResponse,
 		pb.PointCountResponse{},
 	).Endpoint()
 	var compareEndpoint = grpctransport.NewClient(
-		conn, "pb.Briscola", "Compare",
-		grpcserv.EncodeGRPCPointsRequest,
-		grpcserv.DecodeGRPCPointsResponse,
+		conn, "pb.Briscola", "CardCompare",
+		grpcserv.EncodeGRPCCompareRequest,
+		grpcserv.DecodeGRPCCompareResponse,
 		pb.CardPointsResponse{},
 	).Endpoint()
 

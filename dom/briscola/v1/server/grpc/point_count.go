@@ -7,7 +7,7 @@ import (
 )
 
 func (s *grpcServer) PointCount(ctx context.Context, r *pb.PointCountRequest) (*pb.PointCountResponse, error) {
-	_, resp, err := s.points.ServeGRPC(ctx, r)
+	_, resp, err := s.count.ServeGRPC(ctx, r)
 	if err != nil {
 		return nil, err
 	}
