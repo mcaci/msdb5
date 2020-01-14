@@ -1,8 +1,8 @@
 package briscola
 
 import (
-	"github.com/mcaci/msdb5/dom/briscola/v1/pb"
-	serv "github.com/mcaci/msdb5/dom/briscola/v1/service"
+	"github.com/mcaci/msdb5/dom/briscola/pb"
+	serv "github.com/mcaci/msdb5/dom/briscola/service"
 	"golang.org/x/net/context"
 )
 

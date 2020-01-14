@@ -1,14 +1,10 @@
 syntax = "proto3";
 package pb;
 
-service Points {
-    rpc Points(PointsRequest) returns (PointsResponse) {}
+message CardPointsRequest {
+    uint32 card_number = 1;
 }
 
-message PointsRequest {
-    uint32 number = 1;
-}
-
-message PointsResponse {
+message CardPointsResponse {
     uint32 points = 1;
 }

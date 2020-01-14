@@ -14,7 +14,6 @@ env:
     - PATH=$HOME/protoc/bin:$PATH GO111MODULE=on 
 
 script:
-    - protoc dom/briscola/pb/points.proto --go_out=plugins=grpc:.
-    - protoc dom/briscola/v1/pb/*.proto --go_out=plugins=grpc:.
+    - protoc dom/briscola/pb/*.proto --go_out=plugins=grpc:.
     - go build ./...
     - go test ./...

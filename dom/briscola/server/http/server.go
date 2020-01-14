@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	httptransport "github.com/go-kit/kit/transport/http"
-	serv "github.com/mcaci/msdb5/dom/briscola/v1/service"
+	serv "github.com/mcaci/msdb5/dom/briscola/service"
 	"golang.org/x/net/context"
 )
 

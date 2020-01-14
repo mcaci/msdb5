@@ -9,7 +9,7 @@ import (
 	"time"
 
 	grpcclient "github.com/mcaci/msdb5/dom/briscola/client/grpc"
-	briscola "github.com/mcaci/msdb5/dom/briscola/server"
+	serv "github.com/mcaci/msdb5/dom/briscola/service"
 	"google.golang.org/grpc"
 )
 
@@ -33,18 +33,54 @@ func main() {
 		var number string
 		number, args = pop(args)
 		n, _ := strconv.Atoi(number)
-		points(ctx, pointsService, uint8(n))
+		points(ctx, pointsService, uint32(n))
+	case "count":
+		var numbers []uint32
+		for _, arg := range args {
+			n, _ := strconv.Atoi(arg)
+			numbers = append(numbers, uint32(n))
+		}
+		count(ctx, pointsService, numbers)
+	case "compare":
+		var number string
+		number, args = pop(args)
+		fcnum, _ := strconv.Atoi(number)
+		number, args = pop(args)
+		fcseed, _ := strconv.Atoi(number)
+		number, args = pop(args)
+		scnum, _ := strconv.Atoi(number)
+		number, args = pop(args)
+		scseed, _ := strconv.Atoi(number)
+		number, args = pop(args)
+		brseed, _ := strconv.Atoi(number)
+		compare(ctx, pointsService, uint32(fcnum), uint32(fcseed), uint32(scnum), uint32(scseed), uint32(brseed))
 	default:
 		log.Fatalln("unknown command", cmd)
 	}
 }
 
-func points(ctx context.Context, service briscola.Service, number uint8) {
-	h, err := service.Points(ctx, number)
+func points(ctx context.Context, service serv.Service, number uint32) {
+	res, err := service.CardPoints(ctx, number)
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	fmt.Println(h)
+	fmt.Println(res)
+}
+
+func count(ctx context.Context, service serv.Service, numbers []uint32) {
+	res, err := service.PointCount(ctx, numbers)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	fmt.Println(res)
+}
+
+func compare(ctx context.Context, service serv.Service, firstCardNumber, firstCardSeed, secondCardNumber, secondCardSeed, briscolaSeed uint32) {
+	res, err := service.CardCompare(ctx, firstCardNumber, firstCardSeed, secondCardNumber, secondCardSeed, briscolaSeed)
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
+	fmt.Println(res)
 }
 
 func pop(s []string) (string, []string) {
