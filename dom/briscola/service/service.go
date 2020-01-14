@@ -24,7 +24,7 @@ func (b briscolaService) PointCount(ctx context.Context, numbers []uint32) (uint
 	for _, n := range numbers {
 		a = append(a, cardnumber(n))
 	}
-	return uint32(briscola.Count2(a)), nil
+	return uint32(briscola.CountWithIntf(a)), nil
 }
 
 func (b briscolaService) CardCompare(ctx context.Context, firstCardNumber, firstCardSeed, secondCardNumber, secondCardSeed, briscolaSeed uint32) (bool, error) {
