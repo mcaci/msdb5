@@ -12,7 +12,7 @@ import (
 	"syscall"
 
 	"github.com/mcaci/msdb5/dom/briscola/pb"
-	briscola "github.com/mcaci/msdb5/dom/briscola/server/grpc"
+	briscolagrpc "github.com/mcaci/msdb5/dom/briscola/server/grpc"
 	briscolahttp "github.com/mcaci/msdb5/dom/briscola/server/http"
 	serv "github.com/mcaci/msdb5/dom/briscola/service"
 	"google.golang.org/grpc"
@@ -59,7 +59,7 @@ func main() {
 			return
 		}
 		log.Println("grpc:", *gRPCAddr)
-		handler := briscola.NewGRPCServer(ctx, endpoints)
+		handler := briscolagrpc.NewGRPCServer(ctx, endpoints)
 		gRPCServer := grpc.NewServer()
 		pb.RegisterBriscolaServer(gRPCServer, handler)
 		errChan <- gRPCServer.Serve(listener)
