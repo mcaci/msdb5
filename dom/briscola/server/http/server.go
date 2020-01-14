@@ -43,7 +43,7 @@ func encodePointsResponse(ctx context.Context, w http.ResponseWriter, response i
 }
 
 func decodeCountRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var req serv.PointsRequest
+	var req serv.CountRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func encodeCountResponse(ctx context.Context, w http.ResponseWriter, response in
 }
 
 func decodeCompareRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var req serv.PointsRequest
+	var req serv.CompareRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		return nil, err
