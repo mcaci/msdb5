@@ -11,3 +11,11 @@ func Count(cards set.Cards) (sum uint8) {
 	}
 	return
 }
+
+// CountWithIntf counts the number of points in a set of cards
+func CountWithIntf(pointGivers []interface{ Number() uint8 }) (sum uint8) {
+	for _, c := range pointGivers {
+		sum += Points(c)
+	}
+	return
+}
