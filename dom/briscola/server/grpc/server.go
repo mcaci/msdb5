@@ -2,8 +2,8 @@ package briscola
 
 import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
+	endp "github.com/mcaci/msdb5/dom/briscola/endpoint"
 	"github.com/mcaci/msdb5/dom/briscola/pb"
-	serv "github.com/mcaci/msdb5/dom/briscola/service"
 	"golang.org/x/net/context"
 )
 
@@ -13,7 +13,7 @@ type grpcServer struct {
 	compare grpctransport.Handler
 }
 
-func NewGRPCServer(ctx context.Context, endpoints serv.Endpoints) pb.BriscolaServer {
+func NewGRPCServer(ctx context.Context, endpoints endp.Endpoints) pb.BriscolaServer {
 	return &grpcServer{
 		points: grpctransport.NewServer(
 			endpoints.CardPointsEndpoint,

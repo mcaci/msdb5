@@ -5,11 +5,11 @@ import (
 	"net/http"
 
 	httptransport "github.com/go-kit/kit/transport/http"
-	serv "github.com/mcaci/msdb5/dom/briscola/service"
+	endp "github.com/mcaci/msdb5/dom/briscola/endpoint"
 	"golang.org/x/net/context"
 )
 
-func NewHTTPServer(ctx context.Context, endpoints serv.Endpoints) http.Handler {
+func NewHTTPServer(ctx context.Context, endpoints endp.Endpoints) http.Handler {
 	m := http.NewServeMux()
 	m.Handle("/points", httptransport.NewServer(
 		endpoints.CardPointsEndpoint,
@@ -30,7 +30,7 @@ func NewHTTPServer(ctx context.Context, endpoints serv.Endpoints) http.Handler {
 }
 
 func decodePointsRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var req serv.PointsRequest
+	var req endp.PointsRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		return nil, err
@@ -43,7 +43,7 @@ func encodePointsResponse(ctx context.Context, w http.ResponseWriter, response i
 }
 
 func decodeCountRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var req serv.CountRequest
+	var req endp.CountRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func encodeCountResponse(ctx context.Context, w http.ResponseWriter, response in
 }
 
 func decodeCompareRequest(ctx context.Context, r *http.Request) (interface{}, error) {
-	var req serv.CompareRequest
+	var req endp.CompareRequest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		return nil, err

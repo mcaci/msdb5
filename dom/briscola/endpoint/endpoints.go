@@ -1,10 +1,11 @@
-package serv
+package endp
 
 import (
 	"context"
 	"errors"
 
 	"github.com/go-kit/kit/endpoint"
+	serv "github.com/mcaci/msdb5/dom/briscola/service"
 )
 
 type PointsRequest struct {
@@ -35,7 +36,7 @@ type CompareResponse struct {
 	Err            string `json:"err,omitempty"`
 }
 
-func MakePointsEndpoint(srv Service) endpoint.Endpoint {
+func MakePointsEndpoint(srv serv.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(PointsRequest)
 		v, err := srv.CardPoints(ctx, req.CardNumber)
@@ -46,7 +47,7 @@ func MakePointsEndpoint(srv Service) endpoint.Endpoint {
 	}
 }
 
-func MakeCountEndpoint(srv Service) endpoint.Endpoint {
+func MakeCountEndpoint(srv serv.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(CountRequest)
 		v, err := srv.PointCount(ctx, req.CardNumbers)
@@ -57,7 +58,7 @@ func MakeCountEndpoint(srv Service) endpoint.Endpoint {
 	}
 }
 
-func MakeCompareEndpoint(srv Service) endpoint.Endpoint {
+func MakeCompareEndpoint(srv serv.Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (interface{}, error) {
 		req := request.(CompareRequest)
 		v, err := srv.CardCompare(ctx, req.FirstCardNumber, req.FirstCardSeed, req.SecondCardNumber, req.SecondCardSeed, req.BriscolaSeed)

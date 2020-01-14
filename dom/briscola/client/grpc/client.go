@@ -2,6 +2,7 @@ package grpcclient
 
 import (
 	grpctransport "github.com/go-kit/kit/transport/grpc"
+	endp "github.com/mcaci/msdb5/dom/briscola/endpoint"
 	"github.com/mcaci/msdb5/dom/briscola/pb"
 	grpcserv "github.com/mcaci/msdb5/dom/briscola/server/grpc"
 	serv "github.com/mcaci/msdb5/dom/briscola/service"
@@ -28,7 +29,7 @@ func New(conn *grpc.ClientConn) serv.Service {
 		pb.CardCompareResponse{},
 	).Endpoint()
 
-	return serv.Endpoints{
+	return endp.Endpoints{
 		CardPointsEndpoint:  pointsEndpoint,
 		PointCountEndpoint:  countEndpoint,
 		CardCompareEndpoint: compareEndpoint,

@@ -1,8 +1,8 @@
 package briscola
 
 import (
+	endp "github.com/mcaci/msdb5/dom/briscola/endpoint"
 	"github.com/mcaci/msdb5/dom/briscola/pb"
-	serv "github.com/mcaci/msdb5/dom/briscola/service"
 	"golang.org/x/net/context"
 )
 
@@ -15,21 +15,21 @@ func (s *grpcServer) PointCount(ctx context.Context, r *pb.PointCountRequest) (*
 }
 
 func EncodeGRPCCountRequest(ctx context.Context, r interface{}) (interface{}, error) {
-	req := r.(serv.CountRequest)
+	req := r.(endp.CountRequest)
 	return &pb.PointCountRequest{CardNumber: req.CardNumbers}, nil
 }
 
 func DecodeGRPCCountRequest(ctx context.Context, r interface{}) (interface{}, error) {
 	req := r.(*pb.PointCountRequest)
-	return serv.CountRequest{CardNumbers: req.CardNumber}, nil
+	return endp.CountRequest{CardNumbers: req.CardNumber}, nil
 }
 
 func EncodeGRPCCountResponse(ctx context.Context, r interface{}) (interface{}, error) {
-	res := r.(serv.CountResponse)
+	res := r.(endp.CountResponse)
 	return &pb.PointCountResponse{Count: res.Points}, nil
 }
 
 func DecodeGRPCCountResponse(ctx context.Context, r interface{}) (interface{}, error) {
 	res := r.(*pb.PointCountResponse)
-	return serv.CountResponse{Points: res.Count, Err: ""}, nil
+	return endp.CountResponse{Points: res.Count, Err: ""}, nil
 }

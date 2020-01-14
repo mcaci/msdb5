@@ -11,6 +11,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	endp "github.com/mcaci/msdb5/dom/briscola/endpoint"
 	"github.com/mcaci/msdb5/dom/briscola/pb"
 	briscolagrpc "github.com/mcaci/msdb5/dom/briscola/server/grpc"
 	briscolahttp "github.com/mcaci/msdb5/dom/briscola/server/http"
@@ -35,10 +36,10 @@ func main() {
 		errChan <- fmt.Errorf("%s", <-c)
 	}()
 
-	pointsEndpoint := serv.MakePointsEndpoint(srv)
-	countEndpoint := serv.MakeCountEndpoint(srv)
-	compareEndpoint := serv.MakeCompareEndpoint(srv)
-	endpoints := serv.Endpoints{
+	pointsEndpoint := endp.MakePointsEndpoint(srv)
+	countEndpoint := endp.MakeCountEndpoint(srv)
+	compareEndpoint := endp.MakeCompareEndpoint(srv)
+	endpoints := endp.Endpoints{
 		CardPointsEndpoint:  pointsEndpoint,
 		PointCountEndpoint:  countEndpoint,
 		CardCompareEndpoint: compareEndpoint,
