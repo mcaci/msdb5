@@ -2,6 +2,9 @@ package serv
 
 import (
 	"context"
+
+	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/msdb5/dom/briscola"
 )
 
 type Service interface {
@@ -13,20 +16,31 @@ type Service interface {
 type briscolaService struct{}
 
 func (b briscolaService) CardPoints(ctx context.Context, number uint32) (uint32, error) {
-	return 15, nil
+	return uint32(briscola.Points(cardnumber(number))), nil
 }
 
-func (b briscolaService) PointCount(ctx context.Context, number []uint32) (uint32, error) {
-	return 100, nil
+func (b briscolaService) PointCount(ctx context.Context, numbers []uint32) (uint32, error) {
+	var a []interface{ Number() uint8 }
+	for _, n := range numbers {
+		a = append(a, cardnumber(n))
+	}
+	return uint32(briscola.Count2(a)), nil
 }
 
 func (b briscolaService) CardCompare(ctx context.Context, firstCardNumber, firstCardSeed, secondCardNumber, secondCardSeed, briscolaSeed uint32) (bool, error) {
-	if briscolaSeed > 1 {
-		return false, nil
-	}
-	return true, nil
+	first, second := *card.MustID(uint8(firstCardNumber + firstCardSeed*10)), *card.MustID(uint8(secondCardNumber + secondCardSeed*10))
+	br := cardseed(briscolaSeed)
+	return briscola.IsOtherWinning(first, second, br), nil
 }
 
 func NewService() Service {
 	return briscolaService{}
 }
+
+type cardnumber uint8
+
+func (n cardnumber) Number() uint8 { return uint8(n) }
+
+type cardseed card.Seed
+
+func (s cardseed) Seed() card.Seed { return card.Seed(s) }
