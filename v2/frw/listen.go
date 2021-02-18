@@ -49,17 +49,13 @@ func (tr *TickerRand) Input() <-chan func() {
 	return tr.fCh
 }
 
-func (tr *TickerRand) StartExample(f func()) {
-	ctx, cancel := context.WithCancel(tr.Context)
-	defer cancel()
-	for i := 0; i < 5; i++ {
-		select {
-		case <-tr.tick.C:
-			tr.fCh <- f
-		case <-ctx.Done():
-			close(tr.fCh)
-		}
-	}
+type ContextFChan struct {
+	context.Context
+	fCh chan func()
+}
+
+func (cfc *ContextFChan) Input() <-chan func() {
+	return cfc.fCh
 }
 
 func WithRand2(a interface {
