@@ -4,11 +4,11 @@ import (
 	"fmt"
 
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/app/listen"
 	"github.com/mcaci/msdb5/v2/app/score"
 	"github.com/mcaci/msdb5/v2/app/track"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
-	"github.com/mcaci/msdb5/v2/frw"
 )
 
 func Setup(g *Game, noSide bool) {
@@ -33,10 +33,10 @@ func Start(g *Game) {
 	track.Player(&g.lastPlaying, g.players[0])
 
 	// auction phase
-	runAuction(g, frw.WithRand)
+	runAuction(g, listen.WithRand)
 
 	// card exchange phase
-	runExchange(g, frw.WithRand)
+	runExchange(g, listen.WithRand)
 
 	// companion choice phase
 	runCompanion(g)

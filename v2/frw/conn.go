@@ -1,12 +1,13 @@
-package main
+package frw
 
 import (
 	"fmt"
 	"log"
 	"net"
+	"net/http"
 )
 
-func run() {
+func Run() {
 	const (
 		host   = "localhost"
 		port   = "8080"
@@ -59,4 +60,9 @@ func handleRequest(conn net.Conn) {
 			conn.Write([]byte(fmt.Sprintf("UNKNOWN_COMMAND: %s\n", str)))
 		}
 	}
+}
+
+func welcome(rw http.ResponseWriter, r *http.Request) {
+	log.Print("New Request: ", r)
+	rw.Write([]byte("Welcome guest"))
 }
