@@ -11,10 +11,6 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-func Setup(g *Game, noSide bool) {
-	g.withSide = !noSide
-}
-
 func WaitForPlayers(g *Game, listenFor func(chan<- string)) {
 	names := make(chan string)
 	go listenFor(names)
@@ -58,7 +54,7 @@ func Score(g *Game) string {
 func distributeCards(g *Game) {
 	d := set.Deck()
 	for i := 0; i < set.DeckSize; i++ {
-		if g.withSide && i >= set.DeckSize-5 {
+		if g.opts.WithSide && i >= set.DeckSize-5 {
 			g.side.Add(d.Top())
 			continue
 		}

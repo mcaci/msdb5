@@ -6,7 +6,7 @@ import (
 )
 
 func runExchange(g *Game, listenFor func(context.Context, chan<- int, func() int)) {
-	if !g.withSide {
+	if !g.opts.WithSide {
 		g.phase++
 		return
 	}

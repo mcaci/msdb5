@@ -21,8 +21,14 @@ type Game struct {
 	side, playedCards set.Cards
 	auctionScore      auction.Score
 	phase             phase.ID
-	withSide          bool
+	opts              *Options
 }
+
+type Options struct {
+	WithSide bool
+}
+
+func NewGame(gOpts *Options) *Game { return &Game{opts: gOpts} }
 
 // New func
 func New() *Game                              { return &Game{} }

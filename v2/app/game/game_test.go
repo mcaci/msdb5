@@ -20,12 +20,14 @@ func supply(p chan<- string) {
 }
 
 func TestSideDeckProperty(t *testing.T) {
-	g := New()
-	if g.withSide {
+	g := NewGame(&Options{})
+	if g.opts.WithSide {
 		t.Errorf("error")
 	}
-	Setup(g, false)
-	if !g.withSide {
+	g = NewGame(&Options{
+		WithSide: false,
+	})
+	if !g.opts.WithSide {
 		t.Errorf("error")
 	}
 }
