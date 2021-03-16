@@ -26,14 +26,13 @@ func WithAINames(names chan<- string) {
 	close(names)
 }
 
-func WithRand(ctx context.Context, numbers chan<- int, n func() int) {
+func WithTicker(ctx context.Context, do func()) {
 	ticker := time.NewTicker(nMillis * time.Millisecond)
 	for {
 		select {
 		case <-ticker.C:
-			numbers <- n()
+			do()
 		case <-ctx.Done():
-			close(numbers)
 			return
 		}
 	}

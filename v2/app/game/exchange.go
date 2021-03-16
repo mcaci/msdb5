@@ -5,7 +5,7 @@ import (
 	"math/rand"
 )
 
-func runExchange(g *Game, listenFor func(context.Context, chan<- int, func() int)) {
+func runExchange(g *Game, listenFor func(context.Context, func())) {
 	if !g.opts.WithSide {
 		g.phase++
 		return
@@ -14,10 +14,11 @@ func runExchange(g *Game, listenFor func(context.Context, chan<- int, func() int
 	ctx, cancel := context.WithCancel(context.Background())
 	numbers := make(chan int)
 	done := make(chan struct{})
-	go listenFor(ctx, numbers, func() int { return rand.Intn(len(*g.CurrentPlayer().Hand())) })
+	go listenFor(ctx, func() { numbers <- rand.Intn(len(*g.CurrentPlayer().Hand())) })
 	go func() {
 		<-done
 		cancel()
+		close(numbers)
 	}()
 
 	for idx := range numbers {

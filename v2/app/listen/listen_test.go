@@ -21,7 +21,7 @@ func TestWithAINames(t *testing.T) { // add -race to go test for running this te
 func TestWithRand(t *testing.T) { // add -race to go test for running this test
 	ctx, cancel := context.WithCancel(context.Background())
 	ch := make(chan int)
-	go WithRand(ctx, ch, func() int { return 0 })
+	go WithTicker(ctx, func() { ch <- 0 })
 	go func() {
 		time.Sleep(1 * time.Second)
 		cancel()

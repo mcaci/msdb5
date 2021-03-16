@@ -29,10 +29,10 @@ func Start(g *Game) {
 	track.Player(&g.lastPlaying, g.players[0])
 
 	// auction phase
-	runAuction(g, listen.WithRand)
+	runAuction(g, listen.WithTicker)
 
 	// card exchange phase
-	runExchange(g, listen.WithRand)
+	runExchange(g, listen.WithTicker)
 
 	// companion choice phase
 	runCompanion(g)

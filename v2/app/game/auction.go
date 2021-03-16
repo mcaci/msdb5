@@ -12,14 +12,15 @@ import (
 
 var notFolded player.Predicate = func(p *player.Player) bool { return !player.Folded(p) }
 
-func runAuction(g *Game, listenFor func(context.Context, chan<- int, func() int)) {
+func runAuction(g *Game, listenFor func(context.Context, func())) {
 	ctx, cancel := context.WithCancel(context.Background())
 	numbers := make(chan int)
 	done := make(chan struct{})
-	go listenFor(ctx, numbers, func() int { return 60 + rand.Intn(60) })
+	go listenFor(ctx, func() { numbers <- 60 + rand.Intn(60) })
 	go func() {
 		<-done
 		cancel()
+		close(numbers)
 	}()
 
 	for score := range numbers {
