@@ -7,9 +7,9 @@ import (
 )
 
 // Collector func
-func Collector(g interface{ Phase() phase.ID }, all team.Players, side *set.Cards, played *set.Cards) (collector func() *set.Cards) {
+func Collector(p phase.ID, all team.Players, side *set.Cards, played *set.Cards) (collector func() *set.Cards) {
 	collector = func() *set.Cards { return &set.Cards{} }
-	switch g.Phase() {
+	switch p {
 	case phase.PlayingCards:
 		if len(*played) == 5 {
 			collector = func() *set.Cards { return played }

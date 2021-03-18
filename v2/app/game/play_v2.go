@@ -1,6 +1,7 @@
 package game
 
 import (
+	"container/list"
 	"math/rand"
 	"time"
 
@@ -8,15 +9,22 @@ import (
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/collect"
 	"github.com/mcaci/msdb5/v2/app/track"
-	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/phase"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-func runPlay(g *Game) {
+func runPlay_v2(g struct {
+	phase             phase.ID
+	playedCards       set.Cards
+	side              set.Cards
+	players           team.Players
+	briscolaCard      card.Item
+	lastPlaying       list.List
+	caller, companion *player.Player
+}) {
 	for g.phase == phase.PlayingCards {
-		pl := g.CurrentPlayer()
+		pl := CurrentPlayer(g.lastPlaying)
 		hnd := pl.Hand()
 		if len(*hnd) > 0 {
 			rand.Seed(time.Now().Unix())
@@ -28,13 +36,23 @@ func runPlay(g *Game) {
 		}
 
 		// next phase
-		if g.players.All(player.IsHandEmpty) || isAnticipatedEnd(g) {
+		if g.players.All(player.IsHandEmpty) || isAnticipatedEnd_v2(struct {
+			players           team.Players
+			playedCards       set.Cards
+			briscolaCard      card.Item
+			caller, companion *player.Player
+		}{players: g.players, playedCards: g.playedCards, briscolaCard: g.briscolaCard,
+			caller: g.caller, companion: g.companion}) {
 			g.phase++
 		}
 
 		// next player
-		nextPlayer := roundRobin(g.CurrentPlayerIndex(), 1, numberOfPlayers)
-		if !g.IsRoundOngoing() {
+		idx, err := CurrentPlayerIndex(pl, g.players)
+		if err != nil {
+			return
+		}
+		nextPlayer := roundRobin(idx, 1, numberOfPlayers)
+		if !IsRoundOngoing(g.playedCards) {
 			// end current round
 			winningCardIndex := indexOfWinningCard(g.playedCards, g.briscolaCard.Seed())
 			nextPlayer = roundRobin(nextPlayer, winningCardIndex, numberOfPlayers)
@@ -48,51 +66,34 @@ func runPlay(g *Game) {
 	}
 }
 
-func indexOfWinningCard(cardsOnTheTable set.Cards, b card.Seed) uint8 {
-	base := cardsOnTheTable[0]
-	max := 0
-	for i, other := range cardsOnTheTable {
-		if winningCard(base, other, b) == other {
-			base = other
-			max = i
-		}
-	}
-	return uint8(max)
-}
-
-func winningCard(base, other card.Item, b card.Seed) card.Item {
-	if &base == nil || doesOtherCardWin(base, other, b) {
-		base = other
-	}
-	return base
-}
-
-func doesOtherCardWin(first, other card.Item, briscola card.Seed) bool {
-	otherIsBriscola := other.Seed() == briscola
-	isSameSeed := first.Seed() == other.Seed()
-	return (!isSameSeed && otherIsBriscola) || isOtherHigher(first, other)
-}
-
-func isOtherHigher(first, other card.Item) bool {
-	isSameSeed := first.Seed() == other.Seed()
-	isOtherGreaterOnPoints := briscola.Points(first) < briscola.Points(other)
-	isSamePoints := briscola.Points(first) == briscola.Points(other)
-	isOtherGreaterOnNumber := first.Number() < other.Number()
-	return isSameSeed && ((isSamePoints && isOtherGreaterOnNumber) || isOtherGreaterOnPoints)
-}
-
-func isAnticipatedEnd(g *Game) bool {
+func isAnticipatedEnd_v2(g struct {
+	players           team.Players
+	playedCards       set.Cards
+	briscolaCard      card.Item
+	caller, companion *player.Player
+}) bool {
 	var isAnticipatedEnd bool
 	const limit = 3
 	roundsBefore := uint8(len(*g.players[0].Hand()))
 	if roundsBefore <= limit {
 		isNewRoundToStart := len(g.playedCards) == 5
-		isAnticipatedEnd = isNewRoundToStart && predict(g, roundsBefore)
+		isAnticipatedEnd = isNewRoundToStart && predict_v2(struct {
+			players      team.Players
+			briscolaCard card.Item
+			caller       *player.Player
+			companion    *player.Player
+		}{
+			players: g.players, briscolaCard: g.briscolaCard, caller: g.caller, companion: g.companion,
+		}, roundsBefore)
 	}
 	return isAnticipatedEnd
 }
 
-func predict(g *Game, roundsBefore uint8) bool {
+func predict_v2(g struct {
+	players           team.Players
+	briscolaCard      card.Item
+	caller, companion *player.Player
+}, roundsBefore uint8) bool {
 	highbriscolaCard := serie(g.briscolaCard.Seed())
 	var teams [2]bool
 	var cardsChecked uint8
@@ -102,7 +103,7 @@ func predict(g *Game, roundsBefore uint8) bool {
 			continue
 		}
 		p := g.players.At(i)
-		isPlayerInCallersTeam := team.IsInCallers(g)(p)
+		isPlayerInCallersTeam := team.IsInCallers(callers{caller: g.caller, companion: g.companion})(p)
 		teams[0] = teams[0] || isPlayerInCallersTeam
 		teams[1] = teams[1] || !isPlayerInCallersTeam
 		if teams[0] == teams[1] {
@@ -116,11 +117,9 @@ func predict(g *Game, roundsBefore uint8) bool {
 	return false
 }
 
-func serie(briscola card.Seed) set.Cards {
-	serie := []uint8{1, 3, 10, 9, 8, 7, 6, 5, 4, 2}
-	cards := make(set.Cards, len(serie))
-	for i, id := range serie {
-		cards[i] = *card.MustID(id + 10*uint8(briscola))
-	}
-	return cards
+type callers struct {
+	caller, companion *player.Player
 }
+
+func (c callers) Caller() *player.Player    { return c.caller }
+func (c callers) Companion() *player.Player { return c.companion }

@@ -2,6 +2,7 @@ package game
 
 import (
 	"container/list"
+	"errors"
 	"fmt"
 
 	"github.com/mcaci/ita-cards/card"
@@ -46,6 +47,18 @@ func (g *Game) CurrentPlayerIndex() uint8 {
 		return uint8(i)
 	}
 	return 0
+}
+
+func IsRoundOngoing(playedCards set.Cards) bool { return len(playedCards) < 5 }
+func CurrentPlayer(l list.List) *player.Player  { return l.Front().Value.(*player.Player) }
+func CurrentPlayerIndex(cp *player.Player, pls team.Players) (uint8, error) {
+	for i := range pls {
+		if pls[i] != cp {
+			continue
+		}
+		return uint8(i), nil
+	}
+	return 0, errors.New("Not found")
 }
 
 func (g Game) String() string {

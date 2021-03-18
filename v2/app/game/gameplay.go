@@ -1,12 +1,15 @@
 package game
 
 import (
+	"container/list"
 	"fmt"
 
+	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/listen"
 	"github.com/mcaci/msdb5/v2/app/score"
 	"github.com/mcaci/msdb5/v2/app/track"
+	"github.com/mcaci/msdb5/v2/dom/phase"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
@@ -38,7 +41,23 @@ func Start(g *Game) {
 	runCompanion(g)
 
 	// play phase
-	runPlay(g)
+	runPlay_v2(struct {
+		phase        phase.ID
+		playedCards  set.Cards
+		side         set.Cards
+		players      team.Players
+		briscolaCard card.Item
+		lastPlaying  list.List
+		caller       *player.Player
+		companion    *player.Player
+	}{phase: g.phase,
+		playedCards:  g.playedCards,
+		side:         g.side,
+		players:      g.players,
+		briscolaCard: g.briscolaCard,
+		lastPlaying:  g.lastPlaying,
+		caller:       g.caller,
+		companion:    g.companion})
 
 	// end phase
 	runEnd(g)
