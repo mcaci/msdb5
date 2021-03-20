@@ -38,7 +38,13 @@ func Start(g *Game) {
 	runExchange(g, listen.WithTicker)
 
 	// companion choice phase
-	runCompanion(g)
+	cmpInf := runCompanion_v2(struct {
+		players team.Players
+	}{
+		players: g.players,
+	})
+	g.briscolaCard = *cmpInf.briscolaCard
+	g.companion = cmpInf.companion
 
 	// play phase
 	runPlay_v2(struct {

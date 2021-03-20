@@ -7,6 +7,7 @@ import (
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/v2/dom/phase"
 	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 func runCompanion(g *Game) {
@@ -26,5 +27,30 @@ func runCompanion(g *Game) {
 		g.phase++
 
 		// next player: no change
+	}
+}
+
+func runCompanion_v2(g struct {
+	players team.Players
+}) struct {
+	briscolaCard *card.Item
+	companion    *player.Player
+} {
+	for {
+		rand.Seed(time.Now().Unix())
+		c := card.MustID(uint8(rand.Intn(40) + 1))
+		idx, err := g.players.Index(player.IsCardInHand(*c))
+		if err != nil {
+			continue
+		}
+		pl := g.players.At(idx)
+
+		return struct {
+			briscolaCard *card.Item
+			companion    *player.Player
+		}{
+			briscolaCard: c,
+			companion:    pl,
+		}
 	}
 }
