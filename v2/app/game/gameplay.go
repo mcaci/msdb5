@@ -3,6 +3,7 @@ package game
 import (
 	"container/list"
 	"fmt"
+	"math/rand"
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
@@ -35,14 +36,22 @@ func Start(g *Game) {
 	runAuction(g, listen.WithTicker)
 
 	// card exchange phase
-	runExchange(g, listen.WithTicker)
+	runExchange_v2(struct {
+		opts        *Options
+		side        set.Cards
+		lastPlaying list.List
+	}{
+		opts:        g.opts,
+		side:        g.side,
+		lastPlaying: g.lastPlaying,
+	}, listen.WithTicker)
 
 	// companion choice phase
 	cmpInf := runCompanion_v2(struct {
 		players team.Players
 	}{
 		players: g.players,
-	})
+	}, func(id chan<- uint8) { id <- uint8(rand.Intn(40) + 1) })
 	g.briscolaCard = *cmpInf.briscolaCard
 	g.companion = cmpInf.companion
 
