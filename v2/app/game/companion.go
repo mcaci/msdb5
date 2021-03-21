@@ -32,13 +32,16 @@ func runCompanion(g *Game) {
 
 func runCompanion_v2(g struct {
 	players team.Players
-}) struct {
+}, listenForId func(chan<- uint8)) struct {
 	briscolaCard *card.Item
 	companion    *player.Player
 } {
+	id := make(chan uint8)
+	defer close(id)
+
 	for {
-		rand.Seed(time.Now().Unix())
-		c := card.MustID(uint8(rand.Intn(40) + 1))
+		go listenForId(id)
+		c := card.MustID(<-id)
 		idx, err := g.players.Index(player.IsCardInHand(*c))
 		if err != nil {
 			continue
