@@ -62,7 +62,6 @@ func runPlay_v2(g struct {
 			set.Move(cardToCollect(), g.players[nextPlayer].Pile())
 		}
 		track.Player(&g.lastPlaying, g.players[nextPlayer])
-
 	}
 }
 
