@@ -15,21 +15,43 @@ func Collector(p phase.ID, all team.Players, side *set.Cards, played *set.Cards)
 			collector = func() *set.Cards { return played }
 		}
 	case phase.End:
-		collector = allCards{all, side, played}.leftInGame
+		collector = NewAllCards(all, side, played).Set
 	}
 	return
 }
 
-type allCards struct {
+var none *set.Cards = &set.Cards{}
+
+type RoundCards struct {
+	onTable *set.Cards
+}
+
+func NewRoundCards(onTable *set.Cards) *RoundCards { return &RoundCards{onTable: onTable} }
+func (rc *RoundCards) Set() *set.Cards {
+	if len(*rc.onTable) == 5 {
+		return rc.onTable
+	}
+	return none
+}
+
+type AllCards struct {
 	all           team.Players
 	side, onTable *set.Cards
 }
 
-func (a allCards) leftInGame() *set.Cards {
+func NewAllCards(players team.Players, side, onTable *set.Cards) *AllCards {
+	return &AllCards{
+		all:     players,
+		side:    side,
+		onTable: onTable,
+	}
+}
+
+func (ac *AllCards) Set() *set.Cards {
 	leftoverCards := &set.Cards{}
-	set.Move(a.side, leftoverCards)
-	set.Move(a.onTable, leftoverCards)
-	for _, p := range a.all {
+	set.Move(ac.side, leftoverCards)
+	set.Move(ac.onTable, leftoverCards)
+	for _, p := range ac.all {
 		set.Move(p.Hand(), leftoverCards)
 	}
 	return leftoverCards

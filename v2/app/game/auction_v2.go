@@ -1,7 +1,9 @@
 package game
 
 import (
+	"container/list"
 	"context"
+	"errors"
 	"log"
 	"math/rand"
 
@@ -11,7 +13,10 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-func runAuction_v2(g *Game, listenFor func(context.Context, func())) struct {
+func runAuction_v2(g struct {
+	players     team.Players
+	lastPlaying list.List
+}, listenFor func(context.Context, func())) struct {
 	score  auction.Score
 	caller *player.Player
 } {
@@ -26,11 +31,21 @@ func runAuction_v2(g *Game, listenFor func(context.Context, func())) struct {
 	}()
 
 	var caller *player.Player
-	var scr auction.Score
+	var curr auction.Score
 
 	for score := range numbers {
-		res := checkUpdateScore_v2(g, score)
-		scr = res.score
+		next := auction.Score(score)
+		res := checkUpdateScore_v2(struct {
+			curr, next  auction.Score
+			players     team.Players
+			lastPlaying list.List
+		}{
+			curr:        curr,
+			next:        next,
+			players:     g.players,
+			lastPlaying: g.lastPlaying,
+		})
+		curr = res.score
 		if res.fold != nil {
 			res.fold()
 		}
@@ -38,73 +53,83 @@ func runAuction_v2(g *Game, listenFor func(context.Context, func())) struct {
 			// set caller
 			caller = g.players.At(g.players.MustIndex(notFolded))
 			// next phase
-			g.phase++
 			done <- struct{}{}
 			close(done)
 		}
-		idx, err := CurrentPlayerIndex(CurrentPlayer(g.lastPlaying), g.players)
+		pl := CurrentPlayer(g.lastPlaying)
+		idx, err := CurrentPlayerIndex(pl, g.players)
 		if err != nil {
-			log.Println(err)
+			log.Fatalf("error found: %v. Exiting.", err)
 		}
 		// next player
-		nextPlayer := roundRobin(idx, 1, numberOfPlayers)
-		for player.Folded(g.players[nextPlayer]) {
-			nextPlayer = roundRobin(nextPlayer, 1, numberOfPlayers)
+		nextPlayerInfo := rotate(idx, g.players)
+		if nextPlayerInfo.err != nil {
+			log.Fatalf("error found: %v. Exiting.", err)
 		}
-		track.Player(&g.lastPlaying, g.players[nextPlayer])
+		track.Player(&g.lastPlaying, nextPlayerInfo.p)
 	}
 	return struct {
 		score  auction.Score
 		caller *player.Player
 	}{
-		score:  scr,
+		score:  curr,
 		caller: caller,
 	}
 }
 
-func rotate(start uint8, players team.Players) uint8 {
-	nextPlayer := roundRobin(start, 1, numberOfPlayers)
-	for player.Folded(players[nextPlayer]) {
-		nextPlayer = roundRobin(nextPlayer, 1, numberOfPlayers)
+func rotate(currID uint8, players team.Players) struct {
+	p   *player.Player
+	err error
+} {
+	for i := 0; i < 2*len(players); i++ {
+		currID = roundRobin(currID, 1, uint8(len(players)))
+		if player.Folded(players[currID]) {
+			continue
+		}
+		return struct {
+			p   *player.Player
+			err error
+		}{p: players[currID], err: nil}
 	}
-	return nextPlayer
+	return struct {
+		p   *player.Player
+		err error
+	}{p: nil, err: errors.New("rotated twice on the number of players and no player found in play.")}
 }
 
-func checkUpdateScore_v2(g *Game, score int) struct {
+func checkUpdateScore_v2(g struct {
+	curr, next  auction.Score
+	players     team.Players
+	lastPlaying list.List
+}) struct {
 	score auction.Score
 	fold  func()
 } {
-	toFold := player.Folded(CurrentPlayer(g.lastPlaying)) || !auction.ScoreCmp(g.auctionScore, auction.Score(score))
+	toFold := player.Folded(CurrentPlayer(g.lastPlaying)) || !auction.ScoreCmp(g.curr, g.next)
 	if toFold {
 		return struct {
 			score auction.Score
 			fold  func()
 		}{
-			score: g.auctionScore,
+			score: g.curr,
 			fold:  func() { CurrentPlayer(g.lastPlaying).Fold() },
 		}
 	}
-	newScore := auction.Max120(g.auctionScore, auction.Score(score))
-	if newScore >= 120 {
-		return struct {
-			score auction.Score
-			fold  func()
-		}{
-			score: newScore,
-			fold: func() {
+	newScore := auction.Max120(g.curr, g.next)
+	return struct {
+		score auction.Score
+		fold  func()
+	}{
+		score: newScore,
+		fold: func() {
+			if newScore >= 120 {
 				for _, p := range g.players {
 					if p == CurrentPlayer(g.lastPlaying) {
 						continue
 					}
 					p.Fold()
 				}
-			},
-		}
-	}
-	return struct {
-		score auction.Score
-		fold  func()
-	}{
-		score: g.auctionScore,
+			}
+		},
 	}
 }

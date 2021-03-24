@@ -24,8 +24,7 @@ func runEnd(g *Game) {
 	}
 
 	// collect cards
-	cardToCollect := collect.Collector(g.phase, g.players, &g.side, &g.playedCards)
-	set.Move(cardToCollect(), g.players[nextPlayer].Pile())
+	set.Move(collect.NewAllCards(g.players, &g.side, &g.playedCards).Set(), g.players[nextPlayer].Pile())
 
 	track.Player(&g.lastPlaying, g.players[nextPlayer])
 }

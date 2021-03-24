@@ -9,7 +9,6 @@ import (
 	"github.com/mcaci/msdb5/v2/app/listen"
 	"github.com/mcaci/msdb5/v2/app/score"
 	"github.com/mcaci/msdb5/v2/app/track"
-	"github.com/mcaci/msdb5/v2/dom/phase"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
@@ -32,7 +31,15 @@ func Start(g *Game) {
 	track.Player(&g.lastPlaying, g.players[0])
 
 	// auction phase
-	runAuction(g, listen.WithTicker)
+	aucInf := runAuction_v2(struct {
+		players     team.Players
+		lastPlaying list.List
+	}{
+		players:     g.players,
+		lastPlaying: g.lastPlaying,
+	}, listen.WithTicker)
+	g.auctionScore = aucInf.score
+	g.caller = aucInf.caller
 
 	// card exchange phase
 	runExchange(g, listen.WithTicker)
@@ -48,22 +55,17 @@ func Start(g *Game) {
 
 	// play phase
 	runPlay_v2(struct {
-		phase        phase.ID
-		playedCards  set.Cards
-		side         set.Cards
 		players      team.Players
 		briscolaCard card.Item
 		lastPlaying  list.List
 		caller       *player.Player
 		companion    *player.Player
-	}{phase: g.phase,
-		playedCards:  g.playedCards,
-		side:         g.side,
+	}{
 		players:      g.players,
-		briscolaCard: g.briscolaCard,
+		briscolaCard: *cmpInf.briscolaCard,
 		lastPlaying:  g.lastPlaying,
-		caller:       g.caller,
-		companion:    g.companion})
+		caller:       aucInf.caller,
+		companion:    cmpInf.companion})
 
 	// end phase
 	runEnd(g)
