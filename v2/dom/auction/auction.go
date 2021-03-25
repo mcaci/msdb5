@@ -20,7 +20,28 @@ func Update(actual, proposed Score) Score {
 	return actualScore
 }
 
+// Max120 func
+func Max120(actual, proposed Score) Score {
+	const minScore = 61
+	const maxScore = 120
+	switch {
+	case proposed < actual:
+		return actual
+	case proposed < minScore:
+		return minScore
+	case proposed > maxScore:
+		return maxScore
+	default:
+		return proposed
+	}
+}
+
 // CheckScores func
 func CheckScores(actual, proposed Score) bool {
+	return proposed > actual
+}
+
+// ScoreCmp func
+func ScoreCmp(actual, proposed Score) bool {
 	return proposed > actual
 }

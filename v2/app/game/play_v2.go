@@ -9,21 +9,33 @@ import (
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/collect"
 	"github.com/mcaci/msdb5/v2/app/track"
-	"github.com/mcaci/msdb5/v2/dom/phase"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 func runPlay_v2(g struct {
-	phase             phase.ID
-	playedCards       set.Cards
-	side              set.Cards
 	players           team.Players
 	briscolaCard      card.Item
 	lastPlaying       list.List
 	caller, companion *player.Player
-}) {
-	for g.phase == phase.PlayingCards {
+}) struct {
+	onBoard set.Cards
+} {
+	var playedCards set.Cards
+
+	for !endCond(struct {
+		playedCards  set.Cards
+		players      team.Players
+		briscolaCard card.Item
+		caller       *player.Player
+		companion    *player.Player
+	}{
+		playedCards:  playedCards,
+		players:      g.players,
+		briscolaCard: g.briscolaCard,
+		caller:       g.caller,
+		companion:    g.companion,
+	}) {
 		pl := CurrentPlayer(g.lastPlaying)
 		hnd := pl.Hand()
 		if len(*hnd) > 0 {
@@ -31,39 +43,45 @@ func runPlay_v2(g struct {
 			idx := rand.Intn(len(*hnd))
 			crd := (*hnd)[idx]
 			index := hnd.Find(crd)
-			g.playedCards.Add((*hnd)[index])
+			playedCards.Add((*hnd)[index])
 			*hnd = append((*hnd)[:index], (*hnd)[index+1:]...)
-		}
-
-		// next phase
-		if g.players.All(player.IsHandEmpty) || isAnticipatedEnd_v2(struct {
-			players           team.Players
-			playedCards       set.Cards
-			briscolaCard      card.Item
-			caller, companion *player.Player
-		}{players: g.players, playedCards: g.playedCards, briscolaCard: g.briscolaCard,
-			caller: g.caller, companion: g.companion}) {
-			g.phase++
 		}
 
 		// next player
 		idx, err := CurrentPlayerIndex(pl, g.players)
 		if err != nil {
-			return
+			return struct{ onBoard set.Cards }{}
 		}
 		nextPlayer := roundRobin(idx, 1, numberOfPlayers)
-		if !IsRoundOngoing(g.playedCards) {
+		if !IsRoundOngoing(playedCards) {
 			// end current round
-			winningCardIndex := indexOfWinningCard(g.playedCards, g.briscolaCard.Seed())
+			winningCardIndex := indexOfWinningCard(playedCards, g.briscolaCard.Seed())
 			nextPlayer = roundRobin(nextPlayer, winningCardIndex, numberOfPlayers)
 
-			// collect cards
-			cardToCollect := collect.Collector(g.phase, g.players, &g.side, &g.playedCards)
-			set.Move(cardToCollect(), g.players[nextPlayer].Pile())
+			set.Move(collect.NewRoundCards(&playedCards).Set(), g.players[nextPlayer].Pile())
 		}
 		track.Player(&g.lastPlaying, g.players[nextPlayer])
-
 	}
+	return struct{ onBoard set.Cards }{
+		onBoard: playedCards,
+	}
+}
+
+func endCond(g struct {
+	playedCards       set.Cards
+	players           team.Players
+	briscolaCard      card.Item
+	caller, companion *player.Player
+}) bool {
+	// next phase
+	return g.players.All(player.IsHandEmpty) ||
+		isAnticipatedEnd_v2(struct {
+			players           team.Players
+			playedCards       set.Cards
+			briscolaCard      card.Item
+			caller, companion *player.Player
+		}{players: g.players, playedCards: g.playedCards, briscolaCard: g.briscolaCard,
+			caller: g.caller, companion: g.companion})
 }
 
 func isAnticipatedEnd_v2(g struct {

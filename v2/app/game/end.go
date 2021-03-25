@@ -1,13 +1,23 @@
 package game
 
 import (
+	"container/list"
+
+	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/collect"
 	"github.com/mcaci/msdb5/v2/app/track"
 	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-func runEnd(g *Game) {
+func runEnd(g struct {
+	players      team.Players
+	briscolaCard card.Item
+	lastPlaying  list.List
+	playedCards  set.Cards
+	side         set.Cards
+}) {
 	// no more cards to play
 	if g.players.All(player.IsHandEmpty) {
 		return
@@ -24,8 +34,7 @@ func runEnd(g *Game) {
 	}
 
 	// collect cards
-	cardToCollect := collect.Collector(g.phase, g.players, &g.side, &g.playedCards)
-	set.Move(cardToCollect(), g.players[nextPlayer].Pile())
+	set.Move(collect.NewAllCards(g.players, &g.side, &g.playedCards).Set(), g.players[nextPlayer].Pile())
 
 	track.Player(&g.lastPlaying, g.players[nextPlayer])
 }

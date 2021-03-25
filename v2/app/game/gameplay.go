@@ -7,10 +7,10 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/app/game/auction"
 	"github.com/mcaci/msdb5/v2/app/listen"
 	"github.com/mcaci/msdb5/v2/app/score"
 	"github.com/mcaci/msdb5/v2/app/track"
-	"github.com/mcaci/msdb5/v2/dom/phase"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
@@ -33,17 +33,22 @@ func Start(g *Game) {
 	track.Player(&g.lastPlaying, g.players[0])
 
 	// auction phase
-	runAuction(g, listen.WithTicker)
+	aucInf := auction.Run(&auction.Options{
+		Players:     g.players,
+		LastPlaying: g.lastPlaying,
+	}, listen.WithTicker)
+	g.auctionScore = aucInf.Score
+	g.caller = aucInf.Caller
 
 	// card exchange phase
 	runExchange_v2(struct {
-		opts        *Options
-		side        set.Cards
-		lastPlaying list.List
+		opts *Options
+		side set.Cards
+		pl   *player.Player
 	}{
-		opts:        g.opts,
-		side:        g.side,
-		lastPlaying: g.lastPlaying,
+		opts: g.opts,
+		side: g.side,
+		pl:   CurrentPlayer(g.lastPlaying),
 	}, listen.WithTicker)
 
 	// companion choice phase
@@ -56,26 +61,32 @@ func Start(g *Game) {
 	g.companion = cmpInf.companion
 
 	// play phase
-	runPlay_v2(struct {
-		phase        phase.ID
-		playedCards  set.Cards
-		side         set.Cards
+	plInfo := runPlay_v2(struct {
 		players      team.Players
 		briscolaCard card.Item
 		lastPlaying  list.List
 		caller       *player.Player
 		companion    *player.Player
-	}{phase: g.phase,
-		playedCards:  g.playedCards,
-		side:         g.side,
+	}{
 		players:      g.players,
-		briscolaCard: g.briscolaCard,
+		briscolaCard: *cmpInf.briscolaCard,
 		lastPlaying:  g.lastPlaying,
-		caller:       g.caller,
-		companion:    g.companion})
+		caller:       aucInf.Caller,
+		companion:    cmpInf.companion})
 
 	// end phase
-	runEnd(g)
+	runEnd(struct {
+		players      team.Players
+		briscolaCard card.Item
+		lastPlaying  list.List
+		playedCards  set.Cards
+		side         set.Cards
+	}{
+		players:      g.players,
+		briscolaCard: *cmpInf.briscolaCard,
+		lastPlaying:  g.lastPlaying,
+		playedCards:  plInfo.onBoard,
+	})
 }
 
 func Score(g *Game) string {
