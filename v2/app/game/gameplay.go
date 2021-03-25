@@ -6,6 +6,7 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/app/game/auction"
 	"github.com/mcaci/msdb5/v2/app/listen"
 	"github.com/mcaci/msdb5/v2/app/score"
 	"github.com/mcaci/msdb5/v2/app/track"
@@ -31,18 +32,23 @@ func Start(g *Game) {
 	track.Player(&g.lastPlaying, g.players[0])
 
 	// auction phase
-	aucInf := runAuction_v2(struct {
-		players     team.Players
-		lastPlaying list.List
-	}{
-		players:     g.players,
-		lastPlaying: g.lastPlaying,
+	aucInf := auction.Run(&auction.Options{
+		Players:     g.players,
+		LastPlaying: g.lastPlaying,
 	}, listen.WithTicker)
-	g.auctionScore = aucInf.score
-	g.caller = aucInf.caller
+	g.auctionScore = aucInf.Score
+	g.caller = aucInf.Caller
 
 	// card exchange phase
-	runExchange(g, listen.WithTicker)
+	runExchange_v2(struct {
+		opts *Options
+		side set.Cards
+		pl   *player.Player
+	}{
+		opts: g.opts,
+		side: g.side,
+		pl:   CurrentPlayer(g.lastPlaying),
+	}, listen.WithTicker)
 
 	// companion choice phase
 	cmpInf := runCompanion_v2(struct {
@@ -54,7 +60,7 @@ func Start(g *Game) {
 	g.companion = cmpInf.companion
 
 	// play phase
-	runPlay_v2(struct {
+	plInfo := runPlay_v2(struct {
 		players      team.Players
 		briscolaCard card.Item
 		lastPlaying  list.List
@@ -64,11 +70,22 @@ func Start(g *Game) {
 		players:      g.players,
 		briscolaCard: *cmpInf.briscolaCard,
 		lastPlaying:  g.lastPlaying,
-		caller:       aucInf.caller,
+		caller:       aucInf.Caller,
 		companion:    cmpInf.companion})
 
 	// end phase
-	runEnd(g)
+	runEnd(struct {
+		players      team.Players
+		briscolaCard card.Item
+		lastPlaying  list.List
+		playedCards  set.Cards
+		side         set.Cards
+	}{
+		players:      g.players,
+		briscolaCard: *cmpInf.briscolaCard,
+		lastPlaying:  g.lastPlaying,
+		playedCards:  plInfo.onBoard,
+	})
 }
 
 func Score(g *Game) string {

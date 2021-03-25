@@ -18,7 +18,9 @@ func runPlay_v2(g struct {
 	briscolaCard      card.Item
 	lastPlaying       list.List
 	caller, companion *player.Player
-}) {
+}) struct {
+	onBoard set.Cards
+} {
 	var playedCards set.Cards
 
 	for !endCond(struct {
@@ -48,7 +50,7 @@ func runPlay_v2(g struct {
 		// next player
 		idx, err := CurrentPlayerIndex(pl, g.players)
 		if err != nil {
-			return
+			return struct{ onBoard set.Cards }{}
 		}
 		nextPlayer := roundRobin(idx, 1, numberOfPlayers)
 		if !IsRoundOngoing(playedCards) {
@@ -59,6 +61,9 @@ func runPlay_v2(g struct {
 			set.Move(collect.NewRoundCards(&playedCards).Set(), g.players[nextPlayer].Pile())
 		}
 		track.Player(&g.lastPlaying, g.players[nextPlayer])
+	}
+	return struct{ onBoard set.Cards }{
+		onBoard: playedCards,
 	}
 }
 
