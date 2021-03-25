@@ -1,24 +1,17 @@
 package auction
 
 import (
-	"container/list"
 	"context"
-	"errors"
+	"fmt"
 	"log"
 	"math/rand"
 
-	"github.com/mcaci/msdb5/v2/app/track"
 	"github.com/mcaci/msdb5/v2/dom/auction"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-type Options struct {
-	Players     team.Players
-	LastPlaying list.List
-}
-
-func Run(opt *Options, listenFor func(context.Context, func())) struct {
+func Run(players team.Players, listenFor func(context.Context, func())) struct {
 	Score  auction.Score
 	Caller *player.Player
 } {
@@ -32,22 +25,24 @@ func Run(opt *Options, listenFor func(context.Context, func())) struct {
 		close(numbers)
 	}()
 
-	var caller *player.Player
 	var curr auction.Score
+	var currID uint8
 
 	for score := range numbers {
-		pl := currentPlayer(opt.LastPlaying)
+		pl := players[currID]
 		next := auction.Score(score)
-
-		// Player is folding
-		if toFold := player.Folded(pl) || !auction.ScoreCmp(curr, next); toFold {
-			pl.Fold()
-		}
-
-		// Fold everyone if score is 120 or more
 		curr = auction.Max120(curr, next)
-		if curr >= 120 {
-			for _, p := range opt.Players {
+
+		switch {
+		// Player has folded already
+		case player.Folded(pl):
+			break
+		// Player for scoring less than current
+		case auction.ScoreCmp(curr, next) >= 0:
+			pl.Fold()
+		// Fold everyone if score is 120 or more
+		case auction.ScoreCmp(120, next) >= 0:
+			for _, p := range players {
 				if p == pl {
 					continue
 				}
@@ -55,52 +50,38 @@ func Run(opt *Options, listenFor func(context.Context, func())) struct {
 			}
 		}
 
-		// End the loop if only one person is left
-		if team.Count(opt.Players, notFolded) == 1 {
-			// set caller
-			caller = opt.Players.At(opt.Players.MustIndex(notFolded))
-			// next phase
-			done <- struct{}{}
-			close(done)
+		// End the loop if only one not folded players is left
+		if team.Count(players, notFolded) != 1 {
+			// else search next player
+			id, err := rotateOn(players, currID, notFolded)
+			if err != nil {
+				log.Fatalf("error found: %v. Exiting.", err)
+			}
+			currID = id
 		}
 
-		// next player
-		currID, err := currentPlayerIndex(opt.LastPlaying, opt.Players)
-		if err != nil {
-			log.Fatalf("error found: %v. Exiting.", err)
-		}
-		var found bool
-		for i := 0; i < 2*len(opt.Players); i++ {
-			currID = roundRobin(currID, 1, uint8(len(opt.Players)))
-			if player.Folded(opt.Players[currID]) {
-				continue
-			}
-			found = true
-			track.Player(&opt.LastPlaying, opt.Players[currID])
-		}
-		if !found {
-			log.Fatalln("rotated twice on the number of players and no player found in play. Exiting.")
-		}
+		// next phase
+		done <- struct{}{}
+		close(done)
 	}
 	return struct {
 		Score  auction.Score
 		Caller *player.Player
 	}{
 		Score:  curr,
-		Caller: caller,
+		Caller: players[players.MustIndex(notFolded)],
 	}
 }
 
-func notFolded(p *player.Player) bool          { return !player.Folded(p) }
-func roundRobin(idx, off, size uint8) uint8    { return (idx + off) % size }
-func currentPlayer(l list.List) *player.Player { return l.Front().Value.(*player.Player) }
-func currentPlayerIndex(l list.List, pls team.Players) (uint8, error) {
-	cp := currentPlayer(l)
-	for i := range pls {
-		if pls[i] != cp {
+func notFolded(p *player.Player) bool { return !player.Folded(p) }
+
+func rotateOn(players team.Players, idx uint8, appliesTo player.Predicate) (uint8, error) {
+	for i := 0; i < 2*len(players); i++ {
+		idx = (idx + 1) % uint8(len(players))
+		if !appliesTo(players[idx]) {
 			continue
 		}
-		return uint8(i), nil
+		return idx, nil
 	}
-	return 0, errors.New("Not found")
+	return 0, fmt.Errorf("rotated twice on the number of players and no player found in play.")
 }

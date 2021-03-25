@@ -33,10 +33,7 @@ func Start(g *Game) {
 	track.Player(&g.lastPlaying, g.players[0])
 
 	// auction phase
-	aucInf := auction.Run(&auction.Options{
-		Players:     g.players,
-		LastPlaying: g.lastPlaying,
-	}, listen.WithTicker)
+	aucInf := auction.Run(g.players, listen.WithTicker)
 	g.auctionScore = aucInf.Score
 	g.caller = aucInf.Caller
 

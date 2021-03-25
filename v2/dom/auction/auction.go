@@ -42,6 +42,13 @@ func CheckScores(actual, proposed Score) bool {
 }
 
 // ScoreCmp func
-func ScoreCmp(actual, proposed Score) bool {
-	return proposed > actual
+func ScoreCmp(actual, proposed Score) int {
+	switch {
+	case actual < proposed:
+		return -1
+	case actual > proposed:
+		return 1
+	default:
+		return 0
+	}
 }
