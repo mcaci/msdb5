@@ -8,6 +8,8 @@ import (
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/game/auction"
+	"github.com/mcaci/msdb5/v2/app/game/companion"
+	"github.com/mcaci/msdb5/v2/app/game/exchange"
 	"github.com/mcaci/msdb5/v2/app/listen"
 	"github.com/mcaci/msdb5/v2/app/score"
 	"github.com/mcaci/msdb5/v2/app/track"
@@ -38,24 +40,19 @@ func Start(g *Game) {
 	g.caller = aucInf.Caller
 
 	// card exchange phase
-	runExchange_v2(struct {
-		opts *Options
-		side set.Cards
-		pl   *player.Player
-	}{
-		opts: g.opts,
-		side: g.side,
-		pl:   CurrentPlayer(g.lastPlaying),
-	}, listen.WithTicker)
+	if g.opts.WithSide {
+		exchange.Run(struct {
+			Hand, Side *set.Cards
+		}{
+			Hand: CurrentPlayer(g.lastPlaying).Hand(),
+			Side: &g.side,
+		}, listen.WithTicker)
+	}
 
 	// companion choice phase
-	cmpInf := runCompanion_v2(struct {
-		players team.Players
-	}{
-		players: g.players,
-	}, func(id chan<- uint8) { id <- uint8(rand.Intn(40) + 1) })
-	g.briscolaCard = *cmpInf.briscolaCard
-	g.companion = cmpInf.companion
+	cmpInf := companion.Run(g.players, func(id chan<- uint8) { id <- uint8(rand.Intn(40) + 1) })
+	g.briscolaCard = *cmpInf.Briscola
+	g.companion = cmpInf.Companion
 
 	// play phase
 	plInfo := runPlay_v2(struct {
@@ -66,23 +63,22 @@ func Start(g *Game) {
 		companion    *player.Player
 	}{
 		players:      g.players,
-		briscolaCard: *cmpInf.briscolaCard,
+		briscolaCard: *cmpInf.Briscola,
 		lastPlaying:  g.lastPlaying,
 		caller:       aucInf.Caller,
-		companion:    cmpInf.companion})
+		companion:    cmpInf.Companion})
 
 	// end phase
 	runEnd(struct {
 		players      team.Players
 		briscolaCard card.Item
-		lastPlaying  list.List
 		playedCards  set.Cards
 		side         set.Cards
 	}{
 		players:      g.players,
-		briscolaCard: *cmpInf.briscolaCard,
-		lastPlaying:  g.lastPlaying,
+		briscolaCard: *cmpInf.Briscola,
 		playedCards:  plInfo.onBoard,
+		side:         g.side,
 	})
 }
 

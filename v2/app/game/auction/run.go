@@ -25,42 +25,16 @@ func Run(players team.Players, listenFor func(context.Context, func())) struct {
 		close(numbers)
 	}()
 
-	var curr auction.Score
+	var score auction.Score
 	var currID uint8
 
-	for score := range numbers {
-		pl := players[currID]
-		next := auction.Score(score)
-		curr = auction.Max120(curr, next)
-
-		switch {
-		// Player has folded already
-		case player.Folded(pl):
-			break
-		// Player for scoring less than current
-		case auction.ScoreCmp(curr, next) >= 0:
-			pl.Fold()
-		// Fold everyone if score is 120 or more
-		case auction.ScoreCmp(120, next) >= 0:
-			for _, p := range players {
-				if p == pl {
-					continue
-				}
-				p.Fold()
-			}
+	for n := range numbers {
+		r := Round(score, auction.Score(n), currID, players)
+		score = r.s
+		currID = r.id
+		if !r.end {
+			continue
 		}
-
-		// End the loop if only one not folded players is left
-		if team.Count(players, notFolded) != 1 {
-			// else search next player
-			id, err := rotateOn(players, currID, notFolded)
-			if err != nil {
-				log.Fatalf("error found: %v. Exiting.", err)
-			}
-			currID = id
-		}
-
-		// next phase
 		done <- struct{}{}
 		close(done)
 	}
@@ -68,13 +42,19 @@ func Run(players team.Players, listenFor func(context.Context, func())) struct {
 		Score  auction.Score
 		Caller *player.Player
 	}{
-		Score:  curr,
+		Score:  score,
 		Caller: players[players.MustIndex(notFolded)],
 	}
 }
 
 func notFolded(p *player.Player) bool { return !player.Folded(p) }
-
+func mustRotateOnNotFolded(players team.Players, from uint8) uint8 {
+	id, err := rotateOn(players, from, notFolded)
+	if err != nil {
+		log.Fatalf("error found: %v. Exiting.", err)
+	}
+	return id
+}
 func rotateOn(players team.Players, idx uint8, appliesTo player.Predicate) (uint8, error) {
 	for i := 0; i < 2*len(players); i++ {
 		idx = (idx + 1) % uint8(len(players))

@@ -20,35 +20,49 @@ func Update(actual, proposed Score) Score {
 	return actualScore
 }
 
-// Max120 func
-func Max120(actual, proposed Score) Score {
-	const minScore = 61
-	const maxScore = 120
-	switch {
-	case proposed < actual:
-		return actual
-	case proposed < minScore:
-		return minScore
-	case proposed > maxScore:
-		return maxScore
-	default:
-		return proposed
-	}
-}
-
 // CheckScores func
 func CheckScores(actual, proposed Score) bool {
 	return proposed > actual
 }
 
-// ScoreCmp func
-func ScoreCmp(actual, proposed Score) int {
-	switch {
-	case actual < proposed:
-		return -1
-	case actual > proposed:
-		return 1
+type cmpInfo int8
+
+const (
+	LT_MIN_SCORE cmpInfo = iota - 2
+	LE_ACTUAL
+	GT_ACTUAL
+	GE_MAX_SCORE
+)
+
+const (
+	MIN_SCORE = 61
+	MAX_SCORE = 120
+)
+
+// CmpAndSet func
+func CmpAndSet(actual, proposed Score) Score {
+	switch Cmp(actual, proposed) {
+	case LT_MIN_SCORE:
+		return MIN_SCORE
+	case LE_ACTUAL:
+		return actual
+	case GE_MAX_SCORE:
+		return MAX_SCORE
 	default:
-		return 0
+		return proposed
+	}
+}
+
+// Cmp func
+func Cmp(actual, proposed Score) cmpInfo {
+	switch {
+	case proposed <= actual:
+		return LE_ACTUAL
+	case proposed < MIN_SCORE:
+		return LT_MIN_SCORE
+	case proposed >= MAX_SCORE:
+		return GE_MAX_SCORE
+	default:
+		return GT_ACTUAL
 	}
 }
