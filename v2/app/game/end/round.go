@@ -1,73 +1,13 @@
-package game
+package end
 
 import (
-	"container/list"
-	"math/rand"
-	"time"
-
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/app/collect"
-	"github.com/mcaci/msdb5/v2/app/track"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-func runPlay_v2(g struct {
-	players           team.Players
-	briscolaCard      card.Item
-	lastPlaying       list.List
-	caller, companion *player.Player
-}) struct {
-	onBoard set.Cards
-} {
-	var playedCards set.Cards
-
-	for !endCond(struct {
-		playedCards  set.Cards
-		players      team.Players
-		briscolaCard card.Item
-		caller       *player.Player
-		companion    *player.Player
-	}{
-		playedCards:  playedCards,
-		players:      g.players,
-		briscolaCard: g.briscolaCard,
-		caller:       g.caller,
-		companion:    g.companion,
-	}) {
-		pl := CurrentPlayer(g.lastPlaying)
-		hnd := pl.Hand()
-		if len(*hnd) > 0 {
-			rand.Seed(time.Now().Unix())
-			idx := rand.Intn(len(*hnd))
-			crd := (*hnd)[idx]
-			index := hnd.Find(crd)
-			playedCards.Add((*hnd)[index])
-			*hnd = append((*hnd)[:index], (*hnd)[index+1:]...)
-		}
-
-		// next player
-		idx, err := CurrentPlayerIndex(pl, g.players)
-		if err != nil {
-			return struct{ onBoard set.Cards }{}
-		}
-		nextPlayer := roundRobin(idx, 1, numberOfPlayers)
-		if !IsRoundOngoing(playedCards) {
-			// end current round
-			winningCardIndex := indexOfWinningCard(playedCards, g.briscolaCard.Seed())
-			nextPlayer = roundRobin(nextPlayer, winningCardIndex, numberOfPlayers)
-
-			set.Move(collect.NewRoundCards(&playedCards).Set(), g.players[nextPlayer].Pile())
-		}
-		track.Player(&g.lastPlaying, g.players[nextPlayer])
-	}
-	return struct{ onBoard set.Cards }{
-		onBoard: playedCards,
-	}
-}
-
-func endCond(g struct {
+func Cond(g struct {
 	playedCards       set.Cards
 	players           team.Players
 	briscolaCard      card.Item
@@ -133,6 +73,15 @@ func predict_v2(g struct {
 		}
 	}
 	return false
+}
+
+func serie(briscola card.Seed) set.Cards {
+	serie := []uint8{1, 3, 10, 9, 8, 7, 6, 5, 4, 2}
+	cards := make(set.Cards, len(serie))
+	for i, id := range serie {
+		cards[i] = *card.MustID(id + 10*uint8(briscola))
+	}
+	return cards
 }
 
 type callers struct {

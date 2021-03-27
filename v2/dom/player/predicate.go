@@ -13,8 +13,8 @@ func IsCardInHand(c card.Item) Predicate { return func(p *Player) bool { return 
 // Matching func
 func Matching(o *Player) Predicate { return func(p *Player) bool { return p == o } }
 
-// IsHandEmpty var
-var IsHandEmpty Predicate = func(p *Player) bool { return len(p.hand) == 0 }
+// EmptyHanded var
+var EmptyHanded Predicate = func(p *Player) bool { return len(p.hand) == 0 }
 
 // Folded var
 var Folded Predicate = func(p *Player) bool { return p.fold }

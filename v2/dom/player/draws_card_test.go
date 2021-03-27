@@ -7,7 +7,7 @@ import (
 )
 
 func TestPlayerHasNoCardsAtStartGame(t *testing.T) {
-	if p := New(); !IsHandEmpty(p) {
+	if p := New(); !EmptyHanded(p) {
 		t.Fatal("Player should not have cards at creation")
 	}
 }

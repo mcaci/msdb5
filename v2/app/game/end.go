@@ -15,7 +15,7 @@ func runEnd(g struct {
 	side         set.Cards
 }) {
 	// no more cards to play
-	if g.players.All(player.IsHandEmpty) {
+	if g.players.All(player.EmptyHanded) {
 		return
 	}
 

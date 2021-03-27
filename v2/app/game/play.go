@@ -28,7 +28,7 @@ func runPlay(g *Game) {
 		}
 
 		// next phase
-		if g.players.All(player.IsHandEmpty) || isAnticipatedEnd(g) {
+		if g.players.All(player.EmptyHanded) || isAnticipatedEnd(g) {
 			g.phase++
 		}
 
