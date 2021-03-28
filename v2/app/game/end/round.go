@@ -8,27 +8,25 @@ import (
 )
 
 func Cond(g struct {
-	playedCards       set.Cards
-	players           team.Players
-	briscolaCard      card.Item
-	caller, companion *player.Player
+	PlayedCards  set.Cards
+	Players      team.Players
+	BriscolaCard interface{ Seed() card.Seed }
+	Callers      team.Callers
 }) bool {
-	// next phase
-	return g.players.All(player.EmptyHanded) ||
+	return g.Players.All(player.EmptyHanded) ||
 		isAnticipatedEnd_v2(struct {
-			players           team.Players
-			playedCards       set.Cards
-			briscolaCard      card.Item
-			caller, companion *player.Player
-		}{players: g.players, playedCards: g.playedCards, briscolaCard: g.briscolaCard,
-			caller: g.caller, companion: g.companion})
+			players      team.Players
+			playedCards  set.Cards
+			briscolaCard interface{ Seed() card.Seed }
+			callers      team.Callers
+		}{players: g.Players, playedCards: g.PlayedCards, briscolaCard: g.BriscolaCard, callers: g.Callers})
 }
 
 func isAnticipatedEnd_v2(g struct {
-	players           team.Players
-	playedCards       set.Cards
-	briscolaCard      card.Item
-	caller, companion *player.Player
+	players      team.Players
+	playedCards  set.Cards
+	briscolaCard interface{ Seed() card.Seed }
+	callers      team.Callers
 }) bool {
 	var isAnticipatedEnd bool
 	const limit = 3
@@ -37,20 +35,19 @@ func isAnticipatedEnd_v2(g struct {
 		isNewRoundToStart := len(g.playedCards) == 5
 		isAnticipatedEnd = isNewRoundToStart && predict_v2(struct {
 			players      team.Players
-			briscolaCard card.Item
-			caller       *player.Player
-			companion    *player.Player
+			briscolaCard interface{ Seed() card.Seed }
+			callers      team.Callers
 		}{
-			players: g.players, briscolaCard: g.briscolaCard, caller: g.caller, companion: g.companion,
+			players: g.players, briscolaCard: g.briscolaCard, callers: g.callers,
 		}, roundsBefore)
 	}
 	return isAnticipatedEnd
 }
 
 func predict_v2(g struct {
-	players           team.Players
-	briscolaCard      card.Item
-	caller, companion *player.Player
+	players      team.Players
+	briscolaCard interface{ Seed() card.Seed }
+	callers      team.Callers
 }, roundsBefore uint8) bool {
 	highbriscolaCard := serie(g.briscolaCard.Seed())
 	var teams [2]bool
@@ -61,7 +58,7 @@ func predict_v2(g struct {
 			continue
 		}
 		p := g.players.At(i)
-		isPlayerInCallersTeam := team.IsInCallers(callers{caller: g.caller, companion: g.companion})(p)
+		isPlayerInCallersTeam := team.IsInCallers(g.callers)(p)
 		teams[0] = teams[0] || isPlayerInCallersTeam
 		teams[1] = teams[1] || !isPlayerInCallersTeam
 		if teams[0] == teams[1] {
@@ -74,19 +71,3 @@ func predict_v2(g struct {
 	}
 	return false
 }
-
-func serie(briscola card.Seed) set.Cards {
-	serie := []uint8{1, 3, 10, 9, 8, 7, 6, 5, 4, 2}
-	cards := make(set.Cards, len(serie))
-	for i, id := range serie {
-		cards[i] = *card.MustID(id + 10*uint8(briscola))
-	}
-	return cards
-}
-
-type callers struct {
-	caller, companion *player.Player
-}
-
-func (c callers) Caller() *player.Player    { return c.caller }
-func (c callers) Companion() *player.Player { return c.companion }

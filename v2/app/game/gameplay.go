@@ -1,7 +1,6 @@
 package game
 
 import (
-	"container/list"
 	"fmt"
 	"math/rand"
 
@@ -9,10 +8,10 @@ import (
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/game/auction"
 	"github.com/mcaci/msdb5/v2/app/game/companion"
+	"github.com/mcaci/msdb5/v2/app/game/end"
 	"github.com/mcaci/msdb5/v2/app/game/exchange"
 	"github.com/mcaci/msdb5/v2/app/listen"
 	"github.com/mcaci/msdb5/v2/app/score"
-	"github.com/mcaci/msdb5/v2/app/track"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
@@ -31,20 +30,17 @@ func Start(g *Game) {
 	// distribute cards to players
 	distributeCards(g)
 
-	// setup first player
-	track.Player(&g.lastPlaying, g.players[0])
-
 	// auction phase
 	aucInf := auction.Run(g.players, listen.WithTicker)
 	g.auctionScore = aucInf.Score
-	g.caller = aucInf.Caller
+	g.c.caller = aucInf.Caller
 
 	// card exchange phase
 	if g.opts.WithSide {
 		exchange.Run(struct {
 			Hand, Side *set.Cards
 		}{
-			Hand: CurrentPlayer(g.lastPlaying).Hand(),
+			Hand: g.c.caller.Hand(),
 			Side: &g.side,
 		}, listen.WithTicker)
 	}
@@ -52,38 +48,35 @@ func Start(g *Game) {
 	// companion choice phase
 	cmpInf := companion.Run(g.players, func(id chan<- uint8) { id <- uint8(rand.Intn(40) + 1) })
 	g.briscolaCard = *cmpInf.Briscola
-	g.companion = cmpInf.Companion
+	g.c.companion = cmpInf.Companion
 
 	// play phase
 	plInfo := runPlay_v2(struct {
 		players      team.Players
-		briscolaCard card.Item
-		lastPlaying  list.List
-		caller       *player.Player
-		companion    *player.Player
+		briscolaCard interface{ Seed() card.Seed }
+		callers      team.Callers
 	}{
 		players:      g.players,
 		briscolaCard: *cmpInf.Briscola,
-		lastPlaying:  g.lastPlaying,
-		caller:       aucInf.Caller,
-		companion:    cmpInf.Companion})
+		callers:      callers{caller: aucInf.Caller, companion: cmpInf.Companion},
+	})
 
 	// end phase
-	runEnd(struct {
-		players      team.Players
-		briscolaCard card.Item
-		playedCards  set.Cards
-		side         set.Cards
+	end.Run(struct {
+		PlayedCards  set.Cards
+		Players      team.Players
+		BriscolaCard interface{ Seed() card.Seed }
+		Side         set.Cards
 	}{
-		players:      g.players,
-		briscolaCard: *cmpInf.Briscola,
-		playedCards:  plInfo.onBoard,
-		side:         g.side,
+		PlayedCards:  plInfo.onBoard,
+		Players:      g.players,
+		BriscolaCard: *cmpInf.Briscola,
+		Side:         g.side,
 	})
 }
 
 func Score(g *Game) string {
-	t1, t2 := g.players.Part(team.IsInCallers(g))
+	t1, t2 := g.players.Part(team.IsInCallers(g.c))
 	return fmt.Sprintf("[%s: %d], [%s: %d]",
 		"Caller team", score.Sum(team.CommonPile(t1)),
 		"Non Caller team", score.Sum(team.CommonPile(t2)))
