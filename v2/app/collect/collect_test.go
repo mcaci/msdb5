@@ -10,10 +10,6 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-type testObj phase.ID
-
-func (t testObj) Phase() phase.ID { return phase.ID(t) }
-
 func TestNoCollectorFunc(t *testing.T) {
 	cards := &set.Cards{*card.MustID(1), *card.MustID(2)}
 	side := &set.Cards{*card.MustID(4), *card.MustID(5)}
