@@ -29,8 +29,6 @@ func NewGame(gOpts *Options) *Game { return &Game{opts: gOpts} }
 // New func
 func New() *Game { return &Game{} }
 
-func IsRoundOngoing(playedCards set.Cards) bool { return len(playedCards) < 5 }
-
 func (g Game) String() string {
 	return fmt.Sprintf("(Caller is: %s,\n Companion is: %s,\n Played cards: %v,\n Auction score: %d,\n Players: %v,\n Side Deck: %v)",
 		g.c.caller.Name(), g.c.companion.Name()+" "+g.briscolaCard.String(), g.playedCards, g.auctionScore, g.players, g.side)

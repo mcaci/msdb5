@@ -10,6 +10,7 @@ import (
 	"github.com/mcaci/msdb5/v2/app/game/companion"
 	"github.com/mcaci/msdb5/v2/app/game/end"
 	"github.com/mcaci/msdb5/v2/app/game/exchange"
+	"github.com/mcaci/msdb5/v2/app/game/play"
 	"github.com/mcaci/msdb5/v2/app/listen"
 	"github.com/mcaci/msdb5/v2/app/score"
 	"github.com/mcaci/msdb5/v2/dom/player"
@@ -51,14 +52,14 @@ func Start(g *Game) {
 	g.c.companion = cmpInf.Companion
 
 	// play phase
-	plInfo := runPlay_v2(struct {
-		players      team.Players
-		briscolaCard interface{ Seed() card.Seed }
-		callers      team.Callers
+	plInfo := play.Run(struct {
+		Players      team.Players
+		BriscolaCard interface{ Seed() card.Seed }
+		Callers      team.Callers
 	}{
-		players:      g.players,
-		briscolaCard: *cmpInf.Briscola,
-		callers:      callers{caller: aucInf.Caller, companion: cmpInf.Companion},
+		Players:      g.players,
+		BriscolaCard: *cmpInf.Briscola,
+		Callers:      callers{caller: aucInf.Caller, companion: cmpInf.Companion},
 	})
 
 	// end phase
@@ -68,7 +69,7 @@ func Start(g *Game) {
 		BriscolaCard interface{ Seed() card.Seed }
 		Side         set.Cards
 	}{
-		PlayedCards:  plInfo.onBoard,
+		PlayedCards:  plInfo.OnBoard,
 		Players:      g.players,
 		BriscolaCard: *cmpInf.Briscola,
 		Side:         g.side,
