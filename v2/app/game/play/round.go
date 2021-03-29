@@ -14,11 +14,11 @@ import (
 
 func Round(g struct {
 	Players      team.Players
-	LastPlaying  list.List
+	LastPlaying  *list.List
 	BriscolaCard interface{ Seed() card.Seed }
 	PlayedCards  set.Cards
 }) struct{ OnBoard set.Cards } {
-	pl := currentPlayer(g.LastPlaying)
+	pl := currentPlayer(*g.LastPlaying)
 	hnd := pl.Hand()
 	if len(*hnd) > 0 {
 		rand.Seed(time.Now().Unix())
@@ -42,8 +42,14 @@ func Round(g struct {
 
 		set.Move(collect.NewRoundCards(&g.PlayedCards).Set(), g.Players[nextPlayer].Pile())
 	}
-	track.Player(&g.LastPlaying, g.Players[nextPlayer])
+	track.Player(g.LastPlaying, g.Players[nextPlayer])
 	return struct{ OnBoard set.Cards }{
 		OnBoard: g.PlayedCards,
 	}
+}
+
+const numberOfPlayers = 5
+
+func roundRobin(idx, off, size uint8) uint8 {
+	return (idx + off) % size
 }

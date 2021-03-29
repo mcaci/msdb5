@@ -2,17 +2,16 @@ package auction
 
 import (
 	"github.com/mcaci/msdb5/v2/dom/auction"
-	"github.com/mcaci/msdb5/v2/dom/player"
-	"github.com/mcaci/msdb5/v2/dom/team"
+	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
-func Round(curr, prop auction.Score, currID uint8, players team.Players) struct {
+func Round(curr, prop auction.Score, currID uint8, players briscola5.Players) struct {
 	s   auction.Score
 	id  uint8
 	end bool
 } {
 	// Player has folded already, go to next player and exit
-	if player.Folded(players[currID]) {
+	if briscola5.Folded(players[currID]) {
 		return struct {
 			s   auction.Score
 			id  uint8
@@ -32,7 +31,7 @@ func Round(curr, prop auction.Score, currID uint8, players team.Players) struct 
 		players[currID].Fold()
 		// End the loop if only one not folded players is left
 		id = mustRotateOnNotFolded(players, currID)
-		end = team.Count(players, notFolded) == 1
+		end = briscola5.Count(players, notFolded) == 1
 	case auction.GE_MAX_SCORE:
 		// Fold everyone if score is 120 or more
 		(&othersFold{p: players[currID], pls: players}).Fold()
@@ -47,8 +46,8 @@ func Round(curr, prop auction.Score, currID uint8, players team.Players) struct 
 }
 
 type othersFold struct {
-	p   *player.Player
-	pls team.Players
+	p   *briscola5.Player
+	pls briscola5.Players
 }
 
 func (ot *othersFold) Fold() {

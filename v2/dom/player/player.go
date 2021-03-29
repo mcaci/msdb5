@@ -10,7 +10,6 @@ import (
 type Player struct {
 	name       string
 	hand, pile set.Cards
-	fold       bool
 }
 
 // New func
@@ -30,10 +29,7 @@ func (player *Player) Pile() *set.Cards { return &player.pile }
 // RegisterAs func
 func (player *Player) RegisterAs(name string) { player.name = name }
 
-// Fold func
-func (player *Player) Fold() { player.fold = true }
-
 func (player Player) String() string {
-	return fmt.Sprintf("(Name: %s, Cards: %+v, Pile: %+v, Has folded? %t)\n",
-		player.name, player.hand, player.pile, player.fold)
+	return fmt.Sprintf("(Name: %s, Cards: %+v, Pile: %+v)",
+		player.name, player.hand, player.pile)
 }

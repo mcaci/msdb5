@@ -2,25 +2,8 @@ package collect
 
 import (
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/dom/phase"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
-
-// Collector func
-func Collector(p phase.ID, all team.Players, side *set.Cards, played *set.Cards) (collector func() *set.Cards) {
-	collector = func() *set.Cards { return &set.Cards{} }
-	switch p {
-	case phase.PlayingCards:
-		if len(*played) == 5 {
-			collector = func() *set.Cards { return played }
-		}
-	case phase.End:
-		collector = NewAllCards(all, side, played).Set
-	}
-	return
-}
-
-var none *set.Cards = &set.Cards{}
 
 type RoundCards struct {
 	onTable *set.Cards
@@ -31,7 +14,7 @@ func (rc *RoundCards) Set() *set.Cards {
 	if len(*rc.onTable) == 5 {
 		return rc.onTable
 	}
-	return none
+	return &set.Cards{}
 }
 
 type AllCards struct {

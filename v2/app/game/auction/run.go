@@ -7,13 +7,12 @@ import (
 	"math/rand"
 
 	"github.com/mcaci/msdb5/v2/dom/auction"
-	"github.com/mcaci/msdb5/v2/dom/player"
-	"github.com/mcaci/msdb5/v2/dom/team"
+	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
-func Run(players team.Players, listenFor func(context.Context, func())) struct {
+func Run(players briscola5.Players, listenFor func(context.Context, func())) struct {
 	Score  auction.Score
-	Caller *player.Player
+	Caller *briscola5.Player
 } {
 	ctx, cancel := context.WithCancel(context.Background())
 	numbers := make(chan int)
@@ -40,22 +39,22 @@ func Run(players team.Players, listenFor func(context.Context, func())) struct {
 	}
 	return struct {
 		Score  auction.Score
-		Caller *player.Player
+		Caller *briscola5.Player
 	}{
 		Score:  score,
 		Caller: players[players.MustIndex(notFolded)],
 	}
 }
 
-func notFolded(p *player.Player) bool { return !player.Folded(p) }
-func mustRotateOnNotFolded(players team.Players, from uint8) uint8 {
+func notFolded(p *briscola5.Player) bool { return !briscola5.Folded(p) }
+func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
 	id, err := rotateOn(players, from, notFolded)
 	if err != nil {
 		log.Fatalf("error found: %v. Exiting.", err)
 	}
 	return id
 }
-func rotateOn(players team.Players, idx uint8, appliesTo player.Predicate) (uint8, error) {
+func rotateOn(players briscola5.Players, idx uint8, appliesTo briscola5.Predicate) (uint8, error) {
 	for i := 0; i < 2*len(players); i++ {
 		idx = (idx + 1) % uint8(len(players))
 		if !appliesTo(players[idx]) {

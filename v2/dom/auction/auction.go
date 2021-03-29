@@ -1,30 +1,5 @@
 package auction
 
-// Score is the auction value
-type Score uint8
-
-// Update func
-func Update(actual, proposed Score) Score {
-	const minScore = 61
-	const maxScore = 120
-	actualScore := proposed
-	switch {
-	case proposed < actual:
-		actualScore = actual
-	case proposed < minScore:
-		actualScore = minScore
-	case proposed > maxScore:
-		actualScore = maxScore
-	default:
-	}
-	return actualScore
-}
-
-// CheckScores func
-func CheckScores(actual, proposed Score) bool {
-	return proposed > actual
-}
-
 type cmpInfo int8
 
 const (
@@ -39,7 +14,10 @@ const (
 	MAX_SCORE = 120
 )
 
-// CmpAndSet func
+// Score is the auction value
+type Score uint8
+
+// CmpAndSet compares two auction scores and returns the appropriate score
 func CmpAndSet(actual, proposed Score) Score {
 	switch Cmp(actual, proposed) {
 	case LT_MIN_SCORE:
@@ -53,7 +31,11 @@ func CmpAndSet(actual, proposed Score) Score {
 	}
 }
 
-// Cmp func
+// Cmp compares two auction scores and returns the comparison information value
+// -2 if both actual and proposed are less than 61
+// -1 if proposed is less than actual but greater than 61
+// 0 if proposed is greater than actual but less than 120
+// 1 if proposed is greater than 120
 func Cmp(actual, proposed Score) cmpInfo {
 	switch {
 	case proposed <= actual:

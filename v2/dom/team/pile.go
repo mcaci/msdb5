@@ -2,7 +2,7 @@ package team
 
 import "github.com/mcaci/ita-cards/set"
 
-// CommonPile func
+// CommonPile returns the pile of cards of all players in input
 func CommonPile(players Players) set.Cards {
 	pile := make(set.Cards, 0)
 	for _, p := range players {

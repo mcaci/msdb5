@@ -23,7 +23,7 @@ func init() {
 
 func TestSuccessfulFindDataCorresponds(t *testing.T) {
 	isPlayerACheck := func(p *player.Player) bool { return p.Name() == "A" }
-	if p := testPlayers.At(testPlayers.MustIndex(isPlayerACheck)); !isPlayerACheck(p) {
+	if p := testPlayers[testPlayers.MustIndex(isPlayerACheck)]; !isPlayerACheck(p) {
 		t.Fatalf("%s and %v are expected to be the same player", "A", p)
 	}
 }

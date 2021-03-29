@@ -1,46 +1,46 @@
-package phase
+package briscola5
 
 import (
 	"testing"
 )
 
 func TestIDCreationMustWithNoErr(t *testing.T) {
-	testID := MustID("Card")
+	testID := MustPhase("Card")
 	if testID != PlayingCards {
 		t.Fatalf("Unexpected phase: %s", testID)
 	}
 }
 
 func TestIDCreationWithNoErr(t *testing.T) {
-	_, err := ToID("Card")
+	_, err := ToPhase("Card")
 	if err != nil {
 		t.Fatal("Unexpected error")
 	}
 }
 
 func TestIDValueCreation_Exchange(t *testing.T) {
-	p, _ := ToID("Exchange")
+	p, _ := ToPhase("Exchange")
 	if p != ExchangingCards {
 		t.Fatal("Unexpected error")
 	}
 }
 
 func TestIDValueCreation_Companion(t *testing.T) {
-	p, _ := ToID("Companion")
+	p, _ := ToPhase("Companion")
 	if p != ChoosingCompanion {
 		t.Fatal("Unexpected error")
 	}
 }
 
 func TestIDValueCreation_Auction(t *testing.T) {
-	p, _ := ToID("Auction")
+	p, _ := ToPhase("Auction")
 	if p != InsideAuction {
 		t.Fatal("Unexpected error")
 	}
 }
 
 func TestIDCreationWithErr(t *testing.T) {
-	_, err := ToID("Budget")
+	_, err := ToPhase("Budget")
 	if err == nil {
 		t.Fatal("Budget is not a valid phase")
 	}

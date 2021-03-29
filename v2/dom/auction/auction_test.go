@@ -5,54 +5,54 @@ import (
 )
 
 var initialValue Score
-var minValue Score = 61
-var maxValue Score = 120
 
-func TestRaiseAuctionScoreFirstAssignmentShouldBeSuperiorThan61ElseEither61(t *testing.T) {
-	const currentValue = 1
-	value := Update(initialValue, currentValue)
-	assertPlayerScore(t, value, minValue)
-}
-
-func TestInvalidRaiseAuctionScoreFirstAssignmentShouldBeAlways61(t *testing.T) {
-	const currentValue = 0
-	value := Update(initialValue, currentValue)
-	assertPlayerScore(t, value, minValue)
-}
-
-func TestRaiseAuctionTo65(t *testing.T) {
-	const currentValue = 65
-	value := Update(initialValue, currentValue)
-	assertPlayerScore(t, value, currentValue)
-}
-func TestRaiseAuctionTo135ShouldStopAt120(t *testing.T) {
-	const currentValue = 135
-	value := Update(initialValue, currentValue)
-	assertPlayerScore(t, value, maxValue)
-}
-
-func TestPlayerRaisingAuctionAfterAnotherWithLowerScore(t *testing.T) {
-	const currentValue = 90
-	value := Update(Score(94), currentValue)
-	assertPlayerScore(t, value, Score(94))
+func TestAuctionCases(t *testing.T) {
+	testcases := map[string]struct {
+		current, proposed Score
+		expected          cmpInfo
+	}{
+		"Current and proposed less than min -> MIN_SCORE":         {0, 1, LT_MIN_SCORE},
+		"Proposed less than current but more than min -> current": {76, 65, LE_ACTUAL},
+		"Normal case -> proposed":                                 {61, 65, GT_ACTUAL},
+		"Proposed higher or equal than max -> MAX_SCORE":          {110, 121, GE_MAX_SCORE},
+	}
+	for name, tc := range testcases {
+		t.Run(name, func(t *testing.T) {
+			if info := Cmp(tc.current, tc.proposed); info != tc.expected {
+				t.Fatalf("Compare info's value should be %d but is %d", tc.expected, info)
+			}
+		})
+	}
 }
 
 func TestCheckAndUpdate_OK(t *testing.T) {
 	value := Score(80)
-	if !CheckScores(value, Score(100)) {
+	if Cmp(value, Score(100)) != 0 {
 		t.Fatal("Unexpected check return value")
 	}
 }
 
 func TestCheckAndUpdate_Fold(t *testing.T) {
 	value := Score(80)
-	if CheckScores(value, Score(61)) {
+	if Cmp(value, Score(61)) >= 0 {
 		t.Fatal("Unexpected check return value")
 	}
 }
 
-func assertPlayerScore(t *testing.T, actualScore, expectedScore Score) {
-	if actualScore != expectedScore {
-		t.Fatalf("Auction score should be set at %d but is %d", expectedScore, actualScore)
+func TestAuctionValues(t *testing.T) {
+	testcases := map[string]struct {
+		current, proposed, expected Score
+	}{
+		"Current and proposed less than min -> MIN_SCORE":         {0, 1, MIN_SCORE},
+		"Proposed less than current but more than min -> current": {76, 65, 76},
+		"Normal case -> proposed":                                 {61, 65, 65},
+		"Proposed higher or equal than max -> MAX_SCORE":          {110, 121, MAX_SCORE},
+	}
+	for name, tc := range testcases {
+		t.Run(name, func(t *testing.T) {
+			if s := CmpAndSet(tc.current, tc.proposed); s != tc.expected {
+				t.Fatalf("Auction score should be set at %d but is %d", tc.expected, s)
+			}
+		})
 	}
 }
