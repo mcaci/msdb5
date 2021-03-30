@@ -1,7 +1,6 @@
 package play
 
 import (
-	"container/list"
 	"errors"
 	"log"
 	"math/rand"
@@ -37,9 +36,10 @@ func Run(g struct {
 	}) {
 		rand.Seed(time.Now().Unix())
 		hnd := g.Players[plIdx].Hand()
-		info := Round(&RoundOptions{
+		info := Round(&RoundOpts{
 			PlHand:       *hnd,
-			Idx:          uint8(rand.Intn(len(*hnd))),
+			PlIdx:        plIdx,
+			CardIdx:      uint8(rand.Intn(len(*hnd))),
 			PlayedCards:  playedCards,
 			NPlayers:     uint8(len(g.Players)),
 			BriscolaCard: g.BriscolaCard,
@@ -56,8 +56,6 @@ func Run(g struct {
 	}
 }
 
-func isRoundOngoing(playedCards set.Cards) bool { return len(playedCards) < 5 }
-func currentPlayer(l list.List) *player.Player  { return l.Front().Value.(*player.Player) }
 func currentPlayerIndex(cp *player.Player, pls team.Players) (uint8, error) {
 	for i := range pls {
 		if pls[i] != cp {

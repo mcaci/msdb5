@@ -5,9 +5,10 @@ import (
 	"github.com/mcaci/ita-cards/set"
 )
 
-type RoundOptions struct {
+type RoundOpts struct {
+	PlIdx        uint8
 	PlHand       set.Cards
-	Idx          uint8
+	CardIdx      uint8
 	PlayedCards  set.Cards
 	NPlayers     uint8
 	BriscolaCard interface{ Seed() card.Seed }
@@ -19,15 +20,15 @@ type RoundInfo struct {
 	NextRnd bool
 }
 
-func Round(g *RoundOptions) *RoundInfo {
+func Round(g *RoundOpts) *RoundInfo {
 	defaultInfo := &RoundInfo{
 		OnBoard: g.PlayedCards,
-		NextPl:  roundRobin(g.Idx, 1, g.NPlayers),
+		NextPl:  roundRobin(g.PlIdx, 1, g.NPlayers),
 	}
 	if len(g.PlHand) <= 0 {
 		return defaultInfo
 	}
-	err := set.MoveOne(&g.PlHand[g.Idx], &g.PlHand, &g.PlayedCards)
+	err := set.MoveOne(&g.PlHand[g.CardIdx], &g.PlHand, &g.PlayedCards)
 	if err != nil {
 		return defaultInfo
 	}
@@ -36,13 +37,15 @@ func Round(g *RoundOptions) *RoundInfo {
 		winningCardIndex := indexOfWinningCard(g.PlayedCards, g.BriscolaCard.Seed())
 		return &RoundInfo{
 			OnBoard: g.PlayedCards,
-			NextPl:  roundRobin(g.Idx, winningCardIndex, g.NPlayers),
+			NextPl:  roundRobin(g.PlIdx, winningCardIndex+1, g.NPlayers),
 			NextRnd: true,
 		}
 	}
-	return defaultInfo
+	return &RoundInfo{
+		OnBoard: g.PlayedCards,
+		NextPl:  roundRobin(g.PlIdx, 1, g.NPlayers),
+	}
 }
 
-func roundRobin(idx, off, size uint8) uint8 {
-	return (idx + off) % size
-}
+func isRoundOngoing(playedCards set.Cards) bool { return len(playedCards) < 5 }
+func roundRobin(idx, off, size uint8) uint8     { return (idx + off) % size }
