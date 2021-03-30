@@ -1,54 +1,47 @@
 package play
 
 import (
-	"container/list"
-	"math/rand"
-	"time"
-
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/app/collect"
-	"github.com/mcaci/msdb5/v2/app/track"
-	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-func Round(g struct {
-	Players      team.Players
-	LastPlaying  *list.List
-	BriscolaCard interface{ Seed() card.Seed }
+type RoundOptions struct {
+	PlHand       set.Cards
+	Idx          uint8
 	PlayedCards  set.Cards
-}) struct{ OnBoard set.Cards } {
-	pl := currentPlayer(*g.LastPlaying)
-	hnd := pl.Hand()
-	if len(*hnd) > 0 {
-		rand.Seed(time.Now().Unix())
-		idx := rand.Intn(len(*hnd))
-		crd := (*hnd)[idx]
-		index := hnd.Find(crd)
-		g.PlayedCards.Add((*hnd)[index])
-		*hnd = append((*hnd)[:index], (*hnd)[index+1:]...)
-	}
+	NPlayers     uint8
+	BriscolaCard interface{ Seed() card.Seed }
+}
 
-	// next player
-	idx, err := currentPlayerIndex(pl, g.Players)
-	if err != nil {
-		return struct{ OnBoard set.Cards }{}
+type RoundInfo struct {
+	OnBoard set.Cards
+	NextPl  uint8
+	NextRnd bool
+}
+
+func Round(g *RoundOptions) *RoundInfo {
+	defaultInfo := &RoundInfo{
+		OnBoard: g.PlayedCards,
+		NextPl:  roundRobin(g.Idx, 1, g.NPlayers),
 	}
-	nextPlayer := roundRobin(idx, 1, numberOfPlayers)
+	if len(g.PlHand) <= 0 {
+		return defaultInfo
+	}
+	err := set.MoveOne(&g.PlHand[g.Idx], &g.PlHand, &g.PlayedCards)
+	if err != nil {
+		return defaultInfo
+	}
 	if !isRoundOngoing(g.PlayedCards) {
 		// end current round
 		winningCardIndex := indexOfWinningCard(g.PlayedCards, g.BriscolaCard.Seed())
-		nextPlayer = roundRobin(nextPlayer, winningCardIndex, numberOfPlayers)
-
-		set.Move(collect.NewRoundCards(&g.PlayedCards).Set(), g.Players[nextPlayer].Pile())
+		return &RoundInfo{
+			OnBoard: g.PlayedCards,
+			NextPl:  roundRobin(g.Idx, winningCardIndex, g.NPlayers),
+			NextRnd: true,
+		}
 	}
-	track.Player(g.LastPlaying, g.Players[nextPlayer])
-	return struct{ OnBoard set.Cards }{
-		OnBoard: g.PlayedCards,
-	}
+	return defaultInfo
 }
-
-const numberOfPlayers = 5
 
 func roundRobin(idx, off, size uint8) uint8 {
 	return (idx + off) % size

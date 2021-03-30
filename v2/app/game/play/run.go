@@ -3,11 +3,14 @@ package play
 import (
 	"container/list"
 	"errors"
+	"log"
+	"math/rand"
+	"time"
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/app/collect"
 	"github.com/mcaci/msdb5/v2/app/game/end"
-	"github.com/mcaci/msdb5/v2/app/track"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
@@ -20,32 +23,33 @@ func Run(g struct {
 }) struct {
 	OnBoard set.Cards
 } {
-	var lastPlaying list.List
-	track.Player(&lastPlaying, g.Callers.Caller())
 	var playedCards set.Cards
+	plIdx, err := currentPlayerIndex(g.Callers.Caller(), g.Players)
+	if err != nil {
+		log.Fatal("didn't expect to arrive at this point")
+	}
 
-	for !end.Cond(struct {
-		PlayedCards  set.Cards
-		Players      team.Players
-		BriscolaCard interface{ Seed() card.Seed }
-		Callers      briscola5.Callerer
-	}{
+	for !end.Cond(&end.Opts{
 		PlayedCards:  playedCards,
 		Players:      g.Players,
 		BriscolaCard: g.BriscolaCard,
 		Callers:      g.Callers,
 	}) {
-		playedCards = Round(struct {
-			Players      team.Players
-			LastPlaying  *list.List
-			BriscolaCard interface{ Seed() card.Seed }
-			PlayedCards  set.Cards
-		}{
-			Players:      g.Players,
-			LastPlaying:  &lastPlaying,
-			BriscolaCard: g.BriscolaCard,
+		rand.Seed(time.Now().Unix())
+		hnd := g.Players[plIdx].Hand()
+		info := Round(&RoundOptions{
+			PlHand:       *hnd,
+			Idx:          uint8(rand.Intn(len(*hnd))),
 			PlayedCards:  playedCards,
-		}).OnBoard
+			NPlayers:     uint8(len(g.Players)),
+			BriscolaCard: g.BriscolaCard,
+		})
+		playedCards = info.OnBoard
+		plIdx = info.NextPl
+		if !info.NextRnd {
+			continue
+		}
+		set.Move(collect.NewRoundCards(&playedCards).Set(), g.Players[plIdx].Pile())
 	}
 	return struct{ OnBoard set.Cards }{
 		OnBoard: playedCards,
