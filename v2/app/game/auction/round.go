@@ -5,36 +5,41 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
-func Round(curr, prop auction.Score, currID uint8, players briscola5.Players) struct {
+func Round(r struct {
+	curr    auction.Score
+	prop    auction.Score
+	currID  uint8
+	players briscola5.Players
+}) struct {
 	s   auction.Score
 	id  uint8
 	end bool
 } {
 	// Player has folded already, go to next player and exit
-	if briscola5.Folded(players[currID]) {
+	if briscola5.Folded(r.players[r.currID]) {
 		return struct {
 			s   auction.Score
 			id  uint8
 			end bool
-		}{s: curr, id: mustRotateOnNotFolded(players, currID)}
+		}{s: r.curr, id: mustRotateOnNotFolded(r.players, r.currID)}
 	}
-	var s auction.Score = curr
-	var id uint8 = currID
+	var s auction.Score = r.curr
+	var id uint8 = r.currID
 	var end bool
-	switch auction.Cmp(curr, prop) {
+	switch auction.Cmp(r.curr, r.prop) {
 	case auction.GT_ACTUAL:
 		// Auction bid is valid: updates score
-		s = auction.CmpAndSet(curr, prop)
-		id = mustRotateOnNotFolded(players, currID)
+		s = auction.CmpAndSet(r.curr, r.prop)
+		id = mustRotateOnNotFolded(r.players, r.currID)
 	case auction.LE_ACTUAL, auction.LT_MIN_SCORE:
 		// Player is folded for scoring less or equal than current (or min)
-		players[currID].Fold()
+		r.players[r.currID].Fold()
 		// End the loop if only one not folded players is left
-		id = mustRotateOnNotFolded(players, currID)
-		end = briscola5.Count(players, notFolded) == 1
+		id = mustRotateOnNotFolded(r.players, r.currID)
+		end = briscola5.Count(r.players, notFolded) == 1
 	case auction.GE_MAX_SCORE:
 		// Fold everyone if score is 120 or more
-		(&othersFold{p: players[currID], pls: players}).Fold()
+		(&othersFold{p: r.players[r.currID], pls: r.players}).Fold()
 		s = auction.MAX_SCORE
 		end = true
 	}
