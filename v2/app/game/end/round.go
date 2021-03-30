@@ -8,65 +8,42 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-func Cond(g struct {
+type Opts struct {
 	PlayedCards  set.Cards
 	Players      team.Players
 	BriscolaCard interface{ Seed() card.Seed }
 	Callers      briscola5.Callerer
-}) bool {
-	return g.Players.All(player.EmptyHanded) ||
-		isAnticipatedEnd_v2(struct {
-			players      team.Players
-			playedCards  set.Cards
-			briscolaCard interface{ Seed() card.Seed }
-			callers      briscola5.Callerer
-		}{players: g.Players, playedCards: g.PlayedCards, briscolaCard: g.BriscolaCard, callers: g.Callers})
 }
 
-func isAnticipatedEnd_v2(g struct {
-	players      team.Players
-	playedCards  set.Cards
-	briscolaCard interface{ Seed() card.Seed }
-	callers      briscola5.Callerer
-}) bool {
-	var isAnticipatedEnd bool
-	const limit = 3
-	roundsBefore := uint8(len(*g.players[0].Hand()))
-	if roundsBefore <= limit {
-		isNewRoundToStart := len(g.playedCards) == 5
-		isAnticipatedEnd = isNewRoundToStart && predict_v2(struct {
-			players      team.Players
-			briscolaCard interface{ Seed() card.Seed }
-			callers      briscola5.Callerer
-		}{
-			players: g.players, briscolaCard: g.briscolaCard, callers: g.callers,
-		}, roundsBefore)
+func Cond(g *Opts) bool {
+	if g.Players.All(player.EmptyHanded) {
+		return true
 	}
-	return isAnticipatedEnd
-}
-
-func predict_v2(g struct {
-	players      team.Players
-	briscolaCard interface{ Seed() card.Seed }
-	callers      briscola5.Callerer
-}, roundsBefore uint8) bool {
-	highbriscolaCard := serie(g.briscolaCard.Seed())
+	isNewRoundToStart := len(g.PlayedCards) == 5
+	if !isNewRoundToStart {
+		return false
+	}
+	const limit = 3
+	roundsToEnd := len(*g.Players[0].Hand())
+	if roundsToEnd > limit {
+		return false
+	}
 	var teams [2]bool
-	var cardsChecked uint8
-	for _, card := range highbriscolaCard {
-		i, err := g.players.Index(player.IsCardInHand(card))
+	var cardsChecked int
+	for _, card := range serie(g.BriscolaCard.Seed()) {
+		i, err := g.Players.Index(player.IsCardInHand(card))
 		if err != nil { // no one has card
 			continue
 		}
-		p := g.players[i]
-		isPlayerInCallersTeam := briscola5.IsInCallers(g.callers)(p)
+		p := g.Players[i]
+		isPlayerInCallersTeam := briscola5.IsInCallers(g.Callers)(p)
 		teams[0] = teams[0] || isPlayerInCallersTeam
 		teams[1] = teams[1] || !isPlayerInCallersTeam
 		if teams[0] == teams[1] {
 			return false
 		}
 		cardsChecked++
-		if cardsChecked == roundsBefore {
+		if cardsChecked == roundsToEnd {
 			return true
 		}
 	}
