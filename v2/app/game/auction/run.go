@@ -28,7 +28,16 @@ func Run(players briscola5.Players, listenFor func(context.Context, func())) str
 	var currID uint8
 
 	for n := range numbers {
-		r := Round(score, auction.Score(n), currID, players)
+		r := Round(struct {
+			curr, prop auction.Score
+			currID     uint8
+			players    briscola5.Players
+		}{
+			curr:    score,
+			prop:    auction.Score(n),
+			currID:  currID,
+			players: players,
+		})
 		score = r.s
 		currID = r.id
 		if !r.end {
