@@ -9,29 +9,22 @@ import (
 
 func TestExchangeRound(t *testing.T) {
 	testcases := map[string]struct {
-		start struct {
-			Hand, Side *set.Cards
-			hIdx, sIdx int
-		}
-		aHand, aSide *set.Cards
+		Hand, Side *set.Cards
+		hIdx, sIdx int
 	}{
-		"Test with len 1": {
-			start: struct {
-				Hand *set.Cards
-				Side *set.Cards
-				hIdx int
-				sIdx int
-			}{Hand: &set.Cards{*card.MustID(1)}, Side: &set.Cards{*card.MustID(2)}},
-			aHand: &set.Cards{*card.MustID(2)}, aSide: &set.Cards{*card.MustID(1)},
-		},
+		"Test with len 1": {Hand: &set.Cards{*card.MustID(1)}, Side: &set.Cards{*card.MustID(2)}},
+		"Test with len 2": {Hand: &set.Cards{*card.MustID(1), *card.MustID(3)}, Side: &set.Cards{*card.MustID(2), *card.MustID(4)}},
 	}
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-			Round(tc.start)
-			if (*tc.start.Hand)[tc.start.hIdx] != (*tc.aSide)[tc.start.hIdx] {
-				t.Errorf("Expecting exchange to have happened, but not: %v %v %v %v", *tc.start.Hand, *tc.start.Side, tc.aHand, tc.aSide)
+			bCard, aCard := (*tc.Hand)[tc.hIdx], (*tc.Side)[tc.sIdx]
+			Round(tc)
+			if (*tc.Hand)[tc.hIdx] != aCard {
+				t.Errorf("Expecting exchange to have happened, but not: %v %v %v %v", *tc.Hand, *tc.Side, bCard, aCard)
+			}
+			if (*tc.Side)[tc.sIdx] != bCard {
+				t.Errorf("Expecting exchange to have happened, but not: %v %v %v %v", *tc.Hand, *tc.Side, bCard, aCard)
 			}
 		})
 	}
-
 }
