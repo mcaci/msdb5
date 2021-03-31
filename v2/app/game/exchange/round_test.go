@@ -3,7 +3,6 @@ package exchange
 import (
 	"testing"
 
-	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 )
 
@@ -12,8 +11,8 @@ func TestExchangeRound(t *testing.T) {
 		Hand, Side *set.Cards
 		hIdx, sIdx int
 	}{
-		"Test with len 1": {Hand: &set.Cards{*card.MustID(1)}, Side: &set.Cards{*card.MustID(2)}},
-		"Test with len 2": {Hand: &set.Cards{*card.MustID(1), *card.MustID(3)}, Side: &set.Cards{*card.MustID(2), *card.MustID(4)}},
+		"Test with len 1": {Hand: set.NewMust(1), Side: set.NewMust(2)},
+		"Test with len 2": {Hand: set.NewMust(1, 3), Side: set.NewMust(2, 4)},
 	}
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
