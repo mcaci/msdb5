@@ -3,8 +3,8 @@ package auction
 import (
 	"testing"
 
-	"github.com/mcaci/msdb5/v2/dom/auction"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
+	"github.com/mcaci/msdb5/v2/dom/briscola5/auction"
 )
 
 type opts struct {
@@ -12,14 +12,13 @@ type opts struct {
 }
 
 func testplayers(opt *opts) briscola5.Players {
-	pls := make(briscola5.Players, 5)
-	for i := range pls {
-		pls[i] = briscola5.NewPlayer()
+	pls := briscola5.NewPlayers()
+	for i := range pls.List() {
 		if opt.folded[i] {
-			pls[i].Fold()
+			pls.At(i).Fold()
 		}
 	}
-	return pls
+	return *pls
 }
 
 type inParams struct {

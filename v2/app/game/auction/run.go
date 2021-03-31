@@ -6,13 +6,13 @@ import (
 	"log"
 	"math/rand"
 
-	"github.com/mcaci/msdb5/v2/dom/auction"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
+	"github.com/mcaci/msdb5/v2/dom/briscola5/auction"
 )
 
 func Run(players briscola5.Players, listenFor func(context.Context, func())) struct {
 	Score  auction.Score
-	Caller *briscola5.Player
+	Caller uint8
 } {
 	ctx, cancel := context.WithCancel(context.Background())
 	numbers := make(chan int)
@@ -48,10 +48,10 @@ func Run(players briscola5.Players, listenFor func(context.Context, func())) str
 	}
 	return struct {
 		Score  auction.Score
-		Caller *briscola5.Player
+		Caller uint8
 	}{
 		Score:  score,
-		Caller: players[players.MustIndex(notFolded)],
+		Caller: players.MustIndex(notFolded),
 	}
 }
 
@@ -64,9 +64,9 @@ func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
 	return id
 }
 func rotateOn(players briscola5.Players, idx uint8, appliesTo briscola5.Predicate) (uint8, error) {
-	for i := 0; i < 2*len(players); i++ {
-		idx = (idx + 1) % uint8(len(players))
-		if !appliesTo(players[idx]) {
+	for i := 0; i < 2*len(players.List()); i++ {
+		idx = (idx + 1) % uint8(len(players.List()))
+		if !appliesTo(players.At(int(idx))) {
 			continue
 		}
 		return idx, nil
