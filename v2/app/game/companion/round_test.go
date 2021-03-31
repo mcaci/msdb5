@@ -5,6 +5,7 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
@@ -49,11 +50,12 @@ func TestCompanionRound(t *testing.T) {
 	}
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-			out := Round(tc.crd, tc.pls)
-			if tc.crd != out.Briscola {
+			c := briscola.Card{Item: *tc.crd}
+			out := Round(c, tc.pls)
+			if c.Item != out.Briscola.Item {
 				t.Error("Unexpected error on the transfer of the briscola card")
 			}
-			if tc.pls[tc.cmp].Name() != out.Companion.Name() {
+			if tc.pls[tc.cmp].Name() != tc.pls[out.Companion].Name() {
 				t.Errorf("Unexpected error on the companion selection: expecting (%v), actual (%v)", tc.cmp, out.Companion)
 			}
 		})
