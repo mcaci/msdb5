@@ -6,42 +6,39 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/app/collect"
 	"github.com/mcaci/msdb5/v2/app/game/end"
+	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 func Run(g struct {
-	Players      team.Players
-	BriscolaCard interface{ Seed() card.Seed }
-	Callers      briscola5.Callerer
+	Players      briscola5.Players
+	BriscolaCard briscola.Card
 }) struct {
-	OnBoard set.Cards
+	OnBoard briscola5.PlayedCards
 } {
-	var playedCards set.Cards
-	plIdx, err := currentPlayerIndex(g.Callers.Caller(), g.Players)
+	playedCards := &briscola5.PlayedCards{Cards: &set.Cards{}}
+	plIdx, err := currentPlayerIndex(g.Players.Caller(), briscola5.ToGeneralPlayers(g.Players))
 	if err != nil {
 		log.Fatal("didn't expect to arrive at this point")
 	}
 
 	for !end.Cond(&end.Opts{
-		PlayedCards:  playedCards,
+		PlayedCards:  *playedCards,
 		Players:      g.Players,
 		BriscolaCard: g.BriscolaCard,
-		Callers:      g.Callers,
 	}) {
 		rand.Seed(time.Now().Unix())
-		hnd := g.Players[plIdx].Hand()
+		hnd := g.Players.At(int(plIdx)).Hand()
 		info := Round(&RoundOpts{
-			PlHand:       *hnd,
+			PlHand:       hnd,
 			PlIdx:        plIdx,
 			CardIdx:      uint8(rand.Intn(len(*hnd))),
 			PlayedCards:  playedCards,
-			NPlayers:     uint8(len(g.Players)),
+			NPlayers:     uint8(len(briscola5.ToGeneralPlayers(g.Players))),
 			BriscolaCard: g.BriscolaCard,
 		})
 		playedCards = info.OnBoard
@@ -49,10 +46,10 @@ func Run(g struct {
 		if !info.NextRnd {
 			continue
 		}
-		set.Move(collect.NewRoundCards(&playedCards).Set(), g.Players[plIdx].Pile())
+		briscola.Collect(playedCards, g.Players.At(int(plIdx)))
 	}
-	return struct{ OnBoard set.Cards }{
-		OnBoard: playedCards,
+	return struct{ OnBoard briscola5.PlayedCards }{
+		OnBoard: *playedCards,
 	}
 }
 

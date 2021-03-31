@@ -5,6 +5,8 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/dom/briscola"
+	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
@@ -29,43 +31,47 @@ func TestPlayRound(t *testing.T) {
 	}{
 		"Test player with empty hands": {
 			in: RoundOpts{
-				PlIdx:    0,
-				NPlayers: 5,
+				PlHand:      &set.Cards{},
+				PlIdx:       0,
+				PlayedCards: &briscola5.PlayedCards{Cards: &set.Cards{}},
+				NPlayers:    5,
 			}, out: RoundInfo{
-				NextPl: 1,
+				OnBoard: &briscola5.PlayedCards{Cards: &set.Cards{}},
+				NextPl:  1,
 			}},
 		"Test simple round": {
 			in: RoundOpts{
-				PlHand:   set.Cards{*card.MustID(1)},
-				PlIdx:    2,
-				NPlayers: 5,
+				PlHand:      &set.Cards{*card.MustID(1)},
+				PlIdx:       2,
+				PlayedCards: &briscola5.PlayedCards{Cards: &set.Cards{}},
+				NPlayers:    5,
 			}, out: RoundInfo{
-				OnBoard: set.Cards{*card.MustID(1)},
+				OnBoard: &briscola5.PlayedCards{Cards: set.NewMust(1)},
 				NextPl:  3,
 			}},
 		"Test last action for round": {
 			in: RoundOpts{
-				PlHand:       set.Cards{*card.MustID(1), *card.MustID(2)},
+				PlHand:       &set.Cards{*card.MustID(1), *card.MustID(2)},
 				PlIdx:        2,
 				CardIdx:      1,
 				NPlayers:     5,
-				PlayedCards:  set.Cards{*card.MustID(11), *card.MustID(21), *card.MustID(12), *card.MustID(22)},
-				BriscolaCard: card.MustID(23),
+				PlayedCards:  &briscola5.PlayedCards{Cards: set.NewMust(11, 21, 12, 22)},
+				BriscolaCard: *briscola.MustID(23),
 			}, out: RoundInfo{
-				OnBoard: set.Cards{*card.MustID(11), *card.MustID(21), *card.MustID(12), *card.MustID(22), *card.MustID(2)},
+				OnBoard: &briscola5.PlayedCards{Cards: set.NewMust(11, 21, 12, 22, 2)},
 				NextPl:  4,
 				NextRnd: true,
 			}},
 		"Test self winning round": {
 			in: RoundOpts{
-				PlHand:       set.Cards{*card.MustID(11), *card.MustID(33), *card.MustID(28)},
+				PlHand:       set.NewMust(11, 33, 28),
 				PlIdx:        3,
 				CardIdx:      0,
 				NPlayers:     5,
-				PlayedCards:  set.Cards{*card.MustID(12), *card.MustID(8), *card.MustID(17), *card.MustID(2)},
-				BriscolaCard: card.MustID(33),
+				PlayedCards:  &briscola5.PlayedCards{Cards: set.NewMust(12, 8, 17, 2)},
+				BriscolaCard: *briscola.MustID(33),
 			}, out: RoundInfo{
-				OnBoard: set.Cards{*card.MustID(12), *card.MustID(8), *card.MustID(17), *card.MustID(2), *card.MustID(11)},
+				OnBoard: &briscola5.PlayedCards{Cards: set.NewMust(12, 8, 17, 2, 11)},
 				NextPl:  3,
 				NextRnd: true,
 			}},
@@ -73,7 +79,7 @@ func TestPlayRound(t *testing.T) {
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
 			out := Round(&tc.in)
-			if len(tc.out.OnBoard) != len(out.OnBoard) {
+			if len(*tc.out.OnBoard.Cards) != len(*out.OnBoard.Cards) {
 				t.Errorf("OnBoard error: Expected and actual play results didn't match: Expected (%v), Actual (%v). Input (%v)", tc.out, out, tc.in)
 			}
 			if tc.out.NextPl != out.NextPl {
