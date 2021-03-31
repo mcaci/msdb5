@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/game/auction"
 	"github.com/mcaci/msdb5/v2/app/game/companion"
@@ -23,7 +22,7 @@ func WaitForPlayers(g *Game, listenFor func(chan<- string)) {
 	for name := range names {
 		p := briscola5.NewPlayer()
 		p.RegisterAs(name)
-		g.players = append(g.players, p)
+		g.players.Add(p)
 	}
 }
 
@@ -34,49 +33,48 @@ func Start(g *Game) {
 	// auction phase
 	aucInf := auction.Run(g.players, listen.WithTicker)
 	g.auctionScore = aucInf.Score
+	g.players.SetCaller(aucInf.Caller)
 
 	// card exchange phase
 	if g.opts.WithSide {
 		exchange.Run(struct {
 			Hand, Side *set.Cards
 		}{
-			Hand: aucInf.Caller.Player.Hand(),
-			Side: &g.side,
+			Hand: g.players.Caller().Hand(),
+			Side: &g.side.Cards,
 		}, listen.WithTicker)
 	}
 
 	// companion choice phase
 	cmpInf := companion.Run(briscola5.ToGeneralPlayers(g.players), func(id chan<- uint8) { id <- uint8(rand.Intn(40) + 1) })
-	g.briscolaCard = *cmpInf.Briscola
-	g.cTeam = briscola5.NewCallersTeam(&aucInf.Caller.Player, cmpInf.Companion)
+	g.briscolaCard = cmpInf.Briscola
+	g.players.SetCaller(cmpInf.Companion)
 
 	// play phase
 	plInfo := play.Run(struct {
-		Players      team.Players
-		BriscolaCard interface{ Seed() card.Seed }
-		Callers      briscola5.Callerer
+		Players      briscola5.Players
+		BriscolaCard briscola.Card
 	}{
-		Players:      briscola5.ToGeneralPlayers(g.players),
-		BriscolaCard: *cmpInf.Briscola,
-		Callers:      g.cTeam,
+		Players:      g.players,
+		BriscolaCard: cmpInf.Briscola,
 	})
 
 	// end phase
 	end.Run(struct {
-		PlayedCards  set.Cards
+		PlayedCards  briscola5.PlayedCards
 		Players      team.Players
-		BriscolaCard interface{ Seed() card.Seed }
-		Side         set.Cards
+		BriscolaCard briscola.Card
+		Side         briscola5.Side
 	}{
 		PlayedCards:  plInfo.OnBoard,
 		Players:      briscola5.ToGeneralPlayers(g.players),
-		BriscolaCard: *cmpInf.Briscola,
+		BriscolaCard: cmpInf.Briscola,
 		Side:         g.side,
 	})
 }
 
 func Score(g *Game) string {
-	t1, t2 := briscola5.ToGeneralPlayers(g.players).Part(briscola5.IsInCallers(g.cTeam))
+	t1, t2 := briscola5.ToGeneralPlayers(g.players).Part(briscola5.IsInCallers(&g.players))
 	return fmt.Sprintf("[%s: %d], [%s: %d]",
 		"Caller team", briscola.Score(team.CommonPile(t1)),
 		"Non Caller team", briscola.Score(team.CommonPile(t2)))
@@ -89,6 +87,6 @@ func distributeCards(g *Game) {
 			g.side.Add(d.Top())
 			continue
 		}
-		g.players[i%5].Hand().Add(d.Top())
+		g.players.Player(i % 5).Hand().Add(d.Top())
 	}
 }

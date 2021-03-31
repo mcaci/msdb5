@@ -24,9 +24,7 @@ func TestSideDeckProperty(t *testing.T) {
 	if g.opts.WithSide {
 		t.Errorf("error")
 	}
-	g = NewGame(&Options{
-		WithSide: true,
-	})
+	g = NewGame(&Options{WithSide: true})
 	if !g.opts.WithSide {
 		t.Errorf("error")
 	}
@@ -35,7 +33,7 @@ func TestSideDeckProperty(t *testing.T) {
 func TestWaitForPlayers(t *testing.T) {
 	g := New()
 	WaitForPlayers(g, supply)
-	if len(g.players) != 5 {
-		t.Errorf("%d", len(g.players))
+	if len(g.players.List()) != 5 {
+		t.Errorf("%d", len(g.players.List()))
 	}
 }
