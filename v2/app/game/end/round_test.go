@@ -5,27 +5,27 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/dom/briscola"
+	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
-	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 type opts struct {
 	hands [5]set.Cards
 }
 
-type testPlayersWithCallers team.Players
+type testPlayers briscola5.Players
 
-func testplayers(opt *opts) testPlayersWithCallers {
-	pls := make(testPlayersWithCallers, 5)
-	for i := range pls {
-		pls[i] = player.New()
-		pls[i].Hand().Add(opt.hands[i]...)
+func testplayers(opt *opts) testPlayers {
+	pls := briscola5.NewPlayers()
+	for i := range pls.List() {
+		pls.At(i).Hand().Add(opt.hands[i]...)
 	}
-	return pls
+	return testPlayers(*pls)
 }
 
-func (pls testPlayersWithCallers) Caller() *player.Player    { return pls[1] }
-func (pls testPlayersWithCallers) Companion() *player.Player { return player.New() }
+func (pls *testPlayers) Caller() *player.Player    { return (*briscola5.Players)(pls).Player(1) }
+func (pls *testPlayers) Companion() *player.Player { return player.New() }
 
 func TestEndRound(t *testing.T) {
 	playersWithinLimits := testplayers(&opts{[5]set.Cards{{*card.MustID(1)}, {}, {}, {}, {}}})
@@ -35,38 +35,43 @@ func TestEndRound(t *testing.T) {
 		in  Opts
 		end bool
 	}{
-		"Test all players with empty hands": {in: Opts{}, end: true},
+		"Test all players with empty hands": {
+			in: Opts{
+				PlayedCards: briscola5.PlayedCards{Cards: &set.Cards{}},
+				Players:     briscola5.Players(testplayers(&opts{})),
+			}, end: true},
 		"Test false because round is in progress": {
-			in: Opts{Players: team.Players(playersWithinLimits)},
+			in: Opts{
+				PlayedCards: briscola5.PlayedCards{Cards: &set.Cards{}},
+				Players:     briscola5.Players(playersWithinLimits),
+			},
 		},
 		"Test false because limit not reached yet": {
 			in: Opts{
-				PlayedCards: set.Cards{*card.MustID(1), *card.MustID(2), *card.MustID(3), *card.MustID(4), *card.MustID(5)},
-				Players:     team.Players(playersBeyondLimits),
+				PlayedCards: briscola5.PlayedCards{Cards: set.NewMust(1, 2, 3, 4, 5)},
+				Players:     briscola5.Players(playersBeyondLimits),
 			},
 		},
 		"Test false because no one has briscola cards": {
 			in: Opts{
-				PlayedCards:  set.Cards{*card.MustID(1), *card.MustID(2), *card.MustID(3), *card.MustID(4), *card.MustID(5)},
-				Players:      team.Players(playersWithinLimits),
-				BriscolaCard: card.MustID(11),
+				PlayedCards:  briscola5.PlayedCards{Cards: set.NewMust(1, 2, 3, 4, 5)},
+				Players:      briscola5.Players(playersWithinLimits),
+				BriscolaCard: briscola.Card{Item: *card.MustID(11)},
 			},
 		},
 		"Test true because one team only has briscola cards": {
 			in: Opts{
-				PlayedCards:  set.Cards{*card.MustID(1), *card.MustID(2), *card.MustID(3), *card.MustID(4), *card.MustID(5)},
-				Players:      team.Players(playersWithinLimits),
-				BriscolaCard: card.MustID(1),
-				Callers:      playersWithinLimits,
+				PlayedCards:  briscola5.PlayedCards{Cards: set.NewMust(1, 2, 3, 4, 5)},
+				Players:      briscola5.Players(playersWithinLimits),
+				BriscolaCard: briscola.Card{Item: *card.MustID(1)},
 			},
 			end: true,
 		},
 		"Test false because not only one team only has briscola cards": {
 			in: Opts{
-				PlayedCards:  set.Cards{*card.MustID(1), *card.MustID(2), *card.MustID(3), *card.MustID(4), *card.MustID(5)},
-				Players:      team.Players(playersWithinLimitsAndSpreadCards),
-				BriscolaCard: card.MustID(1),
-				Callers:      playersWithinLimitsAndSpreadCards,
+				PlayedCards:  briscola5.PlayedCards{Cards: set.NewMust(1, 2, 3, 4, 5)},
+				Players:      briscola5.Players(playersWithinLimitsAndSpreadCards),
+				BriscolaCard: briscola.Card{Item: *card.MustID(1)},
 			},
 		},
 	}
