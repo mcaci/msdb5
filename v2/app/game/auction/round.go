@@ -1,17 +1,27 @@
 package auction
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
-	"github.com/mcaci/msdb5/v2/dom/briscola5/auction"
+)
+
+const (
+	MIN int8 = iota - 2
+	LE
+	GT
+	OVER
 )
 
 func Round(r struct {
-	curr    auction.Score
-	prop    auction.Score
+	curr    briscola5.AuctionScore
+	prop    briscola5.AuctionScore
 	currID  uint8
 	players briscola5.Players
+	cmpF    func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 }) struct {
-	s   auction.Score
+	s   briscola5.AuctionScore
 	id  uint8
 	end bool
 } {
@@ -19,33 +29,33 @@ func Round(r struct {
 	// Player has folded already, go to next player and exit
 	if briscola5.Folded(pl) {
 		return struct {
-			s   auction.Score
+			s   briscola5.AuctionScore
 			id  uint8
 			end bool
 		}{s: r.curr, id: mustRotateOnNotFolded(r.players, r.currID)}
 	}
-	var s auction.Score = r.curr
+	var s briscola5.AuctionScore = r.curr
 	var id uint8 = r.currID
 	var end bool
-	switch auction.Cmp(r.curr, r.prop) {
-	case auction.GT_ACTUAL:
+	switch r.cmpF(r.curr, r.prop) {
+	case GT:
 		// Auction bid is valid: updates score
-		s = auction.CmpAndSet(r.curr, r.prop)
+		s = briscola5.CmpAndSet(r.curr, r.prop)
 		id = mustRotateOnNotFolded(r.players, r.currID)
-	case auction.LE_ACTUAL, auction.LT_MIN_SCORE:
+	case MIN, LE:
 		// Player is folded for scoring less or equal than current (or min)
 		pl.Fold()
 		// End the loop if only one not folded players is left
 		id = mustRotateOnNotFolded(r.players, r.currID)
 		end = briscola5.Count(r.players, notFolded) == 1
-	case auction.GE_MAX_SCORE:
+	case OVER:
 		// Fold everyone if score is 120 or more
 		(&othersFold{p: pl, pls: r.players}).Fold()
-		s = auction.MAX_SCORE
+		s = briscola5.MAX_SCORE
 		end = true
 	}
 	return struct {
-		s   auction.Score
+		s   briscola5.AuctionScore
 		id  uint8
 		end bool
 	}{s: s, id: id, end: end}
@@ -63,4 +73,22 @@ func (ot *othersFold) Fold() {
 		}
 		p.Fold()
 	}
+}
+
+func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
+	id, err := rotateOn(players, from, notFolded)
+	if err != nil {
+		log.Fatalf("error found: %v. Exiting.", err)
+	}
+	return id
+}
+func rotateOn(players briscola5.Players, idx uint8, appliesTo briscola5.Predicate) (uint8, error) {
+	for i := 0; i < 2*len(players.List()); i++ {
+		idx = (idx + 1) % uint8(len(players.List()))
+		if !appliesTo(players.At(int(idx))) {
+			continue
+		}
+		return idx, nil
+	}
+	return 0, fmt.Errorf("rotated twice on the number of players and no player found in play.")
 }

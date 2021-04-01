@@ -2,16 +2,18 @@ package auction
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"math/rand"
+	"net/http"
+	"strings"
 
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
-	"github.com/mcaci/msdb5/v2/dom/briscola5/auction"
 )
 
 func Run(players briscola5.Players, listenFor func(context.Context, func())) struct {
-	Score  auction.Score
+	Score  briscola5.AuctionScore
 	Caller uint8
 } {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -24,19 +26,21 @@ func Run(players briscola5.Players, listenFor func(context.Context, func())) str
 		close(numbers)
 	}()
 
-	var score auction.Score
+	var score briscola5.AuctionScore
 	var currID uint8
 
 	for n := range numbers {
 		r := Round(struct {
-			curr, prop auction.Score
+			curr, prop briscola5.AuctionScore
 			currID     uint8
 			players    briscola5.Players
+			cmpF       func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 		}{
 			curr:    score,
-			prop:    auction.Score(n),
+			prop:    briscola5.AuctionScore(n),
 			currID:  currID,
 			players: players,
+			cmpF:    callCmp,
 		})
 		score = r.s
 		currID = r.id
@@ -47,7 +51,7 @@ func Run(players briscola5.Players, listenFor func(context.Context, func())) str
 		close(done)
 	}
 	return struct {
-		Score  auction.Score
+		Score  briscola5.AuctionScore
 		Caller uint8
 	}{
 		Score:  score,
@@ -56,20 +60,20 @@ func Run(players briscola5.Players, listenFor func(context.Context, func())) str
 }
 
 func notFolded(p *briscola5.Player) bool { return !briscola5.Folded(p) }
-func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
-	id, err := rotateOn(players, from, notFolded)
+
+func callCmp(curr, prop briscola5.AuctionScore) int8 {
+	var jsonReq = fmt.Sprintf(`{"current":%d,"proposed":%d}`, curr, prop)
+	res, err := http.Post("http://localhost:8080/cmp", "application/json", strings.NewReader(jsonReq))
 	if err != nil {
-		log.Fatalf("error found: %v. Exiting.", err)
+		log.Println(err)
 	}
-	return id
-}
-func rotateOn(players briscola5.Players, idx uint8, appliesTo briscola5.Predicate) (uint8, error) {
-	for i := 0; i < 2*len(players.List()); i++ {
-		idx = (idx + 1) % uint8(len(players.List()))
-		if !appliesTo(players.At(int(idx))) {
-			continue
-		}
-		return idx, nil
+	defer res.Body.Close()
+	var rs struct {
+		Cmp int8 `json:"cmp"`
 	}
-	return 0, fmt.Errorf("rotated twice on the number of players and no player found in play.")
+	rserr := json.NewDecoder(res.Body).Decode(&rs)
+	if rserr != nil {
+		log.Println(err)
+	}
+	return rs.Cmp
 }

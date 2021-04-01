@@ -5,7 +5,6 @@ import (
 
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
-	"github.com/mcaci/msdb5/v2/dom/briscola5/auction"
 )
 
 // Game struct
@@ -14,7 +13,7 @@ type Game struct {
 	players      briscola5.Players
 	briscolaCard briscola.Card
 	side         briscola5.Side
-	auctionScore auction.Score
+	auctionScore briscola5.AuctionScore
 }
 
 type Options struct {

@@ -1,14 +1,14 @@
-package auction
+package briscola5
 
 import (
 	"testing"
 )
 
-var initialValue Score
+var initialValue AuctionScore
 
 func TestAuctionCases(t *testing.T) {
 	testcases := map[string]struct {
-		current, proposed Score
+		current, proposed AuctionScore
 		expected          cmpInfo
 	}{
 		"Current and proposed less than min -> MIN_SCORE":         {0, 1, LT_MIN_SCORE},
@@ -26,22 +26,22 @@ func TestAuctionCases(t *testing.T) {
 }
 
 func TestCheckAndUpdate_OK(t *testing.T) {
-	value := Score(80)
-	if Cmp(value, Score(100)) != 0 {
+	value := AuctionScore(80)
+	if Cmp(value, AuctionScore(100)) != 0 {
 		t.Fatal("Unexpected check return value")
 	}
 }
 
 func TestCheckAndUpdate_Fold(t *testing.T) {
-	value := Score(80)
-	if Cmp(value, Score(61)) >= 0 {
+	value := AuctionScore(80)
+	if Cmp(value, AuctionScore(61)) >= 0 {
 		t.Fatal("Unexpected check return value")
 	}
 }
 
 func TestAuctionValues(t *testing.T) {
 	testcases := map[string]struct {
-		current, proposed, expected Score
+		current, proposed, expected AuctionScore
 	}{
 		"Current and proposed less than min -> MIN_SCORE":         {0, 1, MIN_SCORE},
 		"Proposed less than current but more than min -> current": {76, 65, 76},

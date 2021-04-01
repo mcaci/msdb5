@@ -1,8 +1,6 @@
 package end
 
 import (
-	"log"
-
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
@@ -19,7 +17,6 @@ func Cond(g *Opts) bool {
 	if briscola5.ToGeneralPlayers(g.Players).All(player.EmptyHanded) {
 		return true
 	}
-	log.Println(g.PlayedCards)
 	isNewRoundToStart := len(*g.PlayedCards.Cards) == 5
 	if !isNewRoundToStart {
 		return false

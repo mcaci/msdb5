@@ -1,4 +1,4 @@
-package auction
+package briscola5
 
 type cmpInfo int8
 
@@ -14,11 +14,11 @@ const (
 	MAX_SCORE = 120
 )
 
-// Score is the auction value
-type Score uint8
+// AuctionScore is the auction value
+type AuctionScore uint8
 
 // CmpAndSet compares two auction scores and returns the appropriate score
-func CmpAndSet(actual, proposed Score) Score {
+func CmpAndSet(actual, proposed AuctionScore) AuctionScore {
 	switch Cmp(actual, proposed) {
 	case LT_MIN_SCORE:
 		return MIN_SCORE
@@ -36,7 +36,7 @@ func CmpAndSet(actual, proposed Score) Score {
 // -1 if proposed is less than actual but greater than 61
 // 0 if proposed is greater than actual but less than 120
 // 1 if proposed is greater than 120
-func Cmp(actual, proposed Score) cmpInfo {
+func Cmp(actual, proposed AuctionScore) cmpInfo {
 	switch {
 	case proposed <= actual:
 		return LE_ACTUAL

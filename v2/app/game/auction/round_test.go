@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
-	"github.com/mcaci/msdb5/v2/dom/briscola5/auction"
 )
 
 type opts struct {
@@ -22,15 +21,20 @@ func testplayers(opt *opts) briscola5.Players {
 }
 
 type inParams struct {
-	curr, prop auction.Score
+	curr, prop briscola5.AuctionScore
 	currID     uint8
 	players    briscola5.Players
+	cmpF       func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 }
 
 type outParams struct {
-	s   auction.Score
+	s   briscola5.AuctionScore
 	id  uint8
 	end bool
+}
+
+func dirCmp(curr, prop briscola5.AuctionScore) int8 {
+	return int8(briscola5.Cmp(curr, prop))
 }
 
 func TestAuctionRound(t *testing.T) {
@@ -44,6 +48,7 @@ func TestAuctionRound(t *testing.T) {
 				prop:    80,
 				currID:  0,
 				players: testplayers(&opts{}),
+				cmpF:    dirCmp,
 			},
 			out: outParams{
 				s:   80,
@@ -59,6 +64,7 @@ func TestAuctionRound(t *testing.T) {
 				players: testplayers(&opts{
 					folded: [5]bool{true, false, false, false, false},
 				}),
+				cmpF: dirCmp,
 			},
 			out: outParams{
 				s:   61,
@@ -71,6 +77,7 @@ func TestAuctionRound(t *testing.T) {
 				prop:    74,
 				currID:  0,
 				players: testplayers(&opts{}),
+				cmpF:    dirCmp,
 			},
 			out: outParams{
 				s:   80,
@@ -86,6 +93,7 @@ func TestAuctionRound(t *testing.T) {
 				players: testplayers(&opts{
 					folded: [5]bool{false, true, false, true, true},
 				}),
+				cmpF: dirCmp,
 			},
 			out: outParams{
 				s:   80,
@@ -99,6 +107,7 @@ func TestAuctionRound(t *testing.T) {
 				prop:    120,
 				currID:  3,
 				players: testplayers(&opts{}),
+				cmpF:    dirCmp,
 			},
 			out: outParams{
 				s:   120,
