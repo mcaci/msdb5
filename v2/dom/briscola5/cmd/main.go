@@ -4,12 +4,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mcaci/msdb5/v2/dom/briscola5/cmd/mdw"
+	"github.com/mcaci/msdb5/v2/dom/briscola5/srv"
 )
 
 func main() {
-	http.HandleFunc("/cmp", mdw.Cmp)
-	http.HandleFunc("/cmpandset", mdw.CmpAndSet)
+	http.HandleFunc("/cmp", srv.Cmp)
+	http.HandleFunc("/cmpandset", srv.CmpAndSet)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

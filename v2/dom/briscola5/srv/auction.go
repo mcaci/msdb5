@@ -1,4 +1,4 @@
-package mdw
+package srv
 
 import (
 	"context"
