@@ -24,7 +24,7 @@ func main() {
 	game.Start(g)
 
 	log.Println("Match over", g)
-	log.Println("Score", game.Score(g))
+	log.Println("Score", game.ScoreGrpc(g))
 
 	// // setup connection listenner
 	// l, err := net.Listen(*network, fmt.Sprintf("%s:%s", *host, *port))
