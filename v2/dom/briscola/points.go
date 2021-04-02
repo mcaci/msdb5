@@ -13,15 +13,23 @@ type Card struct{ card.Item }
 func MustID(n uint8) *Card { return &Card{Item: *card.MustID(n)} }
 
 // Points returns the value of each card number according to Briscola rules
-func Points(valuer interface{ Number() uint8 }) uint8 {
+func Points(scorer interface{ Number() uint8 }) uint8 {
 	var points = map[uint8]uint8{1: 11, 3: 10, 8: 2, 9: 3, 10: 4}
-	return points[valuer.Number()]
+	return points[scorer.Number()]
 }
 
 // Score computes the total score for a cardset according to Briscola rules
 func Score(cards set.Cards) (sum uint8) {
 	for _, c := range cards {
 		sum += Points(c)
+	}
+	return
+}
+
+// FinalScore computes the total score for a cardset according to Briscola rules
+func FinalScore(scorers ...interface{ Number() uint8 }) (sum uint8) {
+	for _, s := range scorers {
+		sum += Points(s)
 	}
 	return
 }

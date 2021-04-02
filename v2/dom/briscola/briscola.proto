@@ -1,15 +1,24 @@
 syntax = "proto3";
 
-option go_package = ".;briscola";
+option go_package = "/pb";
 
 service Briscola {
-	rpc Points(PointsRequest) returns (PointsResponse) {}
+	rpc Points(NumberReq) returns (PointsRes) {}
+	rpc Score(Cards) returns (PointsRes) {}
 }
 
-message PointsRequest {
+message NumberReq {
 	uint32 number = 1;
 }
 
-message PointsResponse {
+message PointsRes {
 	uint32 points = 1;
+}
+
+message Cards {
+	repeated CardID cards = 1;
+}
+
+message CardID {
+	uint32 id = 1;
 }
