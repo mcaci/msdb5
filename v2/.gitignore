@@ -1,2 +1,5 @@
 # Generated files
-**/*.pb.go
+*.pb.go
+
+# Client packages for local tests
+cli
