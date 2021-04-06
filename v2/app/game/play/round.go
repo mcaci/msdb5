@@ -1,9 +1,13 @@
 package play
 
 import (
+	"context"
+	"log"
+
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
+	"github.com/mcaci/msdb5/v2/pb"
 )
 
 type RoundOpts struct {
@@ -35,10 +39,33 @@ func Round(g *RoundOpts) *RoundInfo {
 	}
 	if !isRoundOngoing(*g.PlayedCards.Cards) {
 		// end current round
-		winningCardIndex := briscola.IndexOfWinningCard(*g.PlayedCards.Cards, g.BriscolaCard.Seed())
+		conn := pb.Conn()
+		defer conn.Close()
+		client := pb.NewBriscolaClient(conn)
+
+		toPBCards := func(cards set.Cards) *pb.Cards {
+			pbcards := make([]*pb.CardID, len(cards))
+			for i := range pbcards {
+				pbcards[i] = &pb.CardID{Id: uint32(cards[i].ToID())}
+			}
+			return &pb.Cards{Cards: pbcards}
+		}
+		toBoard := func(cards set.Cards) *pb.Board {
+			pbcards := make([]*pb.CardID, len(cards))
+			for i := range pbcards {
+				pbcards[i] = &pb.CardID{Id: uint32(cards[i].ToID())}
+			}
+			return &pb.Board{Briscola: uint32(g.BriscolaCard.Seed()), Cards: toPBCards(cards)}
+		}
+
+		win, err := client.Winner(context.Background(), toBoard(*g.PlayedCards.Cards))
+		if err != nil {
+			log.Println(err)
+		}
+
 		return &RoundInfo{
 			OnBoard: g.PlayedCards,
-			NextPl:  roundRobin(g.PlIdx, winningCardIndex+1, g.NPlayers),
+			NextPl:  roundRobin(g.PlIdx, uint8(win.Id)+1, g.NPlayers),
 			NextRnd: true,
 		}
 	}

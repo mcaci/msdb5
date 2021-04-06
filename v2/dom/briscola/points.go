@@ -27,7 +27,7 @@ func Score(cards set.Cards) (sum uint8) {
 }
 
 // FinalScore computes the total score for a cardset according to Briscola rules
-func FinalScore(scorers ...interface{ Number() uint8 }) (sum uint8) {
+func FinalScore(scorers []*card.Item) (sum uint8) {
 	for _, s := range scorers {
 		sum += Points(s)
 	}

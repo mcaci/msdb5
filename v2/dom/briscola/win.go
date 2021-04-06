@@ -17,6 +17,18 @@ func IndexOfWinningCard(cardsOnTheTable set.Cards, briscola card.Seed) uint8 {
 	return uint8(max)
 }
 
+func Winner(cardsOnTheTable []*card.Item, briscola card.Seed) uint8 {
+	base := cardsOnTheTable[0]
+	max := 0
+	for i, other := range cardsOnTheTable {
+		if winningCard(*base, *other, briscola) == *other {
+			base = other
+			max = i
+		}
+	}
+	return uint8(max)
+}
+
 func winningCard(base, other card.Item, briscola card.Seed) card.Item {
 	if &base == nil || doesOtherCardWin(base, other, briscola) {
 		base = other
