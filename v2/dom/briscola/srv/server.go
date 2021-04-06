@@ -24,9 +24,18 @@ func (s *server) Points(ctx context.Context, n *pb.NumberReq) (*pb.PointsRes, er
 }
 
 func (s *server) Score(ctx context.Context, cs *pb.Cards) (*pb.PointsRes, error) {
-	scrs, err := toScorers(cs)
+	crds, err := toCards(cs)
 	if err != nil {
-		return nil, fmt.Errorf("error in the conversion of the input: %w", err)
+		return nil, fmt.Errorf("Score: error in the conversion of the input: %w", err)
 	}
-	return &pb.PointsRes{Points: uint32(briscola.FinalScore(scrs...))}, nil
+	return &pb.PointsRes{Points: uint32(briscola.FinalScore(crds))}, nil
+}
+
+func (s *server) Winner(ctx context.Context, b *pb.Board) (*pb.Index, error) {
+	crds, err := toCards(b.Cards)
+	if err != nil {
+		return nil, fmt.Errorf("Winner: error in the conversion of the input: %w", err)
+	}
+	id := briscola.Winner(crds, card.Seed(uint8(b.Briscola)))
+	return &pb.Index{Id: uint32(id)}, nil
 }
