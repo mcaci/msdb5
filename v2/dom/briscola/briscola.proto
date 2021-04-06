@@ -5,6 +5,7 @@ option go_package = "/pb";
 service Briscola {
 	rpc Points(NumberReq) returns (PointsRes) {}
 	rpc Score(Cards) returns (PointsRes) {}
+	rpc Winner(Board) returns (Index) {}
 }
 
 message NumberReq {
@@ -15,10 +16,19 @@ message PointsRes {
 	uint32 points = 1;
 }
 
+message Board {
+	uint32 briscola = 1;
+	Cards cards = 2;
+}
+
 message Cards {
 	repeated CardID cards = 1;
 }
 
 message CardID {
+	uint32 id = 1;
+}
+
+message Index {
 	uint32 id = 1;
 }
