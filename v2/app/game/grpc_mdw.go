@@ -2,7 +2,6 @@ package game
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"log"
 
@@ -10,13 +9,12 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/team"
 	"github.com/mcaci/msdb5/v2/pb"
-	"google.golang.org/grpc"
 )
 
 func ScoreGrpc(g *Game) string {
 	t1, t2 := briscola5.ToGeneralPlayers(g.players).Part(briscola5.IsInCallers(&g.players))
 
-	conn := getConn()
+	conn := pb.Conn()
 	defer conn.Close()
 	client := pb.NewBriscolaClient(conn)
 
@@ -41,16 +39,4 @@ func ScoreGrpc(g *Game) string {
 	log.Println(s2.GetPoints())
 
 	return fmt.Sprintf("[%s: %d], [%s: %d]", "Caller team", s1.Points, "Non Caller team", s2.Points)
-}
-
-func getConn() *grpc.ClientConn {
-	const serverAddr = "localhost:8081"
-	flag.Parse()
-	var opts []grpc.DialOption
-	opts = append(opts, grpc.WithInsecure())
-	conn, err := grpc.Dial(serverAddr, opts...)
-	if err != nil {
-		log.Println("error found", err)
-	}
-	return conn
 }
