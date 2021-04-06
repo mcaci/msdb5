@@ -24,7 +24,7 @@ func (s *server) Points(ctx context.Context, n *pb.NumberReq) (*pb.PointsRes, er
 }
 
 func (s *server) Score(ctx context.Context, cs *pb.Cards) (*pb.PointsRes, error) {
-	scrs, err := toScorers(*cs)
+	scrs, err := toScorers(cs)
 	if err != nil {
 		return nil, fmt.Errorf("error in the conversion of the input: %w", err)
 	}
