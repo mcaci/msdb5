@@ -4,7 +4,8 @@
 [go-micro examples](https://github.com/asim/go-micro/tree/master/examples)
 [go-micro proto example](https://github.com/asim/go-micro/tree/master/cmd/protoc-gen-micro)
 
-[grpc docs](https://grpc.io/docs/languages/go/quickstart/)
+[grpc docs basics](https://grpc.io/docs/languages/go/basics/)
+[grpc docs quickstart](https://grpc.io/docs/languages/go/quickstart/)
 [protobuf sytnax](https://developers.google.com/protocol-buffers/docs/reference/proto3-spec#syntax)
 [protobuf gen guide](https://developers.google.com/protocol-buffers/docs/reference/go-generated)
 

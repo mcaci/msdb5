@@ -6,7 +6,7 @@ Lists of commands to build, run and clean docker image
 - docker build -t briscola5 .
 - docker run -d -p 8080:8080 --name briscola5 briscola5
 - docker stop briscola5
-- docker run briscola5
+- docker start briscola5
 
 Flags `CGO_ENABLED=0` and `GOOS=linux` are necessary otherwise docker run doesn't work.
 
