@@ -1,0 +1,25 @@
+<h1>{{.Title}}</h1>
+
+<form action="/start/" method="POST">
+    <div>
+        <label for="gamenameID">Name:</label>
+        <input type="text" id="gamenameID" name="gamename" value="{{printf "%s" .Body}}" />
+    </div>
+
+    <div>
+        <input type="radio" id="joinID" name="type" value="join" checked/>
+        <label for="joinID">Join</label>
+    </div>
+    <div>
+        <input type="radio" id="createID" name="type" value="create"/>
+        <label for="createID">Create</label>
+    </div>
+
+    <div>
+        <input type="submit" id="startID" value="Start">
+    </div>
+</form>
+
+
+
+{{printf "%s" .Msg}}
