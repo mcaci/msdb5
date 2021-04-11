@@ -9,12 +9,14 @@ gen: ./dom/briscola/briscola.proto
 briscola: ./dom/briscola/cmd/main.go ./dom/briscola/cmd/Dockerfile
 	CGO_ENABLED=0 GOOS=linux go build -o briscola -a ./dom/briscola/cmd
 	docker build -f ./dom/briscola/cmd/Dockerfile --force-rm -t briscola .
+	docker stop briscola
 	docker rm briscola
 	rm briscola
 
 briscola5: ./dom/briscola5/cmd/main.go ./dom/briscola5/cmd/Dockerfile
 	CGO_ENABLED=0 GOOS=linux go build -o briscola5 -a ./dom/briscola5/cmd
 	docker build -f ./dom/briscola5/cmd/Dockerfile -t briscola5 .
+	docker stop briscola5
 	docker rm briscola5
 	rm briscola5
 
