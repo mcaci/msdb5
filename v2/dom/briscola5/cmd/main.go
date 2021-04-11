@@ -11,5 +11,5 @@ func main() {
 	http.HandleFunc("/cmp", srv.Cmp)
 	http.HandleFunc("/cmpandset", srv.CmpAndSet)
 
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Fatal(http.ListenAndServe(":8082", nil))
 }

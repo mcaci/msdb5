@@ -63,7 +63,7 @@ func notFolded(p *briscola5.Player) bool { return !briscola5.Folded(p) }
 
 func callCmp(curr, prop briscola5.AuctionScore) int8 {
 	var jsonReq = fmt.Sprintf(`{"current":%d,"proposed":%d}`, curr, prop)
-	res, err := http.Post("http://localhost:8080/cmp", "application/json", strings.NewReader(jsonReq))
+	res, err := http.Post("http://localhost:8082/cmp", "application/json", strings.NewReader(jsonReq))
 	if err != nil {
 		log.Println(err)
 	}

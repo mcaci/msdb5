@@ -20,4 +20,4 @@ briscola5: ./dom/briscola5/cmd/main.go ./dom/briscola5/cmd/Dockerfile
 
 docker_run:
 	docker run -d -p 8081:8081 --name briscola briscola
-	docker run -d -p 8080:8080 --name briscola5 briscola5
+	docker run -d -p 8082:8082 --name briscola5 briscola5

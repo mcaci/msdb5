@@ -4,7 +4,7 @@ Lists of commands to build, run and clean docker image
 
 - CGO_ENABLED=0 GOOS=linux go build -o briscola5 -a .
 - docker build -t briscola5 .
-- docker run -d -p 8080:8080 --name briscola5 briscola5
+- docker run -d -p 8082:8082 --name briscola5 briscola5
 - docker stop briscola5
 - docker start briscola5
 
