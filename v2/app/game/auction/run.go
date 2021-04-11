@@ -1,7 +1,6 @@
 package auction
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -12,24 +11,15 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
-func Run(players briscola5.Players, listenFor func(context.Context, func())) struct {
+func Run(players briscola5.Players) struct {
 	Score  briscola5.AuctionScore
 	Caller uint8
 } {
-	ctx, cancel := context.WithCancel(context.Background())
-	numbers := make(chan int)
-	done := make(chan struct{})
-	go listenFor(ctx, func() { numbers <- 60 + rand.Intn(60) })
-	go func() {
-		<-done
-		cancel()
-		close(numbers)
-	}()
 
 	var score briscola5.AuctionScore
 	var currID uint8
 
-	for n := range numbers {
+	for {
 		r := Round(struct {
 			curr, prop briscola5.AuctionScore
 			currID     uint8
@@ -37,7 +27,7 @@ func Run(players briscola5.Players, listenFor func(context.Context, func())) str
 			cmpF       func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 		}{
 			curr:    score,
-			prop:    briscola5.AuctionScore(n),
+			prop:    briscola5.AuctionScore(60 + rand.Intn(60)),
 			currID:  currID,
 			players: players,
 			cmpF:    callCmp,
@@ -47,15 +37,13 @@ func Run(players briscola5.Players, listenFor func(context.Context, func())) str
 		if !r.end {
 			continue
 		}
-		done <- struct{}{}
-		close(done)
-	}
-	return struct {
-		Score  briscola5.AuctionScore
-		Caller uint8
-	}{
-		Score:  score,
-		Caller: players.MustIndex(notFolded),
+		return struct {
+			Score  briscola5.AuctionScore
+			Caller uint8
+		}{
+			Score:  score,
+			Caller: players.MustIndex(notFolded),
+		}
 	}
 }
 

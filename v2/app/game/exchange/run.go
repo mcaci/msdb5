@@ -1,7 +1,6 @@
 package exchange
 
 import (
-	"context"
 	"math/rand"
 
 	"github.com/mcaci/ita-cards/set"
@@ -9,22 +8,11 @@ import (
 
 func Run(g struct {
 	Hand, Side *set.Cards
-}, listenFor func(context.Context, func())) {
-
-	ctx, cancel := context.WithCancel(context.Background())
-	numbers := make(chan int)
-	done := make(chan struct{})
-	go listenFor(ctx, func() { numbers <- rand.Intn(len(*g.Hand)) })
-	go func() {
-		<-done
-		cancel()
-		close(numbers)
-	}()
-
-	for idx := range numbers {
+}) {
+	for {
+		idx := rand.Intn(len(*g.Hand))
 		if idx > 2 {
-			done <- struct{}{}
-			close(done)
+			break
 		}
 		Round(struct {
 			Hand, Side *set.Cards

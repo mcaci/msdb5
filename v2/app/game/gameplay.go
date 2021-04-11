@@ -2,7 +2,6 @@ package game
 
 import (
 	"fmt"
-	"math/rand"
 
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/game/auction"
@@ -10,20 +9,13 @@ import (
 	"github.com/mcaci/msdb5/v2/app/game/end"
 	"github.com/mcaci/msdb5/v2/app/game/exchange"
 	"github.com/mcaci/msdb5/v2/app/game/play"
-	"github.com/mcaci/msdb5/v2/app/listen"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-func WaitForPlayers(g *Game, listenFor func(chan<- string)) {
-	names := make(chan string)
-	go listenFor(names)
-	for name := range names {
-		p := briscola5.NewPlayer()
-		p.RegisterAs(name)
-		g.players.Add(p)
-	}
+func WaitForPlayers(g *Game) {
+
 }
 
 func Start(g *Game) {
@@ -31,7 +23,7 @@ func Start(g *Game) {
 	distributeCards(g)
 
 	// auction phase
-	aucInf := auction.Run(g.players, listen.WithTicker)
+	aucInf := auction.Run(g.players)
 	g.auctionScore = aucInf.Score
 	g.players.SetCaller(aucInf.Caller)
 
@@ -42,11 +34,19 @@ func Start(g *Game) {
 		}{
 			Hand: g.players.Caller().Hand(),
 			Side: &g.side.Cards,
-		}, listen.WithTicker)
+		})
 	}
 
 	// companion choice phase
-	cmpInf := companion.Run(briscola5.ToGeneralPlayers(g.players), func(id chan<- uint8) { id <- uint8(rand.Intn(40) + 1) })
+	cmpInf := companion.Run(
+		struct {
+			ID      uint8
+			Players team.Players
+		}{
+			ID:      aucInf.Caller,
+			Players: briscola5.ToGeneralPlayers(g.players),
+		},
+	)
 	g.briscolaCard = cmpInf.Briscola
 	g.players.SetCaller(cmpInf.Companion)
 

@@ -20,7 +20,14 @@ type Options struct {
 	WithSide bool
 }
 
-func NewGame(gOpts *Options) *Game { return &Game{opts: gOpts} }
+func NewGame(gOpts *Options) *Game {
+	g := &Game{opts: gOpts}
+	g.players = *briscola5.NewPlayers()
+	for i, p := range g.players.List() {
+		p.RegisterAs(fmt.Sprintf("player%d", i+1))
+	}
+	return g
+}
 
 // New func
 func New() *Game { return &Game{} }
