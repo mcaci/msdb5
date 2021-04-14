@@ -26,7 +26,6 @@ func main() {
 		WithSide: !*noSide,
 	})
 
-	game.WaitForPlayers(g)
 	game.Start(g)
 
 	log.Println("Match over", g)

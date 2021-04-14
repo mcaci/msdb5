@@ -14,10 +14,6 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-func WaitForPlayers(g *Game) {
-
-}
-
 func Start(g *Game) {
 	// distribute cards to players
 	distributeCards(g)
