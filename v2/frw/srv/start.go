@@ -8,6 +8,12 @@ import (
 	"github.com/mcaci/msdb5/v2/app/game"
 )
 
+type StartPage struct {
+	Title string
+	Body  []byte
+	Msg   []byte
+}
+
 func Start(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
@@ -15,7 +21,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	}
 	playername := r.Form["playername"][0]
 	gamename := r.Form["gamename"][0]
-	v := &Page{Title: fmt.Sprintf("Welcome %s! Game %s has started.", playername, gamename)}
+	v := &StartPage{Title: fmt.Sprintf("Welcome %s! Game %s has started.", playername, gamename)}
 	switch r.Form["type"][0] {
 	case "create":
 		if g != nil {

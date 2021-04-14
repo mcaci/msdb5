@@ -17,9 +17,3 @@ var (
 	cards       = set.Deck()
 	currentBody = [][]byte{}
 )
-
-type Page struct {
-	Title string
-	Body  []byte
-	Msg   []byte
-}
