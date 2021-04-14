@@ -1,7 +1,6 @@
 package srv
 
 import (
-	"log"
 	"net/http"
 )
 
@@ -12,9 +11,8 @@ type HomePage struct {
 }
 
 func Home(w http.ResponseWriter, r *http.Request) {
-	err := templates.ExecuteTemplate(w, "home.html", &HomePage{Title: "Start", Body: []byte("test")})
+	err := templates.ExecuteTemplate(w, "home.html", &HomePage{Title: "Home page", Body: []byte("default")})
 	if err != nil {
-		log.Println(err)
 		http.NotFound(w, r)
 		return
 	}
