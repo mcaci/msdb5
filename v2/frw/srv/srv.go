@@ -11,8 +11,9 @@ var (
 	files     = []string{"assets/home.html", "assets/start.html"}
 	templates = template.Must(template.ParseFiles(files...))
 
-	n string
-	g *game.Game
+	n        string
+	g        *game.Game
+	register func(string)
 
 	cards       = set.Deck()
 	currentBody = [][]byte{}

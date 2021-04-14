@@ -31,6 +31,8 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		}
 		g = game.NewGame(&game.Options{WithSide: true})
 		n = gamename
+		register = g.RegisterPlayer()
+		register(playername)
 		v.Msg = []byte(fmt.Sprintf("new game created with gamename %q", gamename))
 		log.Printf("Game created with gamename %q", gamename)
 	case "join":
@@ -44,6 +46,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/", http.StatusFound)
 			return
 		}
+		register(playername)
 		v.Msg = []byte(fmt.Sprintf("joining game %q", gamename))
 	default:
 		log.Printf("unknown %q option", r.Form["type"][0])
