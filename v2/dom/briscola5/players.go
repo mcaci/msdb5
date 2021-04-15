@@ -70,6 +70,19 @@ func Count(players Players, predicate Predicate) (count uint8) {
 	return
 }
 
+func (playerSet *Players) Registration() func(string) error {
+	var i int
+	return func(s string) error {
+		if i >= 5 {
+			return errors.New("noop: max players reached")
+		}
+		log.Printf("registering player %d with name %q", i, s)
+		playerSet.At(i).RegisterAs(s)
+		i++
+		return nil
+	}
+}
+
 func (playerSet *Players) List() []*Player             { return playerSet.pls }
 func (playerSet *Players) At(i int) *Player            { return playerSet.pls[i] }
 func (playerSet *Players) Player(i int) *player.Player { return &playerSet.At(i).Player }
