@@ -3,12 +3,14 @@ package srv
 import (
 	"bytes"
 	"net/http"
+
+	"github.com/mcaci/ita-cards/set"
 )
 
-type DrawPage struct {
-	Title string
-	Body  []byte
-}
+var (
+	cards       = set.Deck()
+	currentBody = [][]byte{}
+)
 
 func Draw(w http.ResponseWriter, r *http.Request) {
 	currentBody = append(currentBody, []byte(cards.Top().String()))
