@@ -1,4 +1,4 @@
-package game
+package briscola5
 
 import (
 	"fmt"

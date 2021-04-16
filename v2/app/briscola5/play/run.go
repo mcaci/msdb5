@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/app/game/end"
+	"github.com/mcaci/msdb5/v2/app/briscola5/end"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"

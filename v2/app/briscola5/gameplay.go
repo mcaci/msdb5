@@ -1,14 +1,14 @@
-package game
+package briscola5
 
 import (
 	"fmt"
 
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/app/game/auction"
-	"github.com/mcaci/msdb5/v2/app/game/companion"
-	"github.com/mcaci/msdb5/v2/app/game/end"
-	"github.com/mcaci/msdb5/v2/app/game/exchange"
-	"github.com/mcaci/msdb5/v2/app/game/play"
+	"github.com/mcaci/msdb5/v2/app/briscola5/auction"
+	"github.com/mcaci/msdb5/v2/app/briscola5/companion"
+	"github.com/mcaci/msdb5/v2/app/briscola5/end"
+	"github.com/mcaci/msdb5/v2/app/briscola5/exchange"
+	"github.com/mcaci/msdb5/v2/app/briscola5/play"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/team"
