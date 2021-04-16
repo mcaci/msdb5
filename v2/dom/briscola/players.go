@@ -9,11 +9,13 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
+const nPlayers = 2
+
 type Players struct{ team.Players }
 
 // NewPlayers creates new container for briscola5 players
 func NewPlayers() *Players {
-	players := make(team.Players, 2)
+	players := make(team.Players, nPlayers)
 	for i := range players {
 		players[i] = player.New()
 	}
@@ -23,7 +25,7 @@ func NewPlayers() *Players {
 func (pls *Players) Registration() func(string) error {
 	var i int
 	return func(s string) error {
-		if i >= 5 {
+		if i >= nPlayers {
 			return errors.New("noop: max players reached")
 		}
 		log.Printf("registering player %d with name %q", i, s)
@@ -39,7 +41,7 @@ func (pls *Players) All(prd player.Predicate) bool { return pls.Players.All(prd)
 type PlayedCards struct{ *set.Cards }
 
 func (c PlayedCards) Pile() *set.Cards {
-	if len(*c.Cards) == 5 {
+	if len(*c.Cards) == nPlayers {
 		return (*set.Cards)(c.Cards)
 	}
 	return &set.Cards{}
