@@ -6,12 +6,13 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mcaci/msdb5/v2/app/game"
+	"github.com/mcaci/msdb5/v2/app/briscola"
 	"github.com/mcaci/msdb5/v2/frw/session"
 )
 
 var (
-	s     = session.Briscola5{}
+	s     = session.Briscola{}
+	s5    = session.Briscola5{}
 	start = template.Must(template.ParseFiles("assets/start.html"))
 )
 
@@ -30,11 +31,11 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/", http.StatusFound)
 			return
 		}
-		s.Game = game.NewGame(&game.Options{
+		s.Game = briscola.NewGame(&briscola.Options{
 			WithSide: true,
 			WithName: gamename,
 		})
-		err := game.Register(playername, s.Game)
+		err := briscola.Register(playername, s.Game)
 		if err != nil {
 			log.Print("registration error:", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -52,7 +53,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/", http.StatusFound)
 			return
 		}
-		err := game.Register(playername, s.Game)
+		err := briscola.Register(playername, s.Game)
 		if err != nil {
 			log.Print("registration error:", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)

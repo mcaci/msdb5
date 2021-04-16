@@ -5,7 +5,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mcaci/msdb5/v2/app/game"
+	"github.com/mcaci/msdb5/v2/app/briscola5"
 	"github.com/mcaci/msdb5/v2/frw/srv"
 )
 
@@ -22,12 +22,12 @@ func main() {
 	}
 
 	// setup game
-	g := game.NewGame(&game.Options{
+	g := briscola5.NewGame(&briscola5.Options{
 		WithSide: !*noSide,
 	})
 
-	game.Start(g)
+	briscola5.Start(g)
 
 	log.Println("Match over", g)
-	log.Println("Score", game.ScoreGrpc(g))
+	log.Println("Score", briscola5.ScoreGrpc(g))
 }
