@@ -1,23 +1,36 @@
 package srv
 
 import (
-	"bytes"
+	"log"
 	"net/http"
+	"regexp"
 
-	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/dom/player"
 )
 
 var (
-	cards       = set.Deck()
-	currentBody = [][]byte{}
+	validName = regexp.MustCompile("^/(draw|view)/([a-zA-Z0-9]+)$")
 )
 
 func Draw(w http.ResponseWriter, r *http.Request) {
-	currentBody = append(currentBody, []byte(cards.Top().String()))
-	err := start.Execute(w, &struct {
-		Title string
-		Body  []byte
-	}{Title: "Player", Body: bytes.Join(currentBody, []byte(", "))})
+	m := validName.FindStringSubmatch(r.URL.Path)
+	playername := m[2]
+	i, err := s.Game.Players().Players.Index(func(p *player.Player) bool { return p.Name() == playername })
+	pl := s.Game.Players().At(int(i))
+	pl.Hand().Add(s.Deck.Top())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	err = game.Execute(w, &struct {
+		Title      string
+		Body       string
+		PlayerName string
+	}{
+		Title:      "Player",
+		Body:       pl.String(),
+		PlayerName: pl.Name(),
+	})
+	log.Print(s.Game)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

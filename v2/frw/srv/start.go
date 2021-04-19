@@ -6,14 +6,15 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola"
 	"github.com/mcaci/msdb5/v2/frw/session"
 )
 
 var (
-	s     = session.Briscola{}
-	s5    = session.Briscola5{}
-	start = template.Must(template.ParseFiles("assets/start.html"))
+	s    = session.Briscola{Deck: set.Deck()}
+	s5   = session.Briscola5{}
+	game = template.Must(template.ParseFiles("assets/game.html"))
 )
 
 func Start(w http.ResponseWriter, r *http.Request) {
@@ -67,10 +68,15 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Print(s.Game)
-	err = start.Execute(w, &struct {
-		Title string
-		Body  []byte
-	}{Title: fmt.Sprintf("Welcome %s! Game %s has started.", playername, gamename), Body: body})
+	err = game.Execute(w, &struct {
+		Title      string
+		Body       []byte
+		PlayerName string
+	}{
+		Title:      "Welcome",
+		Body:       body,
+		PlayerName: playername,
+	})
 	if err != nil {
 		http.NotFound(w, r)
 		return
