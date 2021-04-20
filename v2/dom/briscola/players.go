@@ -4,7 +4,6 @@ import (
 	"errors"
 	"log"
 
-	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
@@ -37,12 +36,3 @@ func (pls *Players) Registration() func(string) error {
 
 func (pls *Players) At(i int) *player.Player       { return pls.Players[i] }
 func (pls *Players) All(prd player.Predicate) bool { return pls.Players.All(prd) }
-
-type PlayedCards struct{ *set.Cards }
-
-func (c PlayedCards) Pile() *set.Cards {
-	if len(*c.Cards) == nPlayers {
-		return (*set.Cards)(c.Cards)
-	}
-	return &set.Cards{}
-}
