@@ -4,4 +4,12 @@
     <div><input type="submit" value="Draw"></div>
 </form>
 
+<form action="/play/{{.PlayerName}}" method="POST">
+    <div>
+      <label for="cardnameID">Card name:</label>
+      <input type="text" id="cardnameID" name="cardname" />
+    </div>
+    <div><input type="submit" value="Play"></div>
+</form>
+
 <div>{{printf "%s" .Body}}</div>

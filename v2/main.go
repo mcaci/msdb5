@@ -17,6 +17,7 @@ func main() {
 	if !*aiGame {
 		http.HandleFunc("/", srv.Home)
 		http.HandleFunc("/start/", srv.Start)
+		http.HandleFunc("/play/", srv.Play)
 		http.HandleFunc("/draw/", srv.Draw)
 		log.Fatal(http.ListenAndServe(":8080", nil))
 	}
