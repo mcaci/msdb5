@@ -6,13 +6,12 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola"
 	"github.com/mcaci/msdb5/v2/frw/session"
 )
 
 var (
-	s    = session.Briscola{Deck: set.Deck()}
+	s    = session.Briscola{}
 	s5   = session.Briscola5{}
 	game = template.Must(template.ParseFiles("assets/game.html"))
 )
@@ -33,7 +32,6 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		s.Game = briscola.NewGame(&briscola.Options{
-			WithSide: true,
 			WithName: gamename,
 		})
 		err := briscola.Register(playername, s.Game)

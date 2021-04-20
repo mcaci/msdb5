@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	validName = regexp.MustCompile("^/(draw|view)/([a-zA-Z0-9]+)$")
+	validName = regexp.MustCompile("^/(draw|play)/([a-zA-Z0-9]+)$")
 )
 
 func Draw(w http.ResponseWriter, r *http.Request) {
@@ -17,7 +17,7 @@ func Draw(w http.ResponseWriter, r *http.Request) {
 	playername := m[2]
 	i, err := s.Game.Players().Players.Index(func(p *player.Player) bool { return p.Name() == playername })
 	pl := s.Game.Players().At(int(i))
-	pl.Hand().Add(s.Deck.Top())
+	pl.Hand().Add(s.Game.Deck().Top())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
