@@ -12,10 +12,10 @@ type Game struct {
 	players      briscola.Players
 	briscolaCard briscola.Card
 	registration func(string) error
+	deck         *briscola.Deck
 }
 
 type Options struct {
-	WithSide bool
 	WithName string
 }
 
@@ -23,6 +23,7 @@ func NewGame(gOpts *Options) *Game {
 	g := &Game{opts: gOpts}
 	g.players = *briscola.NewPlayers()
 	g.registration = g.players.Registration()
+	g.deck = briscola.NewDeck()
 	return g
 }
 
@@ -30,6 +31,7 @@ func NewGame(gOpts *Options) *Game {
 func New() *Game { return &Game{} }
 
 func (g *Game) Players() *briscola.Players { return &g.players }
+func (g *Game) Deck() *briscola.Deck       { return g.deck }
 func (g *Game) Started(name string) bool   { return name == g.opts.WithName }
 func Register(name string, g *Game) error  { return g.registration(name) }
 
