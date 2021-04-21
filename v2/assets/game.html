@@ -12,4 +12,12 @@
     <div><input type="submit" value="Play"></div>
 </form>
 
-<div>{{printf "%s" .Body}}</div>
+<div>Player: {{printf "%s" .Body}}</div>
+
+{{ if .Briscola }}
+<div>Briscola: {{printf "%s" .Briscola}}</div>
+{{ end }}
+
+{{ if .Board }}
+<div>Board: {{printf "%s" .Board}}</div>
+{{ end }}

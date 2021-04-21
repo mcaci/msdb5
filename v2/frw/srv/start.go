@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	"github.com/mcaci/msdb5/v2/app/briscola"
+	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/frw/session"
 )
 
@@ -23,7 +24,8 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	}
 	playername := r.Form["playername"][0]
 	gamename := r.Form["gamename"][0]
-	var body []byte
+	var body string
+	var briscolaCard string
 	switch r.Form["type"][0] {
 	case "create":
 		if s.Game != nil && s.Game.Started(gamename) {
@@ -39,8 +41,9 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			log.Print("registration error:", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		body = []byte(fmt.Sprintf("new game created with gamename %q by player %q", gamename, playername))
+		body = fmt.Sprintf("new game created with gamename %q by player %q", gamename, playername)
 		log.Print(string(body))
+		s.NPls++
 	case "join":
 		if s.Game == nil {
 			log.Print("no games created yet")
@@ -58,21 +61,34 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		body = []byte(fmt.Sprintf("player %q joining game %q", playername, gamename))
+		body = fmt.Sprintf("player %q joining game %q", playername, gamename)
 		log.Print(string(body))
+		s.NPls++
+		if s.NPls == session.NPlBriscola {
+			briscola.StartGame(s.Game)
+		}
+		briscolaCard = s.Game.Briscola().String()
 	default:
 		log.Printf("unknown %q option", r.Form["type"][0])
 		http.Error(w, "did not understand the action", http.StatusInternalServerError)
 		return
 	}
+	i, err := s.Game.Players().Players.Index(func(p *player.Player) bool { return p.Name() == playername })
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	pl := s.Game.Players().At(int(i))
 	log.Print(s.Game)
 	err = game.Execute(w, &struct {
 		Title      string
-		Body       []byte
+		Body       string
+		Briscola   string
+		Board      string
 		PlayerName string
 	}{
 		Title:      "Welcome",
-		Body:       body,
+		Body:       pl.String(),
+		Briscola:   briscolaCard,
 		PlayerName: playername,
 	})
 	if err != nil {
