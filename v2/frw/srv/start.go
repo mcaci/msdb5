@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/frw/session"
@@ -82,12 +83,14 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	err = game.Execute(w, &struct {
 		Title      string
 		Body       string
+		Hand       set.Cards
 		Briscola   string
 		Board      string
 		PlayerName string
 	}{
 		Title:      "Welcome",
 		Body:       pl.String(),
+		Hand:       *pl.Hand(),
 		Briscola:   briscolaCard,
 		PlayerName: playername,
 	})

@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"regexp"
 
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/player"
 )
 
@@ -24,12 +25,14 @@ func Draw(w http.ResponseWriter, r *http.Request) {
 	err = game.Execute(w, &struct {
 		Title      string
 		Body       string
+		Hand       set.Cards
 		Briscola   string
 		Board      string
 		PlayerName string
 	}{
 		Title:      "Player",
 		Body:       pl.String(),
+		Hand:       *pl.Hand(),
 		Briscola:   s.Game.Briscola().String(),
 		PlayerName: pl.Name(),
 	})

@@ -14,6 +14,12 @@
 
 <div>Player: {{printf "%s" .Body}}</div>
 
+<div>Hand: {{printf "%s" .Hand}}</div>
+
+{{range .Hand}}
+  <div>Card: {{printf "%s" .}}</div>
+{{end}}
+
 {{ if .Briscola }}
 <div>Briscola: {{printf "%s" .Briscola}}</div>
 {{ end }}
