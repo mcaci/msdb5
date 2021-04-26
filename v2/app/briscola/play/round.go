@@ -74,5 +74,5 @@ func Round(g *RoundOpts) *RoundInfo {
 	}
 }
 
-func isRoundOngoing(playedCards set.Cards) bool { return len(playedCards) < 5 }
+func isRoundOngoing(playedCards set.Cards) bool { return len(playedCards) < 2 }
 func roundRobin(idx, off, size uint8) uint8     { return (idx + off) % size }
