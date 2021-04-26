@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/player"
 )
 
@@ -26,14 +27,15 @@ func Draw(w http.ResponseWriter, r *http.Request) {
 		Title      string
 		Body       string
 		Hand       set.Cards
-		Briscola   string
+		Briscola   *briscola.Card
 		Board      string
 		PlayerName string
+		NextPlayer string
 	}{
 		Title:      "Player",
 		Body:       pl.String(),
 		Hand:       *pl.Hand(),
-		Briscola:   s.Game.Briscola().String(),
+		Briscola:   s.Game.Briscola(),
 		PlayerName: pl.Name(),
 	})
 	log.Print(s.Game)

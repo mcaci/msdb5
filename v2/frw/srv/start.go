@@ -8,6 +8,7 @@ import (
 
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola"
+	briscolad "github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/frw/session"
 )
@@ -26,7 +27,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	playername := r.Form["playername"][0]
 	gamename := r.Form["gamename"][0]
 	var body string
-	var briscolaCard string
+	var briscolaCard *briscolad.Card
 	switch r.Form["type"][0] {
 	case "create":
 		if s.Game != nil && s.Game.Started(gamename) {
@@ -68,7 +69,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		if s.NPls == session.NPlBriscola {
 			briscola.StartGame(s.Game)
 		}
-		briscolaCard = s.Game.Briscola().String()
+		briscolaCard = s.Game.Briscola()
 	default:
 		log.Printf("unknown %q option", r.Form["type"][0])
 		http.Error(w, "did not understand the action", http.StatusInternalServerError)
@@ -84,9 +85,10 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		Title      string
 		Body       string
 		Hand       set.Cards
-		Briscola   string
+		Briscola   *briscolad.Card
 		Board      string
 		PlayerName string
+		NextPlayer string
 	}{
 		Title:      "Welcome",
 		Body:       pl.String(),

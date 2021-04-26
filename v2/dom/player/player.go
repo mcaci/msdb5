@@ -3,6 +3,7 @@ package player
 import (
 	"fmt"
 
+	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 )
 
@@ -22,6 +23,14 @@ func (player Player) Name() string { return player.name }
 
 // Hand func
 func (player *Player) Hand() *set.Cards { return &player.hand }
+
+// Select func
+func (player *Player) Select(i int) (*card.Item, error) {
+	if l := len(player.hand); i >= l {
+		return nil, fmt.Errorf("card at position %d cannot be found. Maximum position is %d", i, l)
+	}
+	return &player.hand[i], nil
+}
 
 // Pile func
 func (player *Player) Pile() *set.Cards { return &player.pile }
