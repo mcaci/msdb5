@@ -3,6 +3,7 @@ package briscola
 import (
 	"fmt"
 
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 )
 
@@ -25,6 +26,7 @@ func NewGame(gOpts *Options) *Game {
 	g.players = *briscola.NewPlayers()
 	g.registration = g.players.Registration()
 	g.deck = briscola.NewDeck()
+	g.board = briscola.PlayedCards{Cards: &set.Cards{}}
 	return g
 }
 
