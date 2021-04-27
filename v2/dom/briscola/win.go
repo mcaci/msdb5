@@ -1,6 +1,8 @@
 package briscola
 
 import (
+	"log"
+
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 )
@@ -22,6 +24,7 @@ func Winner(cardsOnTheTable []*card.Item, briscola card.Seed) uint8 {
 	max := 0
 	for i, other := range cardsOnTheTable {
 		if winningCard(*base, *other, briscola) == *other {
+			log.Println(*base, *other, briscola)
 			base = other
 			max = i
 		}
