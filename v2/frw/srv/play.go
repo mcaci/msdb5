@@ -30,7 +30,6 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	log.Printf("playing card %v", card)
-	set.MoveOne(card, pl.Hand(), s.Game.Board().Cards)
 	board := fmt.Sprint(*s.Game.Board().Cards)
 	info := play.Round(&play.RoundOpts{
 		PlIdx:        i,
@@ -39,6 +38,7 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		PlayedCards:  s.Game.Board(),
 		NPlayers:     2,
 		BriscolaCard: *s.Game.Briscola(),
+		EndRound:     play.EndDirect,
 	})
 	err = game.Execute(w, &struct {
 		Title      string
@@ -61,4 +61,8 @@ func Play(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	if !info.NextRnd {
+		return
+	}
+	briscola.Collect(info.OnBoard, s.Game.Players().At(int(info.NextPl)))
 }

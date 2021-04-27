@@ -37,6 +37,7 @@ func Run(g struct {
 			PlayedCards:  playedCards,
 			NPlayers:     uint8(len(g.Players.Players)),
 			BriscolaCard: g.BriscolaCard,
+			EndRound:     EndRemote,
 		})
 		playedCards = info.OnBoard
 		plIdx = info.NextPl

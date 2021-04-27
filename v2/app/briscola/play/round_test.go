@@ -34,6 +34,7 @@ func TestPlayRound(t *testing.T) {
 				PlIdx:       0,
 				PlayedCards: &briscola.PlayedCards{Cards: &set.Cards{}},
 				NPlayers:    5,
+				EndRound:    EndDirect,
 			}, out: RoundInfo{
 				OnBoard: &briscola.PlayedCards{Cards: &set.Cards{}},
 				NextPl:  1,
@@ -44,6 +45,7 @@ func TestPlayRound(t *testing.T) {
 				PlIdx:       2,
 				PlayedCards: &briscola.PlayedCards{Cards: &set.Cards{}},
 				NPlayers:    5,
+				EndRound:    EndDirect,
 			}, out: RoundInfo{
 				OnBoard: &briscola.PlayedCards{Cards: set.NewMust(1)},
 				NextPl:  3,
@@ -56,6 +58,7 @@ func TestPlayRound(t *testing.T) {
 				NPlayers:     5,
 				PlayedCards:  &briscola.PlayedCards{Cards: set.NewMust(11, 21, 12, 22)},
 				BriscolaCard: *briscola.MustID(23),
+				EndRound:     EndDirect,
 			}, out: RoundInfo{
 				OnBoard: &briscola.PlayedCards{Cards: set.NewMust(11, 21, 12, 22, 2)},
 				NextPl:  4,
@@ -69,6 +72,7 @@ func TestPlayRound(t *testing.T) {
 				NPlayers:     5,
 				PlayedCards:  &briscola.PlayedCards{Cards: set.NewMust(12, 8, 17, 2)},
 				BriscolaCard: *briscola.MustID(33),
+				EndRound:     EndDirect,
 			}, out: RoundInfo{
 				OnBoard: &briscola.PlayedCards{Cards: set.NewMust(12, 8, 17, 2, 11)},
 				NextPl:  3,
