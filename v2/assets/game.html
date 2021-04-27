@@ -6,9 +6,9 @@
 
 {{ if .Hand }}
   {{ print "Hand"}}
-{{ end }}
-{{ range $i, $el:= .Hand}}
-  <div>{{printf "(%d) %s" $i $el}}</div>
+  {{ range $i, $el:= .Hand}}
+    <div>{{printf "(%d) %s" $i $el}}</div>
+  {{ end }}
 {{ end }}
 
 <form action="/play/{{.PlayerName}}" method="POST">
@@ -26,5 +26,12 @@
 {{ end }}
 
 {{ if .Board }}
-<div>Board: {{printf "%s" .Board}}</div>
+  {{ print "Board"}}
+  {{ range $i, $el:= .Board}}
+    <div>{{printf "(%d) %s" $i $el}}</div>
+  {{ end }}
+{{ end }}
+
+{{ if .NextPlayer }}
+  {{ printf "Next player is %s" .NextPlayer }}
 {{ end }}
