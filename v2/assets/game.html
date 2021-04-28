@@ -1,6 +1,6 @@
 <h1>{{.Title}} {{.PlayerName}}</h1>
 
-<form action="/draw/{{.PlayerName}}" method="POST">
+<form action="/refresh/{{.PlayerName}}" method="POST">
   <div><input type="submit" value="Refresh"></div>
 </form>
 
@@ -19,7 +19,7 @@
     </div>
 </form>
 
-<div>{{printf "Player: %s" .Body}}</div>
+<div>{{printf "Player: %s" .Player}}</div>
 
 {{ if .Briscola }}
 <div>Briscola: {{printf "%s" .Briscola}}</div>

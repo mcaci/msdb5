@@ -12,6 +12,7 @@ const (
 
 type Briscola struct {
 	Game *briscola.Game
+	Curr uint8
 	NPls uint8
 }
 

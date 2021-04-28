@@ -1,7 +1,6 @@
 package srv
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -30,7 +29,6 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	log.Printf("playing card %v", card)
-	board := fmt.Sprint(*s.Game.Board().Cards)
 	info := play.Round(&play.RoundOpts{
 		PlIdx:        i,
 		PlHand:       pl.Hand(),
@@ -40,22 +38,24 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		BriscolaCard: *s.Game.Briscola(),
 		EndRound:     play.EndDirect,
 	})
+	s.Game.Board().Cards = info.OnBoard.Cards
+	s.Curr = info.NextPl
 	err = game.Execute(w, &struct {
 		Title      string
-		Body       string
+		Player     string
 		Hand       set.Cards
 		Briscola   *briscola.Card
-		Board      string
+		Board      interface{}
 		PlayerName string
 		NextPlayer string
 	}{
 		Title:      "Player",
-		Body:       pl.String(),
+		Player:     pl.String(),
 		Hand:       *pl.Hand(),
-		Briscola:   s.Game.Briscola(),
-		Board:      board,
 		PlayerName: pl.Name(),
-		NextPlayer: s.Game.Players().Players[info.NextPl].Name(),
+		Briscola:   s.Game.Briscola(),
+		Board:      *info.OnBoard.Cards,
+		NextPlayer: s.Game.Players().Players[s.Curr].Name(),
 	})
 	log.Print(s.Game)
 	if err != nil {

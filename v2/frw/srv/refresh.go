@@ -11,32 +11,33 @@ import (
 )
 
 var (
-	validName = regexp.MustCompile("^/(draw|play)/([a-zA-Z0-9]+)$")
+	validName = regexp.MustCompile("^/(refresh|play)/([a-zA-Z0-9]+)$")
 )
 
-func Draw(w http.ResponseWriter, r *http.Request) {
+func Refresh(w http.ResponseWriter, r *http.Request) {
 	m := validName.FindStringSubmatch(r.URL.Path)
 	playername := m[2]
 	i, err := s.Game.Players().Players.Index(func(p *player.Player) bool { return p.Name() == playername })
 	pl := s.Game.Players().At(int(i))
-	// pl.Hand().Add(s.Game.Deck().Top())
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	err = game.Execute(w, &struct {
 		Title      string
-		Body       string
+		Player     string
 		Hand       set.Cards
 		Briscola   *briscola.Card
-		Board      string
+		Board      interface{}
 		PlayerName string
 		NextPlayer string
 	}{
 		Title:      "Player",
-		Body:       pl.String(),
+		Player:     pl.String(),
 		Hand:       *pl.Hand(),
-		Briscola:   s.Game.Briscola(),
 		PlayerName: pl.Name(),
+		Briscola:   s.Game.Briscola(),
+		Board:      *s.Game.Board().Cards,
+		NextPlayer: s.Game.Players().Players[s.Curr].Name(),
 	})
 	log.Print(s.Game)
 	if err != nil {

@@ -18,7 +18,7 @@ func main() {
 		http.HandleFunc("/", srv.Home)
 		http.HandleFunc("/start/", srv.Start)
 		http.HandleFunc("/play/", srv.Play)
-		http.HandleFunc("/draw/", srv.Draw)
+		http.HandleFunc("/refresh/", srv.Refresh)
 		log.Fatal(http.ListenAndServe(":8080", nil))
 	}
 

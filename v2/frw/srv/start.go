@@ -1,7 +1,6 @@
 package srv
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -26,7 +25,6 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	}
 	playername := r.Form["playername"][0]
 	gamename := r.Form["gamename"][0]
-	var body string
 	var briscolaCard *briscolad.Card
 	switch r.Form["type"][0] {
 	case "create":
@@ -43,8 +41,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			log.Print("registration error:", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		body = fmt.Sprintf("new game created with gamename %q by player %q", gamename, playername)
-		log.Print(string(body))
+		log.Printf("new game created with gamename %q by player %q", gamename, playername)
 		s.NPls++
 	case "join":
 		if s.Game == nil {
@@ -63,8 +60,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		body = fmt.Sprintf("player %q joining game %q", playername, gamename)
-		log.Print(string(body))
+		log.Printf("player %q joining game %q", playername, gamename)
 		s.NPls++
 		if s.NPls == session.NPlBriscola {
 			briscola.StartGame(s.Game)
@@ -83,7 +79,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	log.Print(s.Game)
 	err = game.Execute(w, &struct {
 		Title      string
-		Body       string
+		Player     string
 		Hand       set.Cards
 		Briscola   *briscolad.Card
 		Board      string
@@ -91,7 +87,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		NextPlayer string
 	}{
 		Title:      "Welcome",
-		Body:       pl.String(),
+		Player:     pl.String(),
 		Hand:       *pl.Hand(),
 		Briscola:   briscolaCard,
 		PlayerName: playername,
