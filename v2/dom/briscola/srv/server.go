@@ -28,7 +28,7 @@ func (s *server) Score(ctx context.Context, cs *pb.Cards) (*pb.PointsRes, error)
 	if err != nil {
 		return nil, fmt.Errorf("Score: error in the conversion of the input: %w", err)
 	}
-	return &pb.PointsRes{Points: uint32(briscola.FinalScore(crds))}, nil
+	return &pb.PointsRes{Points: uint32(briscola.Score(*crds))}, nil
 }
 
 func (s *server) Winner(ctx context.Context, b *pb.Board) (*pb.Index, error) {
@@ -36,6 +36,6 @@ func (s *server) Winner(ctx context.Context, b *pb.Board) (*pb.Index, error) {
 	if err != nil {
 		return nil, fmt.Errorf("Winner: error in the conversion of the input: %w", err)
 	}
-	id := briscola.Winner(crds, card.Seed(uint8(b.Briscola)))
+	id := briscola.Winner(*crds, card.Seed(uint8(b.Briscola)))
 	return &pb.Index{Id: uint32(id)}, nil
 }

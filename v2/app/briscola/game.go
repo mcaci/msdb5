@@ -3,7 +3,6 @@ package briscola
 import (
 	"fmt"
 
-	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 )
 
@@ -12,7 +11,7 @@ type Game struct {
 	opts         *Options
 	players      briscola.Players
 	briscolaCard briscola.Card
-	board        briscola.PlayedCards
+	board        *briscola.PlayedCards
 	registration func(string) error
 	deck         *briscola.Deck
 }
@@ -26,7 +25,7 @@ func NewGame(gOpts *Options) *Game {
 	g.players = *briscola.NewPlayers()
 	g.registration = g.players.Registration()
 	g.deck = briscola.NewDeck()
-	g.board = briscola.PlayedCards{Cards: &set.Cards{}}
+	g.board = briscola.NewPlayedCards(2)
 	return g
 }
 
@@ -35,7 +34,7 @@ func New() *Game { return &Game{} }
 
 func (g *Game) Players() *briscola.Players   { return &g.players }
 func (g *Game) Deck() *briscola.Deck         { return g.deck }
-func (g *Game) Board() *briscola.PlayedCards { return &g.board }
+func (g *Game) Board() *briscola.PlayedCards { return g.board }
 func (g *Game) Briscola() *briscola.Card     { return &g.briscolaCard }
 func (g *Game) Started(name string) bool     { return name == g.opts.WithName }
 func Register(name string, g *Game) error    { return g.registration(name) }

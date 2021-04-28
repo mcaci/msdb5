@@ -6,7 +6,6 @@ import (
 
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
@@ -14,66 +13,85 @@ type RoundOpts struct {
 	PlIdx        uint8
 	PlHand       *set.Cards
 	CardIdx      uint8
-	PlayedCards  *briscola5.PlayedCards
+	PlayedCards  *briscola.PlayedCards
 	NPlayers     uint8
 	BriscolaCard briscola.Card
+	EndRound     func(*struct {
+		PlayedCards  briscola.PlayedCards
+		BriscolaCard briscola.Card
+	}) (*pb.Index, error)
 }
 
 type RoundInfo struct {
-	OnBoard *briscola5.PlayedCards
+	OnBoard *briscola.PlayedCards
 	NextPl  uint8
 	NextRnd bool
 }
 
-func Round(g *RoundOpts) *RoundInfo {
-	defaultInfo := &RoundInfo{
-		OnBoard: g.PlayedCards,
-		NextPl:  roundRobin(g.PlIdx, 1, g.NPlayers),
+func Round(rOpts *RoundOpts) *RoundInfo {
+	isRoundOngoing := func(playedCards set.Cards) bool { return len(playedCards) < int(rOpts.NPlayers) }
+	roundRobin := func(idx, off uint8) uint8 { return (idx + off) % rOpts.NPlayers }
+	rInfo := &RoundInfo{
+		OnBoard: rOpts.PlayedCards,
+		NextPl:  roundRobin(rOpts.PlIdx, 1),
 	}
-	if len(*g.PlHand) <= 0 {
-		return defaultInfo
+	// no cards in hand
+	if len(*rOpts.PlHand) <= 0 {
+		return rInfo
 	}
-	err := set.MoveOne(&(*g.PlHand)[g.CardIdx], g.PlHand, g.PlayedCards.Cards)
+	// play card
+	err := set.MoveOne(&(*rOpts.PlHand)[rOpts.CardIdx], rOpts.PlHand, rOpts.PlayedCards.Cards)
 	if err != nil {
-		return defaultInfo
+		log.Println(err)
+		return rInfo
 	}
-	if !isRoundOngoing(*g.PlayedCards.Cards) {
-		// end current round
-		conn := pb.Conn()
-		defer conn.Close()
-		client := pb.NewBriscolaClient(conn)
-
-		toPBCards := func(cards set.Cards) *pb.Cards {
-			pbcards := make([]*pb.CardID, len(cards))
-			for i := range pbcards {
-				pbcards[i] = &pb.CardID{Id: uint32(cards[i].ToID())}
-			}
-			return &pb.Cards{Cards: pbcards}
-		}
-		toBoard := func(cards set.Cards) *pb.Board {
-			pbcards := make([]*pb.CardID, len(cards))
-			for i := range pbcards {
-				pbcards[i] = &pb.CardID{Id: uint32(cards[i].ToID())}
-			}
-			return &pb.Board{Briscola: uint32(g.BriscolaCard.Seed()), Cards: toPBCards(cards)}
-		}
-
-		win, err := client.Winner(context.Background(), toBoard(*g.PlayedCards.Cards))
-		if err != nil {
-			log.Println(err)
-		}
-
-		return &RoundInfo{
-			OnBoard: g.PlayedCards,
-			NextPl:  roundRobin(g.PlIdx, uint8(win.Id)+1, g.NPlayers),
-			NextRnd: true,
-		}
+	rInfo.OnBoard = rOpts.PlayedCards
+	// round is ongoing
+	if isRoundOngoing(*rOpts.PlayedCards.Cards) {
+		return rInfo
 	}
-	return &RoundInfo{
-		OnBoard: g.PlayedCards,
-		NextPl:  roundRobin(g.PlIdx, 1, g.NPlayers),
+	// round is finished
+	win, err := rOpts.EndRound(&struct {
+		PlayedCards  briscola.PlayedCards
+		BriscolaCard briscola.Card
+	}{
+		PlayedCards:  *rOpts.PlayedCards,
+		BriscolaCard: rOpts.BriscolaCard,
+	})
+	if err != nil {
+		log.Println(err)
+		return rInfo
 	}
+	rInfo.NextPl = roundRobin(rOpts.PlIdx, uint8(win.Id)+1)
+	rInfo.NextRnd = true
+	return rInfo
 }
 
-func isRoundOngoing(playedCards set.Cards) bool { return len(playedCards) < 5 }
-func roundRobin(idx, off, size uint8) uint8     { return (idx + off) % size }
+func EndDirect(opts *struct {
+	PlayedCards  briscola.PlayedCards
+	BriscolaCard briscola.Card
+}) (*pb.Index, error) {
+	pbcards := make(set.Cards, len(*opts.PlayedCards.Cards))
+	for i := range pbcards {
+		pbcards[i] = (*opts.PlayedCards.Cards)[i]
+	}
+	return &pb.Index{Id: uint32(briscola.Winner(pbcards, opts.BriscolaCard.Seed()))}, nil
+}
+
+func EndRemote(opts *struct {
+	PlayedCards  briscola.PlayedCards
+	BriscolaCard briscola.Card
+}) (*pb.Index, error) {
+	conn := pb.Conn()
+	defer conn.Close()
+	client := pb.NewBriscolaClient(conn)
+
+	toBoard := func(cards set.Cards) *pb.Board {
+		pbcards := make([]*pb.CardID, len(cards))
+		for i := range pbcards {
+			pbcards[i] = &pb.CardID{Id: uint32(cards[i].ToID())}
+		}
+		return &pb.Board{Briscola: uint32(opts.BriscolaCard.Seed()), Cards: &pb.Cards{Cards: pbcards}}
+	}
+	return client.Winner(context.Background(), toBoard(*opts.PlayedCards.Cards))
+}

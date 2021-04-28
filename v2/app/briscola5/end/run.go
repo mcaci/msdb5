@@ -8,7 +8,7 @@ import (
 )
 
 func Run(g struct {
-	PlayedCards  briscola5.PlayedCards
+	PlayedCards  briscola.PlayedCards
 	Players      team.Players
 	BriscolaCard briscola.Card
 	Side         briscola5.Side

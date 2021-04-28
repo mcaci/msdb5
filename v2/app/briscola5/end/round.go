@@ -7,7 +7,7 @@ import (
 )
 
 type Opts struct {
-	PlayedCards  briscola5.PlayedCards
+	PlayedCards  briscola.PlayedCards
 	Players      briscola5.Players
 	BriscolaCard briscola.Card
 }

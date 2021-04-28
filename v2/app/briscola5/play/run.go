@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola5/end"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
@@ -18,9 +17,9 @@ func Run(g struct {
 	Players      briscola5.Players
 	BriscolaCard briscola.Card
 }) struct {
-	OnBoard briscola5.PlayedCards
+	OnBoard briscola.PlayedCards
 } {
-	playedCards := &briscola5.PlayedCards{Cards: &set.Cards{}}
+	playedCards := briscola.NewPlayedCards(5)
 	plIdx, err := currentPlayerIndex(g.Players.Caller(), briscola5.ToGeneralPlayers(g.Players))
 	if err != nil {
 		log.Fatal("didn't expect to arrive at this point")
@@ -40,6 +39,7 @@ func Run(g struct {
 			PlayedCards:  playedCards,
 			NPlayers:     uint8(len(briscola5.ToGeneralPlayers(g.Players))),
 			BriscolaCard: g.BriscolaCard,
+			EndRound:     EndRemote,
 		})
 		playedCards = info.OnBoard
 		plIdx = info.NextPl
@@ -48,7 +48,7 @@ func Run(g struct {
 		}
 		briscola.Collect(playedCards, g.Players.At(int(plIdx)))
 	}
-	return struct{ OnBoard briscola5.PlayedCards }{
+	return struct{ OnBoard briscola.PlayedCards }{
 		OnBoard: *playedCards,
 	}
 }
@@ -60,5 +60,5 @@ func currentPlayerIndex(cp *player.Player, pls team.Players) (uint8, error) {
 		}
 		return uint8(i), nil
 	}
-	return 0, errors.New("Not found")
+	return 0, errors.New("not found")
 }

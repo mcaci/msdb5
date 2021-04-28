@@ -6,22 +6,12 @@ import (
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola5"
-	"github.com/mcaci/msdb5/v2/dom/player"
-	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-type opts struct {
-	hands [5]set.Cards
-}
-
-func testplayers(opt *opts) team.Players {
-	pls := make(team.Players, 5)
-	for i := range pls {
-		pls[i] = player.New()
-		pls[i].Hand().Add(opt.hands[i]...)
-	}
-	return pls
+func newPlayedCardsForTest(a *set.Cards) *briscola.PlayedCards {
+	b := briscola.NewPlayedCards(5)
+	b.Cards = a
+	return b
 }
 
 func TestPlayRound(t *testing.T) {
@@ -33,20 +23,22 @@ func TestPlayRound(t *testing.T) {
 			in: RoundOpts{
 				PlHand:      &set.Cards{},
 				PlIdx:       0,
-				PlayedCards: &briscola5.PlayedCards{Cards: &set.Cards{}},
+				PlayedCards: newPlayedCardsForTest(&set.Cards{}),
 				NPlayers:    5,
+				EndRound:    EndDirect,
 			}, out: RoundInfo{
-				OnBoard: &briscola5.PlayedCards{Cards: &set.Cards{}},
+				OnBoard: newPlayedCardsForTest(&set.Cards{}),
 				NextPl:  1,
 			}},
 		"Test simple round": {
 			in: RoundOpts{
 				PlHand:      &set.Cards{*card.MustID(1)},
 				PlIdx:       2,
-				PlayedCards: &briscola5.PlayedCards{Cards: &set.Cards{}},
+				PlayedCards: newPlayedCardsForTest(&set.Cards{}),
 				NPlayers:    5,
+				EndRound:    EndDirect,
 			}, out: RoundInfo{
-				OnBoard: &briscola5.PlayedCards{Cards: set.NewMust(1)},
+				OnBoard: newPlayedCardsForTest(set.NewMust(1)),
 				NextPl:  3,
 			}},
 		"Test last action for round": {
@@ -55,10 +47,11 @@ func TestPlayRound(t *testing.T) {
 				PlIdx:        2,
 				CardIdx:      1,
 				NPlayers:     5,
-				PlayedCards:  &briscola5.PlayedCards{Cards: set.NewMust(11, 21, 12, 22)},
+				PlayedCards:  newPlayedCardsForTest(set.NewMust(11, 21, 12, 22)),
 				BriscolaCard: *briscola.MustID(23),
+				EndRound:     EndDirect,
 			}, out: RoundInfo{
-				OnBoard: &briscola5.PlayedCards{Cards: set.NewMust(11, 21, 12, 22, 2)},
+				OnBoard: newPlayedCardsForTest(set.NewMust(11, 21, 12, 22, 2)),
 				NextPl:  4,
 				NextRnd: true,
 			}},
@@ -68,10 +61,11 @@ func TestPlayRound(t *testing.T) {
 				PlIdx:        3,
 				CardIdx:      0,
 				NPlayers:     5,
-				PlayedCards:  &briscola5.PlayedCards{Cards: set.NewMust(12, 8, 17, 2)},
+				PlayedCards:  newPlayedCardsForTest(set.NewMust(12, 8, 17, 2)),
 				BriscolaCard: *briscola.MustID(33),
+				EndRound:     EndDirect,
 			}, out: RoundInfo{
-				OnBoard: &briscola5.PlayedCards{Cards: set.NewMust(12, 8, 17, 2, 11)},
+				OnBoard: newPlayedCardsForTest(set.NewMust(12, 8, 17, 2, 11)),
 				NextPl:  3,
 				NextRnd: true,
 			}},

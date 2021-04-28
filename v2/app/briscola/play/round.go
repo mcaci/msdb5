@@ -4,7 +4,6 @@ import (
 	"context"
 	"log"
 
-	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/pb"
@@ -72,9 +71,9 @@ func EndDirect(opts *struct {
 	PlayedCards  briscola.PlayedCards
 	BriscolaCard briscola.Card
 }) (*pb.Index, error) {
-	pbcards := make([]*card.Item, len(*opts.PlayedCards.Cards))
+	pbcards := make(set.Cards, len(*opts.PlayedCards.Cards))
 	for i := range pbcards {
-		pbcards[i] = &(*opts.PlayedCards.Cards)[i]
+		pbcards[i] = (*opts.PlayedCards.Cards)[i]
 	}
 	return &pb.Index{Id: uint32(briscola.Winner(pbcards, opts.BriscolaCard.Seed()))}, nil
 }

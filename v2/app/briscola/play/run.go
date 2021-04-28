@@ -6,7 +6,6 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola/end"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/player"
@@ -19,15 +18,13 @@ func Run(g struct {
 }) struct {
 	OnBoard briscola.PlayedCards
 } {
-	playedCards := &briscola.PlayedCards{Cards: &set.Cards{}}
+	playedCards := briscola.NewPlayedCards(2)
 	plIdx, err := currentPlayerIndex(g.Players.At((0)), g.Players.Players)
 	if err != nil {
 		log.Fatal("didn't expect to arrive at this point")
 	}
 
-	for !end.Cond(&end.Opts{
-		Players: g.Players,
-	}) {
+	for !end.Cond(&end.Opts{Players: g.Players}) {
 		rand.Seed(time.Now().Unix())
 		hnd := g.Players.At(int(plIdx)).Hand()
 		info := Round(&RoundOpts{
@@ -58,5 +55,5 @@ func currentPlayerIndex(cp *player.Player, pls team.Players) (uint8, error) {
 		}
 		return uint8(i), nil
 	}
-	return 0, errors.New("Not found")
+	return 0, errors.New("not found")
 }

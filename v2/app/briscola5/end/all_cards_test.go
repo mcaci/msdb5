@@ -18,7 +18,7 @@ func TestCollect(t *testing.T) {
 		expected   *set.Cards
 	}{
 		"Test with AllCards": {
-			cardSetter: newAllCards(team.Players{p1}, briscola5.Side{Cards: *set.NewMust(5)}, &briscola5.PlayedCards{Cards: set.NewMust(1, 2, 3, 4, 6)}),
+			cardSetter: newAllCards(team.Players{p1}, briscola5.Side{Cards: *set.NewMust(5)}, newPlayedCardsForTest(set.NewMust(1, 2, 3, 4, 6))),
 			expected:   set.NewMust(1, 2, 3, 4, 5, 6, 11),
 		},
 	}
