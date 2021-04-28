@@ -11,5 +11,5 @@ type Opts struct {
 
 func Cond(g *Opts) bool {
 	// no more cards to play
-	return g.Players.Players.All(player.EmptyHanded)
+	return g.Players.All(player.EmptyHanded)
 }

@@ -90,5 +90,5 @@ func rotateOn(players briscola5.Players, idx uint8, appliesTo briscola5.Predicat
 		}
 		return idx, nil
 	}
-	return 0, fmt.Errorf("rotated twice on the number of players and no player found in play.")
+	return 0, fmt.Errorf("rotated twice on the number of players and no player found in play")
 }

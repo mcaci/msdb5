@@ -8,7 +8,7 @@ import (
 	"net"
 )
 
-var errClientQuit = errors.New("Received QUIT from client, ending connection")
+var errClientQuit = errors.New("received QUIT from client, ending connection")
 
 func handle(c net.Conn) error {
 	log.Println("Handling new Request")

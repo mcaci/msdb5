@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-var errClientQuitMsdb5 = errors.New("Received QUIT from client, ending connection")
+var errClientQuitMsdb5 = errors.New("received QUIT from client, ending connection")
 
 func Handle(c net.Conn) (struct{}, error) {
 	log.Println("Handling new Request")

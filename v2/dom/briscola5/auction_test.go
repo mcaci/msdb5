@@ -4,8 +4,6 @@ import (
 	"testing"
 )
 
-var initialValue AuctionScore
-
 func TestAuctionCases(t *testing.T) {
 	testcases := map[string]struct {
 		current, proposed AuctionScore

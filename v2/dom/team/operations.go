@@ -8,7 +8,7 @@ import (
 )
 
 // ErrPlayerNotFound error
-var ErrPlayerNotFound = errors.New("Player not found")
+var ErrPlayerNotFound = errors.New("player not found")
 
 // Index returns the index of the player that satisfies the predicate
 // or an error if not found

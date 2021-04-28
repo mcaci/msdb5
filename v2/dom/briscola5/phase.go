@@ -26,7 +26,7 @@ func ToPhase(phase string) (Phase, error) {
 		}
 		return Phase(i), nil
 	}
-	return Phase(0), fmt.Errorf("Request %s not valid", phase)
+	return Phase(0), fmt.Errorf("request %s not valid", phase)
 }
 
 // MustPhase func

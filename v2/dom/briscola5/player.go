@@ -12,7 +12,7 @@ type Player struct {
 	fold bool
 }
 
-// New func
+// NewPlayer func
 func NewPlayer() *Player {
 	return new(Player)
 }

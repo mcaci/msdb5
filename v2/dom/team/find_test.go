@@ -7,24 +7,6 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/player"
 )
 
-type fakeGame struct {
-	current *player.Player
-	players Players
-	origin  string
-}
-
-func newTestGame(origin string) fakeGame {
-	f := fakeGame{}
-	t := Players{}
-	p := player.New()
-	p.RegisterAs("A")
-	t.Add(p)
-	f.players = t
-	f.current = p
-	f.origin = origin
-	return f
-}
-
 func TestUnsuccessfulFind(t *testing.T) {
 	if _, err := testPlayers.Index(player.IsCardInHand(*card.MustID(8))); err == nil {
 		t.Fatal("Player should not be found")
