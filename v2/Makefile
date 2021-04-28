@@ -1,5 +1,5 @@
 list:
-	echo all, gen, briscola, briscola5, docker_clean, docker_run
+	echo all, gen, briscola, briscola5, docker_clean, docker_run, staticcheck
 
 all: gen briscola briscola5 docker_clean docker_run
 
@@ -26,3 +26,6 @@ docker_run:
 
 docker_restart:
 	sudo systemctl start docker
+
+staticcheck:
+	staticcheck github.com/mcaci/msdb5/v2 github.com/mcaci/msdb5/v2/frw/... github.com/mcaci/msdb5/v2/app/... github.com/mcaci/msdb5/v2/dom/...
