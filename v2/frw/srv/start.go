@@ -28,7 +28,6 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "did not understand the action", http.StatusInternalServerError)
 		return
 	}
-	log.Print(s.Game)
 	plId := s.NPls
 	s.NPls++
 	switch session.NPlBriscola {
@@ -38,6 +37,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	default:
 		session.Wait(s.Ready)
 	}
+	log.Print(s.Game)
 	err := game.Execute(w, data(plId))
 	if err != nil {
 		http.NotFound(w, r)
@@ -64,8 +64,9 @@ func create(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Print("registration error:", err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	log.Printf("new game created with gamename %q by player %q", gamename, playername)
+	log.Printf("player %q joining game %q", playername, gamename)
 }
 
 func join(w http.ResponseWriter, r *http.Request) {
