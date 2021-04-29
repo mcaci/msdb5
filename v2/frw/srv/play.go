@@ -9,6 +9,7 @@ import (
 	"github.com/mcaci/msdb5/v2/app/briscola/play"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/frw/session"
 )
 
 func Play(w http.ResponseWriter, r *http.Request) {
@@ -40,6 +41,17 @@ func Play(w http.ResponseWriter, r *http.Request) {
 	})
 	s.Game.Board().Cards = info.OnBoard.Cards
 	s.Curr = info.NextPl
+	s.NPls++
+
+	switch session.NPlBriscola {
+	case int(s.NPls):
+		session.Signal(s.Ready)
+		s.NPls = 0
+	default:
+		session.Wait(s.Ready)
+	}
+
+	log.Print(s.Game)
 	err = game.Execute(w, &struct {
 		Title      string
 		Player     string
@@ -57,10 +69,10 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		Board:      *info.OnBoard.Cards,
 		NextPlayer: s.Game.Players().Players[s.Curr].Name(),
 	})
-	log.Print(s.Game)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	pl.Hand().Add(s.Game.Deck().Top())
 	if !info.NextRnd {
 		return
 	}

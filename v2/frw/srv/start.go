@@ -34,6 +34,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	case int(s.NPls):
 		briscola.StartGame(s.Game)
 		session.Signal(s.Ready)
+		s.NPls = 0
 	default:
 		session.Wait(s.Ready)
 	}
