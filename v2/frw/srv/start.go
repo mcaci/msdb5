@@ -34,9 +34,9 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	switch session.NPlBriscola {
 	case int(s.NPls):
 		briscola.StartGame(s.Game)
-		SigAllJoin()
+		session.Signal(s.Ready)
 	default:
-		Wait()
+		session.Wait(s.Ready)
 	}
 	err := game.Execute(w, data(plId))
 	if err != nil {

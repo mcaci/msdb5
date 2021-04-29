@@ -1,4 +1,4 @@
-package srv
+package session
 
 import (
 	"context"
@@ -6,13 +6,7 @@ import (
 	"time"
 )
 
-type WaitSession struct {
-	ready chan struct{}
-}
-
-var waitSession = WaitSession{ready: make(chan struct{})}
-
-func Wait() {
+func Wait(on <-chan interface{}) {
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	tick := time.NewTicker(1 * time.Second)
@@ -23,7 +17,7 @@ waiter:
 		case <-tick.C:
 			i++
 			log.Println(i)
-		case <-waitSession.ready:
+		case <-on:
 			break waiter
 		case <-ctx.Done():
 			break waiter
@@ -31,6 +25,6 @@ waiter:
 	}
 }
 
-func SigAllJoin() {
-	waitSession.ready <- struct{}{}
+func Signal(on chan<- interface{}) {
+	on <- struct{}{}
 }
