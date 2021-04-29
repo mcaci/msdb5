@@ -11,9 +11,17 @@ const (
 )
 
 type Briscola struct {
-	Game *briscola.Game
-	Curr uint8
-	NPls uint8
+	Game  *briscola.Game
+	Curr  uint8
+	NPls  uint8
+	Ready chan struct{}
+}
+
+func NewBriscola() *Briscola {
+	return &Briscola{
+		Game:  briscola.New(),
+		Ready: make(chan struct{}),
+	}
 }
 
 type Briscola5 struct {
