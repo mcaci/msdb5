@@ -15,7 +15,7 @@ type opts struct {
 type testPlayers briscola.Players
 
 func testplayers(opt *opts) testPlayers {
-	pls := briscola.NewPlayers()
+	pls := briscola.NewPlayers(2)
 	for i := range pls.Players {
 		pls.At(i).Hand().Add(opt.hands[i]...)
 	}

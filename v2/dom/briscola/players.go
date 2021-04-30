@@ -13,7 +13,7 @@ const nPlayers = 2
 type Players struct{ team.Players }
 
 // NewPlayers creates new container for briscola5 players
-func NewPlayers() *Players {
+func NewPlayers(nPlayers int) *Players {
 	players := make(team.Players, nPlayers)
 	for i := range players {
 		players[i] = player.New()

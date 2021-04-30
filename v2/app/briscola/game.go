@@ -21,12 +21,14 @@ type Options struct {
 }
 
 func NewGame(gOpts *Options) *Game {
-	g := &Game{opts: gOpts}
-	g.players = *briscola.NewPlayers()
+	g := Game{
+		opts:    gOpts,
+		players: *briscola.NewPlayers(2),
+		deck:    briscola.NewDeck(),
+		board:   briscola.NewPlayedCards(2),
+	}
 	g.registration = g.players.Registration()
-	g.deck = briscola.NewDeck()
-	g.board = briscola.NewPlayedCards(2)
-	return g
+	return &g
 }
 
 // New func
