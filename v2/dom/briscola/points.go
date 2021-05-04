@@ -18,12 +18,17 @@ func Points(scorer interface{ Number() uint8 }) uint8 {
 	return points[scorer.Number()]
 }
 
+type Pnts uint8
+
+func (p *Pnts) GetPoints() uint32 { return uint32(*p) }
+
 // Score computes the total score for a cardset according to Briscola rules
-func Score(cards set.Cards) (sum uint8) {
+func Score(cards set.Cards) *Pnts {
+	sum := Pnts(0)
 	for _, c := range cards {
-		sum += Points(c)
+		sum += Pnts(Points(c))
 	}
-	return
+	return &sum
 }
 
 // FinalScore computes the total score for a cardset according to Briscola rules

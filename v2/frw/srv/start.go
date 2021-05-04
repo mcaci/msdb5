@@ -32,7 +32,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 	s.NPls++
 	switch session.NPlBriscola {
 	case int(s.NPls):
-		briscola.StartGame(s.Game)
+		briscola.Start(s.Game)
 		session.Signal(s.Ready)
 		s.NPls = 0
 	default:
@@ -52,7 +52,7 @@ func create(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	gamename := r.Form["gamename"][0]
-	if s.Game.Started(gamename) {
+	if s.Game.Created(gamename) {
 		log.Print("another game already exists, cannot create more than 1")
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
@@ -76,7 +76,7 @@ func join(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	gamename := r.Form["gamename"][0]
-	if !s.Game.Started(gamename) {
+	if !s.Game.Created(gamename) {
 		log.Printf("game %s not found", gamename)
 		http.Redirect(w, r, "/", http.StatusFound)
 		return

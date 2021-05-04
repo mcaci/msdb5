@@ -28,3 +28,15 @@ func (c PlayedCards) Pile() *set.Cards {
 	}
 	return &set.Cards{}
 }
+
+func Distribute(g *struct {
+	Players  Players
+	Deck     *Deck
+	HandSize int
+}) {
+	for i := 0; i < g.HandSize; i++ {
+		for _, p := range g.Players.Players {
+			p.Hand().Add(g.Deck.Top())
+		}
+	}
+}

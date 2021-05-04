@@ -14,7 +14,7 @@ func TestPoints(t *testing.T) {
 }
 
 func TestScore(t *testing.T) {
-	if score1 := Score(*set.NewMust(1, 2, 3)); score1 != 21 {
+	if score1 := Score(*set.NewMust(1, 2, 3)).GetPoints(); score1 != 21 {
 		t.Fatal("Points string should contain the total of 21")
 	}
 }
