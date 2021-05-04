@@ -38,8 +38,22 @@ func (g *Game) Players() *briscola.Players   { return &g.players }
 func (g *Game) Deck() *briscola.Deck         { return g.deck }
 func (g *Game) Board() *briscola.PlayedCards { return g.board }
 func (g *Game) Briscola() *briscola.Card     { return &g.briscolaCard }
-func (g *Game) Started(name string) bool     { return g.opts != nil && name == g.opts.WithName }
+func (g *Game) Created(name string) bool     { return g.opts != nil && name == g.opts.WithName }
 func Register(name string, g *Game) error    { return g.registration(name) }
+func Set(card briscola.Card, g *Game)        { g.briscolaCard = card }
+
+func Start(g *Game) {
+	briscola.Distribute(&struct {
+		Players  briscola.Players
+		Deck     *briscola.Deck
+		HandSize int
+	}{
+		Players:  g.players,
+		Deck:     g.deck,
+		HandSize: 3,
+	})
+	Set(briscola.Card{Item: g.deck.Top()}, g)
+}
 
 func (g Game) String() string {
 	return fmt.Sprintf("(Players: %v,\n)", g.players)
