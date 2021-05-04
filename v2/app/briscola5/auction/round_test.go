@@ -33,10 +33,6 @@ type outParams struct {
 	end bool
 }
 
-func dirCmp(curr, prop briscola5.AuctionScore) int8 {
-	return int8(briscola5.Cmp(curr, prop))
-}
-
 func TestAuctionRound(t *testing.T) {
 	testcases := map[string]struct {
 		in  inParams

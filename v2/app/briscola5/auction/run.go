@@ -49,6 +49,10 @@ func Run(players briscola5.Players) struct {
 
 func notFolded(p *briscola5.Player) bool { return !briscola5.Folded(p) }
 
+func dirCmp(curr, prop briscola5.AuctionScore) int8 {
+	return int8(briscola5.Cmp(curr, prop))
+}
+
 func callCmp(curr, prop briscola5.AuctionScore) int8 {
 	var jsonReq = fmt.Sprintf(`{"current":%d,"proposed":%d}`, curr, prop)
 	res, err := http.Post("http://localhost:8082/cmp", "application/json", strings.NewReader(jsonReq))

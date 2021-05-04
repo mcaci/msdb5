@@ -82,6 +82,7 @@ func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
 	}
 	return id
 }
+
 func rotateOn(players briscola5.Players, idx uint8, appliesTo briscola5.Predicate) (uint8, error) {
 	for i := 0; i < 2*len(players.List()); i++ {
 		idx = (idx + 1) % uint8(len(players.List()))
