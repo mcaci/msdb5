@@ -14,7 +14,9 @@ type Game struct {
 	briscolaCard briscola.Card
 	side         briscola5.Side
 	auctionScore briscola5.AuctionScore
+	board        *briscola.PlayedCards
 	registration func(string) error
+	deck         *briscola.Deck
 }
 
 type Options struct {
@@ -23,17 +25,19 @@ type Options struct {
 }
 
 func NewGame(gOpts *Options) *Game {
-	g := &Game{opts: gOpts}
-	g.players = *briscola5.NewPlayers()
+	g := Game{
+		opts:    gOpts,
+		players: *briscola5.NewPlayers(),
+		deck:    briscola.NewDeck(),
+		board:   briscola.NewPlayedCards(5),
+	}
 	g.registration = g.players.Registration()
-	return g
+	return &g
 }
 
-// New func
-func New() *Game { return &Game{} }
-
 func (g *Game) Players() *briscola5.Players { return &g.players }
-func (g *Game) Started(name string) bool    { return name == g.opts.WithName }
+func (g *Game) Created(name string) bool    { return name == g.opts.WithName }
+func (g *Game) Deck() *briscola.Deck        { return g.deck }
 func Register(name string, g *Game) error   { return g.registration(name) }
 
 func (g Game) String() string {

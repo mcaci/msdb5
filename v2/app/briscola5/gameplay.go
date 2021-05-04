@@ -1,8 +1,6 @@
 package briscola5
 
 import (
-	"fmt"
-
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola5/auction"
 	"github.com/mcaci/msdb5/v2/app/briscola5/companion"
@@ -15,8 +13,24 @@ import (
 )
 
 func Start(g *Game) {
+	handSize := 7
+	if !g.opts.WithSide {
+		handSize++
+	}
 	// distribute cards to players
-	distributeCards(g)
+	briscola.Distribute(&struct {
+		Players  briscola.Players
+		Deck     *briscola.Deck
+		HandSize int
+	}{
+		Players:  briscola.Players{Players: briscola5.ToGeneralPlayers(g.players)},
+		Deck:     g.Deck(),
+		HandSize: handSize,
+	})
+	// set side deck
+	for range g.deck.Cards {
+		g.side.Add(g.deck.Top())
+	}
 
 	// auction phase
 	aucInf := auction.Run(g.players)
@@ -67,22 +81,4 @@ func Start(g *Game) {
 		BriscolaCard: cmpInf.Briscola,
 		Side:         g.side,
 	})
-}
-
-func Score(g *Game) string {
-	t1, t2 := briscola5.ToGeneralPlayers(g.players).Part(briscola5.IsInCallers(&g.players))
-	return fmt.Sprintf("[%s: %d], [%s: %d]",
-		"Caller team", briscola.Score(team.CommonPile(t1)),
-		"Non Caller team", briscola.Score(team.CommonPile(t2)))
-}
-
-func distributeCards(g *Game) {
-	d := set.Deck()
-	for i := 0; i < set.DeckSize; i++ {
-		if g.opts.WithSide && i >= set.DeckSize-5 {
-			g.side.Add(d.Top())
-			continue
-		}
-		g.players.Player(i % 5).Hand().Add(d.Top())
-	}
 }
