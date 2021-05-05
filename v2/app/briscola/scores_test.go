@@ -39,7 +39,7 @@ func TestScoreWithErr(t *testing.T) {
 	}
 }
 
-func TestComplexScore(t *testing.T) {
+func TestPlayerScore(t *testing.T) {
 	players := *briscola.NewPlayers(2)
 	players.Players[0].RegisterAs("Player 1")
 	players.Players[0].Pile().Add(*card.MustID(1))
