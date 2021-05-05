@@ -11,11 +11,16 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
+	"github.com/mcaci/msdb5/v2/pb"
 )
 
 func Run(g struct {
 	Players      briscola5.Players
 	BriscolaCard briscola.Card
+	EndRound     func(*struct {
+		PlayedCards  briscola.PlayedCards
+		BriscolaCard briscola.Card
+	}) (*pb.Index, error)
 }) struct {
 	OnBoard briscola.PlayedCards
 } {
@@ -39,7 +44,7 @@ func Run(g struct {
 			PlayedCards:  playedCards,
 			NPlayers:     uint8(len(briscola5.ToGeneralPlayers(g.Players))),
 			BriscolaCard: g.BriscolaCard,
-			EndRound:     EndRemote,
+			EndRound:     g.EndRound,
 		})
 		playedCards = info.OnBoard
 		plIdx = info.NextPl

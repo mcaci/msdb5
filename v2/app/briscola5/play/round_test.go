@@ -6,6 +6,7 @@ import (
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
+	"github.com/mcaci/msdb5/v2/pb"
 )
 
 func newPlayedCardsForTest(a *set.Cards) *briscola.PlayedCards {
@@ -25,7 +26,7 @@ func TestPlayRound(t *testing.T) {
 				PlIdx:       0,
 				PlayedCards: newPlayedCardsForTest(&set.Cards{}),
 				NPlayers:    5,
-				EndRound:    EndDirect,
+				EndRound:    endDirect,
 			}, out: RoundInfo{
 				OnBoard: newPlayedCardsForTest(&set.Cards{}),
 				NextPl:  1,
@@ -36,7 +37,7 @@ func TestPlayRound(t *testing.T) {
 				PlIdx:       2,
 				PlayedCards: newPlayedCardsForTest(&set.Cards{}),
 				NPlayers:    5,
-				EndRound:    EndDirect,
+				EndRound:    endDirect,
 			}, out: RoundInfo{
 				OnBoard: newPlayedCardsForTest(set.NewMust(1)),
 				NextPl:  3,
@@ -49,7 +50,7 @@ func TestPlayRound(t *testing.T) {
 				NPlayers:     5,
 				PlayedCards:  newPlayedCardsForTest(set.NewMust(11, 21, 12, 22)),
 				BriscolaCard: *briscola.MustID(23),
-				EndRound:     EndDirect,
+				EndRound:     endDirect,
 			}, out: RoundInfo{
 				OnBoard: newPlayedCardsForTest(set.NewMust(11, 21, 12, 22, 2)),
 				NextPl:  4,
@@ -63,7 +64,7 @@ func TestPlayRound(t *testing.T) {
 				NPlayers:     5,
 				PlayedCards:  newPlayedCardsForTest(set.NewMust(12, 8, 17, 2)),
 				BriscolaCard: *briscola.MustID(33),
-				EndRound:     EndDirect,
+				EndRound:     endDirect,
 			}, out: RoundInfo{
 				OnBoard: newPlayedCardsForTest(set.NewMust(12, 8, 17, 2, 11)),
 				NextPl:  3,
@@ -84,4 +85,15 @@ func TestPlayRound(t *testing.T) {
 			}
 		})
 	}
+}
+
+func endDirect(opts *struct {
+	PlayedCards  briscola.PlayedCards
+	BriscolaCard briscola.Card
+}) (*pb.Index, error) {
+	pbcards := make(set.Cards, len(*opts.PlayedCards.Cards))
+	for i := range pbcards {
+		pbcards[i] = (*opts.PlayedCards.Cards)[i]
+	}
+	return &pb.Index{Id: uint32(briscola.Winner(pbcards, opts.BriscolaCard.Seed()))}, nil
 }
