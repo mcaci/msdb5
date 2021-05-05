@@ -6,8 +6,8 @@ import "github.com/mcaci/msdb5/v2/dom/player"
 func IsInCallers(g interface {
 	Caller() *player.Player
 	Companion() *player.Player
-}) player.Predicate {
+}) Predicate {
 	matchingCaller := player.Matching(g.Caller())
 	matchingCompanion := player.Matching(g.Companion())
-	return func(p *player.Player) bool { return matchingCaller(p) || matchingCompanion(p) }
+	return func(p *Player) bool { return matchingCaller(&p.Player) || matchingCompanion(&p.Player) }
 }

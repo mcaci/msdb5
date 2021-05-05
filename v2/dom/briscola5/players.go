@@ -25,9 +25,9 @@ func NewPlayers() *Players {
 }
 
 func ToGeneralPlayers(bp5 Players) team.Players {
-	pls := make(team.Players, 5)
+	pls := make(team.Players, 0)
 	for i := range bp5.pls {
-		pls[i] = &bp5.pls[i].Player
+		pls = append(pls, &bp5.pls[i].Player)
 	}
 	return pls
 }
@@ -66,6 +66,18 @@ func Count(players Players, predicate Predicate) (count uint8) {
 		if predicate(p) {
 			count++
 		}
+	}
+	return
+}
+
+// Part partition players in two groups according to a predicate
+func (playerSet Players) Part(predicate Predicate) (t1, t2 Players) {
+	for _, p := range playerSet.pls {
+		if predicate(p) {
+			t1.Add(p)
+			continue
+		}
+		t2.Add(p)
 	}
 	return
 }

@@ -13,9 +13,7 @@ type Player struct {
 }
 
 // NewPlayer func
-func NewPlayer() *Player {
-	return new(Player)
-}
+func NewPlayer() *Player { return &Player{} }
 
 // Fold func
 func (player *Player) Fold() { player.fold = true }
