@@ -51,6 +51,10 @@ func Round(rOpts *RoundOpts) *RoundInfo {
 		return rInfo
 	}
 	// round is finished
+	if rOpts.EndRound == nil {
+		log.Println("using default end round from remote")
+		rOpts.EndRound = endRemote
+	}
 	win, err := rOpts.EndRound(&struct {
 		PlayedCards  briscola.PlayedCards
 		BriscolaCard briscola.Card
@@ -67,18 +71,7 @@ func Round(rOpts *RoundOpts) *RoundInfo {
 	return rInfo
 }
 
-func EndDirect(opts *struct {
-	PlayedCards  briscola.PlayedCards
-	BriscolaCard briscola.Card
-}) (*pb.Index, error) {
-	pbcards := make(set.Cards, len(*opts.PlayedCards.Cards))
-	for i := range pbcards {
-		pbcards[i] = (*opts.PlayedCards.Cards)[i]
-	}
-	return &pb.Index{Id: uint32(briscola.Winner(pbcards, opts.BriscolaCard.Seed()))}, nil
-}
-
-func EndRemote(opts *struct {
+func endRemote(opts *struct {
 	PlayedCards  briscola.PlayedCards
 	BriscolaCard briscola.Card
 }) (*pb.Index, error) {
