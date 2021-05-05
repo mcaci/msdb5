@@ -5,6 +5,7 @@ import (
 
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
+	"github.com/mcaci/msdb5/v2/pb"
 )
 
 // Game struct
@@ -20,8 +21,14 @@ type Game struct {
 }
 
 type Options struct {
-	WithSide bool
-	WithName string
+	WithSide     bool
+	WithName     string
+	WithCmpF     func(briscola5.AuctionScore, briscola5.AuctionScore) int8
+	WithScoreF   func(int) (interface{ GetPoints() uint32 }, error)
+	WithEndRound func(*struct {
+		PlayedCards  briscola.PlayedCards
+		BriscolaCard briscola.Card
+	}) (*pb.Index, error)
 }
 
 func NewGame(gOpts *Options) *Game {
@@ -35,10 +42,28 @@ func NewGame(gOpts *Options) *Game {
 	return &g
 }
 
-func (g *Game) Players() *briscola5.Players { return &g.players }
-func (g *Game) Created(name string) bool    { return name == g.opts.WithName }
-func (g *Game) Deck() *briscola.Deck        { return g.deck }
-func Register(name string, g *Game) error   { return g.registration(name) }
+func (g *Game) Players() *briscola5.Players                                   { return &g.players }
+func (g *Game) Created(name string) bool                                      { return name == g.opts.WithName }
+func (g *Game) WithSide() bool                                                { return g.opts.WithSide }
+func (g *Game) Deck() *briscola.Deck                                          { return g.deck }
+func (g *Game) Side() *briscola5.Side                                         { return &g.side }
+func Register(name string, g *Game) error                                     { return g.registration(name) }
+func SetAucScore(score briscola5.AuctionScore, g *Game)                       { g.auctionScore = score }
+func SetBriscola(card briscola.Card, g *Game)                                 { g.briscolaCard = card }
+func SetScoreF(f func(int) (interface{ GetPoints() uint32 }, error), g *Game) { g.opts.WithScoreF = f }
+
+func (g *Game) CmpF() func(briscola5.AuctionScore, briscola5.AuctionScore) int8 {
+	return g.opts.WithCmpF
+}
+func (g *Game) EndRndF() func(*struct {
+	PlayedCards  briscola.PlayedCards
+	BriscolaCard briscola.Card
+}) (*pb.Index, error) {
+	return g.opts.WithEndRound
+}
+func (g *Game) ScoreF() func(int) (interface{ GetPoints() uint32 }, error) {
+	return g.opts.WithScoreF
+}
 
 func (g Game) String() string {
 	return fmt.Sprintf("(Caller is: %s,\n Companion is: %s,\n Auction score: %d,\n Players: %v,\n Side Deck: %v)",

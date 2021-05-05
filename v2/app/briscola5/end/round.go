@@ -33,7 +33,7 @@ func Cond(g *Opts) bool {
 		if err != nil { // no one has card
 			continue
 		}
-		p := g.Players.Player(int(i))
+		p := g.Players.At(int(i))
 		isPlayerInCallersTeam := briscola5.IsInCallers(&g.Players)(p)
 		teams[0] = teams[0] || isPlayerInCallersTeam
 		teams[1] = teams[1] || !isPlayerInCallersTeam
