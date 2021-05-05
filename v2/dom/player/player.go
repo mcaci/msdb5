@@ -14,9 +14,7 @@ type Player struct {
 }
 
 // New func
-func New() *Player {
-	return new(Player)
-}
+func New() *Player { return &Player{} }
 
 // Name func
 func (player Player) Name() string { return player.name }
