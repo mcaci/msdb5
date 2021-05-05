@@ -47,6 +47,7 @@ func Round(r struct {
 		pl.Fold()
 		// End the loop if only one not folded players is left
 		id = mustRotateOnNotFolded(r.players, r.currID)
+		notFolded := func(p *briscola5.Player) bool { return !briscola5.Folded(p) }
 		end = briscola5.Count(r.players, notFolded) == 1
 	case OVER:
 		// Fold everyone if score is 120 or more
@@ -76,6 +77,7 @@ func (ot *othersFold) Fold() {
 }
 
 func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
+	notFolded := func(p *briscola5.Player) bool { return !briscola5.Folded(p) }
 	id, err := rotateOn(players, from, notFolded)
 	if err != nil {
 		log.Fatalf("error found: %v. Exiting.", err)

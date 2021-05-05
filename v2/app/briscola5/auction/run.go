@@ -11,14 +11,20 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
-func Run(players briscola5.Players) struct {
+func Run(auctIn struct {
+	Players briscola5.Players
+	CmpF    func(briscola5.AuctionScore, briscola5.AuctionScore) int8
+}) struct {
 	Score  briscola5.AuctionScore
 	Caller uint8
 } {
+	if auctIn.CmpF == nil {
+		log.Println("using default auction score comparer")
+		auctIn.CmpF = callCmp
+	}
 
 	var score briscola5.AuctionScore
 	var currID uint8
-
 	for {
 		r := Round(struct {
 			curr, prop briscola5.AuctionScore
@@ -29,28 +35,23 @@ func Run(players briscola5.Players) struct {
 			curr:    score,
 			prop:    briscola5.AuctionScore(60 + rand.Intn(60)),
 			currID:  currID,
-			players: players,
-			cmpF:    callCmp,
+			players: auctIn.Players,
+			cmpF:    auctIn.CmpF,
 		})
 		score = r.s
 		currID = r.id
 		if !r.end {
 			continue
 		}
+		notFolded := func(p *briscola5.Player) bool { return !briscola5.Folded(p) }
 		return struct {
 			Score  briscola5.AuctionScore
 			Caller uint8
 		}{
 			Score:  score,
-			Caller: players.MustIndex(notFolded),
+			Caller: auctIn.Players.MustIndex(notFolded),
 		}
 	}
-}
-
-func notFolded(p *briscola5.Player) bool { return !briscola5.Folded(p) }
-
-func dirCmp(curr, prop briscola5.AuctionScore) int8 {
-	return int8(briscola5.Cmp(curr, prop))
 }
 
 func callCmp(curr, prop briscola5.AuctionScore) int8 {

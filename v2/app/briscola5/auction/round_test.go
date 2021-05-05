@@ -121,3 +121,7 @@ func TestAuctionRound(t *testing.T) {
 		})
 	}
 }
+
+func dirCmp(curr, prop briscola5.AuctionScore) int8 {
+	return int8(briscola5.Cmp(curr, prop))
+}
