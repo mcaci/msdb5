@@ -9,17 +9,32 @@ import (
 )
 
 func Score(g *struct {
-	Players briscola.Players
+	Players *briscola.Players
 	Method  func(int) (interface{ GetPoints() uint32 }, error)
-}) string {
-	scores := make([]string, len(g.Players.Players))
+}) []uint32 {
+	scores := make([]uint32, len(g.Players.Players))
 	for i := range g.Players.Players {
 		p, err := g.Method(i)
 		if err != nil {
 			log.Println(err)
-			return ""
+			return []uint32{}
 		}
-		score := fmt.Sprintf("[%s: %d]", g.Players.Players[i].Name(), p.GetPoints())
+		scores[i] = p.GetPoints()
+	}
+	return scores
+}
+
+func PrintScore(g *struct {
+	Players *briscola.Players
+	Method  func(int) (interface{ GetPoints() uint32 }, error)
+}) string {
+	scores := make([]string, len(g.Players.Players))
+	scoresN := Score(g)
+	if len(scoresN) == 0 {
+		return ""
+	}
+	for i, s := range scoresN {
+		score := fmt.Sprintf("[%s: %d]", g.Players.Players[i].Name(), s)
 		log.Println(score)
 		scores[i] = score
 	}
