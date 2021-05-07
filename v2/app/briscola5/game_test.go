@@ -5,7 +5,7 @@ import (
 )
 
 func TestSideDeckProperty(t *testing.T) {
-	g := NewGame(&Options{})
+	g := NewGame(WithDefaultOptions)
 	if g.opts.WithSide {
 		t.Errorf("error")
 	}

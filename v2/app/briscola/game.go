@@ -20,6 +20,8 @@ type Options struct {
 	WithName string
 }
 
+var WithDefaultOptions = &Options{}
+
 func NewGame(gOpts *Options) *Game {
 	g := Game{
 		opts:    gOpts,

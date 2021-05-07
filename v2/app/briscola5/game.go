@@ -31,6 +31,8 @@ type Options struct {
 	}) (*pb.Index, error)
 }
 
+var WithDefaultOptions = &Options{}
+
 func NewGame(gOpts *Options) *Game {
 	g := Game{
 		opts:    gOpts,
