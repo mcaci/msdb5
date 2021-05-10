@@ -36,3 +36,18 @@ func (pls *Players) Registration() func(string) error {
 
 func (pls *Players) At(i int) *player.Player       { return pls.Players[i] }
 func (pls *Players) All(prd player.Predicate) bool { return pls.Players.All(prd) }
+
+func (pls *Players) Select(prd player.Predicate) (*player.Player, error) {
+	i, err := pls.SelectIndex(prd)
+	return pls.Players[i], err
+}
+
+func (pls *Players) SelectIndex(prd player.Predicate) (uint8, error) {
+	for i, p := range pls.Players {
+		if !prd(p) {
+			continue
+		}
+		return uint8(i), nil
+	}
+	return 0, errors.New("not found")
+}

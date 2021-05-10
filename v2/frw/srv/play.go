@@ -26,7 +26,7 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	pl := s.Game.Players().At(int(i))
-	card, err := pl.Select(cardn)
+	card, err := pl.SelectCard(cardn)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

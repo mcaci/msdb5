@@ -1,15 +1,12 @@
 package play
 
 import (
-	"errors"
 	"log"
 	"math/rand"
 	"time"
 
 	"github.com/mcaci/msdb5/v2/app/briscola/end"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/player"
-	"github.com/mcaci/msdb5/v2/dom/team"
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
@@ -24,7 +21,7 @@ func Run(g struct {
 	OnBoard briscola.PlayedCards
 } {
 	playedCards := briscola.NewPlayedCards(2)
-	plIdx, err := currentPlayerIndex(g.Players.At((0)), g.Players.Players)
+	plIdx, err := g.Players.SelectIndex(g.Players.At(0).Eq)
 	if err != nil {
 		log.Fatal("didn't expect to arrive at this point")
 	}
@@ -51,14 +48,4 @@ func Run(g struct {
 	return struct{ OnBoard briscola.PlayedCards }{
 		OnBoard: *playedCards,
 	}
-}
-
-func currentPlayerIndex(cp *player.Player, pls team.Players) (uint8, error) {
-	for i := range pls {
-		if pls[i] != cp {
-			continue
-		}
-		return uint8(i), nil
-	}
-	return 0, errors.New("not found")
 }

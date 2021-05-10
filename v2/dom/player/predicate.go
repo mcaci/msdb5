@@ -15,3 +15,6 @@ func Matching(o *Player) Predicate { return func(p *Player) bool { return p == o
 
 // EmptyHanded var
 var EmptyHanded Predicate = func(p *Player) bool { return len(p.hand) == 0 }
+
+// Eq func
+func (p *Player) Eq(q *Player) bool { return p == q }

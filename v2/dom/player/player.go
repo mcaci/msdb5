@@ -22,8 +22,8 @@ func (player Player) Name() string { return player.name }
 // Hand func
 func (player *Player) Hand() *set.Cards { return &player.hand }
 
-// Select func
-func (player *Player) Select(i int) (*card.Item, error) {
+// SelectCard func
+func (player *Player) SelectCard(i int) (*card.Item, error) {
 	if l := len(player.hand); i >= l {
 		return nil, fmt.Errorf("card at position %d cannot be found. Maximum position is %d", i, l)
 	}
