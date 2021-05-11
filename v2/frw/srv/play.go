@@ -21,7 +21,7 @@ func Play(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	i, err := s.Game.Players().Players.Index(func(p *player.Player) bool { return p.Name() == playername })
+	i, err := s.Game.Players().List().Index(func(p *player.Player) bool { return p.Name() == playername })
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -68,7 +68,7 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		PlayerName: pl.Name(),
 		Briscola:   s.Game.Briscola(),
 		Board:      *info.OnBoard.Cards,
-		NextPlayer: s.Game.Players().Players[s.Curr].Name(),
+		NextPlayer: s.Game.Players().At(int(s.Curr)).Name(),
 	})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -41,9 +41,9 @@ func TestScoreWithErr(t *testing.T) {
 
 func TestPlayerScore(t *testing.T) {
 	players := briscola.NewPlayers(2)
-	players.Players[0].RegisterAs("Player 1")
-	players.Players[0].Pile().Add(*card.MustID(1))
-	players.Players[1].RegisterAs("Player 2")
+	players.At(0).RegisterAs("Player 1")
+	players.At(0).Pile().Add(*card.MustID(1))
+	players.At(1).RegisterAs("Player 2")
 
 	expected := "[Player 1: 11], [Player 2: 0]"
 	actual := PrintScore(&struct {
@@ -52,7 +52,7 @@ func TestPlayerScore(t *testing.T) {
 	}{
 		Players: players,
 		Method: func(i int) (interface{ GetPoints() uint32 }, error) {
-			p := briscola.Score(*players.Players[i].Pile())
+			p := briscola.Score(*players.At(i).Pile())
 			return p, nil
 		},
 	})

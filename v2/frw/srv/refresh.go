@@ -17,7 +17,7 @@ var (
 func Refresh(w http.ResponseWriter, r *http.Request) {
 	m := validName.FindStringSubmatch(r.URL.Path)
 	playername := m[2]
-	i, err := s.Game.Players().Players.Index(func(p *player.Player) bool { return p.Name() == playername })
+	i, err := s.Game.Players().List().Index(func(p *player.Player) bool { return p.Name() == playername })
 	pl := s.Game.Players().At(int(i))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -37,7 +37,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 		PlayerName: pl.Name(),
 		Briscola:   s.Game.Briscola(),
 		Board:      *s.Game.Board().Cards,
-		NextPlayer: s.Game.Players().Players[s.Curr].Name(),
+		NextPlayer: s.Game.Players().At(int(s.Curr)).Name(),
 	})
 	log.Print(s.Game)
 	if err != nil {

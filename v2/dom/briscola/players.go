@@ -34,6 +34,8 @@ func (pls *Players) Registration() func(string) error {
 	}
 }
 
+func (pls *Players) List() team.Players            { return pls.Players }
+func (pls *Players) Len() int                      { return len(pls.Players) }
 func (pls *Players) At(i int) *player.Player       { return pls.Players[i] }
 func (pls *Players) All(prd player.Predicate) bool { return pls.Players.All(prd) }
 

@@ -35,7 +35,7 @@ func Distribute(g *struct {
 	HandSize int
 }) {
 	for i := 0; i < g.HandSize; i++ {
-		for _, p := range g.Players.Players {
+		for _, p := range g.Players.List() {
 			p.Hand().Add(g.Deck.Top())
 		}
 	}

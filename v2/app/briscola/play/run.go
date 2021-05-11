@@ -34,7 +34,7 @@ func Run(g struct {
 			PlIdx:        plIdx,
 			CardIdx:      uint8(rand.Intn(len(*hnd))),
 			PlayedCards:  playedCards,
-			NPlayers:     uint8(len(g.Players.Players)),
+			NPlayers:     uint8(g.Players.Len()),
 			BriscolaCard: g.BriscolaCard,
 			EndRound:     g.EndRound,
 		})

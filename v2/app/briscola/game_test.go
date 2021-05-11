@@ -20,7 +20,7 @@ func TestSideDeckProperty(t *testing.T) {
 func TestStartGameLenPlayers(t *testing.T) {
 	g := NewGame(WithDefaultOptions)
 	Start(g)
-	if l := len(g.players.Players); l != 2 {
+	if l := g.Players().Len(); l != 2 {
 		t.Errorf("Expecting 2 players but got %d", l)
 	}
 }
