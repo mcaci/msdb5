@@ -8,8 +8,6 @@ import (
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
-const nPlayers = 2
-
 type Players struct{ team.Players }
 
 // NewPlayers creates new container for briscola5 players
@@ -22,6 +20,7 @@ func NewPlayers(nPlayers int) *Players {
 }
 
 func (pls *Players) Registration() func(string) error {
+	const nPlayers = 2
 	var i int
 	return func(s string) error {
 		if i >= nPlayers {
@@ -34,10 +33,9 @@ func (pls *Players) Registration() func(string) error {
 	}
 }
 
-func (pls *Players) List() team.Players            { return pls.Players }
-func (pls *Players) Len() int                      { return len(pls.Players) }
-func (pls *Players) At(i int) *player.Player       { return pls.Players[i] }
-func (pls *Players) All(prd player.Predicate) bool { return pls.Players.All(prd) }
+func (pls *Players) List() team.Players      { return pls.Players }
+func (pls *Players) Len() int                { return len(pls.Players) }
+func (pls *Players) At(i int) *player.Player { return pls.Players[i] }
 
 func (pls *Players) Select(prd player.Predicate) (*player.Player, error) {
 	i, err := pls.SelectIndex(prd)
