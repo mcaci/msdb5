@@ -1,0 +1,4 @@
+{{ print "Board"}}
+{{ range $i, $el:= .Board}}
+  {{printf "(%d) %s" $i $el}}{{"\n"}}
+{{ end }}

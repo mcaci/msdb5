@@ -1,37 +1,13 @@
-<h1>{{.Title}} {{.PlayerName}}</h1>
+<h1>Welcome {{.PlayerName}}</h1>
 
 <form action="/refresh/{{.PlayerName}}" method="POST">
   <div><input type="submit" value="Refresh"></div>
 </form>
 
-{{ if .Hand }}
-  {{ print "Hand"}}
-  {{ range $i, $el:= .Hand}}
-    <div>{{printf "(%d) %s" $i $el}}</div>
-  {{ end }}
-{{ end }}
-
 <form action="/play/{{.PlayerName}}" method="POST">
     <div>
-      <label for="cardnID">Card number</label>
-      <input type="number" id="cardnID" name="cardn" />
+      <label for="cardnID">Card index</label>
+      <input type="number" id="cardnID" name="cardn" value="0" size="2" />
       <input type="submit" value="Play" />
     </div>
 </form>
-
-<div>{{printf "Player: %s" .Player}}</div>
-
-{{ if .Briscola }}
-<div>Briscola: {{printf "%s" .Briscola}}</div>
-{{ end }}
-
-{{ if .Board }}
-  {{ print "Board"}}
-  {{ range $i, $el:= .Board}}
-    <div>{{printf "(%d) %s" $i $el}}</div>
-  {{ end }}
-{{ end }}
-
-{{ if .NextPlayer }}
-  {{ printf "Next player is %s" .NextPlayer }}
-{{ end }}

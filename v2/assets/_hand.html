@@ -1,0 +1,4 @@
+{{ print "Hand"}}
+{{ range $i, $el:= .Hand}}
+  {{printf "(%d) %s" $i $el}}{{"\n"}}
+{{ end }}
