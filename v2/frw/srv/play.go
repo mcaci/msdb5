@@ -53,26 +53,11 @@ func Play(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Print(s.Game)
-	err = game.Execute(w, &struct {
-		Title      string
-		Player     string
-		Hand       set.Cards
-		Briscola   *briscola.Card
-		Board      interface{}
-		PlayerName string
-		NextPlayer string
-	}{
-		Title:      "Player",
-		Player:     pl.String(),
-		Hand:       *pl.Hand(),
-		PlayerName: pl.Name(),
-		Briscola:   s.Game.Briscola(),
-		Board:      *info.OnBoard.Cards,
-		NextPlayer: s.Game.Players().At(int(s.Curr)).Name(),
-	})
+	err = game.Execute(w, &struct{ PlayerName string }{PlayerName: pl.Name()})
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+
 	pl.Hand().Add(s.Game.Deck().Top())
 	if !info.NextRnd {
 		return
@@ -90,3 +75,24 @@ func endDirect(opts *struct {
 	}
 	return &pb.Index{Id: uint32(briscola.Winner(pbcards, opts.BriscolaCard.Seed()))}, nil
 }
+
+// func data(plId uint8) interface{} {
+// 	pl := s.Game.Players().At(int(plId))
+// 	return &struct {
+// 		Title      string
+// 		Player     string
+// 		Hand       set.Cards
+// 		Briscola   *briscola.Card
+// 		Board      interface{}
+// 		PlayerName string
+// 		NextPlayer string
+// 	}{
+// 		Title:      "Player",
+// 		Player:     pl.String(),
+// 		Hand:       *pl.Hand(),
+// 		PlayerName: pl.Name(),
+// 		Briscola:   s.Game.Briscola(),
+// 		Board:      *info.OnBoard.Cards,
+// 		NextPlayer: s.Game.Players().At(int(s.Curr)).Name(),
+// 	}
+// }

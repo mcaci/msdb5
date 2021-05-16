@@ -48,6 +48,17 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		http.NotFound(w, r)
 		return
 	}
+	pl := s.Game.Players().At(int(plId))
+	handTmpl, err := template.New("Hand").
+		Funcs(template.FuncMap{"hand": pl.Hand}).
+		Parse(`{{ print "Hand"}}{{ range $i, $el:= hand }}<div>{{printf "(%d) %s" $i $el}}</div>{{ end }}`)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	err = handTmpl.Execute(w, nil)
+	if err != nil {
+		log.Print("error in printing hand")
+	}
 }
 
 func data(plId uint8) interface{} {
