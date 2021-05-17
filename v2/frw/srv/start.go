@@ -9,6 +9,7 @@ import (
 	"github.com/mcaci/msdb5/v2/app/briscola"
 	briscolad "github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/frw/session"
+	"github.com/mcaci/msdb5/v2/frw/srv/assets"
 	"github.com/mcaci/msdb5/v2/frw/srv/start"
 )
 
@@ -49,16 +50,9 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	pl := s.Game.Players().At(int(plId))
-	handTmpl, err := template.New("Hand").
-		Funcs(template.FuncMap{"hand": pl.Hand}).
-		Parse(`{{ print "Hand"}}{{ range $i, $el:= hand }}<div>{{printf "(%d) %s" $i $el}}</div>{{ end }}`)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-	err = handTmpl.Execute(w, nil)
-	if err != nil {
-		log.Print("error in printing hand")
-	}
+	assets.MustExecute(assets.Hand(pl), w, nil)
+	assets.MustExecute(assets.Label("Briscola"), w, &struct{ Label interface{} }{Label: s.Game.Briscola()})
+	assets.MustExecute(assets.Label("Player"), w, &struct{ Label interface{} }{Label: pl})
 }
 
 func data(plId uint8) interface{} {
