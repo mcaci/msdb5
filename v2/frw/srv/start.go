@@ -5,12 +5,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola"
-	briscolad "github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/frw/session"
 	"github.com/mcaci/msdb5/v2/frw/srv/assets"
-	"github.com/mcaci/msdb5/v2/frw/srv/start"
 )
 
 var (
@@ -20,56 +17,31 @@ var (
 )
 
 func Start(w http.ResponseWriter, r *http.Request) {
-	sb := start.Session(*s)
-	switch r.FormValue("type") {
-	case "create":
-		sb.Create(w, r)
-	case "join":
-		sb.Join(w, r)
-	default:
-		log.Printf("unknown %q option", r.Form["type"][0])
-		http.Error(w, "did not understand the action", http.StatusInternalServerError)
-		return
-	}
-	sbTmp := session.Briscola(sb)
-	s = &sbTmp
-	plId := s.NPls
-	s.NPls++
-	switch session.NPlBriscola {
-	case int(s.NPls):
+	go startOption(w, r)
+	s.Wg.Wait()
+
+	if r.FormValue("type") == "create" {
 		briscola.Start(s.Game)
-		session.Signal(s.Ready)
-		s.NPls = 0
-	default:
-		session.Wait(s.Ready)
+		log.Print(s.Game)
+		s.Wg.Add(2)
 	}
-	log.Print(s.Game)
-	err := game.Execute(w, data(plId))
-	if err != nil {
-		http.NotFound(w, r)
-		return
-	}
-	pl := s.Game.Players().At(int(plId))
+
+	pl := s.Game.Players().At(s.GetAndIncr())
+	assets.MustExecute(assets.Game, w, &struct{ PlayerName interface{} }{PlayerName: pl.Name()})
 	assets.MustExecute(assets.Hand(pl), w, nil)
 	assets.MustExecute(assets.Label("Briscola"), w, &struct{ Label interface{} }{Label: s.Game.Briscola()})
 	assets.MustExecute(assets.Label("Player"), w, &struct{ Label interface{} }{Label: pl})
 }
 
-func data(plId uint8) interface{} {
-	pl := s.Game.Players().At(int(plId))
-	return &struct {
-		Title      string
-		Player     string
-		Hand       set.Cards
-		Briscola   *briscolad.Card
-		Board      string
-		PlayerName string
-		NextPlayer string
-	}{
-		Title:      "Welcome",
-		Player:     pl.String(),
-		Hand:       *pl.Hand(),
-		Briscola:   s.Game.Briscola(),
-		PlayerName: pl.Name(),
+func startOption(w http.ResponseWriter, r *http.Request) {
+	defer s.Wg.Done()
+	switch r.FormValue("type") {
+	case "create":
+		s.Create(w, r)
+	case "join":
+		s.Join(w, r)
+	default:
+		log.Printf("unknown %q option", r.Form["type"][0])
+		http.Error(w, "did not understand the action", http.StatusInternalServerError)
 	}
 }
