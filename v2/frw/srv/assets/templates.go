@@ -2,13 +2,11 @@ package assets
 
 import (
 	"html/template"
-
-	"github.com/mcaci/ita-cards/set"
 )
 
-func Hand(pl interface{ Hand() *set.Cards }) func() (*template.Template, error) {
+func List(k string, l interface{}) func() (*template.Template, error) {
 	return func() (*template.Template, error) {
-		return template.New("hand").Funcs(map[string]interface{}{"hand": pl.Hand}).Parse(`{{ print "Hand"}}{{ range $i, $el:= hand }}<div>{{printf "(%d) %s" $i $el}}</div>{{ end }}<br/>`)
+		return template.New("list").Funcs(map[string]interface{}{k: l}).Parse(k + `<div>{{ range $i, $el:=` + k + `}}<div>{{printf "(%d) %s" $i $el}}</div>{{ end }}</div><br/>`)
 	}
 }
 func Label(l string) func() (*template.Template, error) {

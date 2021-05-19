@@ -1,7 +1,6 @@
 package srv
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 
@@ -11,9 +10,8 @@ import (
 )
 
 var (
-	s    = session.NewBriscola()
-	s5   = session.Briscola5{}
-	game = template.Must(template.ParseFiles("assets/game.html"))
+	s  = session.NewBriscola()
+	s5 = session.Briscola5{}
 )
 
 func Start(w http.ResponseWriter, r *http.Request) {
@@ -28,7 +26,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 
 	pl := s.Game.Players().At(s.GetAndIncr())
 	assets.MustExecute(assets.Game, w, &struct{ PlayerName interface{} }{PlayerName: pl.Name()})
-	assets.MustExecute(assets.Hand(pl), w, nil)
+	assets.MustExecute(assets.List("Hand", pl.Hand), w, nil)
 	assets.MustExecute(assets.Label("Briscola"), w, &struct{ Label interface{} }{Label: s.Game.Briscola()})
 	assets.MustExecute(assets.Label("Player"), w, &struct{ Label interface{} }{Label: pl})
 }
