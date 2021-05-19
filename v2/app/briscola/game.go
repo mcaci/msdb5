@@ -3,6 +3,7 @@ package briscola
 import (
 	"fmt"
 
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 )
 
@@ -39,6 +40,7 @@ func New() *Game { return &Game{} }
 func (g *Game) Players() *briscola.Players   { return &g.players }
 func (g *Game) Deck() *briscola.Deck         { return g.deck }
 func (g *Game) Board() *briscola.PlayedCards { return g.board }
+func (g *Game) BoardCards() *set.Cards       { return g.board.Cards }
 func (g *Game) Briscola() *briscola.Card     { return &g.briscolaCard }
 func (g *Game) Created(name string) bool     { return g.opts != nil && name == g.opts.WithName }
 func Register(name string, g *Game) error    { return g.registration(name) }
