@@ -1,6 +1,7 @@
 package srv
 
 import (
+	"html/template"
 	"log"
 	"net/http"
 	"regexp"
@@ -22,6 +23,7 @@ func Refresh(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
+	game := template.Must(template.ParseFiles("assets/game.html"))
 	err = game.Execute(w, &struct {
 		Title      string
 		Player     string
