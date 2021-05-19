@@ -1,4 +1,4 @@
-package start
+package session
 
 import (
 	"log"
@@ -7,17 +7,20 @@ import (
 	"github.com/mcaci/msdb5/v2/app/briscola"
 )
 
-func (s *Session) Join(w http.ResponseWriter, r *http.Request) {
+func (s *Briscola) Create(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	gamename := r.Form["gamename"][0]
-	if !s.Game.Created(gamename) {
-		log.Printf("game %s not found", gamename)
+	if s.Game.Created(gamename) {
+		log.Print("another game already exists, cannot create more than 1")
 		http.Redirect(w, r, "/", http.StatusFound)
 		return
 	}
+	s.Game = briscola.NewGame(&briscola.Options{
+		WithName: gamename,
+	})
 	playername := r.Form["playername"][0]
 	err = briscola.Register(playername, s.Game)
 	if err != nil {
