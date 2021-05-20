@@ -60,5 +60,5 @@ func Start(g *Game) {
 }
 
 func (g Game) String() string {
-	return fmt.Sprintf("(Players: %v,\n)", g.players)
+	return fmt.Sprintf("(Players: %v, Board: %v, Briscola: %v, Deck: %v)", g.players, g.board, g.briscolaCard, g.deck)
 }
