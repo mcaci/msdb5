@@ -40,7 +40,9 @@ func Round(rOpts *RoundOpts) *RoundInfo {
 		return rInfo
 	}
 	// play card
-	err := set.MoveOne(&(*rOpts.PlHand)[rOpts.CardIdx], rOpts.PlHand, rOpts.PlayedCards.Cards)
+	card := (*rOpts.PlHand)[rOpts.CardIdx]
+	log.Println("playing card: ", card)
+	err := set.MoveOne(&card, rOpts.PlHand, rOpts.PlayedCards.Cards)
 	if err != nil {
 		log.Println(err)
 		return rInfo
