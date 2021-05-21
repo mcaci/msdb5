@@ -28,13 +28,24 @@ func main() {
 	defer resp.Body.Close()
 	log.Println(resp.Body)
 
-	for i := 0; i < 25; i++ {
+	for {
 		resp, err := http.PostForm("http://localhost:8080/play/"+n, url.Values{"cardn": []string{"0"}})
 		if err != nil {
-			log.Fatal(err)
+			log.Println(err)
+			break
 		}
 		defer resp.Body.Close()
-		log.Println(resp.Body)
-		time.Sleep(2 * time.Second)
+		p := []byte{}
+		n, err := resp.Body.Read(p)
+		if err != nil {
+			log.Println(err)
+			break
+		}
+		log.Println(n, p)
+		if string(p) == "Game is over" {
+			break
+		}
+		time.Sleep(1 * time.Second)
 	}
+	log.Println("Match ended")
 }
