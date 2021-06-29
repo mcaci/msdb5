@@ -136,11 +136,11 @@ func rem(players *briscola.Players) func(int) (interface{ GetPoints() uint32 }, 
 }
 
 func teams(players *briscola5.Players) *briscola.Players {
-	t1, t2 := players.Part(briscola5.IsInCallers(players))
+	t1, t2 := briscola5.ToGeneralPlayers(*players).Part(briscola5.IsInCallers(players))
 	pls := briscola.NewPlayers(2)
 	pls.Players[0].RegisterAs("Caller team")
-	pls.Players[0].Pile().Add(team.CommonPile(briscola5.ToGeneralPlayers(t1))...)
+	pls.Players[0].Pile().Add(team.CommonPile(t1)...)
 	pls.Players[1].RegisterAs("Non Caller team")
-	pls.Players[1].Pile().Add(team.CommonPile(briscola5.ToGeneralPlayers(t2))...)
+	pls.Players[1].Pile().Add(team.CommonPile(t2)...)
 	return pls
 }

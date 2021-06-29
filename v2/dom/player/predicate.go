@@ -18,3 +18,9 @@ var EmptyHanded Predicate = func(p *Player) bool { return len(p.hand) == 0 }
 
 // Eq func
 func (p *Player) Eq(q *Player) bool { return p == q }
+
+// B5Predicate type
+type B5Predicate func(p *B5Player) bool
+
+// Folded var
+var Folded B5Predicate = func(p *B5Player) bool { return p.fold }

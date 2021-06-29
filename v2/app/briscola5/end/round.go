@@ -34,7 +34,7 @@ func Cond(g *Opts) bool {
 			continue
 		}
 		p := g.Players.At(int(i))
-		isPlayerInCallersTeam := briscola5.IsInCallers(&g.Players)(p)
+		isPlayerInCallersTeam := briscola5.IsInCallers(&g.Players)(&p.Player)
 		teams[0] = teams[0] || isPlayerInCallersTeam
 		teams[1] = teams[1] || !isPlayerInCallersTeam
 		if teams[0] == teams[1] {
