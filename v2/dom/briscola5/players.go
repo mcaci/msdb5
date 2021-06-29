@@ -19,7 +19,7 @@ type Players struct {
 func NewPlayers() *Players {
 	players := Players{pls: make([]*player.B5Player, 5)}
 	for i := range players.pls {
-		players.pls[i] = player.NewPlayer()
+		players.pls[i] = player.New(&player.Options{For5P: true}).(*player.B5Player)
 	}
 	return &players
 }

@@ -14,7 +14,7 @@ type Players struct{ team.Players }
 func NewPlayers(nPlayers int) *Players {
 	players := make(team.Players, nPlayers)
 	for i := range players {
-		players[i] = player.New()
+		players[i] = player.New(&player.Options{For2P: true}).(*player.Player)
 	}
 	return &Players{Players: players}
 }

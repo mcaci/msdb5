@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func testB5P() *B5Player { return NewWithOpts(&Options{For5P: true}).(*B5Player) }
+func testB5P() *B5Player { return New(&Options{For5P: true}).(*B5Player) }
 
 func TestPlayerHasFolded(t *testing.T) {
 	p := testB5P()

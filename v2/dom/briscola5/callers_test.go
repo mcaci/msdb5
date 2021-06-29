@@ -15,7 +15,7 @@ func (c callerstest) Caller() *player.Player    { return c.caller }
 func (c callerstest) Companion() *player.Player { return c.companion }
 
 func fakePlayer() *player.Player {
-	return player.NewWithOpts(&player.Options{For2P: true}).(*player.Player)
+	return player.New(&player.Options{For2P: true}).(*player.Player)
 }
 
 func TestTeamCallers(t *testing.T) {

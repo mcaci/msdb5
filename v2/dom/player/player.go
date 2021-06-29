@@ -22,8 +22,8 @@ type Options struct {
 // Playerer interface
 type Playerer interface{}
 
-// NewWithOpts func
-func NewWithOpts(o *Options) Playerer {
+// New func
+func New(o *Options) Playerer {
 	switch {
 	case o.For2P:
 		return &Player{}
@@ -33,9 +33,6 @@ func NewWithOpts(o *Options) Playerer {
 		return &Player{}
 	}
 }
-
-// New func
-func New() *Player { return &Player{} }
 
 // Name func
 func (player Player) Name() string { return player.name }
@@ -67,9 +64,6 @@ type B5Player struct {
 	Player
 	fold bool
 }
-
-// NewPlayer func
-func NewPlayer() *B5Player { return &B5Player{} }
 
 // Fold func
 func (player *B5Player) Fold() { player.fold = true }

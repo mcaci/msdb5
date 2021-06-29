@@ -24,8 +24,10 @@ func testplayers(opt *opts) testPlayers {
 	return testPlayers(*pls)
 }
 
-func (pls *testPlayers) Caller() *player.Player    { return (*briscola5.Players)(pls).Player(1) }
-func (pls *testPlayers) Companion() *player.Player { return player.New() }
+func (pls *testPlayers) Caller() *player.Player { return (*briscola5.Players)(pls).Player(1) }
+func (pls *testPlayers) Companion() *player.Player {
+	return player.New(&player.Options{For2P: true}).(*player.Player)
+}
 
 func newPlayedCardsForTest(a *set.Cards) *briscola.PlayedCards {
 	b := briscola.NewPlayedCards(5)
