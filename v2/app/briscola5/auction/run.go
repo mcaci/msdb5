@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
+	"github.com/mcaci/msdb5/v2/dom/player"
 )
 
 func Run(auctIn struct {
@@ -43,7 +44,7 @@ func Run(auctIn struct {
 		if !r.end {
 			continue
 		}
-		notFolded := func(p *briscola5.Player) bool { return !briscola5.Folded(p) }
+		notFolded := func(p *player.B5Player) bool { return !player.Folded(p) }
 		return struct {
 			Score  briscola5.AuctionScore
 			Caller uint8

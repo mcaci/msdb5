@@ -15,15 +15,15 @@ func (c callerstest) Caller() *player.Player    { return c.caller }
 func (c callerstest) Companion() *player.Player { return c.companion }
 
 func TestTeamCallers(t *testing.T) {
-	fakePlayer := NewPlayer()
-	if !IsInCallers(NewCallersTeam(&fakePlayer.Player, &NewPlayer().Player))(fakePlayer) {
+	fakePlayer := player.NewPlayer()
+	if !IsInCallers(NewCallersTeam(&fakePlayer.Player, &player.NewPlayer().Player))(fakePlayer) {
 		t.Fatal("Player should be in Callers")
 	}
 }
 
 func TestTeamOthers(t *testing.T) {
-	fakePlayer := NewPlayer()
-	if IsInCallers(NewCallersTeam(&NewPlayer().Player, &NewPlayer().Player))(fakePlayer) {
+	fakePlayer := player.NewPlayer()
+	if IsInCallers(NewCallersTeam(&player.NewPlayer().Player, &player.NewPlayer().Player))(fakePlayer) {
 		t.Fatal("Player should be in Others")
 	}
 }

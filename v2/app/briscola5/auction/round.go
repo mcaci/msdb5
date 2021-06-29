@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
+	"github.com/mcaci/msdb5/v2/dom/player"
 )
 
 const (
@@ -27,7 +28,7 @@ func Round(r struct {
 } {
 	pl := r.players.At(int(r.currID))
 	// Player has folded already, go to next player and exit
-	if briscola5.Folded(pl) {
+	if player.Folded(pl) {
 		return struct {
 			s   briscola5.AuctionScore
 			id  uint8
@@ -47,7 +48,7 @@ func Round(r struct {
 		pl.Fold()
 		// End the loop if only one not folded players is left
 		id = mustRotateOnNotFolded(r.players, r.currID)
-		notFolded := func(p *briscola5.Player) bool { return !briscola5.Folded(p) }
+		notFolded := func(p *player.B5Player) bool { return !player.Folded(p) }
 		end = briscola5.Count(r.players, notFolded) == 1
 	case OVER:
 		// Fold everyone if score is 120 or more
@@ -63,7 +64,7 @@ func Round(r struct {
 }
 
 type othersFold struct {
-	p   *briscola5.Player
+	p   *player.B5Player
 	pls briscola5.Players
 }
 
@@ -77,7 +78,7 @@ func (ot *othersFold) Fold() {
 }
 
 func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
-	notFolded := func(p *briscola5.Player) bool { return !briscola5.Folded(p) }
+	notFolded := func(p *player.B5Player) bool { return !player.Folded(p) }
 	id, err := rotateOn(players, from, notFolded)
 	if err != nil {
 		log.Fatalf("error found: %v. Exiting.", err)
@@ -85,7 +86,7 @@ func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
 	return id
 }
 
-func rotateOn(players briscola5.Players, idx uint8, appliesTo briscola5.Predicate) (uint8, error) {
+func rotateOn(players briscola5.Players, idx uint8, appliesTo player.B5Predicate) (uint8, error) {
 	for i := 0; i < 2*len(players.List()); i++ {
 		idx = (idx + 1) % uint8(len(players.List()))
 		if !appliesTo(players.At(int(idx))) {

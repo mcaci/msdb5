@@ -1,4 +1,4 @@
-package briscola5
+package player
 
 import (
 	"testing"

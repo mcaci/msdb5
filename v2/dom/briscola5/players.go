@@ -11,15 +11,15 @@ import (
 
 // Players is a slice of pointers to players
 type Players struct {
-	pls      []*Player
+	pls      []*player.B5Player
 	cal, cmp int
 }
 
 // NewPlayers creates new container for briscola5 players
 func NewPlayers() *Players {
-	players := Players{pls: make([]*Player, 5)}
+	players := Players{pls: make([]*player.B5Player, 5)}
 	for i := range players.pls {
-		players.pls[i] = NewPlayer()
+		players.pls[i] = player.NewPlayer()
 	}
 	return &players
 }
@@ -33,7 +33,7 @@ func ToGeneralPlayers(bp5 Players) team.Players {
 }
 
 // Add adds a player to the team
-func (playerSet *Players) Add(p *Player) {
+func (playerSet *Players) Add(p *player.B5Player) {
 	playerSet.pls = append(playerSet.pls, p)
 }
 
@@ -42,7 +42,7 @@ var ErrPlayerNotFound = errors.New("Player not found")
 
 // Index returns the index of the player that satisfies the predicate
 // or an error if not found
-func (playerSet Players) Index(predicate Predicate) (uint8, error) {
+func (playerSet Players) Index(predicate player.B5Predicate) (uint8, error) {
 	for i, p := range playerSet.pls {
 		if predicate(p) {
 			return uint8(i), nil
@@ -52,7 +52,7 @@ func (playerSet Players) Index(predicate Predicate) (uint8, error) {
 }
 
 // MustIndex works as Index but exits fatally in case of error
-func (playerSet Players) MustIndex(predicate Predicate) uint8 {
+func (playerSet Players) MustIndex(predicate player.B5Predicate) uint8 {
 	i, err := playerSet.Index(predicate)
 	if err != nil {
 		log.Fatalf("error found: %v", err)
@@ -61,7 +61,7 @@ func (playerSet Players) MustIndex(predicate Predicate) uint8 {
 }
 
 // Count counts the number of players satisfying the predicate
-func Count(players Players, predicate Predicate) (count uint8) {
+func Count(players Players, predicate player.B5Predicate) (count uint8) {
 	for _, p := range players.pls {
 		if predicate(p) {
 			count++
@@ -71,7 +71,7 @@ func Count(players Players, predicate Predicate) (count uint8) {
 }
 
 // Part partition players in two groups according to a predicate
-func (playerSet Players) Part(predicate Predicate) (t1, t2 Players) {
+func (playerSet Players) Part(predicate player.B5Predicate) (t1, t2 Players) {
 	for _, p := range playerSet.pls {
 		if predicate(p) {
 			t1.Add(p)
@@ -95,8 +95,8 @@ func (playerSet *Players) Registration() func(string) error {
 	}
 }
 
-func (playerSet *Players) List() []*Player             { return playerSet.pls }
-func (playerSet *Players) At(i int) *Player            { return playerSet.pls[i] }
+func (playerSet *Players) List() []*player.B5Player    { return playerSet.pls }
+func (playerSet *Players) At(i int) *player.B5Player   { return playerSet.pls[i] }
 func (playerSet *Players) Player(i int) *player.Player { return &playerSet.At(i).Player }
 func (playerSet *Players) Caller() *player.Player      { return playerSet.Player(playerSet.cal) }
 func (playerSet *Players) Companion() *player.Player   { return playerSet.Player(playerSet.cmp) }
