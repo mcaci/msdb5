@@ -18,7 +18,7 @@ var (
 func Refresh(w http.ResponseWriter, r *http.Request) {
 	m := validName.FindStringSubmatch(r.URL.Path)
 	playername := m[2]
-	i, err := s.Game.Players().List().Index(func(p *player.Player) bool { return p.Name() == playername })
+	i, err := s.Game.Players().List().Index(func(p player.Player) bool { return p.Name() == playername })
 	pl := s.Game.Players().At(int(i))
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

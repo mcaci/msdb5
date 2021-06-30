@@ -18,8 +18,7 @@ type opts struct {
 func testplayers(opt *opts) team.Players {
 	pls := make(team.Players, 5)
 	for i := range pls {
-		pls[i] = player.New(&player.Options{For2P: true}).(*player.Player)
-		pls[i].RegisterAs(opt.names[i])
+		pls[i] = player.New(&player.Options{For2P: true, Name: opt.names[i]}).(*player.B2Player)
 		pls[i].Hand().Add(opt.hands[i]...)
 	}
 	return pls

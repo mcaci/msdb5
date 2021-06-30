@@ -44,13 +44,12 @@ func Run(auctIn struct {
 		if !r.end {
 			continue
 		}
-		notFolded := func(p *player.B5Player) bool { return !player.Folded(p) }
 		return struct {
 			Score  briscola5.AuctionScore
 			Caller uint8
 		}{
 			Score:  score,
-			Caller: auctIn.Players.MustIndex(notFolded),
+			Caller: auctIn.Players.MustIndex(player.NotFolded),
 		}
 	}
 }

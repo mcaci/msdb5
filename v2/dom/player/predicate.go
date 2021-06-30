@@ -5,22 +5,45 @@ import (
 )
 
 // Predicate type
-type Predicate func(p *Player) bool
+type Predicate func(p Player) bool
 
 // IsCardInHand func
-func IsCardInHand(c card.Item) Predicate { return func(p *Player) bool { return p.hand.Find(c) != -1 } }
-
-// Matching func
-func Matching(o *Player) Predicate { return func(p *Player) bool { return p == o } }
+func IsCardInHand(c card.Item) Predicate {
+	return func(p Player) bool {
+		return p.Hand().Find(c) != -1
+	}
+}
 
 // EmptyHanded var
-var EmptyHanded Predicate = func(p *Player) bool { return len(p.hand) == 0 }
+var EmptyHanded Predicate = func(p Player) bool { return len(*p.Hand()) == 0 }
 
-// Eq func
-func (p *Player) Eq(q *Player) bool { return p == q }
+// IsInCallers func
+func IsInCallers(t interface {
+	Caller() Player
+	Companion() Player
+}) Predicate {
+	return func(p Player) bool { return eq(p, t.Caller()) || eq(p, t.Companion()) }
+}
 
-// B5Predicate type
-type B5Predicate func(p *B5Player) bool
+func eq(p, q Player) bool {
+	return p.Name() == q.Name() && p.Hand() == q.Hand() && p.Pile() == q.Pile()
+}
 
 // Folded var
-var Folded B5Predicate = func(p *B5Player) bool { return p.fold }
+var Folded Predicate = func(p Player) bool {
+	b5p, ok := p.(*B5Player)
+	if !ok {
+		return false
+	}
+	return b5p.fold
+}
+
+// NotFolded var
+var NotFolded = func(p Player) bool {
+	b5p, ok := p.(*B5Player)
+	if !ok {
+		return false
+
+	}
+	return !b5p.fold
+}

@@ -8,7 +8,7 @@ func testB5P() *B5Player { return New(&Options{For5P: true}).(*B5Player) }
 
 func TestPlayerHasFolded(t *testing.T) {
 	p := testB5P()
-	if p.Fold(); !Folded(p) {
+	if p.Fold(); NotFolded(p) {
 		t.Fatal("Player should have folded")
 	}
 }

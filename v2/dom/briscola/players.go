@@ -14,7 +14,7 @@ type Players struct{ team.Players }
 func NewPlayers(nPlayers int) *Players {
 	players := make(team.Players, nPlayers)
 	for i := range players {
-		players[i] = player.New(&player.Options{For2P: true}).(*player.Player)
+		players[i] = player.New(&player.Options{For2P: true}).(*player.B2Player)
 	}
 	return &Players{Players: players}
 }
@@ -33,11 +33,11 @@ func (pls *Players) Registration() func(string) error {
 	}
 }
 
-func (pls *Players) List() team.Players      { return pls.Players }
-func (pls *Players) Len() int                { return len(pls.Players) }
-func (pls *Players) At(i int) *player.Player { return pls.Players[i] }
+func (pls *Players) List() team.Players        { return pls.Players }
+func (pls *Players) Len() int                  { return len(pls.Players) }
+func (pls *Players) At(i int) *player.B2Player { return pls.Players[i] }
 
-func (pls *Players) Select(prd player.Predicate) (*player.Player, error) {
+func (pls *Players) Select(prd player.Predicate) (*player.B2Player, error) {
 	i, err := pls.SelectIndex(prd)
 	return pls.Players[i], err
 }

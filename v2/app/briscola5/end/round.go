@@ -28,13 +28,14 @@ func Cond(g *Opts) bool {
 	}
 	var teams [2]bool
 	var cardsChecked int
+	isPlayerInCallersTeamF := player.IsInCallers(&g.Players)
 	for _, card := range briscola.Serie(g.BriscolaCard) {
 		i, err := briscola5.ToGeneralPlayers(g.Players).Index(player.IsCardInHand(card))
 		if err != nil { // no one has card
 			continue
 		}
 		p := g.Players.At(int(i))
-		isPlayerInCallersTeam := briscola5.IsInCallers(&g.Players)(&p.Player)
+		isPlayerInCallersTeam := isPlayerInCallersTeamF(p)
 		teams[0] = teams[0] || isPlayerInCallersTeam
 		teams[1] = teams[1] || !isPlayerInCallersTeam
 		if teams[0] == teams[1] {

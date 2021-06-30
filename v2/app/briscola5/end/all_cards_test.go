@@ -11,7 +11,7 @@ import (
 )
 
 func TestCollect(t *testing.T) {
-	p1 := player.New(&player.Options{For2P: true}).(*player.Player)
+	p1 := player.New(&player.Options{For2P: true}).(*player.B2Player)
 	p1.Hand().Add(*card.MustID(11))
 	testcases := map[string]struct {
 		cardSetter interface{ Pile() *set.Cards }

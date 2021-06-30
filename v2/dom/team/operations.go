@@ -32,7 +32,7 @@ func (playerSet Players) MustIndex(predicate player.Predicate) uint8 {
 
 // All verifies if all players satisfy the predicate
 func (playerSet Players) All(predicate player.Predicate) bool {
-	_, err := playerSet.Index(func(p *player.Player) bool { return !predicate(p) })
+	_, err := playerSet.Index(func(p player.Player) bool { return !predicate(p) })
 	return err != nil
 }
 

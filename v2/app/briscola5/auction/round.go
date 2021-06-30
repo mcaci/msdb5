@@ -26,9 +26,9 @@ func Round(r struct {
 	id  uint8
 	end bool
 } {
-	pl := r.players.At(int(r.currID))
+	p := r.players.At(int(r.currID))
 	// Player has folded already, go to next player and exit
-	if player.Folded(pl) {
+	if player.Folded(p) {
 		return struct {
 			s   briscola5.AuctionScore
 			id  uint8
@@ -45,14 +45,13 @@ func Round(r struct {
 		id = mustRotateOnNotFolded(r.players, r.currID)
 	case MIN, LE:
 		// Player is folded for scoring less or equal than current (or min)
-		pl.Fold()
+		p.Fold()
 		// End the loop if only one not folded players is left
 		id = mustRotateOnNotFolded(r.players, r.currID)
-		notFolded := func(p *player.B5Player) bool { return !player.Folded(p) }
-		end = briscola5.Count(r.players, notFolded) == 1
+		end = briscola5.Count(r.players, player.NotFolded) == 1
 	case OVER:
 		// Fold everyone if score is 120 or more
-		(&othersFold{p: pl, pls: r.players}).Fold()
+		(&othersFold{p: p, pls: r.players}).Fold()
 		s = briscola5.MAX_SCORE
 		end = true
 	}
@@ -78,15 +77,14 @@ func (ot *othersFold) Fold() {
 }
 
 func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
-	notFolded := func(p *player.B5Player) bool { return !player.Folded(p) }
-	id, err := rotateOn(players, from, notFolded)
+	id, err := rotateOn(players, from, player.NotFolded)
 	if err != nil {
 		log.Fatalf("error found: %v. Exiting.", err)
 	}
 	return id
 }
 
-func rotateOn(players briscola5.Players, idx uint8, appliesTo player.B5Predicate) (uint8, error) {
+func rotateOn(players briscola5.Players, idx uint8, appliesTo player.Predicate) (uint8, error) {
 	for i := 0; i < 2*len(players.List()); i++ {
 		idx = (idx + 1) % uint8(len(players.List()))
 		if !appliesTo(players.At(int(idx))) {

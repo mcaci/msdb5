@@ -27,7 +27,7 @@ func NewPlayers() *Players {
 func ToGeneralPlayers(bp5 Players) team.Players {
 	pls := make(team.Players, 0)
 	for i := range bp5.pls {
-		pls = append(pls, &bp5.pls[i].Player)
+		pls = append(pls, &bp5.pls[i].B2Player)
 	}
 	return pls
 }
@@ -42,7 +42,7 @@ var ErrPlayerNotFound = errors.New("Player not found")
 
 // Index returns the index of the player that satisfies the predicate
 // or an error if not found
-func (playerSet Players) Index(predicate player.B5Predicate) (uint8, error) {
+func (playerSet Players) Index(predicate player.Predicate) (uint8, error) {
 	for i, p := range playerSet.pls {
 		if predicate(p) {
 			return uint8(i), nil
@@ -52,7 +52,7 @@ func (playerSet Players) Index(predicate player.B5Predicate) (uint8, error) {
 }
 
 // MustIndex works as Index but exits fatally in case of error
-func (playerSet Players) MustIndex(predicate player.B5Predicate) uint8 {
+func (playerSet Players) MustIndex(predicate player.Predicate) uint8 {
 	i, err := playerSet.Index(predicate)
 	if err != nil {
 		log.Fatalf("error found: %v", err)
@@ -61,7 +61,7 @@ func (playerSet Players) MustIndex(predicate player.B5Predicate) uint8 {
 }
 
 // Count counts the number of players satisfying the predicate
-func Count(players Players, predicate player.B5Predicate) (count uint8) {
+func Count(players Players, predicate player.Predicate) (count uint8) {
 	for _, p := range players.pls {
 		if predicate(p) {
 			count++
@@ -71,7 +71,7 @@ func Count(players Players, predicate player.B5Predicate) (count uint8) {
 }
 
 // Part partition players in two groups according to a predicate
-func (playerSet Players) Part(predicate player.B5Predicate) (t1, t2 Players) {
+func (playerSet Players) Part(predicate player.Predicate) (t1, t2 Players) {
 	for _, p := range playerSet.pls {
 		if predicate(p) {
 			t1.Add(p)
@@ -95,13 +95,13 @@ func (playerSet *Players) Registration() func(string) error {
 	}
 }
 
-func (playerSet *Players) List() []*player.B5Player    { return playerSet.pls }
-func (playerSet *Players) At(i int) *player.B5Player   { return playerSet.pls[i] }
-func (playerSet *Players) Player(i int) *player.Player { return &playerSet.At(i).Player }
-func (playerSet *Players) Caller() *player.Player      { return playerSet.Player(playerSet.cal) }
-func (playerSet *Players) Companion() *player.Player   { return playerSet.Player(playerSet.cmp) }
-func (playerSet *Players) SetCaller(i uint8)           { playerSet.cal = int(i) }
-func (playerSet *Players) SetCompanion(i uint8)        { playerSet.cmp = int(i) }
+func (playerSet *Players) List() []*player.B5Player      { return playerSet.pls }
+func (playerSet *Players) At(i int) *player.B5Player     { return playerSet.pls[i] }
+func (playerSet *Players) Player(i int) *player.B2Player { return &playerSet.At(i).B2Player }
+func (playerSet *Players) Caller() player.Player         { return playerSet.Player(playerSet.cal) }
+func (playerSet *Players) Companion() player.Player      { return playerSet.Player(playerSet.cmp) }
+func (playerSet *Players) SetCaller(i uint8)             { playerSet.cal = int(i) }
+func (playerSet *Players) SetCompanion(i uint8)          { playerSet.cmp = int(i) }
 
 func (playerSet Players) String() string {
 	return fmt.Sprintf("Players: %v, caller's index: %d, companion's index: %d", playerSet.pls, playerSet.cal, playerSet.cmp)

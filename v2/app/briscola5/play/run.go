@@ -58,7 +58,7 @@ func Run(g struct {
 	}
 }
 
-func currentPlayerIndex(cp *player.Player, pls team.Players) (uint8, error) {
+func currentPlayerIndex(cp player.Player, pls team.Players) (uint8, error) {
 	for i := range pls {
 		if pls[i] != cp {
 			continue

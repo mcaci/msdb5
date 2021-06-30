@@ -5,10 +5,10 @@ import (
 )
 
 // Players is a slice of pointers to players
-type Players []*player.Player
+type Players []*player.B2Player
 
 // Add adds a player to the team
-func (playerSet *Players) Add(p *player.Player) {
+func (playerSet *Players) Add(p *player.B2Player) {
 	*playerSet = append(*playerSet, p)
 }
 

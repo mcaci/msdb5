@@ -16,7 +16,7 @@ import (
 func Play(w http.ResponseWriter, r *http.Request) {
 	m := validName.FindStringSubmatch(r.URL.Path)
 	playername := m[2]
-	idx, err := s.Game.Players().List().Index(func(p *player.Player) bool { return p.Name() == playername })
+	idx, err := s.Game.Players().List().Index(func(p player.Player) bool { return p.Name() == playername })
 	continueIfNoErr(w, err)
 	cardn, err := strconv.Atoi(r.FormValue("cardn"))
 	continueIfNoErr(w, err)

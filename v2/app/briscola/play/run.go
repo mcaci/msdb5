@@ -7,6 +7,7 @@ import (
 
 	"github.com/mcaci/msdb5/v2/app/briscola/end"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
+	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
@@ -21,7 +22,7 @@ func Run(g struct {
 	OnBoard briscola.PlayedCards
 } {
 	playedCards := briscola.NewPlayedCards(2)
-	plIdx, err := g.Players.SelectIndex(g.Players.At(0).Eq)
+	plIdx, err := g.Players.SelectIndex(func(p player.Player) bool { return p == g.Players.At(0) })
 	if err != nil {
 		log.Fatal("didn't expect to arrive at this point")
 	}

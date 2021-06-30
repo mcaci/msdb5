@@ -14,6 +14,7 @@ import (
 	"github.com/mcaci/msdb5/v2/app/briscola5/play"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
+	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 	"github.com/mcaci/msdb5/v2/pb"
 )
@@ -136,7 +137,7 @@ func rem(players *briscola.Players) func(int) (interface{ GetPoints() uint32 }, 
 }
 
 func teams(players *briscola5.Players) *briscola.Players {
-	t1, t2 := briscola5.ToGeneralPlayers(*players).Part(briscola5.IsInCallers(players))
+	t1, t2 := briscola5.ToGeneralPlayers(*players).Part(player.IsInCallers(players))
 	pls := briscola.NewPlayers(2)
 	pls.Players[0].RegisterAs("Caller team")
 	pls.Players[0].Pile().Add(team.CommonPile(t1)...)

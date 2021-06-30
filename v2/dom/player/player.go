@@ -3,71 +3,68 @@ package player
 import (
 	"fmt"
 
-	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
 )
 
-// Player struct
-type Player struct {
+// B2Player struct
+type B2Player struct {
 	name       string
 	hand, pile set.Cards
 }
 
+// B5Player struct
+type B5Player struct {
+	B2Player
+	fold bool
+}
+
 // Options struct
 type Options struct {
+	Name  string
 	For2P bool
 	For5P bool
 }
 
-// Playerer interface
-type Playerer interface{}
+// Player interface
+type Player interface {
+	Name() string
+	Hand() *set.Cards
+	Pile() *set.Cards
+}
 
 // New func
-func New(o *Options) Playerer {
+func New(o *Options) Player {
+	b2P := B2Player{name: o.Name}
+	var p Player
 	switch {
 	case o.For2P:
-		return &Player{}
+		p = &b2P
 	case o.For5P:
-		return &B5Player{}
-	default:
-		return &Player{}
+		p = &B5Player{B2Player: b2P}
 	}
+	return p
 }
 
 // Name func
-func (player Player) Name() string { return player.name }
+func (player B2Player) Name() string { return player.name }
 
 // Hand func
-func (player *Player) Hand() *set.Cards { return &player.hand }
-
-// SelectCard func
-func (player *Player) SelectCard(i int) (*card.Item, error) {
-	if l := len(player.hand); i >= l {
-		return nil, fmt.Errorf("card at position %d cannot be found. Maximum position is %d", i, l)
-	}
-	return &player.hand[i], nil
-}
+func (player *B2Player) Hand() *set.Cards { return &player.hand }
 
 // Pile func
-func (player *Player) Pile() *set.Cards { return &player.pile }
+func (player *B2Player) Pile() *set.Cards { return &player.pile }
 
 // RegisterAs func
-func (player *Player) RegisterAs(name string) { player.name = name }
+func (player *B2Player) RegisterAs(name string) { player.name = name }
 
-func (player Player) String() string {
+func (player B2Player) String() string {
 	return fmt.Sprintf("(Name: %s, Cards: %+v, Pile: %+v)",
 		player.name, player.hand, player.pile)
-}
-
-// B5Player struct
-type B5Player struct {
-	Player
-	fold bool
 }
 
 // Fold func
 func (player *B5Player) Fold() { player.fold = true }
 
 func (player B5Player) String() string {
-	return fmt.Sprintf("(Player: %+v, Has folded? %t)\n", player.Player, player.fold)
+	return fmt.Sprintf("(Player: %+v, Has folded? %t)\n", player.B2Player, player.fold)
 }

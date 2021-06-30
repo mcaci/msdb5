@@ -7,13 +7,13 @@ import (
 )
 
 func TestPlayerHasNoCardsAtStartGame(t *testing.T) {
-	if p := testP(); !EmptyHanded(p) {
+	if p := testP(""); !EmptyHanded(p) {
 		t.Fatal("Player should not have cards at creation")
 	}
 }
 
 func TestPlayerDrawsOneCard(t *testing.T) {
-	p := testP()
+	p := testP("")
 	p.Hand().Add(*card.MustID(1))
 	plPredicate := IsCardInHand(*card.MustID(1))
 	if !plPredicate(p) {

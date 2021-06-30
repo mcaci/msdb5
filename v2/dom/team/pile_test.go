@@ -8,10 +8,10 @@ import (
 )
 
 func TestCommonPile(t *testing.T) {
-	var a player.Player
+	var a player.B2Player
 	a.RegisterAs("A")
 	a.Pile().Add(*card.MustID(5), *card.MustID(16))
-	var b player.Player
+	var b player.B2Player
 	b.RegisterAs("B")
 	b.Pile().Add(*card.MustID(33), *card.MustID(21))
 
