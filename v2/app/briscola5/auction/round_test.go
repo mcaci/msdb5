@@ -4,17 +4,20 @@ import (
 	"testing"
 
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
+	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 type opts struct {
 	folded [5]bool
 }
 
-func testplayers(opt *opts) briscola5.Players {
-	pls := briscola5.NewPlayers()
-	for i := range pls.List() {
+func testplayers(opt *opts) team.Players {
+	pls := team.New(5)
+	for i := range *pls {
+		(*pls)[i] = player.New(&player.Options{For5P: true})
 		if opt.folded[i] {
-			pls.At(i).Fold()
+			(*pls)[i].(*player.B5Player).Fold()
 		}
 	}
 	return *pls
@@ -23,7 +26,7 @@ func testplayers(opt *opts) briscola5.Players {
 type inParams struct {
 	curr, prop briscola5.AuctionScore
 	currID     uint8
-	players    briscola5.Players
+	players    team.Players
 	cmpF       func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 }
 

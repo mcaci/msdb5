@@ -1,6 +1,8 @@
 package player
 
 import (
+	"log"
+
 	"github.com/mcaci/ita-cards/card"
 )
 
@@ -22,6 +24,7 @@ func IsInCallers(t interface {
 	Caller() Player
 	Companion() Player
 }) Predicate {
+	log.Println(t)
 	return func(p Player) bool { return eq(p, t.Caller()) || eq(p, t.Companion()) }
 }
 

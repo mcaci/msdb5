@@ -6,6 +6,7 @@ import (
 
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 const (
@@ -19,14 +20,14 @@ func Round(r struct {
 	curr    briscola5.AuctionScore
 	prop    briscola5.AuctionScore
 	currID  uint8
-	players briscola5.Players
+	players team.Players
 	cmpF    func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 }) struct {
 	s   briscola5.AuctionScore
 	id  uint8
 	end bool
 } {
-	p := r.players.At(int(r.currID))
+	p := r.players[r.currID]
 	// Player has folded already, go to next player and exit
 	if player.Folded(p) {
 		return struct {
@@ -45,13 +46,13 @@ func Round(r struct {
 		id = mustRotateOnNotFolded(r.players, r.currID)
 	case MIN, LE:
 		// Player is folded for scoring less or equal than current (or min)
-		p.Fold()
+		p.(*player.B5Player).Fold()
 		// End the loop if only one not folded players is left
 		id = mustRotateOnNotFolded(r.players, r.currID)
-		end = briscola5.Count(r.players, player.NotFolded) == 1
+		end = team.Count(r.players, player.NotFolded) == 1
 	case OVER:
 		// Fold everyone if score is 120 or more
-		(&othersFold{p: p, pls: r.players}).Fold()
+		(&othersFold{p: p.(*player.B5Player), pls: r.players}).Fold()
 		s = briscola5.MAX_SCORE
 		end = true
 	}
@@ -63,31 +64,31 @@ func Round(r struct {
 }
 
 type othersFold struct {
-	p   *player.B5Player
-	pls briscola5.Players
+	p   player.Player
+	pls team.Players
 }
 
 func (ot *othersFold) Fold() {
-	for _, p := range ot.pls.List() {
+	for _, p := range ot.pls {
 		if p == ot.p {
 			continue
 		}
-		p.Fold()
+		p.(*player.B5Player).Fold()
 	}
 }
 
-func mustRotateOnNotFolded(players briscola5.Players, from uint8) uint8 {
+func mustRotateOnNotFolded(players team.Players, from uint8) uint8 {
 	id, err := rotateOn(players, from, player.NotFolded)
 	if err != nil {
-		log.Fatalf("error found: %v. Exiting.", err)
+		log.Printf("error found: %v. Exiting.", err)
 	}
 	return id
 }
 
-func rotateOn(players briscola5.Players, idx uint8, appliesTo player.Predicate) (uint8, error) {
-	for i := 0; i < 2*len(players.List()); i++ {
-		idx = (idx + 1) % uint8(len(players.List()))
-		if !appliesTo(players.At(int(idx))) {
+func rotateOn(players team.Players, idx uint8, appliesTo player.Predicate) (uint8, error) {
+	for i := 0; i < 2*len(players); i++ {
+		idx = (idx + 1) % uint8(len(players))
+		if !appliesTo(players[idx]) {
 			continue
 		}
 		return idx, nil

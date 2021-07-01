@@ -9,6 +9,8 @@ import (
 	"github.com/mcaci/msdb5/v2/app/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	briscola5d "github.com/mcaci/msdb5/v2/dom/briscola5"
+	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/team"
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
@@ -20,18 +22,23 @@ func TestAiGameWithSide(t *testing.T) {
 		WithEndRound: endDirect,
 	})
 	briscola5.SetScoreF(func(i int) (interface{ GetPoints() uint32 }, error) {
-		p := briscola.Score(*g.Players().At(i).Pile())
+		p := briscola.Score(*(*g.Players())[i].Pile())
 		return p, nil
 	}, g)
+
+	pls := g.Players()
+	for i := range *pls {
+		(*pls)[i] = player.New(&player.Options{For5P: true})
+	}
 
 	// run ai game
 	Run(g)
 
 	scoreIn := &struct {
-		Players *briscola.Players
+		Players *team.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
-		Players: &briscola.Players{Players: briscola5d.ToGeneralPlayers(*g.Players())},
+		Players: g.Players(),
 		Method:  g.ScoreF(),
 	}
 	log.Println("Score", briscolapp.PrintScore(scoreIn))
@@ -44,18 +51,23 @@ func TestAiGameWithNoSide(t *testing.T) {
 		WithEndRound: endDirect,
 	})
 	briscola5.SetScoreF(func(i int) (interface{ GetPoints() uint32 }, error) {
-		p := briscola.Score(*g.Players().At(i).Pile())
+		p := briscola.Score(*(*g.Players())[i].Pile())
 		return p, nil
 	}, g)
+
+	pls := g.Players()
+	for i := range *pls {
+		(*pls)[i] = player.New(&player.Options{For5P: true})
+	}
 
 	// run ai game
 	Run(g)
 
 	scoreIn := &struct {
-		Players *briscola.Players
+		Players *team.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
-		Players: &briscola.Players{Players: briscola5d.ToGeneralPlayers(*g.Players())},
+		Players: g.Players(),
 		Method:  g.ScoreF(),
 	}
 	log.Println("Score", briscolapp.PrintScore(scoreIn))

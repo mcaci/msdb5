@@ -10,10 +10,11 @@ import (
 
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 func Run(auctIn struct {
-	Players briscola5.Players
+	Players team.Players
 	CmpF    func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 }) struct {
 	Score  briscola5.AuctionScore
@@ -30,7 +31,7 @@ func Run(auctIn struct {
 		r := Round(struct {
 			curr, prop briscola5.AuctionScore
 			currID     uint8
-			players    briscola5.Players
+			players    team.Players
 			cmpF       func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 		}{
 			curr:    score,

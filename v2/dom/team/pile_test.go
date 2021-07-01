@@ -8,14 +8,12 @@ import (
 )
 
 func TestCommonPile(t *testing.T) {
-	var a player.B2Player
-	a.RegisterAs("A")
+	a := player.New(&player.Options{For2P: true, Name: "A"})
 	a.Pile().Add(*card.MustID(5), *card.MustID(16))
-	var b player.B2Player
-	b.RegisterAs("B")
+	b := player.New(&player.Options{For2P: true, Name: "B"})
 	b.Pile().Add(*card.MustID(33), *card.MustID(21))
 
-	if pile := CommonPile(Players{&a, &b}); len(pile) != 4 {
+	if pile := CommonPile(Players{a, b}); len(pile) != 4 {
 		t.Fatal("Count should be 4")
 	}
 }

@@ -5,12 +5,13 @@ import (
 
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
+	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 // Game struct
 type Game struct {
 	opts         *Options
-	players      briscola.Players
+	players      team.Players
 	briscolaCard briscola.Card
 	board        *briscola.PlayedCards
 	registration func(string) error
@@ -24,20 +25,21 @@ type Options struct {
 var WithDefaultOptions = &Options{}
 
 func NewGame(gOpts *Options) *Game {
+	p, rf := team.NewWithRegistrator(2)
 	g := Game{
-		opts:    gOpts,
-		players: *briscola.NewPlayers(2),
-		deck:    briscola.NewDeck(),
-		board:   briscola.NewPlayedCards(2),
+		opts:         gOpts,
+		players:      *p,
+		deck:         briscola.NewDeck(),
+		board:        briscola.NewPlayedCards(2),
+		registration: rf,
 	}
-	g.registration = g.players.Registration()
 	return &g
 }
 
 // New func
 func New() *Game { return &Game{} }
 
-func (g *Game) Players() *briscola.Players   { return &g.players }
+func (g *Game) Players() *team.Players       { return &g.players }
 func (g *Game) Deck() *briscola.Deck         { return g.deck }
 func (g *Game) Board() *briscola.PlayedCards { return g.board }
 func (g *Game) BoardCards() *set.Cards       { return g.board.Cards }
@@ -48,7 +50,7 @@ func Set(card briscola.Card, g *Game)        { g.briscolaCard = card }
 
 func Start(g *Game) {
 	briscola.Distribute(&struct {
-		Players  briscola.Players
+		Players  team.Players
 		Deck     *briscola.Deck
 		HandSize int
 	}{

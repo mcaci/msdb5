@@ -36,7 +36,7 @@ func Start(w http.ResponseWriter, r *http.Request) {
 		s.Wg.Add(2)
 	}
 
-	pl := s.Game.Players().At(plID)
+	pl := (*s.Game.Players())[plID]
 	assets.MustExecute(assets.Header, w, &struct{ PlayerName interface{} }{PlayerName: pl.Name()})
 	assets.MustExecute(assets.Label("Briscola"), w, &struct{ Label interface{} }{Label: s.Game.Briscola()})
 	assets.MustExecute(assets.Play, w, &struct{ PlayerName interface{} }{PlayerName: pl.Name()})

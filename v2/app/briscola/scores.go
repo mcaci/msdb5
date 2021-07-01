@@ -5,15 +5,15 @@ import (
 	"log"
 	"strings"
 
-	"github.com/mcaci/msdb5/v2/dom/briscola"
+	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 func Score(g *struct {
-	Players *briscola.Players
+	Players *team.Players
 	Method  func(int) (interface{ GetPoints() uint32 }, error)
 }) []uint32 {
-	scores := make([]uint32, g.Players.Len())
-	for i := range g.Players.List() {
+	scores := make([]uint32, len(*g.Players))
+	for i := range *g.Players {
 		p, err := g.Method(i)
 		if err != nil {
 			log.Println(err)
@@ -25,16 +25,16 @@ func Score(g *struct {
 }
 
 func PrintScore(g *struct {
-	Players *briscola.Players
+	Players *team.Players
 	Method  func(int) (interface{ GetPoints() uint32 }, error)
 }) string {
-	scores := make([]string, g.Players.Len())
+	scores := make([]string, len(*g.Players))
 	scoresN := Score(g)
 	if len(scoresN) == 0 {
 		return ""
 	}
 	for i, s := range scoresN {
-		score := fmt.Sprintf("[%s: %d]", g.Players.At(i).Name(), s)
+		score := fmt.Sprintf("[%s: %d]", (*g.Players)[i].Name(), s)
 		log.Println(score)
 		scores[i] = score
 	}

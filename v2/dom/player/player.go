@@ -30,12 +30,13 @@ type Player interface {
 	Name() string
 	Hand() *set.Cards
 	Pile() *set.Cards
+	fmt.Stringer
 }
 
 // New func
 func New(o *Options) Player {
 	b2P := B2Player{name: o.Name}
-	var p Player
+	p := Player(&b2P)
 	switch {
 	case o.For2P:
 		p = &b2P

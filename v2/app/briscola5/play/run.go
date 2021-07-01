@@ -8,14 +8,14 @@ import (
 
 	"github.com/mcaci/msdb5/v2/app/briscola5/end"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
 	"github.com/mcaci/msdb5/v2/dom/team"
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
 func Run(g struct {
-	Players      briscola5.Players
+	Players      team.Players
+	Caller       player.Player
 	BriscolaCard briscola.Card
 	EndRound     func(*struct {
 		PlayedCards  briscola.PlayedCards
@@ -25,7 +25,7 @@ func Run(g struct {
 	OnBoard briscola.PlayedCards
 } {
 	playedCards := briscola.NewPlayedCards(5)
-	plIdx, err := currentPlayerIndex(g.Players.Caller(), briscola5.ToGeneralPlayers(g.Players))
+	plIdx, err := currentPlayerIndex(g.Caller, g.Players)
 	if err != nil {
 		log.Fatal("didn't expect to arrive at this point")
 	}
@@ -36,13 +36,13 @@ func Run(g struct {
 		BriscolaCard: g.BriscolaCard,
 	}) {
 		rand.Seed(time.Now().Unix())
-		hnd := g.Players.At(int(plIdx)).Hand()
+		hnd := (g.Players)[plIdx].Hand()
 		info := Round(&RoundOpts{
 			PlHand:       hnd,
 			PlIdx:        plIdx,
 			CardIdx:      uint8(rand.Intn(len(*hnd))),
 			PlayedCards:  playedCards,
-			NPlayers:     uint8(len(briscola5.ToGeneralPlayers(g.Players))),
+			NPlayers:     uint8(len(g.Players)),
 			BriscolaCard: g.BriscolaCard,
 			EndRound:     g.EndRound,
 		})
@@ -51,7 +51,7 @@ func Run(g struct {
 		if !info.NextRnd {
 			continue
 		}
-		briscola.Collect(playedCards, g.Players.At(int(plIdx)))
+		briscola.Collect(playedCards, (g.Players)[plIdx])
 	}
 	return struct{ OnBoard briscola.PlayedCards }{
 		OnBoard: *playedCards,

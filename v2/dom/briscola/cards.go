@@ -2,6 +2,7 @@ package briscola
 
 import (
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/dom/team"
 )
 
 type Deck struct{ set.Cards }
@@ -30,12 +31,12 @@ func (c PlayedCards) Pile() *set.Cards {
 }
 
 func Distribute(g *struct {
-	Players  Players
+	Players  team.Players
 	Deck     *Deck
 	HandSize int
 }) {
 	for i := 0; i < g.HandSize; i++ {
-		for _, p := range g.Players.List() {
+		for _, p := range g.Players {
 			p.Hand().Add(g.Deck.Top())
 		}
 	}
