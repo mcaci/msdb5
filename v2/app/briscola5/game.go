@@ -3,6 +3,7 @@ package briscola5
 import (
 	"fmt"
 
+	"github.com/mcaci/msdb5/v2/app/register"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/player"
@@ -41,7 +42,7 @@ type Options struct {
 var WithDefaultOptions = &Options{}
 
 func NewGame(gOpts *Options) *Game {
-	p, rf := team.NewWithRegistrator(5)
+	p, rf := register.NewWithRegistrator(5)
 	g := Game{
 		opts:         gOpts,
 		players:      *p,

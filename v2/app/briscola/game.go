@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/app/register"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/team"
 )
@@ -25,7 +26,7 @@ type Options struct {
 var WithDefaultOptions = &Options{}
 
 func NewGame(gOpts *Options) *Game {
-	p, rf := team.NewWithRegistrator(2)
+	p, rf := register.NewWithRegistrator(2)
 	g := Game{
 		opts:         gOpts,
 		players:      *p,
