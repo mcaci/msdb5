@@ -1,18 +1,11 @@
 package team
 
 import (
-	"errors"
-	"fmt"
-	"log"
-
 	"github.com/mcaci/msdb5/v2/dom/player"
 )
 
 // Players is a slice of Players
 type Players []player.Player
-
-// Registrator registers Players with their names
-type Registrator func(string) error
 
 // New creates new container for players
 func New(nPlayers int) *Players {
@@ -21,31 +14,6 @@ func New(nPlayers int) *Players {
 		players[i] = player.New(&player.Options{})
 	}
 	return &players
-}
-
-// NewWithRegistrator creates new container for players
-func NewWithRegistrator(nPlayers int) (*Players, Registrator) {
-	pls := New(nPlayers)
-	var i int
-	f := func(n string) error {
-		if i >= nPlayers {
-			return errors.New("noop: max players reached")
-		}
-		log.Printf("registering player %d with name %q", i, n)
-		o := player.Options{Name: n}
-		switch nPlayers {
-		case 2:
-			o.For2P = true
-		case 5:
-			o.For5P = true
-		default:
-			return fmt.Errorf("%d players not supported", nPlayers)
-		}
-		(*pls)[i] = player.New(&o)
-		i++
-		return nil
-	}
-	return pls, f
 }
 
 func (players *Players) Add(p player.Player) {
@@ -59,7 +27,7 @@ func (players Players) SelectIndex(prd player.Predicate) (uint8, error) {
 		}
 		return uint8(i), nil
 	}
-	return 0, errors.New("not found")
+	return 0, ErrPlayerNotFound
 }
 
 // Part partition players in two groups according to a predicate

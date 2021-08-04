@@ -2,7 +2,6 @@ package team
 
 import (
 	"errors"
-	"log"
 
 	"github.com/mcaci/msdb5/v2/dom/player"
 )
@@ -19,15 +18,6 @@ func (playerSet Players) Index(predicate player.Predicate) (uint8, error) {
 		}
 	}
 	return 0, ErrPlayerNotFound
-}
-
-// MustIndex works as Index but exits fatally in case of error
-func (playerSet Players) MustIndex(predicate player.Predicate) uint8 {
-	i, err := playerSet.Index(predicate)
-	if err != nil {
-		log.Fatalf("error found: %v", err)
-	}
-	return i
 }
 
 // All verifies if all players satisfy the predicate

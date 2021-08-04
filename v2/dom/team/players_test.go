@@ -10,21 +10,33 @@ import (
 var testPlayers Players
 
 func init() {
+	testPlayers = *New(2)
 	a := player.New(&player.Options{For2P: true, Name: "A"})
 	a.Hand().Add(*card.MustID(34))
-	testPlayers.Add(a)
+	testPlayers[0] = a
 	b := player.New(&player.Options{For2P: true, Name: "B"})
 	b.Hand().Add(*card.MustID(33))
 	b.Hand().Add(*card.MustID(34))
-	testPlayers.Add(b)
+	testPlayers[1] = b
 }
 
-func TestSuccessfulFindDataCorresponds(t *testing.T) {
-	i, err := testPlayers.SelectIndex(testPredicate)
+func TestSuccessfulFindDataCorrespondsToA(t *testing.T) {
+	i, err := testPlayers.SelectIndex(testPredicateA)
 	if err != nil {
 		t.Fatal(err)
 	}
-	if p := testPlayers[i]; !testPredicate(p) {
+	if p := testPlayers[i]; !testPredicateA(p) {
 		t.Fatalf("%s and %v are expected to be the same player", "A", p)
+	}
+}
+
+func TestSuccessfulFindDataCorrespondsToB(t *testing.T) {
+	testPredicateB := func(p player.Player) bool { return p.Name() == "B" }
+	i, err := testPlayers.SelectIndex(testPredicateB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if p := testPlayers[i]; !testPredicateB(p) {
+		t.Fatalf("%s and %v are expected to be the same player", "B", p)
 	}
 }

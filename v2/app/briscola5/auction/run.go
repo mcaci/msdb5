@@ -45,12 +45,17 @@ func Run(auctIn struct {
 		if !r.end {
 			continue
 		}
+		caller, err := auctIn.Players.Index(player.NotFolded)
+		if err != nil {
+			log.Println(err)
+			continue
+		}
 		return struct {
 			Score  briscola5.AuctionScore
 			Caller uint8
 		}{
 			Score:  score,
-			Caller: auctIn.Players.MustIndex(player.NotFolded),
+			Caller: caller,
 		}
 	}
 }
