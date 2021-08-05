@@ -65,10 +65,10 @@ func Run(g *briscolapp5.Game) []uint32 {
 	// companion choice phase
 	cmpInf := companion.Run(
 		struct {
-			ID      uint8
+			Player  player.Player
 			Players team.Players
 		}{
-			ID:      aucInf.Caller,
+			Player:  (*g.Players())[aucInf.Caller],
 			Players: *g.Players(),
 		},
 	)
