@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/mcaci/ita-cards/card"
-	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 )
 
 var testPlayers Players

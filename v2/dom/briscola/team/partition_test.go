@@ -3,7 +3,7 @@ package team
 import (
 	"testing"
 
-	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 )
 
 func testPredicateA(p player.Player) bool { return p.Name() == "A" }

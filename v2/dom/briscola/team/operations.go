@@ -3,7 +3,7 @@ package team
 import (
 	"errors"
 
-	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 )
 
 // ErrPlayerNotFound error

@@ -1,7 +1,7 @@
 package team
 
 import (
-	"github.com/mcaci/msdb5/v2/dom/player"
+	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 )
 
 // Players is a slice of Players

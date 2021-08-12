@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/mcaci/msdb5/v2/dom/team"
+	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 )
 
 func Score(g *struct {

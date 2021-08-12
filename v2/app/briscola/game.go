@@ -6,7 +6,7 @@ import (
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/register"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/team"
+	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 )
 
 // Game struct
