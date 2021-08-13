@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	briscolapp "github.com/mcaci/msdb5/v2/app/briscola"
-	"github.com/mcaci/msdb5/v2/app/register"
+	"github.com/mcaci/msdb5/v2/app/misc"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/pb"
@@ -41,7 +41,7 @@ type Options struct {
 var WithDefaultOptions = &Options{}
 
 func NewGame(gOpts *Options) *Game {
-	p, rf := register.NewWithRegistrator(5)
+	p, rf := misc.NewWithRegistrator(5)
 	g := Game{
 		opts:         gOpts,
 		players:      *p,
@@ -52,7 +52,7 @@ func NewGame(gOpts *Options) *Game {
 	return &g
 }
 
-func (g *Game) Players() *misc.Players                                      { return &g.players }
+func (g *Game) Players() *misc.Players                                        { return &g.players }
 func (g *Game) Created(name string) bool                                      { return name == g.opts.WithName }
 func (g *Game) WithSide() bool                                                { return g.opts.WithSide }
 func (g *Game) Deck() *briscolapp.Deck                                        { return g.deck }
@@ -61,10 +61,10 @@ func Register(name string, g *Game) error                                     { 
 func SetAucScore(score briscola5.AuctionScore, g *Game)                       { g.auctionScore = score }
 func SetBriscola(card briscola.Card, g *Game)                                 { g.briscolaCard = card }
 func SetScoreF(f func(int) (interface{ GetPoints() uint32 }, error), g *Game) { g.opts.WithScoreF = f }
-func (c *Callers) SetCaller(p misc.Player)                                  { c.cal = p }
-func (c *Callers) SetCompanion(p misc.Player)                               { c.cmp = p }
-func (c *Callers) Caller() misc.Player                                      { return c.cal }
-func (c *Callers) Companion() misc.Player                                   { return c.cmp }
+func (c *Callers) SetCaller(p misc.Player)                                    { c.cal = p }
+func (c *Callers) SetCompanion(p misc.Player)                                 { c.cmp = p }
+func (c *Callers) Caller() misc.Player                                        { return c.cal }
+func (c *Callers) Companion() misc.Player                                     { return c.cmp }
 
 type Callerer interface {
 	Caller() misc.Player

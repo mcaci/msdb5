@@ -108,9 +108,9 @@ func Run(g *briscolapp5.Game) []uint32 {
 	t1, t2 := g.Players().Part(misc.IsInCallers(&g.Callers))
 	teams := misc.NewPlayers(2)
 	(*teams)[0] = misc.New(&misc.Options{For2P: true, Name: "Caller team"})
-	(*teams)[0].Pile().Add(misc.CommonPile(t1)...)
+	(*teams)[0].Pile().Add(CommonPile(t1)...)
 	(*teams)[1] = misc.New(&misc.Options{For2P: true, Name: "Non Caller team"})
-	(*teams)[1].Pile().Add(misc.CommonPile(t2)...)
+	(*teams)[1].Pile().Add(CommonPile(t2)...)
 
 	method := g.ScoreF()
 	if method == nil {

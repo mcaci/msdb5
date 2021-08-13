@@ -1,5 +1,7 @@
 package end
 
+import "github.com/mcaci/msdb5/v2/app/misc"
+
 type Opts struct {
 	Players misc.Players
 }
