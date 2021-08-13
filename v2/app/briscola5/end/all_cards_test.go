@@ -5,8 +5,7 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
+	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
@@ -18,7 +17,7 @@ func TestCollect(t *testing.T) {
 		expected   *set.Cards
 	}{
 		"Test with AllCards": {
-			cardSetter: newAllCards(briscola.Players{p1}, briscola5.Side{Cards: *set.NewMust(5)}, newPlayedCardsForTest(set.NewMust(1, 2, 3, 4, 6))),
+			cardSetter: newAllCards(player.Players{p1}, briscola5.Side{Cards: *set.NewMust(5)}, newPlayedCardsForTest(set.NewMust(1, 2, 3, 4, 6))),
 			expected:   set.NewMust(1, 2, 3, 4, 5, 6, 11),
 		},
 	}

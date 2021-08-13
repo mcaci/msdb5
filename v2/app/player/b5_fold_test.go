@@ -2,9 +2,11 @@ package player
 
 import (
 	"testing"
+
+	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
-func testB5P() *B5Player { return New(&Options{For5P: true}).(*B5Player) }
+func testB5P() *briscola5.Player { return New(&Options{For5P: true}).(*briscola5.Player) }
 
 func TestPlayerHasFolded(t *testing.T) {
 	p := testB5P()

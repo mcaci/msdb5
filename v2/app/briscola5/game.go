@@ -3,9 +3,10 @@ package briscola5
 import (
 	"fmt"
 
+	briscolapp "github.com/mcaci/msdb5/v2/app/briscola"
+	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/app/register"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/pb"
 )
@@ -13,13 +14,13 @@ import (
 // Game struct
 type Game struct {
 	opts         *Options
-	players      briscola.Players
+	players      player.Players
 	briscolaCard briscola.Card
 	side         briscola5.Side
 	auctionScore briscola5.AuctionScore
 	board        *briscola.PlayedCards
 	registration func(string) error
-	deck         *briscola.Deck
+	deck         *briscolapp.Deck
 	Callers
 }
 
@@ -45,17 +46,17 @@ func NewGame(gOpts *Options) *Game {
 	g := Game{
 		opts:         gOpts,
 		players:      *p,
-		deck:         briscola.NewDeck(),
+		deck:         briscolapp.NewDeck(),
 		board:        briscola.NewPlayedCards(5),
 		registration: rf,
 	}
 	return &g
 }
 
-func (g *Game) Players() *briscola.Players                                    { return &g.players }
+func (g *Game) Players() *player.Players                                      { return &g.players }
 func (g *Game) Created(name string) bool                                      { return name == g.opts.WithName }
 func (g *Game) WithSide() bool                                                { return g.opts.WithSide }
-func (g *Game) Deck() *briscola.Deck                                          { return g.deck }
+func (g *Game) Deck() *briscolapp.Deck                                        { return g.deck }
 func (g *Game) Side() *briscola5.Side                                         { return &g.side }
 func Register(name string, g *Game) error                                     { return g.registration(name) }
 func SetAucScore(score briscola5.AuctionScore, g *Game)                       { g.auctionScore = score }

@@ -12,8 +12,8 @@ import (
 	"github.com/mcaci/msdb5/v2/app/briscola5/end"
 	"github.com/mcaci/msdb5/v2/app/briscola5/exchange"
 	"github.com/mcaci/msdb5/v2/app/briscola5/play"
+	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/pb"
 )
@@ -26,9 +26,9 @@ func Run(g *briscolapp5.Game) []uint32 {
 
 	pls := *g.Players()
 	// distribute cards to players
-	briscola.Distribute(&struct {
-		Players  briscola.Players
-		Deck     *briscola.Deck
+	briscolapp.Distribute(&struct {
+		Players  player.Players
+		Deck     *briscolapp.Deck
 		HandSize int
 	}{
 		Players:  pls,
@@ -42,7 +42,7 @@ func Run(g *briscolapp5.Game) []uint32 {
 
 	// auction phase
 	aucInf := auction.Run(struct {
-		Players briscola.Players
+		Players player.Players
 		CmpF    func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 	}{
 		Players: *g.Players(),
@@ -65,7 +65,7 @@ func Run(g *briscolapp5.Game) []uint32 {
 	cmpInf := companion.Run(
 		struct {
 			Player  player.Player
-			Players briscola.Players
+			Players player.Players
 		}{
 			Player:  (*g.Players())[aucInf.Caller],
 			Players: *g.Players(),
@@ -76,7 +76,7 @@ func Run(g *briscolapp5.Game) []uint32 {
 
 	// play phase
 	plInfo := play.Run(struct {
-		Players      briscola.Players
+		Players      player.Players
 		Caller       player.Player
 		BriscolaCard briscola.Card
 		EndRound     func(*struct {
@@ -93,7 +93,7 @@ func Run(g *briscolapp5.Game) []uint32 {
 	// end phase
 	end.Run(struct {
 		PlayedCards  briscola.PlayedCards
-		Players      briscola.Players
+		Players      player.Players
 		BriscolaCard briscola.Card
 		Side         briscola5.Side
 	}{
@@ -106,11 +106,11 @@ func Run(g *briscolapp5.Game) []uint32 {
 	log.Println("Match over", g)
 
 	t1, t2 := g.Players().Part(player.IsInCallers(&g.Callers))
-	teams := briscola.NewPlayers(2)
+	teams := player.NewPlayers(2)
 	(*teams)[0] = player.New(&player.Options{For2P: true, Name: "Caller team"})
-	(*teams)[0].Pile().Add(briscola.CommonPile(t1)...)
+	(*teams)[0].Pile().Add(player.CommonPile(t1)...)
 	(*teams)[1] = player.New(&player.Options{For2P: true, Name: "Non Caller team"})
-	(*teams)[1].Pile().Add(briscola.CommonPile(t2)...)
+	(*teams)[1].Pile().Add(player.CommonPile(t2)...)
 
 	method := g.ScoreF()
 	if method == nil {
@@ -119,7 +119,7 @@ func Run(g *briscolapp5.Game) []uint32 {
 	}
 
 	scoreIn := &struct {
-		Players *briscola.Players
+		Players *player.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
 		Players: teams,
@@ -128,7 +128,7 @@ func Run(g *briscolapp5.Game) []uint32 {
 	return briscolapp.Score(scoreIn)
 }
 
-func rem(players *briscola.Players) func(int) (interface{ GetPoints() uint32 }, error) {
+func rem(players *player.Players) func(int) (interface{ GetPoints() uint32 }, error) {
 	return func(i int) (interface{ GetPoints() uint32 }, error) {
 		conn := pb.Conn()
 		defer conn.Close()

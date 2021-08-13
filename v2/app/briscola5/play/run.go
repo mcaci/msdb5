@@ -7,13 +7,13 @@ import (
 	"time"
 
 	"github.com/mcaci/msdb5/v2/app/briscola5/end"
+	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
 func Run(g struct {
-	Players      briscola.Players
+	Players      player.Players
 	Caller       player.Player
 	BriscolaCard briscola.Card
 	EndRound     func(*struct {
@@ -57,7 +57,7 @@ func Run(g struct {
 	}
 }
 
-func currentPlayerIndex(cp player.Player, pls briscola.Players) (uint8, error) {
+func currentPlayerIndex(cp player.Player, pls player.Players) (uint8, error) {
 	for i := range pls {
 		if pls[i] != cp {
 			continue

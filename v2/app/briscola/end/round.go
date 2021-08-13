@@ -1,12 +1,11 @@
 package end
 
 import (
-	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
+	"github.com/mcaci/msdb5/v2/app/player"
 )
 
 type Opts struct {
-	Players briscola.Players
+	Players player.Players
 }
 
 func Cond(g *Opts) bool {

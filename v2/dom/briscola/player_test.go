@@ -1,11 +1,11 @@
-package player
+package briscola
 
 import (
 	"testing"
 )
 
 func testP(name string) Player {
-	return New(&Options{For2P: true, Name: name})
+	return *NewB2Player(name)
 }
 
 func TestJoinPlayerName(t *testing.T) {

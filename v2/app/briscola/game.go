@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mcaci/ita-cards/set"
+	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/app/register"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 )
@@ -11,11 +12,11 @@ import (
 // Game struct
 type Game struct {
 	opts         *Options
-	players      briscola.Players
+	players      player.Players
 	briscolaCard briscola.Card
 	board        *briscola.PlayedCards
 	registration func(string) error
-	deck         *briscola.Deck
+	deck         *Deck
 }
 
 type Options struct {
@@ -29,7 +30,7 @@ func NewGame(gOpts *Options) *Game {
 	g := Game{
 		opts:         gOpts,
 		players:      *p,
-		deck:         briscola.NewDeck(),
+		deck:         NewDeck(),
 		board:        briscola.NewPlayedCards(2),
 		registration: rf,
 	}
@@ -39,8 +40,8 @@ func NewGame(gOpts *Options) *Game {
 // New func
 func New() *Game { return &Game{} }
 
-func (g *Game) Players() *briscola.Players   { return &g.players }
-func (g *Game) Deck() *briscola.Deck         { return g.deck }
+func (g *Game) Players() *player.Players     { return &g.players }
+func (g *Game) Deck() *Deck                  { return g.deck }
 func (g *Game) Board() *briscola.PlayedCards { return g.board }
 func (g *Game) BoardCards() *set.Cards       { return g.board.Cards }
 func (g *Game) Briscola() *briscola.Card     { return &g.briscolaCard }
@@ -49,9 +50,9 @@ func Register(name string, g *Game) error    { return g.registration(name) }
 func Set(card briscola.Card, g *Game)        { g.briscolaCard = card }
 
 func Start(g *Game) {
-	briscola.Distribute(&struct {
-		Players  briscola.Players
-		Deck     *briscola.Deck
+	Distribute(&struct {
+		Players  player.Players
+		Deck     *Deck
 		HandSize int
 	}{
 		Players:  g.players,

@@ -4,13 +4,13 @@ import (
 	"log"
 
 	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 )
 
 type companionIn struct {
 	Player  player.Player
-	Players briscola.Players
+	Players player.Players
 }
 type companionOut struct {
 	Briscola  briscola.Card

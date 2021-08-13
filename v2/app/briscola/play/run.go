@@ -6,13 +6,13 @@ import (
 	"time"
 
 	"github.com/mcaci/msdb5/v2/app/briscola/end"
+	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
 func Run(g struct {
-	Players      briscola.Players
+	Players      player.Players
 	BriscolaCard briscola.Card
 	EndRound     func(*struct {
 		PlayedCards  briscola.PlayedCards

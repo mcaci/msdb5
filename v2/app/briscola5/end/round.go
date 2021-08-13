@@ -2,13 +2,13 @@ package end
 
 import (
 	"github.com/mcaci/msdb5/v2/app/briscola5"
+	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
 )
 
 type Opts struct {
 	PlayedCards  briscola.PlayedCards
-	Players      briscola.Players
+	Players      player.Players
 	Callers      briscola5.Callerer
 	BriscolaCard briscola.Card
 }

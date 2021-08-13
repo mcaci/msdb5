@@ -1,4 +1,4 @@
-package briscola
+package player
 
 import "github.com/mcaci/ita-cards/set"
 

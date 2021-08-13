@@ -5,17 +5,17 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/dom/briscola"
+	"github.com/mcaci/msdb5/v2/app/player"
 )
 
 type opts struct {
 	hands [5]set.Cards
 }
 
-type testPlayers briscola.Players
+type testPlayers player.Players
 
 func testplayers(opt *opts) testPlayers {
-	pls := briscola.NewPlayers(2)
+	pls := player.NewPlayers(2)
 	for i := range *pls {
 		(*pls)[i].Hand().Add(opt.hands[i]...)
 	}
@@ -29,12 +29,12 @@ func TestEndRound(t *testing.T) {
 	}{
 		"Test all players with empty hands": {
 			in: Opts{
-				Players: briscola.Players(testplayers(&opts{})),
+				Players: player.Players(testplayers(&opts{})),
 			},
 			end: true},
 		"Test one player still with cards": {
 			in: Opts{
-				Players: briscola.Players(testplayers(&opts{[5]set.Cards{{*card.MustID(1)}, {}}})),
+				Players: player.Players(testplayers(&opts{[5]set.Cards{{*card.MustID(1)}, {}}})),
 			},
 		},
 	}

@@ -5,16 +5,15 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
+	"github.com/mcaci/msdb5/v2/app/player"
 )
 
 // Registrator registers Players with their names
 type Registrator func(string) error
 
 // NewWithRegistrator creates new container for players
-func NewWithRegistrator(nPlayers int) (*briscola.Players, Registrator) {
-	pls := briscola.NewPlayers(nPlayers)
+func NewWithRegistrator(nPlayers int) (*player.Players, Registrator) {
+	pls := player.NewPlayers(nPlayers)
 	var i int
 	f := func(n string) error {
 		if i >= nPlayers {

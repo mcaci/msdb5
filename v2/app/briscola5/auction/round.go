@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/player"
+	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
@@ -20,7 +19,7 @@ func Round(r struct {
 	curr    briscola5.AuctionScore
 	prop    briscola5.AuctionScore
 	currID  uint8
-	players briscola.Players
+	players player.Players
 	cmpF    func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 }) struct {
 	s   briscola5.AuctionScore
@@ -46,13 +45,13 @@ func Round(r struct {
 		id = mustRotateOnNotFolded(r.players, r.currID)
 	case MIN, LE:
 		// Player is folded for scoring less or equal than current (or min)
-		p.(*player.B5Player).Fold()
+		p.(*briscola5.Player).Fold()
 		// End the loop if only one not folded players is left
 		id = mustRotateOnNotFolded(r.players, r.currID)
-		end = briscola.Count(r.players, player.NotFolded) == 1
+		end = player.Count(r.players, player.NotFolded) == 1
 	case OVER:
 		// Fold everyone if score is 120 or more
-		(&othersFold{p: p.(*player.B5Player), pls: r.players}).Fold()
+		(&othersFold{p: p.(*briscola5.Player), pls: r.players}).Fold()
 		s = briscola5.MAX_SCORE
 		end = true
 	}
@@ -65,7 +64,7 @@ func Round(r struct {
 
 type othersFold struct {
 	p   player.Player
-	pls briscola.Players
+	pls player.Players
 }
 
 func (ot *othersFold) Fold() {
@@ -73,11 +72,11 @@ func (ot *othersFold) Fold() {
 		if p == ot.p {
 			continue
 		}
-		p.(*player.B5Player).Fold()
+		p.(*briscola5.Player).Fold()
 	}
 }
 
-func mustRotateOnNotFolded(players briscola.Players, from uint8) uint8 {
+func mustRotateOnNotFolded(players player.Players, from uint8) uint8 {
 	id, err := rotateOn(players, from, player.NotFolded)
 	if err != nil {
 		log.Printf("error found: %v. Exiting.", err)
@@ -85,7 +84,7 @@ func mustRotateOnNotFolded(players briscola.Players, from uint8) uint8 {
 	return id
 }
 
-func rotateOn(players briscola.Players, idx uint8, appliesTo player.Predicate) (uint8, error) {
+func rotateOn(players player.Players, idx uint8, appliesTo player.Predicate) (uint8, error) {
 	for i := 0; i < 2*len(players); i++ {
 		idx = (idx + 1) % uint8(len(players))
 		if !appliesTo(players[idx]) {

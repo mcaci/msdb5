@@ -4,12 +4,6 @@ import (
 	"github.com/mcaci/ita-cards/set"
 )
 
-type Deck struct{ set.Cards }
-
-func NewDeck() *Deck {
-	return &Deck{Cards: set.Deck()}
-}
-
 type PlayedCards struct {
 	*set.Cards
 	nPlayers int
@@ -27,16 +21,4 @@ func (c PlayedCards) Pile() *set.Cards {
 		return (*set.Cards)(c.Cards)
 	}
 	return &set.Cards{}
-}
-
-func Distribute(g *struct {
-	Players  Players
-	Deck     *Deck
-	HandSize int
-}) {
-	for i := 0; i < g.HandSize; i++ {
-		for _, p := range g.Players {
-			p.Hand().Add(g.Deck.Top())
-		}
-	}
 }
