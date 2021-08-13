@@ -7,6 +7,9 @@ import (
 // ErrPlayerNotFound error
 var ErrPlayerNotFound = errors.New("player not found")
 
+// Predicate type
+type Predicate func(p Player) bool
+
 // Index returns the index of the player that satisfies the predicate
 // or an error if not found
 func (playerSet Players) Index(predicate Predicate) (uint8, error) {

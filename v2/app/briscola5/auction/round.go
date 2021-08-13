@@ -84,7 +84,7 @@ func mustRotateOnNotFolded(players misc.Players, from uint8) uint8 {
 	return id
 }
 
-func rotateOn(players misc.Players, idx uint8, appliesTo misc.Predicate) (uint8, error) {
+func rotateOn(players misc.Players, idx uint8, appliesTo func(p misc.Player) bool) (uint8, error) {
 	for i := 0; i < 2*len(players); i++ {
 		idx = (idx + 1) % uint8(len(players))
 		if !appliesTo(players[idx]) {

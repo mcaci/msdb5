@@ -4,8 +4,6 @@ import (
 	"github.com/mcaci/ita-cards/card"
 )
 
-// Predicate type
-type Predicate func(p Player) bool
 
 // IsCardInHand func
 func IsCardInHand(c card.Item) func(p Player) bool {

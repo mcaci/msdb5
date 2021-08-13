@@ -8,7 +8,7 @@ import (
 func IsInCallers(t interface {
 	Caller() misc.Player
 	Companion() misc.Player
-}) misc.Predicate {
+}) func(p misc.Player) bool {
 	return func(p misc.Player) bool { return eq(p, t.Caller()) || eq(p, t.Companion()) }
 }
 
