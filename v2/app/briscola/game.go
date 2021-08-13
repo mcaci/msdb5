@@ -24,6 +24,7 @@ type Options struct {
 
 var WithDefaultOptions = &Options{}
 
+// NewGame func
 func NewGame(gOpts *Options) *Game {
 	p, rf := misc.NewWithRegistrator(2)
 	g := Game{
@@ -35,9 +36,6 @@ func NewGame(gOpts *Options) *Game {
 	}
 	return &g
 }
-
-// New func
-func New() *Game { return &Game{} }
 
 func (g *Game) Players() *misc.Players       { return &g.players }
 func (g *Game) Deck() *Deck                  { return g.deck }

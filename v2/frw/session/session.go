@@ -22,7 +22,7 @@ type Briscola struct {
 
 func NewBriscola() *Briscola {
 	b := &Briscola{
-		Game:  briscola.New(),
+		Game:  briscola.NewGame(briscola.WithDefaultOptions),
 		Ready: make(chan interface{}),
 		Wg:    &sync.WaitGroup{},
 	}
