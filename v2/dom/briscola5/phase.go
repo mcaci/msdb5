@@ -2,7 +2,6 @@ package briscola5
 
 import (
 	"fmt"
-	"log"
 )
 
 // Phase type
@@ -27,15 +26,6 @@ func ToPhase(phase string) (Phase, error) {
 		return Phase(i), nil
 	}
 	return Phase(0), fmt.Errorf("request %s not valid", phase)
-}
-
-// MustPhase func
-func MustPhase(phase string) Phase {
-	id, err := ToPhase(phase)
-	if err != nil {
-		log.Fatalf("error found: %v", err)
-	}
-	return id
 }
 
 func (id Phase) String() string {

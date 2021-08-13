@@ -4,13 +4,6 @@ import (
 	"testing"
 )
 
-func TestIDCreationMustWithNoErr(t *testing.T) {
-	testID := MustPhase("Card")
-	if testID != PlayingCards {
-		t.Fatalf("Unexpected phase: %s", testID)
-	}
-}
-
 func TestIDCreationWithNoErr(t *testing.T) {
 	_, err := ToPhase("Card")
 	if err != nil {
