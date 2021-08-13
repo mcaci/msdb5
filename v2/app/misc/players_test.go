@@ -20,7 +20,7 @@ func init() {
 }
 
 func TestSuccessfulFindDataCorrespondsToA(t *testing.T) {
-	i, err := testPlayers.SelectIndex(testPredicateA)
+	i, err := testPlayers.Index(testPredicateA)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -31,7 +31,7 @@ func TestSuccessfulFindDataCorrespondsToA(t *testing.T) {
 
 func TestSuccessfulFindDataCorrespondsToB(t *testing.T) {
 	testPredicateB := func(p Player) bool { return p.Name() == "B" }
-	i, err := testPlayers.SelectIndex(testPredicateB)
+	i, err := testPlayers.Index(testPredicateB)
 	if err != nil {
 		t.Fatal(err)
 	}

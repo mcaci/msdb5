@@ -22,7 +22,7 @@ func Run(g struct {
 	OnBoard briscola.PlayedCards
 } {
 	playedCards := briscola.NewPlayedCards(2)
-	plIdx, err := g.Players.SelectIndex(func(p misc.Player) bool { return p == g.Players[0] })
+	plIdx, err := g.Players.Index(func(p misc.Player) bool { return p == g.Players[0] })
 	if err != nil {
 		log.Fatal("didn't expect to arrive at this point")
 	}

@@ -29,7 +29,7 @@ func Cond(g *Opts) bool {
 	}
 	var teams [2]bool
 	var cardsChecked int
-	isPlayerInCallersTeamF := misc.IsInCallers(g.Callers)
+	isPlayerInCallersTeamF := briscola5.IsInCallers(g.Callers)
 	for _, card := range briscola.Serie(g.BriscolaCard) {
 		i, err := g.Players.Index(misc.IsCardInHand(card))
 		if err != nil { // no one has card

@@ -105,7 +105,7 @@ func Run(g *briscolapp5.Game) []uint32 {
 
 	log.Println("Match over", g)
 
-	t1, t2 := g.Players().Part(misc.IsInCallers(&g.Callers))
+	t1, t2 := g.Players().Part(briscolapp5.IsInCallers(&g.Callers))
 	teams := misc.NewPlayers(2)
 	(*teams)[0] = misc.New(&misc.Options{For2P: true, Name: "Caller team"})
 	(*teams)[0].Pile().Add(CommonPile(t1)...)
