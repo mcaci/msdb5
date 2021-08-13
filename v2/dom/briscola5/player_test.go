@@ -19,3 +19,17 @@ func TestJoinPlayerPileIsEmpty(t *testing.T) {
 		t.Fatal("Pile should be empty")
 	}
 }
+
+func TestPlayerHasFolded(t *testing.T) {
+	p := NewB5Player("")
+	if p.Fold(); !p.Folded() {
+		t.Fatal("Player should have folded")
+	}
+}
+
+func TestPlayerHasntFolded(t *testing.T) {
+	p := NewB5Player("")
+	if p.Folded() {
+		t.Fatal("New player should not have folded")
+	}
+}
