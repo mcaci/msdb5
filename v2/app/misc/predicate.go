@@ -33,21 +33,3 @@ func eq(p, q Player) bool {
 	return p.Name() == q.Name() && p.Hand() == q.Hand() && p.Pile() == q.Pile()
 }
 
-// Folded var
-var Folded Predicate = func(p Player) bool {
-	b5p, ok := p.(*briscola5.Player)
-	if !ok {
-		return false
-	}
-	return b5p.Folded()
-}
-
-// NotFolded var
-var NotFolded = func(p Player) bool {
-	b5p, ok := p.(*briscola5.Player)
-	if !ok {
-		return false
-
-	}
-	return !b5p.Folded()
-}

@@ -44,7 +44,7 @@ func Run(auctIn struct {
 		if !r.end {
 			continue
 		}
-		caller, err := auctIn.Players.Index(misc.NotFolded)
+		caller, err := auctIn.Players.Index(notFolded)
 		if err != nil {
 			log.Println(err)
 			continue
