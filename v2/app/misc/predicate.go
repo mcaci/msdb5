@@ -1,10 +1,7 @@
 package misc
 
 import (
-	"log"
-
 	"github.com/mcaci/ita-cards/card"
-	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
 // Predicate type
@@ -19,17 +16,3 @@ func IsCardInHand(c card.Item) func(p Player) bool {
 
 // EmptyHanded func
 func EmptyHanded(p Player) bool { return len(*p.Hand()) == 0 }
-
-// IsInCallers func
-func IsInCallers(t interface {
-	Caller() Player
-	Companion() Player
-}) Predicate {
-	log.Println(t)
-	return func(p Player) bool { return eq(p, t.Caller()) || eq(p, t.Companion()) }
-}
-
-func eq(p, q Player) bool {
-	return p.Name() == q.Name() && p.Hand() == q.Hand() && p.Pile() == q.Pile()
-}
-
