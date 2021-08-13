@@ -16,11 +16,11 @@ type Player struct {
 func NewB5Player(name string) *Player { return &Player{Player: *briscola.NewB2Player(name)} }
 
 // Fold func
-func (player *Player) Fold() { misc.fold = true }
+func (player *Player) Fold() { player.fold = true }
 
 // Folded func
-func (player *Player) Folded() bool { return misc.fold }
+func (player *Player) Folded() bool { return player.fold }
 
 func (player Player) String() string {
-	return fmt.Sprintf("(Player: %+v, Has folded? %t)\n", misc.Player, misc.fold)
+	return fmt.Sprintf("(Player: %+v, Has folded? %t)\n", player.Player, player.fold)
 }
