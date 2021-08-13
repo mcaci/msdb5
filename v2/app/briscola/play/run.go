@@ -6,13 +6,12 @@ import (
 	"time"
 
 	"github.com/mcaci/msdb5/v2/app/briscola/end"
-	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
 func Run(g struct {
-	Players      player.Players
+	Players      misc.Players
 	BriscolaCard briscola.Card
 	EndRound     func(*struct {
 		PlayedCards  briscola.PlayedCards
@@ -22,7 +21,7 @@ func Run(g struct {
 	OnBoard briscola.PlayedCards
 } {
 	playedCards := briscola.NewPlayedCards(2)
-	plIdx, err := g.Players.SelectIndex(func(p player.Player) bool { return p == g.Players[0] })
+	plIdx, err := g.Players.SelectIndex(func(p misc.Player) bool { return p == g.Players[0] })
 	if err != nil {
 		log.Fatal("didn't expect to arrive at this point")
 	}

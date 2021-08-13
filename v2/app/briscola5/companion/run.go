@@ -4,13 +4,12 @@ import (
 	"log"
 
 	"github.com/mcaci/ita-cards/card"
-	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 )
 
 type companionIn struct {
-	Player  player.Player
-	Players player.Players
+	Player  misc.Player
+	Players misc.Players
 }
 type companionOut struct {
 	Briscola  briscola.Card
@@ -21,7 +20,7 @@ func Run(s companionIn) companionOut {
 	selectedCard := selectCardFromSeedThatHasMostCardsInHand(s.Player)
 	serie := briscola.Serie(selectedCard)
 	for _, c := range serie {
-		i, err := s.Players.Index(player.IsCardInHand(c))
+		i, err := s.Players.Index(misc.IsCardInHand(c))
 		switch {
 		case err != nil:
 			log.Printf("error: %v. Card %v is inside the side deck", err, c)
@@ -38,7 +37,7 @@ func Run(s companionIn) companionOut {
 	return companionOut{}
 }
 
-func selectCardFromSeedThatHasMostCardsInHand(p player.Player) card.Item {
+func selectCardFromSeedThatHasMostCardsInHand(p misc.Player) card.Item {
 	// count how many cards per seed
 	count := make(map[card.Seed]uint8)
 	for _, c := range *p.Hand() {

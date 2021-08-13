@@ -1,4 +1,4 @@
-package player
+package misc
 
 import (
 	"testing"
@@ -30,13 +30,13 @@ func TestUnsuccessfulFind(t *testing.T) {
 
 func TestSuccessfulFindNoErr(t *testing.T) {
 	if _, err := testPlayers.Index(IsCardInHand(*card.MustID(33))); err != nil {
-		t.Fatal("Player not found with criteria player.IsCardInHand(33)")
+		t.Fatal("Player not found with criteria misc.IsCardInHand(33)")
 	}
 }
 
 func TestSuccessfulFindWithNone(t *testing.T) {
 	if testPlayers.None(IsCardInHand(*card.MustID(33))) {
-		t.Fatal("Player not found with criteria player.IsCardInHand(33)")
+		t.Fatal("Player not found with criteria misc.IsCardInHand(33)")
 	}
 }
 

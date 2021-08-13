@@ -2,7 +2,6 @@ package briscola
 
 import (
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/app/player"
 )
 
 type Deck struct{ set.Cards }
@@ -12,7 +11,7 @@ func NewDeck() *Deck {
 }
 
 func Distribute(g *struct {
-	Players  player.Players
+	Players  misc.Players
 	Deck     *Deck
 	HandSize int
 }) {

@@ -5,19 +5,18 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
 func TestCollect(t *testing.T) {
-	p1 := player.New(&player.Options{For2P: true})
+	p1 := misc.New(&misc.Options{For2P: true})
 	p1.Hand().Add(*card.MustID(11))
 	testcases := map[string]struct {
 		cardSetter interface{ Pile() *set.Cards }
 		expected   *set.Cards
 	}{
 		"Test with AllCards": {
-			cardSetter: newAllCards(player.Players{p1}, briscola5.Side{Cards: *set.NewMust(5)}, newPlayedCardsForTest(set.NewMust(1, 2, 3, 4, 6))),
+			cardSetter: newAllCards(misc.Players{p1}, briscola5.Side{Cards: *set.NewMust(5)}, newPlayedCardsForTest(set.NewMust(1, 2, 3, 4, 6))),
 			expected:   set.NewMust(1, 2, 3, 4, 5, 6, 11),
 		},
 	}

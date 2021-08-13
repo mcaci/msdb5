@@ -1,4 +1,4 @@
-package player
+package misc
 
 import "github.com/mcaci/ita-cards/set"
 

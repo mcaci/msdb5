@@ -1,4 +1,4 @@
-package player
+package misc
 
 // Players is a slice of Players
 type Players []Player

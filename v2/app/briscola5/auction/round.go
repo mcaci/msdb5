@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
@@ -19,7 +18,7 @@ func Round(r struct {
 	curr    briscola5.AuctionScore
 	prop    briscola5.AuctionScore
 	currID  uint8
-	players player.Players
+	players misc.Players
 	cmpF    func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 }) struct {
 	s   briscola5.AuctionScore
@@ -28,7 +27,7 @@ func Round(r struct {
 } {
 	p := r.players[r.currID]
 	// Player has folded already, go to next player and exit
-	if player.Folded(p) {
+	if misc.Folded(p) {
 		return struct {
 			s   briscola5.AuctionScore
 			id  uint8
@@ -48,7 +47,7 @@ func Round(r struct {
 		p.(*briscola5.Player).Fold()
 		// End the loop if only one not folded players is left
 		id = mustRotateOnNotFolded(r.players, r.currID)
-		end = player.Count(r.players, player.NotFolded) == 1
+		end = misc.Count(r.players, misc.NotFolded) == 1
 	case OVER:
 		// Fold everyone if score is 120 or more
 		(&othersFold{p: p.(*briscola5.Player), pls: r.players}).Fold()
@@ -63,8 +62,8 @@ func Round(r struct {
 }
 
 type othersFold struct {
-	p   player.Player
-	pls player.Players
+	p   misc.Player
+	pls misc.Players
 }
 
 func (ot *othersFold) Fold() {
@@ -76,15 +75,15 @@ func (ot *othersFold) Fold() {
 	}
 }
 
-func mustRotateOnNotFolded(players player.Players, from uint8) uint8 {
-	id, err := rotateOn(players, from, player.NotFolded)
+func mustRotateOnNotFolded(players misc.Players, from uint8) uint8 {
+	id, err := rotateOn(players, from, misc.NotFolded)
 	if err != nil {
 		log.Printf("error found: %v. Exiting.", err)
 	}
 	return id
 }
 
-func rotateOn(players player.Players, idx uint8, appliesTo player.Predicate) (uint8, error) {
+func rotateOn(players misc.Players, idx uint8, appliesTo misc.Predicate) (uint8, error) {
 	for i := 0; i < 2*len(players); i++ {
 		idx = (idx + 1) % uint8(len(players))
 		if !appliesTo(players[idx]) {

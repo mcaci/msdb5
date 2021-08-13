@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/app/register"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 )
@@ -12,7 +11,7 @@ import (
 // Game struct
 type Game struct {
 	opts         *Options
-	players      player.Players
+	players      misc.Players
 	briscolaCard briscola.Card
 	board        *briscola.PlayedCards
 	registration func(string) error
@@ -40,7 +39,7 @@ func NewGame(gOpts *Options) *Game {
 // New func
 func New() *Game { return &Game{} }
 
-func (g *Game) Players() *player.Players     { return &g.players }
+func (g *Game) Players() *misc.Players       { return &g.players }
 func (g *Game) Deck() *Deck                  { return g.deck }
 func (g *Game) Board() *briscola.PlayedCards { return g.board }
 func (g *Game) BoardCards() *set.Cards       { return g.board.Cards }
@@ -51,7 +50,7 @@ func Set(card briscola.Card, g *Game)        { g.briscolaCard = card }
 
 func Start(g *Game) {
 	Distribute(&struct {
-		Players  player.Players
+		Players  misc.Players
 		Deck     *Deck
 		HandSize int
 	}{

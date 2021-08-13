@@ -8,12 +8,11 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
 func Run(auctIn struct {
-	Players player.Players
+	Players misc.Players
 	CmpF    func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 }) struct {
 	Score  briscola5.AuctionScore
@@ -30,7 +29,7 @@ func Run(auctIn struct {
 		r := Round(struct {
 			curr, prop briscola5.AuctionScore
 			currID     uint8
-			players    player.Players
+			players    misc.Players
 			cmpF       func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 		}{
 			curr:    score,
@@ -44,7 +43,7 @@ func Run(auctIn struct {
 		if !r.end {
 			continue
 		}
-		caller, err := auctIn.Players.Index(player.NotFolded)
+		caller, err := auctIn.Players.Index(misc.NotFolded)
 		if err != nil {
 			log.Println(err)
 			continue

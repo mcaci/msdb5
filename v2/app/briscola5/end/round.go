@@ -2,20 +2,19 @@ package end
 
 import (
 	"github.com/mcaci/msdb5/v2/app/briscola5"
-	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 )
 
 type Opts struct {
 	PlayedCards  briscola.PlayedCards
-	Players      player.Players
+	Players      misc.Players
 	Callers      briscola5.Callerer
 	BriscolaCard briscola.Card
 }
 
 func Cond(g *Opts) bool {
 	// no more cards to play
-	if g.Players.All(player.EmptyHanded) {
+	if g.Players.All(misc.EmptyHanded) {
 		return true
 	}
 	isNewRoundToStart := len(*g.PlayedCards.Cards) == 5
@@ -29,9 +28,9 @@ func Cond(g *Opts) bool {
 	}
 	var teams [2]bool
 	var cardsChecked int
-	isPlayerInCallersTeamF := player.IsInCallers(g.Callers)
+	isPlayerInCallersTeamF := misc.IsInCallers(g.Callers)
 	for _, card := range briscola.Serie(g.BriscolaCard) {
-		i, err := g.Players.Index(player.IsCardInHand(card))
+		i, err := g.Players.Index(misc.IsCardInHand(card))
 		if err != nil { // no one has card
 			continue
 		}

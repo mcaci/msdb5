@@ -7,7 +7,6 @@ import (
 	"github.com/mcaci/ita-cards/set"
 	briscolapp "github.com/mcaci/msdb5/v2/app/briscola"
 	"github.com/mcaci/msdb5/v2/app/briscola5"
-	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	briscola5d "github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/pb"
@@ -27,14 +26,14 @@ func TestAiGameWithSide(t *testing.T) {
 
 	pls := g.Players()
 	for i := range *pls {
-		(*pls)[i] = player.New(&player.Options{For5P: true})
+		(*pls)[i] = misc.New(&misc.Options{For5P: true})
 	}
 
 	// run ai game
 	Run(g)
 
 	scoreIn := &struct {
-		Players *player.Players
+		Players *misc.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
 		Players: g.Players(),
@@ -56,14 +55,14 @@ func TestAiGameWithNoSide(t *testing.T) {
 
 	pls := g.Players()
 	for i := range *pls {
-		(*pls)[i] = player.New(&player.Options{For5P: true})
+		(*pls)[i] = misc.New(&misc.Options{For5P: true})
 	}
 
 	// run ai game
 	Run(g)
 
 	scoreIn := &struct {
-		Players *player.Players
+		Players *misc.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
 		Players: g.Players(),

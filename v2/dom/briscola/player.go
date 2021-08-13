@@ -16,15 +16,15 @@ type Player struct {
 func NewB2Player(name string) *Player { return &Player{name: name} }
 
 // Name func
-func (player Player) Name() string { return player.name }
+func (player Player) Name() string { return misc.name }
 
 // Hand func
-func (player *Player) Hand() *set.Cards { return &player.hand }
+func (player *Player) Hand() *set.Cards { return &misc.hand }
 
 // Pile func
-func (player *Player) Pile() *set.Cards { return &player.pile }
+func (player *Player) Pile() *set.Cards { return &misc.pile }
 
 func (player Player) String() string {
 	return fmt.Sprintf("(Name: %s, Cards: %+v, Pile: %+v)",
-		player.name, player.hand, player.pile)
+		misc.name, misc.hand, misc.pile)
 }

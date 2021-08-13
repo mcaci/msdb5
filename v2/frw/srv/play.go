@@ -7,7 +7,6 @@ import (
 
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola/play"
-	"github.com/mcaci/msdb5/v2/app/player"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/frw/srv/assets"
 	"github.com/mcaci/msdb5/v2/pb"
@@ -16,7 +15,7 @@ import (
 func Play(w http.ResponseWriter, r *http.Request) {
 	m := validName.FindStringSubmatch(r.URL.Path)
 	playername := m[2]
-	idx, err := s.Game.Players().Index(func(p player.Player) bool { return p.Name() == playername })
+	idx, err := s.Game.Players().Index(func(p misc.Player) bool { return p.Name() == playername })
 	continueIfNoErr(w, err)
 	cardn, err := strconv.Atoi(r.FormValue("cardn"))
 	continueIfNoErr(w, err)
