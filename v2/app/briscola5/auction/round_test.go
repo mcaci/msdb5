@@ -3,8 +3,8 @@ package auction
 import (
 	"testing"
 
+	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola/player"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
@@ -12,8 +12,8 @@ type opts struct {
 	folded [5]bool
 }
 
-func testplayers(opt *opts) team.Players {
-	pls := team.New(5)
+func testplayers(opt *opts) briscola.Players {
+	pls := briscola.NewPlayers(5)
 	for i := range *pls {
 		(*pls)[i] = player.New(&player.Options{For5P: true})
 		if opt.folded[i] {
@@ -26,7 +26,7 @@ func testplayers(opt *opts) team.Players {
 type inParams struct {
 	curr, prop briscola5.AuctionScore
 	currID     uint8
-	players    team.Players
+	players    briscola.Players
 	cmpF       func(briscola5.AuctionScore, briscola5.AuctionScore) int8
 }
 

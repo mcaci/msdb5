@@ -6,7 +6,6 @@ import (
 	"github.com/mcaci/msdb5/v2/app/register"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola/player"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/pb"
 )
@@ -14,7 +13,7 @@ import (
 // Game struct
 type Game struct {
 	opts         *Options
-	players      team.Players
+	players      briscola.Players
 	briscolaCard briscola.Card
 	side         briscola5.Side
 	auctionScore briscola5.AuctionScore
@@ -53,7 +52,7 @@ func NewGame(gOpts *Options) *Game {
 	return &g
 }
 
-func (g *Game) Players() *team.Players                                        { return &g.players }
+func (g *Game) Players() *briscola.Players                                    { return &g.players }
 func (g *Game) Created(name string) bool                                      { return name == g.opts.WithName }
 func (g *Game) WithSide() bool                                                { return g.opts.WithSide }
 func (g *Game) Deck() *briscola.Deck                                          { return g.deck }

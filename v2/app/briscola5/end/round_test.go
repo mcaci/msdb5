@@ -7,17 +7,16 @@ import (
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola/player"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 )
 
 type opts struct {
 	hands [5]set.Cards
 }
 
-type testPlayers team.Players
+type testPlayers briscola.Players
 
 func testplayers(opt *opts) testPlayers {
-	pls := team.New(5)
+	pls := briscola.NewPlayers(5)
 	for i := range *pls {
 		(*pls)[i] = player.New(&player.Options{For5P: true})
 		(*pls)[i].Hand().Add(opt.hands[i]...)
@@ -47,26 +46,26 @@ func TestEndRound(t *testing.T) {
 		"Test all players with empty hands": {
 			in: Opts{
 				PlayedCards: *newPlayedCardsForTest(&set.Cards{}),
-				Players:     team.Players(testplayers(&opts{})),
+				Players:     briscola.Players(testplayers(&opts{})),
 			}, end: true},
 		"Test false because round is in progress": {
 			in: Opts{
 				PlayedCards: *newPlayedCardsForTest(&set.Cards{}),
-				Players:     team.Players(playersWithinLimits),
+				Players:     briscola.Players(playersWithinLimits),
 				Callers:     &playersWithinLimits,
 			},
 		},
 		"Test false because limit not reached yet": {
 			in: Opts{
 				PlayedCards: *newPlayedCardsForTest(set.NewMust(1, 2, 3, 4, 5)),
-				Players:     team.Players(playersBeyondLimits),
+				Players:     briscola.Players(playersBeyondLimits),
 				Callers:     &playersBeyondLimits,
 			},
 		},
 		"Test false because no one has briscola cards": {
 			in: Opts{
 				PlayedCards:  *newPlayedCardsForTest(set.NewMust(1, 2, 3, 4, 5)),
-				Players:      team.Players(playersWithinLimits),
+				Players:      briscola.Players(playersWithinLimits),
 				Callers:      &playersWithinLimits,
 				BriscolaCard: briscola.Card{Item: *card.MustID(11)},
 			},
@@ -74,7 +73,7 @@ func TestEndRound(t *testing.T) {
 		"Test true because one team only has briscola cards": {
 			in: Opts{
 				PlayedCards:  *newPlayedCardsForTest(set.NewMust(1, 2, 3, 4, 5)),
-				Players:      team.Players(playersWithinLimits),
+				Players:      briscola.Players(playersWithinLimits),
 				Callers:      &playersWithinLimits,
 				BriscolaCard: briscola.Card{Item: *card.MustID(1)},
 			},
@@ -83,7 +82,7 @@ func TestEndRound(t *testing.T) {
 		"Test false because not only one team only has briscola cards": {
 			in: Opts{
 				PlayedCards:  *newPlayedCardsForTest(set.NewMust(1, 2, 3, 4, 5)),
-				Players:      team.Players(playersWithinLimitsAndSpreadCards),
+				Players:      briscola.Players(playersWithinLimitsAndSpreadCards),
 				Callers:      &playersWithinLimitsAndSpreadCards,
 				BriscolaCard: briscola.Card{Item: *card.MustID(1)},
 			},

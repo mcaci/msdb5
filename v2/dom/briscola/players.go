@@ -1,4 +1,4 @@
-package team
+package briscola
 
 import (
 	"github.com/mcaci/msdb5/v2/dom/briscola/player"
@@ -7,8 +7,8 @@ import (
 // Players is a slice of Players
 type Players []player.Player
 
-// New creates new container for players
-func New(nPlayers int) *Players {
+// NewPlayers creates new container for players
+func NewPlayers(nPlayers int) *Players {
 	players := make(Players, nPlayers)
 	for i := range players {
 		players[i] = player.New(&player.Options{})

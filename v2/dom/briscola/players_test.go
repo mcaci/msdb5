@@ -1,4 +1,4 @@
-package team
+package briscola
 
 import (
 	"testing"
@@ -10,7 +10,7 @@ import (
 var testPlayers Players
 
 func init() {
-	testPlayers = *New(2)
+	testPlayers = *NewPlayers(2)
 	a := player.New(&player.Options{For2P: true, Name: "A"})
 	a.Hand().Add(*card.MustID(34))
 	testPlayers[0] = a

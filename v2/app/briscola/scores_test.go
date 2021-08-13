@@ -7,16 +7,15 @@ import (
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola/player"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 )
 
 func TestScore(t *testing.T) {
 	expected := "[: 0], [: 1]"
 	actual := PrintScore(&struct {
-		Players *team.Players
+		Players *briscola.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
-		Players: team.New(2),
+		Players: briscola.NewPlayers(2),
 		Method:  func(i int) (interface{ GetPoints() uint32 }, error) { p := briscola.Pnts(i); return &p, nil },
 	})
 	if expected != actual {
@@ -27,10 +26,10 @@ func TestScore(t *testing.T) {
 func TestScoreWithErr(t *testing.T) {
 	expected := ""
 	actual := PrintScore(&struct {
-		Players *team.Players
+		Players *briscola.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
-		Players: team.New(2),
+		Players: briscola.NewPlayers(2),
 		Method: func(i int) (interface{ GetPoints() uint32 }, error) {
 			p := briscola.Pnts(i)
 			return &p, errors.New("error")
@@ -42,14 +41,14 @@ func TestScoreWithErr(t *testing.T) {
 }
 
 func TestPlayerScore(t *testing.T) {
-	players := team.New(2)
+	players := briscola.NewPlayers(2)
 	(*players)[0] = player.New(&player.Options{Name: "Player 1", For2P: true})
 	(*players)[0].Pile().Add(*card.MustID(1))
 	(*players)[1] = player.New(&player.Options{Name: "Player 2", For2P: true})
 
 	expected := "[Player 1: 11], [Player 2: 0]"
 	actual := PrintScore(&struct {
-		Players *team.Players
+		Players *briscola.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
 		Players: players,

@@ -1,4 +1,4 @@
-package team
+package briscola
 
 import "github.com/mcaci/ita-cards/set"
 

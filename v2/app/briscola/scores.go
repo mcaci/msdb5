@@ -5,11 +5,11 @@ import (
 	"log"
 	"strings"
 
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
+	"github.com/mcaci/msdb5/v2/dom/briscola"
 )
 
 func Score(g *struct {
-	Players *team.Players
+	Players *briscola.Players
 	Method  func(int) (interface{ GetPoints() uint32 }, error)
 }) []uint32 {
 	scores := make([]uint32, len(*g.Players))
@@ -25,7 +25,7 @@ func Score(g *struct {
 }
 
 func PrintScore(g *struct {
-	Players *team.Players
+	Players *briscola.Players
 	Method  func(int) (interface{ GetPoints() uint32 }, error)
 }) string {
 	scores := make([]string, len(*g.Players))

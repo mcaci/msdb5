@@ -6,12 +6,11 @@ import (
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola/player"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 )
 
 type companionIn struct {
 	Player  player.Player
-	Players team.Players
+	Players briscola.Players
 }
 type companionOut struct {
 	Briscola  briscola.Card

@@ -5,12 +5,11 @@ import (
 
 	"github.com/mcaci/ita-cards/card"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 )
 
 func TestRunMinimalExample(t *testing.T) {
 	in := companionIn{}
-	in.Players = *team.New(5)
+	in.Players = *briscola.NewPlayers(5)
 	in.Player = in.Players[0]
 	out := Run(in)
 	if out.Companion != 0 {
@@ -24,7 +23,7 @@ func TestRunMinimalExample(t *testing.T) {
 
 func TestRunExampleNominal(t *testing.T) {
 	in := companionIn{}
-	in.Players = *team.New(5)
+	in.Players = *briscola.NewPlayers(5)
 	in.Players[0].Hand().Add(*card.MustID(1), *card.MustID(1))
 	in.Players[1].Hand().Add(*card.MustID(11), *card.MustID(23))
 	in.Players[2].Hand().Add(*card.MustID(11), *card.MustID(22))
@@ -42,7 +41,7 @@ func TestRunExampleNominal(t *testing.T) {
 
 func TestRunExampleAnother(t *testing.T) {
 	in := companionIn{}
-	in.Players = *team.New(5)
+	in.Players = *briscola.NewPlayers(5)
 	in.Players[0].Hand().Add(*card.MustID(1), *card.MustID(1), *card.MustID(1))
 	in.Players[1].Hand().Add(*card.MustID(11), *card.MustID(22), *card.MustID(11))
 	in.Players[2].Hand().Add(*card.MustID(23), *card.MustID(29), *card.MustID(11))

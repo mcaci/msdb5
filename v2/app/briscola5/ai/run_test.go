@@ -9,7 +9,6 @@ import (
 	"github.com/mcaci/msdb5/v2/app/briscola5"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola/player"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 	briscola5d "github.com/mcaci/msdb5/v2/dom/briscola5"
 	"github.com/mcaci/msdb5/v2/pb"
 )
@@ -35,7 +34,7 @@ func TestAiGameWithSide(t *testing.T) {
 	Run(g)
 
 	scoreIn := &struct {
-		Players *team.Players
+		Players *briscola.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
 		Players: g.Players(),
@@ -64,7 +63,7 @@ func TestAiGameWithNoSide(t *testing.T) {
 	Run(g)
 
 	scoreIn := &struct {
-		Players *team.Players
+		Players *briscola.Players
 		Method  func(int) (interface{ GetPoints() uint32 }, error)
 	}{
 		Players: g.Players(),

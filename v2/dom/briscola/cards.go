@@ -2,7 +2,6 @@ package briscola
 
 import (
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 )
 
 type Deck struct{ set.Cards }
@@ -31,7 +30,7 @@ func (c PlayedCards) Pile() *set.Cards {
 }
 
 func Distribute(g *struct {
-	Players  team.Players
+	Players  Players
 	Deck     *Deck
 	HandSize int
 }) {

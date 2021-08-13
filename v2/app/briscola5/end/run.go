@@ -3,13 +3,12 @@ package end
 import (
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/dom/briscola/player"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
 func Run(g struct {
 	PlayedCards  briscola.PlayedCards
-	Players      team.Players
+	Players      briscola.Players
 	BriscolaCard briscola.Card
 	Side         briscola5.Side
 }) {

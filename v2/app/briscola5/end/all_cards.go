@@ -3,17 +3,16 @@ package end
 import (
 	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
-	"github.com/mcaci/msdb5/v2/dom/briscola/team"
 	"github.com/mcaci/msdb5/v2/dom/briscola5"
 )
 
 type allCards struct {
-	all     team.Players
+	all     briscola.Players
 	side    briscola5.Side
 	onTable *briscola.PlayedCards
 }
 
-func newAllCards(players team.Players, side briscola5.Side, onTable *briscola.PlayedCards) *allCards {
+func newAllCards(players briscola.Players, side briscola5.Side, onTable *briscola.PlayedCards) *allCards {
 	return &allCards{
 		all:     players,
 		side:    side,
