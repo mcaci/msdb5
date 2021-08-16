@@ -47,7 +47,7 @@ func Run(g struct {
 			continue
 		}
 		briscola.Collect(playedCards, (g.Players)[plIdx])
-		hnd.Add(g.Deck.Top())
+		// hnd.Add(g.Deck.Top())
 	}
 	return struct{ OnBoard briscola.PlayedCards }{
 		OnBoard: *playedCards,
