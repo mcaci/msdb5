@@ -5,6 +5,7 @@ import (
 	"math/rand"
 	"time"
 
+	briscolapp "github.com/mcaci/msdb5/v2/app/briscola"
 	"github.com/mcaci/msdb5/v2/app/briscola/end"
 	"github.com/mcaci/msdb5/v2/app/misc"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
@@ -14,6 +15,7 @@ import (
 func Run(g struct {
 	Players      misc.Players
 	BriscolaCard briscola.Card
+	Deck         briscolapp.Deck
 	EndRound     func(*struct {
 		PlayedCards  briscola.PlayedCards
 		BriscolaCard briscola.Card
@@ -45,6 +47,7 @@ func Run(g struct {
 			continue
 		}
 		briscola.Collect(playedCards, (g.Players)[plIdx])
+		hnd.Add(g.Deck.Top())
 	}
 	return struct{ OnBoard briscola.PlayedCards }{
 		OnBoard: *playedCards,
