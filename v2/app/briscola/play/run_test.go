@@ -2,6 +2,7 @@ package play
 
 import (
 	"log"
+	"strconv"
 	"testing"
 
 	"github.com/mcaci/ita-cards/set"
@@ -11,13 +12,13 @@ import (
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
-func TestAiGameWithSide(t *testing.T) {
+func TestAiGame2P(t *testing.T) {
 	// setup ai game
 	g := briscolapp.NewGame(&briscolapp.Options{WithName: "test"})
 
 	pls := g.Players()
 	for i := range *pls {
-		(*pls)[i] = misc.New(&misc.Options{For2P: true})
+		(*pls)[i] = misc.New(&misc.Options{Name: "Player" + strconv.Itoa(i), For2P: true})
 		(*pls)[i].Hand().Add(g.Deck().Top())
 		(*pls)[i].Hand().Add(g.Deck().Top())
 		(*pls)[i].Hand().Add(g.Deck().Top())

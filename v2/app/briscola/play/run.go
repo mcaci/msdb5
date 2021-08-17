@@ -31,23 +31,37 @@ func Run(g struct {
 
 	for !end.Cond(&end.Opts{Players: g.Players}) {
 		rand.Seed(time.Now().Unix())
-		hnd := g.Players[plIdx].Hand()
-		info := Round(&RoundOpts{
-			PlHand:       hnd,
+		info1 := Round(&RoundOpts{
+			PlHand:       g.Players[plIdx].Hand(),
 			PlIdx:        plIdx,
-			CardIdx:      uint8(rand.Intn(len(*hnd))),
+			CardIdx:      uint8(rand.Intn(len(*g.Players[plIdx].Hand()))),
 			PlayedCards:  playedCards,
 			NPlayers:     uint8(len(g.Players)),
 			BriscolaCard: g.BriscolaCard,
 			EndRound:     g.EndRound,
 		})
-		playedCards = info.OnBoard
-		plIdx = info.NextPl
-		if !info.NextRnd {
-			continue
+		info2 := Round(&RoundOpts{
+			PlHand:       g.Players[info1.NextPl].Hand(),
+			PlIdx:        info1.NextPl,
+			CardIdx:      uint8(rand.Intn(len(*g.Players[info1.NextPl].Hand()))),
+			PlayedCards:  playedCards,
+			NPlayers:     uint8(len(g.Players)),
+			BriscolaCard: g.BriscolaCard,
+			EndRound:     g.EndRound,
+		})
+
+		rWin := g.Players[info2.NextPl]
+		rLos := g.Players[(info2.NextPl+1)%2]
+		briscola.Collect(playedCards, rWin)
+		switch len(g.Deck.Cards) {
+		case 0:
+		case 1:
+			rWin.Hand().Add(g.Deck.Top())
+			rLos.Hand().Add(g.BriscolaCard.Item)
+		default:
+			rWin.Hand().Add(g.Deck.Top())
+			rLos.Hand().Add(g.Deck.Top())
 		}
-		briscola.Collect(playedCards, (g.Players)[plIdx])
-		// hnd.Add(g.Deck.Top())
 	}
 	return struct{ OnBoard briscola.PlayedCards }{
 		OnBoard: *playedCards,
