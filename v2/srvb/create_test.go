@@ -1,6 +1,7 @@
 package srvb_test
 
 import (
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -32,4 +33,29 @@ func TestCreation(t *testing.T) {
 	if string(b) != expected {
 		t.Fatalf("expecting %v got %v", expected, string(b))
 	}
+}
+
+func TestRouting(t *testing.T) {
+	srv := httptest.NewServer(srvb.Handler())
+	defer srv.Close()
+
+	res, err := http.Get(fmt.Sprintf("%s/create", srv.URL))
+	if err != nil {
+		t.Fatalf("could not send GET request: %v", err)
+	}
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusOK {
+		t.Errorf("expected status OK; got %v", res.StatusCode)
+	}
+
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Fatalf("could not read response: %v", err)
+	}
+
+	expected := "OK"
+	if string(b) != expected {
+		t.Fatalf("expecting %v got %v", expected, string(b))
+	}
+
 }

@@ -8,8 +8,7 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/create", srvb.Create)
-	err := http.ListenAndServe(":8080", nil)
+	err := http.ListenAndServe(":8080", srvb.Handler())
 	if err != nil {
 		log.Fatal(err)
 	}
