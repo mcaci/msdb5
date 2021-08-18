@@ -1,4 +1,4 @@
-package end
+package briscola
 
 import (
 	"testing"
@@ -40,7 +40,7 @@ func TestEndRound(t *testing.T) {
 	}
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-			end := Cond(&tc.in)
+			end := End(&tc.in)
 			if tc.end != end {
 				t.Errorf("Expecting end condition to be %t but was not. Input info: %v", tc.end, tc.in)
 			}

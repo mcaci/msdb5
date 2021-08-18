@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/mcaci/ita-cards/set"
-	"github.com/mcaci/msdb5/v2/app/briscola/play"
+	briscolapp "github.com/mcaci/msdb5/v2/app/briscola"
 	"github.com/mcaci/msdb5/v2/app/misc"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/frw/srv/assets"
@@ -22,9 +22,9 @@ func Play(w http.ResponseWriter, r *http.Request) {
 	continueIfNoErr(w, err)
 
 	pl := (*s.Game.Players())[idx]
-	var info *play.RoundInfo
+	var info *briscolapp.RoundInfo
 	go func() {
-		info = play.Round(&play.RoundOpts{
+		info = briscolapp.Round(&briscolapp.RoundOpts{
 			PlIdx:        idx,
 			PlHand:       pl.Hand(),
 			CardIdx:      uint8(cardn),

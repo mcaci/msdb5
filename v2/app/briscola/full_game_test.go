@@ -1,21 +1,64 @@
-package play
+package briscola
 
 import (
 	"log"
 	"math/rand"
+	"strconv"
+	"testing"
 	"time"
 
-	briscolapp "github.com/mcaci/msdb5/v2/app/briscola"
-	"github.com/mcaci/msdb5/v2/app/briscola/end"
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/misc"
 	"github.com/mcaci/msdb5/v2/dom/briscola"
 	"github.com/mcaci/msdb5/v2/pb"
 )
 
-func Run(g struct {
+func TestAiGame2P(t *testing.T) {
+	// setup ai game
+	g := NewGame(&Options{WithName: "test"})
+
+	pls := g.Players()
+	for i := range *pls {
+		(*pls)[i] = misc.New(&misc.Options{Name: "Player" + strconv.Itoa(i), For2P: true})
+		(*pls)[i].Hand().Add(g.Deck().Top())
+		(*pls)[i].Hand().Add(g.Deck().Top())
+		(*pls)[i].Hand().Add(g.Deck().Top())
+	}
+	Set(briscola.Card{Item: g.Deck().Top()}, g)
+
+	// run ai game
+	run(struct {
+		Players      misc.Players
+		BriscolaCard briscola.Card
+		Deck         Deck
+		EndRound     func(*struct {
+			PlayedCards  briscola.PlayedCards
+			BriscolaCard briscola.Card
+		}) (*pb.Index, error)
+	}{
+		Players:      *g.Players(),
+		BriscolaCard: *g.Briscola(),
+		Deck:         *g.Deck(),
+		EndRound:     endDirect,
+	})
+
+	scoreIn := &struct {
+		Players *misc.Players
+		Method  func(int) (interface{ GetPoints() uint32 }, error)
+	}{
+		Players: g.Players(),
+		Method: func(i int) (interface{ GetPoints() uint32 }, error) {
+			p := briscola.Score(*(*g.Players())[i].Pile())
+			return p, nil
+		},
+	}
+	log.Println("Score", PrintScore(scoreIn))
+}
+
+func run(g struct {
 	Players      misc.Players
 	BriscolaCard briscola.Card
-	Deck         briscolapp.Deck
+	Deck         Deck
 	EndRound     func(*struct {
 		PlayedCards  briscola.PlayedCards
 		BriscolaCard briscola.Card
@@ -29,7 +72,7 @@ func Run(g struct {
 		log.Fatal("didn't expect to arrive at this point")
 	}
 
-	for !end.Cond(&end.Opts{Players: g.Players}) {
+	for !End(&Opts{Players: g.Players}) {
 		rand.Seed(time.Now().Unix())
 		info1 := Round(&RoundOpts{
 			PlHand:       g.Players[plIdx].Hand(),
@@ -66,4 +109,15 @@ func Run(g struct {
 	return struct{ OnBoard briscola.PlayedCards }{
 		OnBoard: *playedCards,
 	}
+}
+
+func endDirect(opts *struct {
+	PlayedCards  briscola.PlayedCards
+	BriscolaCard briscola.Card
+}) (*pb.Index, error) {
+	pbcards := make(set.Cards, len(*opts.PlayedCards.Cards))
+	for i := range pbcards {
+		pbcards[i] = (*opts.PlayedCards.Cards)[i]
+	}
+	return &pb.Index{Id: uint32(briscola.Winner(pbcards, opts.BriscolaCard.Seed()))}, nil
 }
