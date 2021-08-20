@@ -8,11 +8,11 @@ import (
 
 func TestSideDeckProperty(t *testing.T) {
 	g := NewGame(WithDefaultOptions)
-	if g.opts.WithName != "" {
+	if g.Name != "" {
 		t.Errorf("error")
 	}
 	g = NewGame(&Options{WithName: "test"})
-	if g.opts.WithName != "test" {
+	if g.Name != "test" {
 		t.Errorf("error")
 	}
 }

@@ -10,10 +10,11 @@ import (
 
 // Game struct
 type Game struct {
-	opts         *Options
-	players      misc.Players
-	briscolaCard briscola.Card
-	board        *briscola.PlayedCards
+	// Game name
+	Name         string                `json:"name"`
+	players      misc.Players          `json:"players"`
+	briscolaCard briscola.Card         `json:"briscola"`
+	board        *briscola.PlayedCards `json:"board"`
 	registration func(string) error
 	deck         *Deck
 }
@@ -28,7 +29,7 @@ var WithDefaultOptions = &Options{}
 func NewGame(gOpts *Options) *Game {
 	p, rf := misc.NewWithRegistrator(2)
 	g := Game{
-		opts:         gOpts,
+		Name:         gOpts.WithName,
 		players:      *p,
 		deck:         NewDeck(),
 		board:        briscola.NewPlayedCards(2),
@@ -42,7 +43,7 @@ func (g *Game) Deck() *Deck                  { return g.deck }
 func (g *Game) Board() *briscola.PlayedCards { return g.board }
 func (g *Game) BoardCards() *set.Cards       { return g.board.Cards }
 func (g *Game) Briscola() *briscola.Card     { return &g.briscolaCard }
-func (g *Game) Created(name string) bool     { return g.opts != nil && name == g.opts.WithName }
+func (g *Game) Created(name string) bool     { return name == g.Name }
 func Register(name string, g *Game) error    { return g.registration(name) }
 func Set(card briscola.Card, g *Game)        { g.briscolaCard = card }
 
