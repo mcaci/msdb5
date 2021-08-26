@@ -14,7 +14,6 @@ import (
 )
 
 func TestCreation(t *testing.T) {
-	const url = "localhost:8080/create"
 	td := []struct {
 		name     string
 		method   string
@@ -25,6 +24,7 @@ func TestCreation(t *testing.T) {
 		{"Game creation with name", "POST", strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), "newgame"},
 		{"Game creation with name and GET", "GET", strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "abc")), "abc"},
 	}
+	const url = "localhost:8080/create"
 	for _, tc := range td {
 		t.Run(tc.name, func(t *testing.T) {
 			req, err := http.NewRequest(tc.method, url, tc.reqBody)
@@ -34,23 +34,30 @@ func TestCreation(t *testing.T) {
 			if tc.method == "POST" {
 				req.Header.Set("Content-Type", "application/json")
 			}
+
 			rec := httptest.NewRecorder()
 			srvb.Create(rec, req)
 			res := rec.Result()
 			defer res.Body.Close()
 			if res.StatusCode != http.StatusOK {
-				t.Errorf("expected status OK; got %v", res.StatusCode)
+				t.Fatalf("expected status OK; got %v", res.StatusCode)
 			}
-
-			var rs struct {
-				Name string `json:"name"`
+			actual, err := func(res *http.Response) (string, error) {
+				var rs struct {
+					Name string `json:"name"`
+				}
+				err := json.NewDecoder(res.Body).Decode(&rs)
+				if err != nil {
+					return "", err
+				}
+				return rs.Name, nil
+			}(res)
+			if err != nil {
+				t.Fatalf("could not read response: %v", err)
 			}
-			rserr := json.NewDecoder(res.Body).Decode(&rs)
-			if rserr != nil {
-				t.Fatalf("%v", rserr)
-			}
-			if rs.Name != tc.expected {
-				t.Fatalf("expecting %v got %v", tc.expected, rs.Name)
+			expected := tc.expected
+			if actual != expected {
+				t.Fatalf("expecting %v got %v", expected, actual)
 			}
 		})
 	}
@@ -67,16 +74,20 @@ func TestRouting(t *testing.T) {
 	}
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
-		t.Errorf("expected status OK; got %v", res.StatusCode)
+		t.Fatalf("expected status OK; got %v", res.StatusCode)
 	}
-
-	b, err := ioutil.ReadAll(res.Body)
+	actual, err := func(res *http.Response) (string, error) {
+		b, err := ioutil.ReadAll(res.Body)
+		if err != nil {
+			return "", err
+		}
+		return string(b), nil
+	}(res)
 	if err != nil {
 		t.Fatalf("could not read response: %v", err)
 	}
-
 	expected := "EOF"
-	if string(b) != expected {
-		t.Fatalf("expecting %v got %v", expected, string(b))
+	if actual != expected {
+		t.Fatalf("expecting %v got %v", expected, actual)
 	}
 }
