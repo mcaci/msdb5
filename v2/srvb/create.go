@@ -2,6 +2,7 @@ package srvb
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/mcaci/msdb5/v2/app/briscola"
@@ -13,11 +14,11 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(err.Error()))
 		return
 	}
-	g := briscola.NewGame(opts)
-	if g == nil {
-		http.Error(w, "game could not be created", http.StatusBadRequest)
+	if g != nil {
+		http.Error(w, "one game already created, cannot create more", http.StatusInternalServerError)
 		return
 	}
+	g = briscola.NewGame(opts)
 	json.NewEncoder(w).Encode(g)
 }
 
@@ -31,14 +32,7 @@ func options(r *http.Request) (*briscola.Options, error) {
 	}
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not process the request: %v", err)
 	}
 	return &briscola.Options{WithName: req.Name}, nil
-
-}
-
-func Handler() http.Handler {
-	r := http.NewServeMux()
-	r.HandleFunc("/create", Create)
-	return r
 }
