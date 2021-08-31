@@ -9,13 +9,14 @@ import (
 )
 
 func Create(w http.ResponseWriter, r *http.Request) {
-	opts, err := options(r)
-	if err != nil {
-		w.Write([]byte(err.Error()))
-		return
-	}
+
 	if g != nil {
 		http.Error(w, "one game already created, cannot create more", http.StatusInternalServerError)
+		return
+	}
+	opts, err := options(r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	g = briscola.NewGame(opts)
