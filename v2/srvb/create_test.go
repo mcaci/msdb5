@@ -23,15 +23,15 @@ func TestCreation(t *testing.T) {
 		tester   func(*http.Response, string) error
 		expected string
 	}{
-		{"Default game creation", http.MethodGet, nil, testOK, ""},
+		{"Default game creation", http.MethodGet, nil, testCreateOK, ""},
 		// curl -XPOST  -H "Content-Type: application/json" localhost:8080/create -d '{"name":"newgame"}'
-		{"Game creation with name", http.MethodPost, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), testOK, "newgame"},
-		{"Game creation with name and GET", http.MethodGet, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "abc")), testOK, "abc"},
-		{"Game creation with error", http.MethodPost, strings.NewReader(`'{"name":"na"}`), testKO, "could not process the request"},
+		{"Game creation with name", http.MethodPost, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), testCreateOK, "newgame"},
+		{"Game creation with name and GET", http.MethodGet, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "abc")), testCreateOK, "abc"},
+		{"Game creation with error", http.MethodPost, strings.NewReader(`'{"name":"na"}`), testCreateKO, "could not process the request"},
 	}
 	for _, tc := range td {
 		t.Run(tc.name, func(t *testing.T) {
-			res, err := send(http.NewRequest(tc.method, crUrl, tc.reqBody))
+			res, err := sendCreate(http.NewRequest(tc.method, crUrl, tc.reqBody))
 			if err != nil {
 				t.Fatalf("could not send the request: %v", err)
 			}
@@ -53,11 +53,11 @@ func TestCanCreateOnlyOneGame(t *testing.T) {
 		tester   func(*http.Response, string) error
 		expected string
 	}{
-		{"first request", strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "gg")), testOK, "gg"},
-		{"second request", strings.NewReader(`{"name":"errgame"}`), testKO, "one game already created, cannot create more"},
+		{"first request", strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "gg")), testCreateOK, "gg"},
+		{"second request", strings.NewReader(`{"name":"errgame"}`), testCreateKO, "one game already created, cannot create more"},
 	}
 	for _, tc := range td {
-		res, err := send(http.NewRequest(http.MethodPost, crUrl, tc.reqBody))
+		res, err := sendCreate(http.NewRequest(http.MethodPost, crUrl, tc.reqBody))
 		if err != nil {
 			t.Fatalf("could not send the request: %v", err)
 		}
@@ -71,19 +71,17 @@ func TestCanCreateOnlyOneGame(t *testing.T) {
 	}
 }
 
-func send(req *http.Request, err error) (*http.Response, error) {
+func sendCreate(req *http.Request, err error) (*http.Response, error) {
 	if err != nil {
 		return nil, fmt.Errorf("could not create request: %v", err)
 	}
-	if req.Method == http.MethodPost {
-		req.Header.Set("Content-Type", "application/json")
-	}
+	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
 	srvb.Create(rec, req)
 	return rec.Result(), nil
 }
 
-func testOK(res *http.Response, expected string) error {
+func testCreateOK(res *http.Response, expected string) error {
 	if res.StatusCode != http.StatusOK {
 		return fmt.Errorf("expected status OK; got %v", res.StatusCode)
 	}
@@ -106,7 +104,7 @@ func testOK(res *http.Response, expected string) error {
 	return nil
 }
 
-func testKO(res *http.Response, expected string) error {
+func testCreateKO(res *http.Response, expected string) error {
 	if res.StatusCode != http.StatusInternalServerError {
 		return fmt.Errorf("expected status InternalServerError; got %v", res.StatusCode)
 	}

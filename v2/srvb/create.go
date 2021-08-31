@@ -9,7 +9,6 @@ import (
 )
 
 func Create(w http.ResponseWriter, r *http.Request) {
-
 	if g != nil {
 		http.Error(w, "one game already created, cannot create more", http.StatusInternalServerError)
 		return
