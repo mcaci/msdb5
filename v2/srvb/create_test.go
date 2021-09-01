@@ -15,59 +15,44 @@ import (
 
 const crUrl = "localhost:8080/create"
 
+type crReq struct {
+	body     io.Reader
+	tester   func(*http.Response, string) error
+	expected string
+}
+
 func TestCreation(t *testing.T) {
 	td := []struct {
-		name     string
-		method   string
-		reqBody  io.Reader
-		tester   func(*http.Response, string) error
-		expected string
+		name   string
+		method string
+		reqs   []crReq
 	}{
-		{"Default game creation", http.MethodGet, nil, testCreateOK, ""},
+		{"Default game creation", http.MethodGet, []crReq{{nil, testCreateOK, ""}}},
 		// curl -XPOST  -H "Content-Type: application/json" localhost:8080/create -d '{"name":"newgame"}'
-		{"Game creation with name", http.MethodPost, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), testCreateOK, "newgame"},
-		{"Game creation with name and GET", http.MethodGet, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "abc")), testCreateOK, "abc"},
-		{"Game creation with error", http.MethodPost, strings.NewReader(`'{"name":"na"}`), testCreateKO, "could not process the request"},
+		{"Game creation with name", http.MethodPost, []crReq{{strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), testCreateOK, "newgame"}}},
+		{"Game creation with name and GET", http.MethodGet, []crReq{{strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "abc")), testCreateOK, "abc"}}},
+		{"Game creation with error", http.MethodPost, []crReq{{strings.NewReader(`'{"name":"na"}`), testCreateKO, "could not process the request"}}},
+		{"Cannot create two games", http.MethodPost, []crReq{
+			{strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "gg")), testCreateOK, "gg"},
+			{strings.NewReader(`{"name":"errgame"}`), testCreateKO, "one game already created, cannot create more"},
+		}},
 	}
 	for _, tc := range td {
 		t.Run(tc.name, func(t *testing.T) {
-			res, err := sendCreate(http.NewRequest(tc.method, crUrl, tc.reqBody))
-			if err != nil {
-				t.Fatalf("could not send the request: %v", err)
-			}
-			defer res.Body.Close()
-			if err := tc.tester(res, tc.expected); err != nil {
-				t.Fatalf("test failed because: %v", err)
+			for _, req := range tc.reqs {
+				res, err := sendCreate(http.NewRequest(tc.method, crUrl, req.body))
+				if err != nil {
+					t.Fatalf("could not send the request: %v", err)
+				}
+				defer res.Body.Close()
+				if err := req.tester(res, req.expected); err != nil {
+					t.Fatalf("test failed because: %v", err)
+				}
 			}
 			if err := cleanup(); err != nil {
 				t.Fatalf("test passed but cleanup failed because: %v", err)
 			}
 		})
-	}
-}
-
-func TestCanCreateOnlyOneGame(t *testing.T) {
-	td := []struct {
-		name     string
-		reqBody  io.Reader
-		tester   func(*http.Response, string) error
-		expected string
-	}{
-		{"first request", strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "gg")), testCreateOK, "gg"},
-		{"second request", strings.NewReader(`{"name":"errgame"}`), testCreateKO, "one game already created, cannot create more"},
-	}
-	for _, tc := range td {
-		res, err := sendCreate(http.NewRequest(http.MethodPost, crUrl, tc.reqBody))
-		if err != nil {
-			t.Fatalf("could not send the request: %v", err)
-		}
-		defer res.Body.Close()
-		if err := tc.tester(res, tc.expected); err != nil {
-			t.Fatalf("test failed because: %v", err)
-		}
-	}
-	if err := cleanup(); err != nil {
-		t.Fatalf("test passed but cleanup failed because: %v", err)
 	}
 }
 
