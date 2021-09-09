@@ -35,6 +35,11 @@ func TestSrvbOperations(t *testing.T) {
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
 		}, testOKFor(joinRes), "1"},
+		{"Two players join", []setup{
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame")), r: join},
+		}, testOKFor(joinRes), "2"},
 	}
 	for _, tc := range td {
 		t.Run(tc.name, func(t *testing.T) {
