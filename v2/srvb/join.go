@@ -24,10 +24,6 @@ func Join(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("could not process the request: %v", err), http.StatusBadRequest)
 		return
 	}
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
 	if g == nil {
 		http.Error(w, "cannot join game which is not created", http.StatusInternalServerError)
 		return

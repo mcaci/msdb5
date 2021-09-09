@@ -28,6 +28,8 @@ func TestSrvbOperations(t *testing.T) {
 			{body: strings.NewReader(`{"name":"errgame"}`), r: create},
 		}, testKOWith(http.StatusInternalServerError), "one game already created, cannot create more"},
 		{"Join with no body gives error", []setup{{body: nil, r: join}}, testKOWith(http.StatusBadRequest), "empty request"},
+		{"Join with wrong body gives error", []setup{{body: strings.NewReader(`'{"name":"na"}`), r: join}}, testKOWith(http.StatusBadRequest), "could not process the request"},
+		{"Join with incomplete body gives error", []setup{{body: strings.NewReader(`{"name":"na"}`), r: join}}, testKOWith(http.StatusInternalServerError), "cannot join"},
 		{"Join with no create gives error", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
 		}, testKOWith(http.StatusInternalServerError), "not created"},
