@@ -29,7 +29,6 @@ func TestSrvbOperations(t *testing.T) {
 		}, testKOWith(http.StatusInternalServerError), "one game already created, cannot create more"},
 		{"Join with no body gives error", []setup{{body: nil, r: join}}, testKOWith(http.StatusBadRequest), "empty request"},
 		{"Join with wrong body gives error", []setup{{body: strings.NewReader(`'{"name":"na"}`), r: join}}, testKOWith(http.StatusBadRequest), "could not process the request"},
-		{"Join with incomplete body gives error", []setup{{body: strings.NewReader(`{"name":"na"}`), r: join}}, testKOWith(http.StatusInternalServerError), "cannot join"},
 		{"Join with no create gives error", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
 		}, testKOWith(http.StatusInternalServerError), "not created"},
@@ -37,6 +36,14 @@ func TestSrvbOperations(t *testing.T) {
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "othergame")), r: join},
 		}, testKOWith(http.StatusInternalServerError), "different name"},
+		{"Join with no player name gives error", []setup{
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
+			{body: strings.NewReader(`{"game":"newgame"}`), r: join},
+		}, testKOWith(http.StatusInternalServerError), "no player name was given"},
+		{"Join with no game name gives error", []setup{
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
+			{body: strings.NewReader(`{"name":"player"}`), r: join},
+		}, testKOWith(http.StatusInternalServerError), "no game name was given"},
 		{"Join with game and player name", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},

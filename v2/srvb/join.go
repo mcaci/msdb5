@@ -20,30 +20,34 @@ func Join(w http.ResponseWriter, r *http.Request) {
 		Game string `json:"game"`
 	}
 	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil {
+	switch {
+	case err != nil:
 		http.Error(w, fmt.Sprintf("could not process the request: %v", err), http.StatusBadRequest)
 		return
-	}
-	if g == nil {
+	case req.Name == "":
+		http.Error(w, "no player name was given", http.StatusInternalServerError)
+		return
+	case req.Game == "":
+		http.Error(w, "no game name was given", http.StatusInternalServerError)
+		return
+	case g == nil:
 		http.Error(w, "cannot join game which is not created", http.StatusInternalServerError)
 		return
-	}
-	if g.Name != req.Game {
+	case g.Name != req.Game:
 		http.Error(w, "cannot join game with different name", http.StatusInternalServerError)
 		return
 	}
-	i, err := g.Players().Index(notJoined)
-	if err != nil {
-		http.Error(w, fmt.Sprintf("cannot join game for errors in selecting not joined player: %v", err), http.StatusInternalServerError)
-	}
 	err = briscola.Register(req.Name, g)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	i, err := g.Players().Index(func(p misc.Player) bool { return p.Name() == req.Name })
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	json.NewEncoder(w).Encode(&struct {
 		Number string `json:"number"`
-	}{Number: fmt.Sprint(i + 1)})
+	}{Number: fmt.Sprint(1 + i)})
 }
-
-func notJoined(p misc.Player) bool { return p.Name() == "" }
