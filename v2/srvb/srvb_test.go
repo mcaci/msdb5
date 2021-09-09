@@ -31,6 +31,10 @@ func TestSrvbOperations(t *testing.T) {
 		{"Join with no create gives error", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
 		}, testKOWith(http.StatusInternalServerError), "not created"},
+		{"Join on wrong game", []setup{
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "othergame")), r: join},
+		}, testKOWith(http.StatusInternalServerError), "different name"},
 		{"Join with game and player name", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
@@ -45,14 +49,14 @@ func TestSrvbOperations(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			res, err := exec(tc.setups...)
 			if err != nil {
-				t.Fatalf("could perform the setup: %v", err)
+				t.Errorf("could perform the setup: %v", err)
 			}
 			defer res.Body.Close()
 			if err := tc.tester(res, tc.expected); err != nil {
-				t.Fatalf("test failed because: %v", err)
+				t.Errorf("test failed because: %v", err)
 			}
 			if err := cleanup(); err != nil {
-				t.Fatalf("test passed but cleanup failed because: %v", err)
+				t.Errorf("test passed but cleanup failed because: %v", err)
 			}
 		})
 	}
