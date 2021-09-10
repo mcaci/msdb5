@@ -3,7 +3,6 @@ package srvb_test
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -14,65 +13,65 @@ import (
 
 func TestSrvbOperations(t *testing.T) {
 	td := []struct {
-		name     string
-		setups   []setup
-		tester   func(*http.Response, string) error
-		expected string
+		name               string
+		setups             []setup
+		expectedStatusCode int
+		expectedMsg        string
+		decoder            func(res *http.Response) (string, error)
 	}{
-		{"Creation with no body gives error", []setup{{body: nil, r: create}}, testKOWith(http.StatusInternalServerError), ""},
+		{"Creation with no body gives error", []setup{{body: nil, r: create}}, http.StatusBadRequest, "", koDec},
 		// curl -XPOST  -H "Content-Type: application/json" localhost:8080/create -d '{"name":"newgame"}'
-		{"Game creation with name", []setup{{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create}}, testOKFor(creationRes), "newgame"},
-		{"Game creation with error", []setup{{body: strings.NewReader(`'{"name":"na"}`), r: create}}, testKOWith(http.StatusInternalServerError), "could not process the request"},
+		{"Game creation with name", []setup{{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create}}, http.StatusOK, "newgame", creationDec},
+		{"Game creation with error", []setup{{body: strings.NewReader(`'{"name":"na"}`), r: create}}, http.StatusInternalServerError, "could not process the request", koDec},
 		{"Cannot create two games", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "gg")), r: create},
 			{body: strings.NewReader(`{"name":"errgame"}`), r: create},
-		}, testKOWith(http.StatusInternalServerError), "one game already created, cannot create more"},
-		{"Join with no body gives error", []setup{{body: nil, r: join}}, testKOWith(http.StatusBadRequest), "empty request"},
-		{"Join with wrong body gives error", []setup{{body: strings.NewReader(`'{"name":"na"}`), r: join}}, testKOWith(http.StatusBadRequest), "could not process the request"},
+		}, http.StatusInternalServerError, "one game already created, cannot create more", koDec},
+		{"Join with no body gives error", []setup{{body: nil, r: join}}, http.StatusBadRequest, "empty request", koDec},
+		{"Join with wrong body gives error", []setup{{body: strings.NewReader(`'{"name":"na"}`), r: join}}, http.StatusBadRequest, "could not process the request", koDec},
 		{"Join with no create gives error", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
-		}, testKOWith(http.StatusInternalServerError), "not created"},
+		}, http.StatusInternalServerError, "not created", koDec},
 		{"Join on wrong game", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "othergame")), r: join},
-		}, testKOWith(http.StatusInternalServerError), "different name"},
+		}, http.StatusInternalServerError, "different name", koDec},
 		{"Join with no player name gives error", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(`{"game":"newgame"}`), r: join},
-		}, testKOWith(http.StatusInternalServerError), "no player name was given"},
+		}, http.StatusInternalServerError, "no player name was given", koDec},
 		{"Join with no game name gives error", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(`{"name":"player"}`), r: join},
-		}, testKOWith(http.StatusInternalServerError), "no game name was given"},
+		}, http.StatusInternalServerError, "no game name was given", koDec},
 		{"Join with game and player name", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
-		}, testOKFor(joinRes), "1"},
+		}, http.StatusOK, "1", joinDec},
 		{"Two players join", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame")), r: join},
-		}, testOKFor(joinRes), "2"},
+		}, http.StatusOK, "2", joinDec},
 		{"Three players joining gives error", []setup{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), r: create},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), r: join},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame")), r: join},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "onemore", "newgame")), r: join},
-		}, testKOWith(http.StatusInternalServerError), "max players reached"},
+		}, http.StatusInternalServerError, "max players reached", koDec},
 	}
 	for _, tc := range td {
+		tester := testResWith(tc.expectedStatusCode, tc.decoder)
 		t.Run(tc.name, func(t *testing.T) {
 			res, err := exec(tc.setups...)
 			if err != nil {
 				t.Errorf("could perform the setup: %v", err)
 			}
 			defer res.Body.Close()
-			if err := tc.tester(res, tc.expected); err != nil {
+			if err := tester(res, tc.expectedMsg); err != nil {
 				t.Errorf("test failed because: %v", err)
 			}
-			if err := cleanup(); err != nil {
-				t.Errorf("test passed but cleanup failed because: %v", err)
-			}
+			srvb.Cleanup(httptest.NewRecorder(), nil)
 		})
 	}
 }
@@ -87,54 +86,12 @@ type setup struct {
 
 func exec(s ...setup) (*http.Response, error) {
 	var res *http.Response
-	for _, e := range s {
-		r, err := e.r.send(http.NewRequest(http.MethodPost, e.r.url(), e.body))
+	for _, el := range s {
+		r, err := el.r.send(http.NewRequest(http.MethodPost, el.r.url(), el.body))
 		if err != nil {
 			return nil, err
 		}
 		res = r
 	}
 	return res, nil
-}
-
-func cleanup() error {
-	const durl = "localhost:8080/dgame"
-	dreq, err := http.NewRequest(http.MethodDelete, durl, nil)
-	if err != nil {
-		return fmt.Errorf("could not send DELETE request: %v", err)
-	}
-	srvb.Delete(httptest.NewRecorder(), dreq)
-	return nil
-}
-
-func testOKFor(decode func(res *http.Response) (string, error)) func(*http.Response, string) error {
-	return func(res *http.Response, expected string) error {
-		if res.StatusCode != http.StatusOK {
-			return fmt.Errorf("expected status OK; got %v", res.StatusCode)
-		}
-		actual, err := decode(res)
-		if err != nil {
-			return fmt.Errorf("could not read response: %v", err)
-		}
-		if actual != expected {
-			return fmt.Errorf("expecting %v got %v", expected, actual)
-		}
-		return nil
-	}
-}
-
-func testKOWith(httpStatusCode int) func(*http.Response, string) error {
-	return func(res *http.Response, expected string) error {
-		if res.StatusCode != httpStatusCode {
-			return fmt.Errorf("expected status %d; got %d", httpStatusCode, res.StatusCode)
-		}
-		b, err := ioutil.ReadAll(res.Body)
-		if err != nil {
-			return fmt.Errorf("could not read error response: %v", err)
-		}
-		if actual := string(b); !strings.Contains(actual, expected) {
-			return fmt.Errorf("expecting %q to be in %q", expected, actual)
-		}
-		return nil
-	}
 }

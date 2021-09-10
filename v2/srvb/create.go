@@ -8,7 +8,13 @@ import (
 	"github.com/mcaci/msdb5/v2/app/briscola"
 )
 
+const CreateURL = "/create"
+
 func Create(w http.ResponseWriter, r *http.Request) {
+	if r.Body == nil {
+		http.Error(w, "empty request", http.StatusBadRequest)
+		return
+	}
 	if g != nil {
 		http.Error(w, "one game already created, cannot create more", http.StatusInternalServerError)
 		return
@@ -23,9 +29,6 @@ func Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func options(r *http.Request) (*briscola.Options, error) {
-	if r.Body == nil {
-		return briscola.WithDefaultOptions, nil
-	}
 	defer r.Body.Close()
 	var req struct {
 		Name string `json:"name"`

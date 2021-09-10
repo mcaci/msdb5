@@ -9,6 +9,8 @@ import (
 	"github.com/mcaci/msdb5/v2/app/misc"
 )
 
+const JoinURL = "/join"
+
 func Join(w http.ResponseWriter, r *http.Request) {
 	if r.Body == nil {
 		http.Error(w, "empty request", http.StatusBadRequest)

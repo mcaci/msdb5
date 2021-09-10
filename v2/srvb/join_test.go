@@ -9,6 +9,8 @@ import (
 	"github.com/mcaci/msdb5/v2/srvb"
 )
 
+const join = joinReq(host + srvb.JoinURL)
+
 type joinReq string
 
 func (j joinReq) url() string { return string(j) }
@@ -22,9 +24,7 @@ func (joinReq) send(req *http.Request, err error) (*http.Response, error) {
 	return rec.Result(), nil
 }
 
-const join = joinReq("localhost:8080/join")
-
-func joinRes(res *http.Response) (string, error) {
+func joinDec(res *http.Response) (string, error) {
 	var rs struct {
 		Number string `json:"number"`
 	}

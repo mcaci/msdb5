@@ -9,7 +9,7 @@ import (
 	"github.com/mcaci/msdb5/v2/srvb"
 )
 
-const create = createReq("localhost:8080/create")
+const create = createReq(host + srvb.CreateURL)
 
 type createReq string
 
@@ -24,7 +24,7 @@ func (createReq) send(req *http.Request, err error) (*http.Response, error) {
 	return rec.Result(), nil
 }
 
-func creationRes(res *http.Response) (string, error) {
+func creationDec(res *http.Response) (string, error) {
 	var rs struct {
 		Name string `json:"name"`
 	}

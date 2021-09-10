@@ -4,6 +4,7 @@ import "net/http"
 
 func Handler() http.Handler {
 	r := http.NewServeMux()
-	r.HandleFunc("/create", Create)
+	r.HandleFunc(CreateURL, Create)
+	r.HandleFunc(JoinURL, Join)
 	return r
 }
