@@ -14,14 +14,12 @@ func TestRouting(t *testing.T) {
 	srv := httptest.NewServer(srvb.Handler())
 	defer srv.Close()
 	td := []struct {
-		name               string
-		pattern            string
-		decoder            func(*http.Response) (string, error)
-		expectedStatusCode int
-		expectedMsg        string
+		name    string
+		pattern string
+		v       interface{ verify(*http.Response) error }
 	}{
-		{"create", srvb.CreateURL, creationDec, http.StatusOK, "newgame"},
-		{"join", srvb.JoinURL, koDec, http.StatusInternalServerError, "no game name was given"},
+		{"create", srvb.CreateURL, crOK("newgame")},
+		{"join", srvb.JoinURL, intSrvErr("no game name was given")},
 	}
 	for _, tc := range td {
 		t.Run(fmt.Sprintf("test %s endpoint", tc.name), func(t *testing.T) {
@@ -30,8 +28,7 @@ func TestRouting(t *testing.T) {
 				t.Fatalf("could not send POST request: %v", err)
 			}
 			defer res.Body.Close()
-			tester := testResWith(tc.expectedStatusCode, tc.decoder)
-			if err := tester(res, tc.expectedMsg); err != nil {
+			if err := tc.v.verify(res); err != nil {
 				t.Fatalf("test failed, err is %v", err)
 			}
 			srvb.Cleanup(httptest.NewRecorder(), nil)

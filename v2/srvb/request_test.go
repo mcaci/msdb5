@@ -1,7 +1,6 @@
 package srvb_test
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -9,28 +8,32 @@ import (
 	"github.com/mcaci/msdb5/v2/srvb"
 )
 
-const create = createReq(host + srvb.CreateURL)
+const (
+	host   = "localhost:8080"
+	create = createReq(host + srvb.CreateURL)
+	join   = joinReq(host + srvb.JoinURL)
+)
 
 type createReq string
 
 func (c createReq) url() string { return string(c) }
 func (createReq) send(req *http.Request, err error) (*http.Response, error) {
+	return send(req, err, srvb.Create)
+}
+
+type joinReq string
+
+func (j joinReq) url() string { return string(j) }
+func (joinReq) send(req *http.Request, err error) (*http.Response, error) {
+	return send(req, err, srvb.Join)
+}
+
+func send(req *http.Request, err error, hf http.HandlerFunc) (*http.Response, error) {
 	if err != nil {
 		return nil, fmt.Errorf("could not create request: %v", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
-	srvb.Create(rec, req)
+	hf(rec, req)
 	return rec.Result(), nil
-}
-
-func creationDec(res *http.Response) (string, error) {
-	var rs struct {
-		Name string `json:"name"`
-	}
-	err := json.NewDecoder(res.Body).Decode(&rs)
-	if err != nil {
-		return "", err
-	}
-	return rs.Name, nil
 }
