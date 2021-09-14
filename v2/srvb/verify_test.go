@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
 type verifier interface {
@@ -29,8 +30,18 @@ type ok struct {
 	msg     string
 }
 
-func (ok) verifyStatusCode(statusCode int) error   { return verifyStatusCode(statusCode, http.StatusOK) }
-func (o ok) verifyMessage(resBody io.Reader) error { return verifyMessage(resBody, o.decoder, o.msg) }
+func (ok) verifyStatusCode(statusCode int) error { return verifyStatusCode(statusCode, http.StatusOK) }
+func (o ok) verifyMessage(resBody io.Reader) error {
+	actual, err := o.decoder(resBody)
+	if err != nil {
+		return fmt.Errorf("could not read response: %v", err)
+	}
+	expected := o.msg
+	if actual != expected {
+		return fmt.Errorf("expecting %q to be in %q", expected, actual)
+	}
+	return nil
+}
 
 func creationOK(msg string) verifier {
 	return ok{msg: msg, decoder: func(resBody io.Reader) (string, error) {
@@ -64,9 +75,16 @@ type ko struct {
 
 func (k ko) verifyStatusCode(statusCode int) error { return verifyStatusCode(statusCode, k.statusCode) }
 func (k ko) verifyMessage(resBody io.Reader) error {
-	return verifyMessage(resBody,
-		func(r io.Reader) (string, error) { b, err := ioutil.ReadAll(resBody); return string(b), err },
-		k.msg)
+	b, err := ioutil.ReadAll(resBody)
+	if err != nil {
+		return fmt.Errorf("could not read response: %v", err)
+	}
+	actual := string(b)
+	expected := k.msg
+	if !strings.Contains(actual, expected) {
+		return fmt.Errorf("expecting %q to be in %q", expected, actual)
+	}
+	return nil
 }
 
 func errWith(statusCode int, msg string) verifier { return ko{statusCode: statusCode, msg: msg} }
@@ -74,18 +92,6 @@ func errWith(statusCode int, msg string) verifier { return ko{statusCode: status
 func verifyStatusCode(statusCode1, statusCode2 int) error {
 	if statusCode1 != statusCode2 {
 		return fmt.Errorf("expected status %d; got %d", statusCode2, statusCode1)
-	}
-	return nil
-}
-
-func verifyMessage(resBody io.Reader, decoder func(io.Reader) (string, error), msg string) error {
-	actual, err := decoder(resBody)
-	if err != nil {
-		return fmt.Errorf("could not read response: %v", err)
-	}
-	expected := msg
-	if actual != expected {
-		return fmt.Errorf("expecting %q to be in %q", expected, actual)
 	}
 	return nil
 }
