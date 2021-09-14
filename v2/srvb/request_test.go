@@ -9,39 +9,27 @@ import (
 )
 
 const (
-	host   = "localhost:8080"
-	create = createReq(host + srvb.CreateURL)
-	join   = joinReq(host + srvb.JoinURL)
-	status = statusReq(host + srvb.StatusURL)
+	host = "localhost:8080"
 )
 
-type createReq string
+var (
+	create = req{urlStr: host + srvb.CreateURL, hf: srvb.Create}
+	join   = req{urlStr: host + srvb.JoinURL, hf: srvb.Join}
+	status = req{urlStr: host + srvb.StatusURL, hf: srvb.Status}
+)
 
-func (c createReq) url() string { return string(c) }
-func (createReq) send(req *http.Request, err error) (*http.Response, error) {
-	return send(req, err, srvb.Create)
+type req struct {
+	urlStr string
+	hf     http.HandlerFunc
 }
 
-type joinReq string
-
-func (j joinReq) url() string { return string(j) }
-func (joinReq) send(req *http.Request, err error) (*http.Response, error) {
-	return send(req, err, srvb.Join)
-}
-
-func send(req *http.Request, err error, hf http.HandlerFunc) (*http.Response, error) {
+func (r req) url() string { return r.urlStr }
+func (r req) send(req *http.Request, err error) (*http.Response, error) {
 	if err != nil {
 		return nil, fmt.Errorf("could not create request: %v", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
 	rec := httptest.NewRecorder()
-	hf(rec, req)
+	r.hf(rec, req)
 	return rec.Result(), nil
-}
-
-type statusReq string
-
-func (s statusReq) url() string { return string(s) }
-func (statusReq) send(req *http.Request, err error) (*http.Response, error) {
-	return send(req, err, srvb.Status)
 }
