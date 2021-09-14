@@ -57,6 +57,8 @@ func TestSrvbOperations(t *testing.T) {
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame")), req: join},
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "onemore", "newgame")), req: join},
 		}, errWith(http.StatusInternalServerError, "max players reached")},
+		{"Status with no game started", []operation{{body: nil, req: status}},
+			ok{decoder: func(r io.Reader) (string, error) { return "", nil }, msg: ""}},
 	}
 	for _, tc := range td {
 		t.Run(tc.name, func(t *testing.T) {

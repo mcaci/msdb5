@@ -12,6 +12,7 @@ const (
 	host   = "localhost:8080"
 	create = createReq(host + srvb.CreateURL)
 	join   = joinReq(host + srvb.JoinURL)
+	status = statusReq(host + srvb.StatusURL)
 )
 
 type createReq string
@@ -36,4 +37,11 @@ func send(req *http.Request, err error, hf http.HandlerFunc) (*http.Response, er
 	rec := httptest.NewRecorder()
 	hf(rec, req)
 	return rec.Result(), nil
+}
+
+type statusReq string
+
+func (s statusReq) url() string { return string(s) }
+func (statusReq) send(req *http.Request, err error) (*http.Response, error) {
+	return send(req, err, srvb.Status)
 }
