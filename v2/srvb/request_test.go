@@ -15,7 +15,6 @@ const (
 var (
 	create = req{urlStr: host + srvb.CreateURL, hf: srvb.Create}
 	join   = req{urlStr: host + srvb.JoinURL, hf: srvb.Join}
-	status = req{urlStr: host + srvb.StatusURL, hf: srvb.Status}
 )
 
 type req struct {
