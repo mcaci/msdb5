@@ -61,12 +61,12 @@ func TestSrvbOperations(t *testing.T) {
 		{"Play card with no game gives error", []operation{
 			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d"}`, "onemore", "newgame", 1)), req: play},
 		}, errWith(http.StatusInternalServerError, "not created")},
-		// {"First player plays, ok", []operation{
-		// 	{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), req: create},
-		// 	{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), req: join},
-		// 	{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame")), req: join},
-		// 	{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d"}`, "onemore", "mary", 1)), req: play},
-		// }, playOK("not created")},
+		{"First player plays, ok", []operation{
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")), req: create},
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame")), req: join},
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame")), req: join},
+			{body: strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d"}`, "onemore", "mary", 1)), req: play},
+		}, playOK("")},
 		{"Status with no game started", []operation{{body: nil, req: status}},
 			ok{decoder: func(r io.Reader) (string, error) { return "", nil }, msg: ""}},
 	}

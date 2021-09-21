@@ -2,10 +2,10 @@ package srvb
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/mcaci/ita-cards/card"
+	"github.com/mcaci/ita-cards/set"
 	"github.com/mcaci/msdb5/v2/app/briscola"
 	briscolad "github.com/mcaci/msdb5/v2/dom/briscola"
 )
@@ -33,18 +33,18 @@ func Play(w http.ResponseWriter, r *http.Request) {
 
 func roundOpts(r *http.Request) (*briscola.RoundOpts, error) {
 	defer r.Body.Close()
-	var req struct {
-		Name string `json:"name"`
-	}
-	err := json.NewDecoder(r.Body).Decode(&req)
-	if err != nil {
-		return nil, fmt.Errorf("could not process the request: %v", err)
-	}
+	// var req struct {
+	// 	Name string `json:"name"`
+	// }
+	// err := json.NewDecoder(r.Body).Decode(&req)
+	// if err != nil {
+	// 	return nil, fmt.Errorf("could not process the request: %v", err)
+	// }
 	return &briscola.RoundOpts{
 		PlIdx:        0,
-		PlHand:       nil,
+		PlHand:       &set.Cards{*card.MustID(1)},
 		CardIdx:      0,
-		PlayedCards:  nil,
+		PlayedCards:  &briscolad.PlayedCards{Cards: &set.Cards{}},
 		NPlayers:     2,
 		BriscolaCard: briscolad.Card{Item: *card.MustID(1)}}, nil
 }
