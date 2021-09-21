@@ -12,10 +12,13 @@ const (
 	host = "localhost:8080"
 )
 
+func url(pattern string) string { return host + pattern }
+
 var (
-	create = req{urlStr: host + srvb.CreateURL, hf: srvb.Create}
-	join   = req{urlStr: host + srvb.JoinURL, hf: srvb.Join}
-	status = req{urlStr: host + srvb.StatusURL, hf: srvb.Status}
+	create = req{urlStr: url(srvb.CreateURL), hf: srvb.Create}
+	join   = req{urlStr: url(srvb.JoinURL), hf: srvb.Join}
+	play   = req{urlStr: url(srvb.PlayURL), hf: srvb.Play}
+	status = req{urlStr: url(srvb.StatusURL), hf: srvb.Status}
 )
 
 type req struct {
