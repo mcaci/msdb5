@@ -17,7 +17,8 @@ const (
 
 type testInfo []uint8
 
-func (testInfo) Name() string      { return gameNameTest }
+func (testInfo) Game() string      { return gameNameTest }
+func (testInfo) Name() string      { return playerNameTest }
 func (ti testInfo) Cards() []uint8 { return ti }
 
 func TestSignalPlay(t *testing.T) {
