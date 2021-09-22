@@ -2,16 +2,21 @@ package srvp
 
 import "fmt"
 
-func Signal(signals <-chan struct {
-	Name    string
-	CardIDs []uint8
+type Carder interface {
+	Name() string
+	Cards() []uint8
+}
+
+func Signal(signals <-chan interface {
+	Name() string
+	Cards() []uint8
 }) struct {
 	URL      string
 	JsonBody string
 } {
-	<-signals
+	sig := <-signals
 	return struct {
 		URL      string
 		JsonBody string
-	}{URL: "http://localhost:8080/play", JsonBody: fmt.Sprintf(`{"name":"%s","game":"%s","card":"%d"}`, "tester", "newgame", 1)}
+	}{URL: "http://localhost:8080/play", JsonBody: fmt.Sprintf(`{"name":"%s","game":"%s","card":"%d"}`, "tester", "newgame", sig.Cards()[0])}
 }
