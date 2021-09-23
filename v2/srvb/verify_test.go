@@ -68,16 +68,7 @@ func joinOK(msg string) verifier {
 	}}
 }
 func playOK(msg string) verifier {
-	return ok{msg: msg, decoder: func(resBody io.Reader) (string, error) {
-		var rs struct {
-			Number string `json:"number"`
-		}
-		err := json.NewDecoder(resBody).Decode(&rs)
-		if err != nil {
-			return "", err
-		}
-		return rs.Number, nil
-	}}
+	return ok{msg: msg, decoder: func(resBody io.Reader) (string, error) { return "ok", nil }}
 }
 
 type ko struct {

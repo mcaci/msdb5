@@ -15,9 +15,9 @@ const (
 func url(pattern string) string { return host + pattern }
 
 var (
-	create = req{urlStr: url(srvb.CreateURL), hf: srvb.Create}
-	join   = req{urlStr: url(srvb.JoinURL), hf: srvb.Join}
-	play   = req{urlStr: url(srvb.PlayURL), hf: srvb.Play}
+	createReq = req{urlStr: url(srvb.CreateURL), hf: srvb.Create}
+	joinReq   = req{urlStr: url(srvb.JoinURL), hf: srvb.Join}
+	playReq   = req{urlStr: url(srvb.PlayURL), hf: srvb.Play}
 )
 
 type req struct {

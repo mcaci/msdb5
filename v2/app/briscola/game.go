@@ -12,9 +12,9 @@ import (
 type Game struct {
 	// Game name
 	Name         string                `json:"name"`
-	players      misc.Players          `json:"players"`
+	PlayerList   misc.Players          `json:"players"`
 	briscolaCard briscola.Card         `json:"briscola"`
-	board        *briscola.PlayedCards `json:"board"`
+	BoardSet     *briscola.PlayedCards `json:"board"`
 	registration func(string) error
 	deck         *Deck
 }
@@ -30,22 +30,31 @@ func NewGame(gOpts *Options) *Game {
 	p, rf := misc.NewWithRegistrator(2)
 	g := Game{
 		Name:         gOpts.WithName,
-		players:      *p,
+		PlayerList:   *p,
 		deck:         NewDeck(),
-		board:        briscola.NewPlayedCards(2),
+		BoardSet:     briscola.NewPlayedCards(2),
 		registration: rf,
 	}
 	return &g
 }
 
-func (g *Game) Players() *misc.Players       { return &g.players }
+func (g *Game) Players() *misc.Players       { return &g.PlayerList }
 func (g *Game) Deck() *Deck                  { return g.deck }
-func (g *Game) Board() *briscola.PlayedCards { return g.board }
-func (g *Game) BoardCards() *set.Cards       { return g.board.Cards }
+func (g *Game) Board() *briscola.PlayedCards { return g.BoardSet }
+func (g *Game) BoardCards() *set.Cards       { return g.BoardSet.Cards }
 func (g *Game) Briscola() *briscola.Card     { return &g.briscolaCard }
 func (g *Game) Created(name string) bool     { return name == g.Name }
-func Register(name string, g *Game) error    { return g.registration(name) }
-func Set(card briscola.Card, g *Game)        { g.briscolaCard = card }
+func Register(name string, g *Game) error {
+	err := g.registration(name)
+	if err != nil {
+		return err
+	}
+	if g.Players().None(func(p misc.Player) bool { return p.Name() == "" }) {
+		Start(g)
+	}
+	return nil
+}
+func Set(card briscola.Card, g *Game) { g.briscolaCard = card }
 
 func Start(g *Game) {
 	Distribute(&struct {
@@ -53,7 +62,7 @@ func Start(g *Game) {
 		Deck     *Deck
 		HandSize int
 	}{
-		Players:  g.players,
+		Players:  g.PlayerList,
 		Deck:     g.deck,
 		HandSize: 3,
 	})
@@ -61,5 +70,5 @@ func Start(g *Game) {
 }
 
 func (g Game) String() string {
-	return fmt.Sprintf("(Players: %v, Board: %v, Briscola: %v, Deck: %v)", g.players, g.board, g.briscolaCard, g.deck)
+	return fmt.Sprintf("(Players: %v, Board: %v, Briscola: %v, Deck: %v)", g.PlayerList, g.BoardSet, g.briscolaCard, g.deck)
 }
