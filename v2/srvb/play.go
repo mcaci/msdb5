@@ -24,7 +24,6 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	info := briscola.Play(g, opts)
 	json.NewEncoder(w).Encode(info)
 }
@@ -32,21 +31,18 @@ func Play(w http.ResponseWriter, r *http.Request) {
 type inTest struct {
 	G string `json:"game"`
 	N string `json:"name"`
-	I uint8  `json:"id"`
+	I uint8  `json:"index"`
 }
 
 func (i inTest) Name() string { return i.N }
 func (i inTest) Idx() uint8   { return i.I }
 
-func playOpts(r *http.Request) (interface {
-	Name() string
-	Idx() uint8
-}, error) {
+func playOpts(r *http.Request) (*inTest, error) {
 	defer r.Body.Close()
 	var req inTest
 	err := json.NewDecoder(r.Body).Decode(&req)
 	if err != nil {
 		return nil, fmt.Errorf("could not process the request: %v", err)
 	}
-	return req, nil
+	return &req, nil
 }
