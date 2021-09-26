@@ -25,26 +25,8 @@ func verify(res *http.Response, v verifier) error {
 	return nil
 }
 
-type ok struct {
-	decoder func(io.Reader) (string, error)
-	msg     string
-}
-
-func (ok) verifyStatusCode(statusCode int) error { return verifyStatusCode(statusCode, http.StatusOK) }
-func (o ok) verifyMessage(resBody io.Reader) error {
-	actual, err := o.decoder(resBody)
-	if err != nil {
-		return fmt.Errorf("could not read response: %v", err)
-	}
-	expected := o.msg
-	if actual != expected {
-		return fmt.Errorf("expecting %q to be in %q", expected, actual)
-	}
-	return nil
-}
-
-func creationOK(msg string) verifier {
-	return ok{msg: msg, decoder: func(resBody io.Reader) (string, error) {
+func creationOK(msg string) *expectedData {
+	return &expectedData{statusCode: http.StatusOK, msg: msg, decoder: func(resBody io.Reader) (string, error) {
 		var rs struct {
 			Name string `json:"name"`
 		}
@@ -55,8 +37,8 @@ func creationOK(msg string) verifier {
 		return rs.Name, nil
 	}}
 }
-func joinOK(msg string) verifier {
-	return ok{msg: msg, decoder: func(resBody io.Reader) (string, error) {
+func joinOK(msg string) *expectedData {
+	return &expectedData{statusCode: http.StatusOK, msg: msg, decoder: func(resBody io.Reader) (string, error) {
 		var rs struct {
 			Number string `json:"number"`
 		}
@@ -67,34 +49,48 @@ func joinOK(msg string) verifier {
 		return rs.Number, nil
 	}}
 }
-func playOK(msg string) verifier {
-	return ok{msg: msg, decoder: func(resBody io.Reader) (string, error) { return "ok", nil }}
+func playOK(msg string) *expectedData {
+	return &expectedData{statusCode: http.StatusOK, msg: msg, decoder: func(resBody io.Reader) (string, error) { return "ok", nil }}
 }
 
-type ko struct {
+func errWith(statusCode int, msg string) *expectedData {
+	return &expectedData{statusCode: statusCode, msg: msg, decoder: func(resBody io.Reader) (string, error) {
+		b, err := ioutil.ReadAll(resBody)
+		if err != nil {
+			return "", err
+		}
+		return string(b), err
+	}}
+}
+
+type expectedData struct {
 	statusCode int
+	decoder    func(io.Reader) (string, error)
 	msg        string
 }
 
-func (k ko) verifyStatusCode(statusCode int) error { return verifyStatusCode(statusCode, k.statusCode) }
-func (k ko) verifyMessage(resBody io.Reader) error {
-	b, err := ioutil.ReadAll(resBody)
-	if err != nil {
-		return fmt.Errorf("could not read response: %v", err)
-	}
-	actual := string(b)
-	expected := k.msg
-	if !strings.Contains(actual, expected) {
-		return fmt.Errorf("expecting %q to be in %q", expected, actual)
+func (ed *expectedData) verifyStatusCode(statusCode int) error {
+	if ed.statusCode != statusCode {
+		return fmt.Errorf("expected status %d; got %d", ed.statusCode, statusCode)
 	}
 	return nil
 }
-
-func errWith(statusCode int, msg string) verifier { return ko{statusCode: statusCode, msg: msg} }
-
-func verifyStatusCode(statusCode1, statusCode2 int) error {
-	if statusCode1 != statusCode2 {
-		return fmt.Errorf("expected status %d; got %d", statusCode2, statusCode1)
+func (ed *expectedData) verifyMessage(resBody io.Reader) error {
+	actual, err := ed.decoder(resBody)
+	if err != nil {
+		return fmt.Errorf("could not read response: %v", err)
+	}
+	expected := ed.msg
+	switch ed.statusCode {
+	case http.StatusOK:
+		if actual != expected {
+			return fmt.Errorf("expecting %q to be %q", expected, actual)
+		}
+		return nil
+	default:
+		if !strings.Contains(actual, expected) {
+			return fmt.Errorf("expecting %q to be in %q", expected, actual)
+		}
 	}
 	return nil
 }
