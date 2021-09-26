@@ -20,6 +20,7 @@ func TestRouting(t *testing.T) {
 	}{
 		{"create", srvb.CreateURL, creationOK("newgame")},
 		{"join", srvb.JoinURL, errWith(http.StatusInternalServerError, "no game name was given")},
+		{"play", srvb.PlayURL, errWith(http.StatusInternalServerError, "not created")},
 	}
 	for _, tc := range td {
 		t.Run(fmt.Sprintf("test %s endpoint", tc.name), func(t *testing.T) {
