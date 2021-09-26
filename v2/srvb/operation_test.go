@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 )
+
 type operation struct {
 	body io.Reader
 	url  string
