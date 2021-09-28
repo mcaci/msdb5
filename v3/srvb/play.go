@@ -25,8 +25,12 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	info := briscola.Play(g, req)
-	json.NewEncoder(w).Encode(info)
+	err = briscola.Play(g, req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// json.NewEncoder(w).Encode(info)
 }
 
 type inTest struct {

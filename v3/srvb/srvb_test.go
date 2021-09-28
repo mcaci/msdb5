@@ -79,6 +79,20 @@ func TestSrvbOperations(t *testing.T) {
 			join(defaultGame("michi")),
 			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "mary", newgame, 1))),
 		}, playOK("ok")},
+		{"First player cannot play twice", []*operation{
+			create(withName(newgame)),
+			join(defaultGame("mary")),
+			join(defaultGame("michi")),
+			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "mary", newgame, 1))),
+			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "mary", newgame, 0))),
+		}, errWith(http.StatusInternalServerError, "not expected to play")},
+		{"First player cannot play twice", []*operation{
+			create(withName(newgame)),
+			join(defaultGame("mary")),
+			join(defaultGame("michi")),
+			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "mary", newgame, 1))),
+			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "michi", newgame, 0))),
+		}, playOK("ok")},
 	}
 	for _, tc := range td {
 		t.Run(tc.name, func(t *testing.T) {
