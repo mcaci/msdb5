@@ -14,6 +14,7 @@ type Game struct {
 	BoardSet     *PlayedCards `json:"board"`
 	registration func(string) error
 	deck         *Deck
+	next         int
 }
 
 type Options struct {
@@ -44,7 +45,8 @@ func NewGame(gOpts *Options) *Game {
 }
 
 func (g *Game) Players() *Players   { return g.PlayerList }
-func (g *Game) Board() *PlayedCards { return g.BoardSet }
+func (g *Game) board() *PlayedCards { return g.BoardSet }
+func (g *Game) deckCards() *Deck    { return g.deck }
 func (g *Game) BriscolaCard() *Card { return &g.Briscola }
 func Register(name string, g *Game) error {
 	err := g.registration(name)
@@ -56,6 +58,9 @@ func Register(name string, g *Game) error {
 	}
 	return nil
 }
+func (g *Game) InTurn() *Player            { return (*g.Players())[g.next] }
+func (g *Game) nextPlayer(next func() int) { g.next = next() }
+func (g *Game) roundrobin() int            { return (g.next + 1) % 2 }
 
 func start(g *Game) {
 	// distribute cards
@@ -70,5 +75,5 @@ func start(g *Game) {
 }
 
 func (g Game) String() string {
-	return fmt.Sprintf("(Players: %v, Board: %v, Briscola: %v, Deck: %v)", g.PlayerList, g.BoardSet, g.Briscola, g.deck)
+	return fmt.Sprintf("(Players: %v, board: %v, Briscola: %v, Deck: %v)", g.PlayerList, g.BoardSet, g.Briscola, g.deck)
 }
