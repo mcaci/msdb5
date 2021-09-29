@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net/http"
 
@@ -8,7 +9,9 @@ import (
 )
 
 func main() {
-	err := http.ListenAndServe(":8080", srvb.Handler())
+	port := flag.String("port", "8080", "port where the briscola server is listening to")
+	flag.Parse()
+	err := http.ListenAndServe(":"+*port, srvb.Handler())
 	if err != nil {
 		log.Fatal(err)
 	}
