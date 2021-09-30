@@ -8,18 +8,21 @@ import (
 )
 
 func TestJoinPlayerName(t *testing.T) {
+	t.Parallel()
 	if p := briscola.NewPlayer("Me"); p.Name() != "Me" {
 		t.Fatal("Unexpected name")
 	}
 }
 
 func TestJoinPlayerPileIsEmpty(t *testing.T) {
+	t.Parallel()
 	if p := briscola.NewPlayer(""); len(*p.Pile()) != 0 {
 		t.Fatal("Pile should be empty")
 	}
 }
 
 func TestPlayerDrawsOneCard(t *testing.T) {
+	t.Parallel()
 	p := briscola.NewPlayer("")
 	p.Hand().Add(*card.MustID(1))
 	if len(*p.Hand()) != 1 {

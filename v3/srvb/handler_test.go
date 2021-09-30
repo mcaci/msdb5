@@ -32,7 +32,7 @@ func TestRouting(t *testing.T) {
 			if err := verify(res, tc.v); err != nil {
 				t.Fatalf("test failed, err is %v", err)
 			}
-			srvb.Cleanup(httptest.NewRecorder(), nil)
 		})
+		srvb.Cleanup(httptest.NewRecorder(), nil)
 	}
 }

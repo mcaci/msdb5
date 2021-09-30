@@ -7,6 +7,7 @@ import (
 )
 
 func TestSideDeckProperty(t *testing.T) {
+	t.Parallel()
 	g := briscola.NewGame(briscola.WithDefaultOptions)
 	if g.Name != "" {
 		t.Errorf("error")
@@ -18,6 +19,7 @@ func TestSideDeckProperty(t *testing.T) {
 }
 
 func TestStartGameLenPlayersAndBriscola(t *testing.T) {
+	t.Parallel()
 	g := briscola.NewGame(briscola.WithDefaultOptions)
 	if l := len(*g.Players()); l != 2 {
 		t.Errorf("Expecting 2 players but got %d", l)
@@ -25,6 +27,7 @@ func TestStartGameLenPlayersAndBriscola(t *testing.T) {
 }
 
 func TestRegisterToGameAndStart(t *testing.T) {
+	t.Parallel()
 	g := briscola.NewGame(briscola.WithDefaultOptions)
 	testSinglePlayerRegistering(t, "p1", 0, g)
 	testSinglePlayerRegistering(t, "p2", 1, g)
@@ -35,6 +38,7 @@ func TestRegisterToGameAndStart(t *testing.T) {
 }
 
 func TestRegisterTooManyPlayers(t *testing.T) {
+	t.Parallel()
 	g := briscola.NewGame(briscola.WithDefaultOptions)
 	testSinglePlayerRegistering(t, "p1", 0, g)
 	testSinglePlayerRegistering(t, "p2", 1, g)

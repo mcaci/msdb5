@@ -25,7 +25,7 @@ func verify(res *http.Response, v verifier) error {
 	return nil
 }
 
-func creationOK(msg string) *expectedData {
+func creationOK(msg ...string) *expectedData {
 	return &expectedData{statusCode: http.StatusOK, msg: msg, decoder: func(resBody io.Reader) (string, error) {
 		var rs struct {
 			Name string `json:"name"`
@@ -37,7 +37,7 @@ func creationOK(msg string) *expectedData {
 		return rs.Name, nil
 	}}
 }
-func joinOK(msg string) *expectedData {
+func joinOK(msg ...string) *expectedData {
 	return &expectedData{statusCode: http.StatusOK, msg: msg, decoder: func(resBody io.Reader) (string, error) {
 		var rs struct {
 			Number string `json:"number"`
@@ -49,11 +49,21 @@ func joinOK(msg string) *expectedData {
 		return rs.Number, nil
 	}}
 }
-func playOK(msg string) *expectedData {
-	return &expectedData{statusCode: http.StatusOK, msg: msg, decoder: func(resBody io.Reader) (string, error) { return "ok", nil }}
+func playOK(msg ...string) *expectedData {
+	return &expectedData{statusCode: http.StatusOK, msg: msg, decoder: func(resBody io.Reader) (string, error) {
+		var rs struct {
+			Pl  string `json:"player"`
+			Brd string `json:"board"`
+		}
+		err := json.NewDecoder(resBody).Decode(&rs)
+		if err != nil {
+			return "", err
+		}
+		return fmt.Sprint(rs), nil
+	}}
 }
 
-func errWith(statusCode int, msg string) *expectedData {
+func errWith(statusCode int, msg ...string) *expectedData {
 	return &expectedData{statusCode: statusCode, msg: msg, decoder: func(resBody io.Reader) (string, error) {
 		b, err := ioutil.ReadAll(resBody)
 		if err != nil {
@@ -66,7 +76,7 @@ func errWith(statusCode int, msg string) *expectedData {
 type expectedData struct {
 	statusCode int
 	decoder    func(io.Reader) (string, error)
-	msg        string
+	msg        []string
 }
 
 func (ed *expectedData) verifyStatusCode(statusCode int) error {
@@ -80,14 +90,8 @@ func (ed *expectedData) verifyMessage(resBody io.Reader) error {
 	if err != nil {
 		return fmt.Errorf("could not read response: %v", err)
 	}
-	expected := ed.msg
-	switch ed.statusCode {
-	case http.StatusOK:
-		if actual != expected {
-			return fmt.Errorf("expecting %q to be %q", expected, actual)
-		}
-		return nil
-	default:
+	expecteds := ed.msg
+	for _, expected := range expecteds {
 		if !strings.Contains(actual, expected) {
 			return fmt.Errorf("expecting %q to be in %q", expected, actual)
 		}

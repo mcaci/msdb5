@@ -23,6 +23,7 @@ func init() {
 func testPredicateA(p briscola.Player) bool { return p.Name() == "A" }
 
 func TestSuccessfulFindDataCorrespondsToA(t *testing.T) {
+	t.Parallel()
 	i, err := testPlayers.Index(testPredicateA)
 	if err != nil {
 		t.Fatal(err)
@@ -33,6 +34,7 @@ func TestSuccessfulFindDataCorrespondsToA(t *testing.T) {
 }
 
 func TestSuccessfulFindDataCorrespondsToB(t *testing.T) {
+	t.Parallel()
 	testPredicateB := func(p briscola.Player) bool { return p.Name() == "B" }
 	i, err := testPlayers.Index(testPredicateB)
 	if err != nil {

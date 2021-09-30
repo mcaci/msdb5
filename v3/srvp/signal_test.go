@@ -22,6 +22,7 @@ func (testInfo) Name() string      { return playerNameTest }
 func (ti testInfo) Cards() []uint8 { return ti }
 
 func TestSignalPlay(t *testing.T) {
+	t.Parallel()
 	td := []struct {
 		name     string
 		in       srvp.Carder

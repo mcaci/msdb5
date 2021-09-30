@@ -78,7 +78,7 @@ func TestSrvbOperations(t *testing.T) {
 			join(defaultGame("mary")),
 			join(defaultGame("michi")),
 			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "mary", newgame, 1))),
-		}, playOK("ok")},
+		}, playOK("Name", "Cards", "board")},
 		{"First player cannot play twice", []*operation{
 			create(withName(newgame)),
 			join(defaultGame("mary")),
@@ -86,13 +86,13 @@ func TestSrvbOperations(t *testing.T) {
 			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "mary", newgame, 1))),
 			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "mary", newgame, 0))),
 		}, errWith(http.StatusInternalServerError, "not expected to play")},
-		{"First player cannot play twice", []*operation{
+		{"Second player plays ok", []*operation{
 			create(withName(newgame)),
 			join(defaultGame("mary")),
 			join(defaultGame("michi")),
 			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "mary", newgame, 1))),
 			play(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s","id":%d}`, "michi", newgame, 0))),
-		}, playOK("ok")},
+		}, playOK("Name", "Cards", "board")},
 	}
 	for _, tc := range td {
 		t.Run(tc.name, func(t *testing.T) {
@@ -127,8 +127,8 @@ func play(b io.Reader) *operation {
 	return &operation{url: appendToURL(srvb.PlayURL), hf: srvb.Play, body: b}
 }
 
-var withName = func(n string) io.Reader { return strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, n)) }
-var defaultGame = func(n string) io.Reader {
+func withName(n string) io.Reader { return strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, n)) }
+func defaultGame(n string) io.Reader {
 	return strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, n, newgame))
 }
 

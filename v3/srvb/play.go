@@ -2,6 +2,7 @@ package srvb
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/mcaci/msdb5/v3/briscola"
@@ -25,12 +26,15 @@ func Play(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	err = briscola.Play(g, req)
+	out, err := briscola.Play(g, req)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	// json.NewEncoder(w).Encode(info)
+	json.NewEncoder(w).Encode(&struct {
+		Pl  string `json:"player"`
+		Brd string `json:"board"`
+	}{Pl: out.Pl.String(), Brd: fmt.Sprintf("Cards on the board: %v", out.Brd)})
 }
 
 type inTest struct {

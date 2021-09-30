@@ -13,6 +13,7 @@ import (
 func mustID(n uint8) *briscola.Card { return &briscola.Card{Item: *card.MustID(n)} }
 
 func TestWinnerIndex(t *testing.T) {
+	t.Parallel()
 	testcases := map[string]struct {
 		cards    set.Cards
 		briscola briscola.Card

@@ -8,6 +8,7 @@ import (
 )
 
 func TestNewPlayedCards(t *testing.T) {
+	t.Parallel()
 	pc := briscola.NewPlayedCards(2)
 	if len(*pc.Pile()) != 0 {
 		t.Errorf("error: expecting 0 but was %d", len(*pc.Pile()))
@@ -15,6 +16,7 @@ func TestNewPlayedCards(t *testing.T) {
 }
 
 func TestEmptyPlayedCards(t *testing.T) {
+	t.Parallel()
 	pc := briscola.NewPlayedCards(2)
 	pc.Add(*card.MustID(1))
 	if len(*pc.Pile()) != 0 {
@@ -23,6 +25,7 @@ func TestEmptyPlayedCards(t *testing.T) {
 }
 
 func TestPlayedCards(t *testing.T) {
+	t.Parallel()
 	pc := briscola.NewPlayedCards(2)
 	pc.Add(*card.MustID(1), *card.MustID(2))
 	if len(*pc.Pile()) != 2 {
