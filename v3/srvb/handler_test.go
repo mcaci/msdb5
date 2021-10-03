@@ -15,19 +15,20 @@ func TestRouting(t *testing.T) {
 	defer srv.Close()
 	td := []struct {
 		name    string
+		hf      http.HandlerFunc
 		pattern string
 		v       verifier
 	}{
-		{"create", srvb.CreateURL, creationOK("newgame")},
-		{"join", srvb.JoinURL, errWith(http.StatusInternalServerError, "no game name was given")},
-		{"play", srvb.PlayURL, errWith(http.StatusInternalServerError, "not created")},
+		{"create", srvb.Create, srvb.CreateURL, creationOK("newgame")},
+		{"join", srvb.Join, srvb.JoinURL, errWith(http.StatusInternalServerError, "no game name was given")},
+		{"play", srvb.Play, srvb.PlayURL, errWith(http.StatusInternalServerError, "not created")},
 	}
 	for _, tc := range td {
-		t.Run(fmt.Sprintf("test %s endpoint", tc.name), func(t *testing.T) {
-			res, err := http.Post(fmt.Sprintf("%s%s", srv.URL, tc.pattern), "application/json", strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame")))
-			if err != nil {
-				t.Fatalf("could not send POST request: %v", err)
-			}
+		t.Run(fmt.Sprintf("%s endpoint", tc.name), func(t *testing.T) {
+			t.Parallel()
+			rec := httptest.NewRecorder()
+			tc.hf(rec, httptest.NewRequest(http.MethodPost, srv.URL, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame"))))
+			res := rec.Result()
 			defer res.Body.Close()
 			if err := verify(res, tc.v); err != nil {
 				t.Fatalf("test failed, err is %v", err)

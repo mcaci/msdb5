@@ -3,9 +3,9 @@ package srvb
 import "net/http"
 
 func Handler() http.Handler {
-	r := http.NewServeMux()
-	r.HandleFunc(CreateURL, Create)
-	r.HandleFunc(JoinURL, Join)
-	r.HandleFunc(PlayURL, Play)
-	return r
+	mux := http.NewServeMux()
+	mux.HandleFunc(CreateURL, Create)
+	mux.HandleFunc(JoinURL, Join)
+	mux.HandleFunc(PlayURL, Play)
+	return mux
 }
