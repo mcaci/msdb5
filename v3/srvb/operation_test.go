@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+
+	"github.com/mcaci/msdb5/v3/srvb"
 )
 
 type operation struct {
@@ -23,3 +25,14 @@ func send(op *operation) (*http.Response, error) {
 	op.hf(rec, req)
 	return rec.Result(), nil
 }
+
+func create(b io.Reader) *operation {
+	return &operation{url: appendToURL(srvb.CreateURL), hf: srvb.Create, body: b}
+}
+func join(b io.Reader) *operation {
+	return &operation{url: appendToURL(srvb.JoinURL), hf: srvb.Join, body: b}
+}
+func play(b io.Reader) *operation {
+	return &operation{url: appendToURL(srvb.PlayURL), hf: srvb.Play, body: b}
+}
+func appendToURL(pattern string) string { const host = "localhost:8080"; return host + pattern }

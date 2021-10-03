@@ -11,6 +11,49 @@ import (
 	"github.com/mcaci/msdb5/v3/srvb"
 )
 
+// func TestParallelCreateOK(t *testing.T) {
+// 	t.Parallel()
+// 	tc := struct {
+// 		ops []*operation
+// 		v   verifier
+// 	}{[]*operation{create(withName(newgame))}, creationOK(newgame)}
+// 	var res *http.Response
+// 	for _, op := range tc.ops {
+// 		r, err := send(op)
+// 		if err != nil {
+// 			t.Errorf("could perform the operation: %v", err)
+// 		}
+// 		res = r
+// 	}
+// 	if err := verify(res, tc.v); err != nil {
+// 		t.Errorf("test failed because: %v", err)
+// 	}
+// 	srvb.Cleanup(httptest.NewRecorder(), nil)
+// }
+
+// func TestParallelCreateAndJounOK(t *testing.T) {
+// 	t.Parallel()
+// 	tc := struct {
+// 		ops []*operation
+// 		v   verifier
+// 	}{[]*operation{
+// 		create(withName(newgame)),
+// 		join(defaultGame("mary")),
+// 	}, joinOK("1")}
+// 	var res *http.Response
+// 	for _, op := range tc.ops {
+// 		r, err := send(op)
+// 		if err != nil {
+// 			t.Errorf("could perform the operation: %v", err)
+// 		}
+// 		res = r
+// 	}
+// 	if err := verify(res, tc.v); err != nil {
+// 		t.Errorf("test failed because: %v", err)
+// 	}
+// 	srvb.Cleanup(httptest.NewRecorder(), nil)
+// }
+
 func TestSrvbOperations(t *testing.T) {
 	td := []struct {
 		name string
@@ -112,24 +155,9 @@ func TestSrvbOperations(t *testing.T) {
 	}
 }
 
-const (
-	host    = "localhost:8080"
-	newgame = "newgame"
-)
-
-func create(b io.Reader) *operation {
-	return &operation{url: appendToURL(srvb.CreateURL), hf: srvb.Create, body: b}
-}
-func join(b io.Reader) *operation {
-	return &operation{url: appendToURL(srvb.JoinURL), hf: srvb.Join, body: b}
-}
-func play(b io.Reader) *operation {
-	return &operation{url: appendToURL(srvb.PlayURL), hf: srvb.Play, body: b}
-}
+const newgame = "newgame"
 
 func withName(n string) io.Reader { return strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, n)) }
 func defaultGame(n string) io.Reader {
 	return strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, n, newgame))
 }
-
-func appendToURL(pattern string) string { return host + pattern }
