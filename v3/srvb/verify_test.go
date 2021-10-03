@@ -15,10 +15,14 @@ type verifier interface {
 }
 
 func verify(res *http.Response, v verifier) error {
-	if err := v.verifyStatusCode(res.StatusCode); err != nil {
-		return err
-	}
 	defer res.Body.Close()
+	if err := v.verifyStatusCode(res.StatusCode); err != nil {
+		b, errb := ioutil.ReadAll(res.Body)
+		if errb != nil {
+			return fmt.Errorf("could not read response body: %v", errb)
+		}
+		return fmt.Errorf("got different error code: %v. Cause is: %v", err, string(b))
+	}
 	if err := v.verifyMessage(res.Body); err != nil {
 		return err
 	}
