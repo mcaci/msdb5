@@ -10,12 +10,12 @@ import (
 
 const PlayURL = "/play"
 
-func Play(w http.ResponseWriter, r *http.Request) {
+func (g *Game) Play(w http.ResponseWriter, r *http.Request) {
 	if r.Body == nil {
 		http.Error(w, "empty request", http.StatusBadRequest)
 		return
 	}
-	if g == nil {
+	if g.Game == nil {
 		http.Error(w, "cannot play on game which is not created", http.StatusInternalServerError)
 		return
 	}

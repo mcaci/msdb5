@@ -17,7 +17,7 @@ func Test1PJoin(t *testing.T) {
 	g := srvb.Game{}
 	g.Create(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame"))))
 	rec := httptest.NewRecorder()
-	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame"))))
+	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame"))))
 	res := rec.Result()
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
@@ -40,9 +40,9 @@ func Test2PJoin(t *testing.T) {
 	t.Parallel()
 	g := srvb.Game{}
 	g.Create(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame"))))
-	g.Join(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame"))))
+	g.Join(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame"))))
 	rec := httptest.NewRecorder()
-	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame"))))
+	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame"))))
 	res := rec.Result()
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
@@ -65,10 +65,10 @@ func Test3PJoinError(t *testing.T) {
 	t.Parallel()
 	g := srvb.Game{}
 	g.Create(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame"))))
-	g.Join(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame"))))
-	g.Join(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame"))))
+	g.Join(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame"))))
+	g.Join(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "michi", "newgame"))))
 	rec := httptest.NewRecorder()
-	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "thirdplayer", "newgame"))))
+	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "thirdplayer", "newgame"))))
 	res := rec.Result()
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusInternalServerError {
@@ -85,12 +85,36 @@ func Test3PJoinError(t *testing.T) {
 	g.Cleanup()
 }
 
+func TestJoinWithNoBodyGivesErr(t *testing.T) {
+	t.Parallel()
+	g := srvb.Game{}
+	rec := httptest.NewRecorder()
+	req, err := http.NewRequest(http.MethodPost, srvb.JoinURL, nil)
+	if err != nil {
+		t.Error(err)
+	}
+	g.Join(rec, req)
+	res := rec.Result()
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusBadRequest {
+		t.Error("got", res.StatusCode)
+	}
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Error(err)
+	}
+	if string(b) == "" {
+		t.Error("expecting to have:", string(b))
+	}
+	g.Cleanup()
+}
+
 func TestWrongBodyJoinError(t *testing.T) {
 	t.Parallel()
 	g := srvb.Game{}
 	g.Create(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame"))))
 	rec := httptest.NewRecorder()
-	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(`'{"name":"na"}`)))
+	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(`'{"name":"na"}`)))
 	res := rec.Result()
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusBadRequest {
@@ -107,21 +131,89 @@ func TestWrongBodyJoinError(t *testing.T) {
 	g.Cleanup()
 }
 
-// {"Join with no body gives error", []*operation{
-// 	join(nil),
-// }, errWith(http.StatusBadRequest, "empty request")},
-// {"Join with no create gives error", []*operation{
-// 	join(defaultGame("mary")),
-// }, errWith(http.StatusInternalServerError, "not created")},
-// {"Join on wrong game", []*operation{
-// 	create(withName(newgame)),
-// 	join(strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "othergame"))),
-// }, errWith(http.StatusInternalServerError, "different name")},
-// {"Join with no player name gives error", []*operation{
-// 	create(withName(newgame)),
-// 	join(strings.NewReader(fmt.Sprintf(`{"game":"%s"}`, newgame))),
-// }, errWith(http.StatusInternalServerError, "no player name was given")},
-// {"Join with no game name gives error", []*operation{
-// 	create(withName(newgame)),
-// 	join(strings.NewReader(`{"name":"player"}`)),
-// }, errWith(http.StatusInternalServerError, "no game name was given")},
+func TestJoinOnWrongGameError(t *testing.T) {
+	t.Parallel()
+	g := srvb.Game{}
+	g.Create(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame"))))
+	rec := httptest.NewRecorder()
+	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "othergame"))))
+	res := rec.Result()
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusInternalServerError {
+		t.Error("got", res.StatusCode)
+	}
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Error(err)
+	}
+	expected := "different name"
+	if !strings.Contains(string(b), expected) {
+		t.Error("expecting to have", expected, "in", string(b))
+	}
+	g.Cleanup()
+}
+
+func TestJoinWithNoGameCreatedGivesError(t *testing.T) {
+	t.Parallel()
+	g := srvb.Game{}
+	rec := httptest.NewRecorder()
+	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"name":"%s","game":"%s"}`, "mary", "newgame"))))
+	res := rec.Result()
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusInternalServerError {
+		t.Error("got", res.StatusCode)
+	}
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Error(err)
+	}
+	expected := "not created"
+	if !strings.Contains(string(b), expected) {
+		t.Error("expecting to have", expected, "in", string(b))
+	}
+	g.Cleanup()
+}
+
+func TestJoinWithNoGameNameGivesError(t *testing.T) {
+	t.Parallel()
+	g := srvb.Game{}
+	g.Create(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame"))))
+	rec := httptest.NewRecorder()
+	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "mary"))))
+	res := rec.Result()
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusInternalServerError {
+		t.Error("got", res.StatusCode)
+	}
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Error(err)
+	}
+	expected := "no game name was given"
+	if !strings.Contains(string(b), expected) {
+		t.Error("expecting to have", expected, "in", string(b))
+	}
+	g.Cleanup()
+}
+
+func TestJoinWithNoPlayerNameGivesError(t *testing.T) {
+	t.Parallel()
+	g := srvb.Game{}
+	g.Create(httptest.NewRecorder(), httptest.NewRequest(http.MethodPost, srvb.CreateURL, strings.NewReader(fmt.Sprintf(`{"name":"%s"}`, "newgame"))))
+	rec := httptest.NewRecorder()
+	g.Join(rec, httptest.NewRequest(http.MethodPost, srvb.JoinURL, strings.NewReader(fmt.Sprintf(`{"game":"%s"}`, "newgame"))))
+	res := rec.Result()
+	defer res.Body.Close()
+	if res.StatusCode != http.StatusInternalServerError {
+		t.Error("got", res.StatusCode)
+	}
+	b, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Error(err)
+	}
+	expected := "no player name was given"
+	if !strings.Contains(string(b), expected) {
+		t.Error("expecting to have", expected, "in", string(b))
+	}
+	g.Cleanup()
+}
