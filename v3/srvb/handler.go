@@ -4,7 +4,9 @@ import "net/http"
 
 func Handler() http.Handler {
 	mux := http.NewServeMux()
-	mux.HandleFunc(CreateURL, Create)
+	g := Game{}
+	mux.HandleFunc(CreateURL, g.Create)
+	mux.HandleFunc("/CreateURL", Create)
 	mux.HandleFunc(JoinURL, Join)
 	mux.HandleFunc(PlayURL, Play)
 	return mux
