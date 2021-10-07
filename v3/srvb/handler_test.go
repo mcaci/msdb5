@@ -20,7 +20,7 @@ func TestRouting(t *testing.T) {
 		v       verifier
 	}{
 		{"create", srvb.Create, "/CreateURL", creationOK("newgame")},
-		{"join", srvb.Join, srvb.JoinURL, errWith(http.StatusInternalServerError, "no game name was given")},
+		{"join", srvb.Join, "/JoinURL", errWith(http.StatusInternalServerError, "no game name was given")},
 		{"play", srvb.Play, srvb.PlayURL, errWith(http.StatusInternalServerError, "not created")},
 	}
 	for _, tc := range td {
@@ -49,7 +49,7 @@ func TestGameRouting(t *testing.T) {
 		v       verifier
 	}{
 		{"create", g.Create, srvb.CreateURL, creationOK("newgame")},
-		// {"join", srvb.Join, srvb.JoinURL, errWith(http.StatusInternalServerError, "no game name was given")},
+		{"join", g.Join, srvb.JoinURL, errWith(http.StatusInternalServerError, "no game name was given")},
 		// {"play", srvb.Play, srvb.PlayURL, errWith(http.StatusInternalServerError, "not created")},
 	}
 	for _, tc := range td {
