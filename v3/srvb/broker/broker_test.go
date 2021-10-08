@@ -21,7 +21,7 @@ func TestBrokerCreation(t *testing.T) {
 	}
 }
 
-func TestBrokerHF(t *testing.T) {
+func TestBrokerWithHelloMsg(t *testing.T) {
 	t.Parallel()
 	b := broker.NewServer()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond)
@@ -51,7 +51,7 @@ func TestBrokerHF(t *testing.T) {
 	}
 }
 
-func TestMain(t *testing.T) {
+func TestBrokerWithTimeMsg(t *testing.T) {
 	t.Parallel()
 	b := broker.NewServer()
 	ctx, cancel := context.WithTimeout(context.Background(), time.Millisecond)
