@@ -2,7 +2,6 @@ package srvp_test
 
 import (
 	"fmt"
-	"log"
 	"math/rand"
 	"testing"
 
@@ -51,7 +50,7 @@ func notContains(actual interface{}, expected []interface{}) bool { return !cont
 func contains(actual interface{}, expected []interface{}) bool {
 	for i := range expected {
 		if actual != expected[i] {
-			log.Println(actual, expected[i])
+			// log.Println(actual, expected[i])
 			continue
 		}
 		return true
